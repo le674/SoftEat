@@ -1,12 +1,23 @@
 
 <body>
-  <header>
-    <h1>Factures</h1>
+   <header>
+     <nav class="navbar navbar-expand-lg" style='background:#608230;'>
+     <a class="navbar-brand">Restomatic</a>
+     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+       <span class="navbar-toggler-icon"></span>
+     </button>
+     <div class="collapse navbar-collapse" id="navbarText">
+         <a class="nav-link" href="#"> Alerte </a>
+     </div>
+   </nav>
   </header>
-
-  <button type="button" name="upload">
-    <a href="factures/upload"> Ajout des factures </a>
-  </button>
+  <main>
+    <div class="grid text-end">
+        <button class="button-19" role="button">
+          <a href="factures/upload"> Ajout des factures </a>
+        </button>
+    </div>
+  </main>
 </body>
 
 <router-outlet></router-outlet>
