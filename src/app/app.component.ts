@@ -18,13 +18,14 @@ export class AppComponent {
 
   /*ngOnInit(){
     //ref permet de réferencer un chemin vers la base de données, child permet de spécifier le chemin
-    const ref_db = ref(this.db);
-    get(child(ref_db, 'client_1/Restaurant')).then((restaurant) => {
-      if (restaurant.exists()) {
-          console.log(restaurant.val().adresse);
-      }
-    })
-  }*/
 
-   
+=======
+    //const ref_db = ref(this.db);
+    //get(child(ref_db, 'client_1/Restaurant')).then((restaurant) => {
+    //  if (restaurant.exists()) {
+    //      console.log(restaurant.val().adresse);
+    //  }
+    //})
+  }
+>>>>>>> master
 }
