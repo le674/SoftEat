@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppComponentAcceuilComponent } from './app.component.acceuil/app.component.acceuil.component';
+import { ComponentAcceuil } from './app.component.acceuil/app.component.acceuil';
+import {AppModuleRoutingModule} from './app.module-routing'
 
 @NgModule({
-  declarations: [
-  ],
-  imports: [ CommonModule, AppComponentAcceuil, AppModuleRoutingModule],
+  declarations: [ComponentAcceuil],
+  imports: [CommonModule, AppModuleRoutingModule],
   exports: [],
   providers: [],
 })
-export class AppAlertesModule {}
+export class AppAcceuilModule{}
