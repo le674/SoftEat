@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ComponentAcceuil } from './app.component.acceuil/app.component.acceuil';
 
 const routes: Routes = [
   {path: 'acceuil', component: ComponentAcceuil}
