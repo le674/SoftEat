@@ -4,7 +4,7 @@ import { ComponentAcceuil } from './app.component.acceuil/app.component.acceuil'
 
 const routes: Routes = [
   {
-    path: 'acceuil',
+    path: 'accueil',
     component: ComponentAcceuil
   }
 ];
