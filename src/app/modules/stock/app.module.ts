@@ -1,10 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AppStockComponent } from './app.stock/app.stock.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    AppStockComponent
+  ],
   imports: [ CommonModule ],
-  exports: [],
+  exports: [
+    AppStockComponent
+  ],
   providers: [],
 })
 export class AppStockModule {}
