@@ -11,5 +11,5 @@ export class ComponentAcceuil implements OnInit {
 
   ngOnInit(): void {
   }
-
+  
 }

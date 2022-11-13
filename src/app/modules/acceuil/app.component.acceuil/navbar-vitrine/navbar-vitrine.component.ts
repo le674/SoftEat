@@ -5,11 +5,17 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './navbar-vitrine.component.html',
   styleUrls: ['./navbar-vitrine.component.css']
 })
+
 export class NavbarVitrineComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+    
+   }
 
   ngOnInit(): void {
   }
+  clicConnexion(){
+    alert("Vous venez de cliquer sur un bouton");
 
+  }
 }
