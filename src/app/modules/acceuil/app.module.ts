@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ComponentAcceuil } from './app.component.acceuil/app.component.acceuil';
 import { AppModuleRoutingModule } from './app.module-routing';
 import { NavbarVitrineComponent } from './app.component.acceuil/navbar-vitrine/navbar-vitrine.component';
-import { ConnectionComponent } from './app.component.acceuil/connection/connection.component'
+import { ConnectionComponent } from './app.component.acceuil/connection/connection.component';
+import { HomeComponent } from './app.component.acceuil/home/home.component'
 
 @NgModule({
-  declarations: [ComponentAcceuil, NavbarVitrineComponent, ConnectionComponent],
+  declarations: [ComponentAcceuil, NavbarVitrineComponent, ConnectionComponent, HomeComponent],
   imports: [CommonModule, AppModuleRoutingModule],
   exports: [],
   providers: [],

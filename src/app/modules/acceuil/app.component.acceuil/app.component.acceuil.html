@@ -1,3 +1,6 @@
-<app-navbar-vitrine></app-navbar-vitrine>
+<app-navbar-vitrine (numPanel)="numeroPanel = $event" ></app-navbar-vitrine>
 
-<app-connection></app-connection>
+<app-connection *ngIf="numeroPanel == 1"></app-connection>
+<app-home *ngIf="numeroPanel == 2"></app-home>
+
+<!--<p>{{numeroPanel}}</p>-->

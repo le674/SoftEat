@@ -22,14 +22,14 @@ ul {
     float:left;
 
   }
-  
+ 
   li a {
     display: block;
     color: white;
     text-align: center;
     padding: 3px 16px;
     text-decoration: none;
-
+    cursor:pointer;
   }
   li a:hover {
     background-color: #656B51;

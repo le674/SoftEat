@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { ConnectionComponent } from '../connection/connection.component';
 
 @Component({
   selector: 'app-navbar-vitrine',
@@ -7,17 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class NavbarVitrineComponent implements OnInit {
-
+  @Output() public numPanel = new EventEmitter();
   constructor() {
-    var panel:number = 0;
-
    }
 
   ngOnInit(): void {
+    
   }
   clicConnexion(){
-    
-    alert("Vous venez de cliquer sur un bouton");
-
+  this.numPanel.emit(1);  
+  
   }
+  clicHome(){
+    this.numPanel.emit(2);  
+    
+    }
 }

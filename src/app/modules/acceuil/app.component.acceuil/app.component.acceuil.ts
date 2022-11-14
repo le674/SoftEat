@@ -6,9 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.acceuil.css']
 })
 export class ComponentAcceuil implements OnInit {
-  
+  public numeroPanel = -2;
   constructor() {
-
    }
 
   ngOnInit(): void {
