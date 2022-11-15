@@ -1,4 +1,4 @@
-
+/*
 #banderole{
   background-color: #656B51;
   color:white;
@@ -33,4 +33,22 @@ ul {
   }
   li a:hover {
     background-color: #656B51;
+  }
+  */
+
+  /*nav{
+      
+  }*/
+  
+  #restaumatiqueT{
+    font-family: 'Fasthand', cursive;
+    
+  }
+
+
+  li a {
+    font-family: 'Fasthand', cursive;
+
+    cursor:pointer;
+
   }

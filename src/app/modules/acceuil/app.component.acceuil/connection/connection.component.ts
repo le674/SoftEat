@@ -1,4 +1,5 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
+import { firebaseApp$ } from '@angular/fire/app';
 
 @Component({
   selector: 'app-connection',
@@ -8,6 +9,10 @@ import { Component, HostBinding, OnInit } from '@angular/core';
 export class ConnectionComponent implements OnInit {
 
   ngOnInit(): void {
+  }
+
+  connexionTest(){
+    
   }
 
 }
