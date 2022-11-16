@@ -16,7 +16,7 @@
      height: 2px;
      background: rgb(30, 148, 30);
      transform: scale(0);
-     transition: transform 0.1s ease-in-out;
+     transition: transform 0.2s ease-in-out;
   }
   #souligneVert:hover::after{
     transform: scale(1);
