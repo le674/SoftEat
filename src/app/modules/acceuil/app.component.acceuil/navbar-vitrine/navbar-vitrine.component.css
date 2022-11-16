@@ -13,8 +13,8 @@
   #souligneVert::after{
     content: '';
      display: block;
-     height: 1px;
-     background: rgb(11, 77, 11);
+     height: 2px;
+     background: rgb(30, 148, 30);
      transform: scale(0);
      transition: transform 0.1s ease-in-out;
   }
