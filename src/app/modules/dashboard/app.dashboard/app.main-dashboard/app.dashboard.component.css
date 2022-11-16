@@ -29,6 +29,9 @@ body {
     .sidebar {
       top: 5rem;
     }
+    #alertes{
+      visibility: hidden;
+    }
   }
   
   .sidebar-sticky {
