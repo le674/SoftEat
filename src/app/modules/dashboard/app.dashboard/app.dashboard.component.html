@@ -1,1 +1,8 @@
 <app-main-dashboard (numPanel)="numeroPanel = $event"></app-main-dashboard>
+
+
+<app-alertes *ngIf="numeroPanel==1"></app-alertes> 
+<app-stock *ngIf="numeroPanel==2"></app-stock> 
+<app-analyse *ngIf="numeroPanel==3"></app-analyse> 
+<app-factures *ngIf="numeroPanel==4"></app-factures> 
+<app-rh *ngIf="numeroPanel==5"></app-rh> 

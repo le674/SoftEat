@@ -7,7 +7,9 @@ import { AppFacturesComponent } from './app.factures/app.factures.component';
     AppFacturesComponent
   ],
   imports: [ CommonModule ],
-  exports: [],
+  exports: [
+    AppFacturesComponent
+  ],
   providers: [],
 })
 export class AppFacturesModule {}

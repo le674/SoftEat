@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-app.alertes',
+  selector: 'app-alertes',
   templateUrl: './app.alertes.component.html',
   styleUrls: ['./app.alertes.component.css']
 })
