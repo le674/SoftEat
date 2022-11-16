@@ -1,13 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'app-app.dashboard',
   templateUrl: './app.dashboard.component.html',
-  styleUrls: ['./app.dashboard.component.css']
+  styleUrls: ['./app.dashboard.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class AppDashboardComponent implements OnInit {
+  
+  public numeroPanel = -2;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
   }

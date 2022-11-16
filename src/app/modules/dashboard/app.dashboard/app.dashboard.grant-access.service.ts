@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+//import { Injectable } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AppDashboardGrantAccessService {
+//@Injectable({
+ // providedIn: 'root'
+//})
+//export class AppDashboardGrantAccessService {
 
-  constructor() { }
-}
+ // constructor() { }
+//}
