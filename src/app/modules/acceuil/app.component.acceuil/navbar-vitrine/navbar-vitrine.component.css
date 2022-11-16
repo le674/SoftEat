@@ -1,53 +1,29 @@
-/*
-#banderole{
-  background-color: #656B51;
-  color:white;
-  font-family: 'Fasthand', cursive;
-  text-align: left;  
-  font-size: 48px;
-  padding: 5px;
-}
 
 
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #79864D;
-
-  }
-  
-  li {
-    float:left;
-
-  }
- 
-  li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 3px 16px;
-    text-decoration: none;
-    cursor:pointer;
+  #restaumatiqueT{
+    font-family: 'ABeeZee', sans-serif;
+    font-style: italic;
+    font-size: 38px;
   }
   li a:hover {
-    background-color: #656B51;
-  }
-  */
-
-  /*nav{
-      
-  }*/
-  
-  #restaumatiqueT{
-    font-family: 'Fasthand', cursive;
+    font-weight: bold;
     
+   
   }
-
+  #souligneVert::after{
+    content: '';
+     display: block;
+     height: 1px;
+     background: rgb(11, 77, 11);
+     transform: scale(0);
+     transition: transform 0.1s ease-in-out;
+  }
+  #souligneVert:hover::after{
+    transform: scale(1);
+  }
 
   li a {
-    font-family: 'Fasthand', cursive;
+    font-family: 'Inter', sans-serif;
 
     cursor:pointer;
 
