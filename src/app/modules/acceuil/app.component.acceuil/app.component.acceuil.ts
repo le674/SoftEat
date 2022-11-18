@@ -8,7 +8,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 })
 export class ComponentAcceuil implements OnInit {
-  public numeroPanel = -2;
+  public numeroPanel = 2;
   constructor() {
    }
 

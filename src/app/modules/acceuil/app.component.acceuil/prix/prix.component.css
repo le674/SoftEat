@@ -23,3 +23,188 @@
     }
 
 }
+/*--------------*/
+#divCentrerPrix{
+    margin-left: 5%;
+}
+#divImage{
+    background-color: rgb(237, 255, 237);
+    /*background-image: url("src/assets/ImageTarif.jpg") ;
+      */
+}
+@import url(//fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800);
+.pricing3 {
+  font-family: "Montserrat", sans-serif;
+	color: #8d97ad;
+  font-weight: 300;
+}
+#marque{
+    font-family: 'ABeeZee', sans-serif;
+    font-style: italic;
+    font-size: 30px;
+    color : rgb(30, 148, 30);
+}
+.pricing3 h1, .pricing3 h2, .pricing3 h3, .pricing3 h4, .pricing3 h5, .pricing3 h6 {
+  color: #3e4555;
+}
+
+.pricing3 .font-weight-medium {
+	font-weight: 500;
+}
+
+.pricing3 .bg-light {
+    background-color: #f4f8fa !important;
+}
+
+.pricing3 .subtitle {
+    color: #8d97ad;
+    line-height: 24px;
+}
+
+.pricing3 .col-lg-2 {
+  padding-right: 0px;
+  position: relative;
+  z-index: 1;
+}
+
+.pricing3 .col-lg-10 {
+  padding-left: 0px;
+}
+
+.pricing3 .nav-pills {
+  border: 1px solid rgba(120, 130, 140, 0.13);
+  border-radius: 4px;
+  border-right: 0px;
+}
+
+.pricing3 .nav-pills .nav-link {
+  padding: 30px 25px;
+}
+
+.pricing3 .nav-pills .nav-link h2 {
+  color: #8d97ad;
+}
+
+.pricing3 .nav-pills .nav-link.active {
+  background: #ffffff;
+  border-left: 3px solid #28c33d;
+  border-radius: 0px;
+  margin-left: -3px;
+  -webkit-box-shadow: -20px 0 40px rgba(0, 0, 0, 0.1);
+  box-shadow: -20px 0 40px rgba(0, 0, 0, 0.1);
+}
+
+.pricing3 .nav-pills .nav-link.active h2 {
+  color: #263238;
+}
+
+.pricing3 .tab-content {
+  background: #ffffff;
+  overflow: hidden;
+  -webkit-box-shadow: 0 0 60px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.1);
+}
+
+.pricing3 .tab-content .pricing-box {
+  padding: 50px 80px;
+}
+
+.pricing3 .tab-content .list-inline {
+  margin-top: 20px;
+}
+
+.pricing3 .tab-content .list-inline li {
+  padding: 30px 0;
+  font-weight: 400;
+}
+
+.pricing3 .tab-content .list-inline li span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.pricing3 .tab-content .list-inline li i {
+  font-size: 40px;
+  vertical-align: middle;
+  width: 80px;
+  opacity: 0.5;
+}
+
+.pricing3 .tab-content .bg-image {
+  background-size: cover;
+}
+
+.pricing3 .tab-content .bg-image .quote-box {
+  padding: 40px;
+}
+.pricing-box{
+    margin-left: 20px;
+    width: 500px;
+}
+.tab-content{
+    width: 820px;;
+}
+
+.pricing3 .btn-danger-gradiant {
+  background: #0d8a0d;
+  background: -webkit-linear-gradient(legacy-direction(to right), #0d8a0d 0%, #98ff29 100%);
+  background: -webkit-gradient(linear, left top, right top, from(#0d8a0d), to(#98ff29));
+  background: -webkit-linear-gradient(left, #0d8a0d 0%, #98ff29 100%);
+  background: -o-linear-gradient(left, #0d8a0d 0%, #98ff29 100%);
+  background: linear-gradient(to right, #0d8a0d 0%, #98ff29 100%);
+}
+
+ .pricing3 .btn-danger-gradiant:hover {
+  background: #98ff29;
+  background: -webkit-linear-gradient(legacy-direction(to right), #98ff29 0%, #0d8a0d 100%);
+  background: -webkit-gradient(linear, left top, right top, from(#98ff29), to(#0d8a0d));
+  background: -webkit-linear-gradient(left, #98ff29 0%, #0d8a0d 100%);
+  background: -o-linear-gradient(left, #98ff29 0%, #0d8a0d 100%);
+  background: linear-gradient(to right, #98ff29 0%, #0d8a0d 100%);
+}
+
+.pricing3 .btn-md {
+    padding: 15px 45px;
+    font-size: 16px;
+}
+
+.pricing3 .display-5 {
+    font-size: 3rem;
+}
+
+@media (max-width: 767px) {
+    
+.tab-content{
+    width: auto;
+}
+  .pricing3 .col-lg-2 {
+    padding-right: 15px;
+  }
+  .pricing3 .col-lg-10 {
+    padding-left: 15px;
+  }
+  .pricing3 .nav-pills {
+    -webkit-box-orient: horizontal !important;
+    -webkit-box-direction: normal !important;
+    -webkit-flex-direction: row !important;
+    -ms-flex-direction: row !important;
+    flex-direction: row !important;
+    border-bottom: 0px;
+    border-right: 1px solid rgba(120, 130, 140, 0.13);
+  }
+  .pricing3 .nav-pills .nav-link {
+    padding: 25px 18px;
+  }
+  .pricing3 .nav-pills .nav-link.active {
+    border-left: 0px;
+    border-top: 3px solid #28c33d;
+    margin-top: -4px;
+    margin-left: 0px;
+    margin-bottom: -1px;
+    -webkit-box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.1);
+  }
+  .pricing3 .tab-content .pricing-box {
+    padding: 20px;
+  }
+}

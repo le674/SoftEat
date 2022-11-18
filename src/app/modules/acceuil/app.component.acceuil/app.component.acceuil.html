@@ -1,17 +1,16 @@
 <app-navbar-vitrine (numPanel)="numeroPanel = $event" ></app-navbar-vitrine>
 
 <app-connection *ngIf="numeroPanel == 1"></app-connection>
-<app-home *ngIf="numeroPanel == 2"></app-home>
-<app-home id = "scrollspyHeading1"></app-home>
+<div *ngIf="numeroPanel == 2">
+<app-home></app-home>
 <!--_____________________________________________________________________________________________________________________-->
-<div><!--fonctionnalites-->
+
 
 
 
 <app-fonctionnalite></app-fonctionnalite>
 <app-prix></app-prix>
-
+<app-propos></app-propos>
 </div>
-
 <!--_____________________________________________________________________________________________________________________-->
 <!--<p>{{numeroPanel}}</p>-->

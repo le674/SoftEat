@@ -32,10 +32,13 @@
 
   }
   #navbar_top{
-    background-color: rgb(255, 255, 255,0.6);margin-left: 10%;margin-top: 20px;
+    background-color: rgb(255, 255, 255,0.8);margin-left: 10%;margin-top: 20px;
+    width: max-content;
   }
   @media screen and (max-width: 600px) { 
     #navbar_top{
       background-color: white;
+      width: max-content;
+      margin-left: 0%;
     }
   }
