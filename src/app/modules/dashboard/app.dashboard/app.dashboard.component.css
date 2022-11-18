@@ -5,7 +5,10 @@
     #alertes{
       visibility: hidden;
     }
-  }
-  #h2{
-    color: white;
+    #top-alerte{
+    padding: 15px;
+    }
+  #top-buttons{
+    padding: 20px;
+   }
 }
