@@ -6,7 +6,26 @@ import { DOCUMENT } from '@angular/common';
   templateUrl: './navbar-vitrine.component.html',
   styleUrls: ['./navbar-vitrine.component.css']
 })
-
+/*
+function elementPosition (a) {
+  var b = a.getBoundingClientRect();
+  return {
+    clientX: a.offsetLeft,
+    clientY: a.offsetTop,
+    viewportX: (b.x || b.left),
+    viewportY: (b.y || b.top)
+  }
+}
+const clientY
+function daccord(){
+  var NavBarTOP = document.getElementById('navbar_top');
+  alert(elementPosition(NavBarTOP).clientX);
+  const nX = elementPosition(NavBarTOP).clientY;
+  if(clientY == elementPosition(NavBarTOP).clientY){
+    $('.navbar_top').css('background','rgb(255, 255, 255,0)');
+  }
+}
+*/
 export class NavbarVitrineComponent implements OnInit {
   @Output() public numPanel = new EventEmitter();
   constructor() {
@@ -16,21 +35,8 @@ export class NavbarVitrineComponent implements OnInit {
   ngOnInit(): void {
   }
   
- /* document.addEventListener("DOMContentLoaded", function(){
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {
-          document.getElementById('navbar_top').classList.add('fixed-top');
-          // add padding top to show content behind navbar
-          navbar_height = document.querySelector('.navbar').offsetHeight;
-          document.body.style.paddingTop = navbar_height + 'px';
-        } else {
-          document.getElementById('navbar_top').classList.remove('fixed-top');
-           // remove padding top from body
-          document.body.style.paddingTop = '0';
-        } 
-    });
-  }); */
-
+ 
+  
 
   clicConnexion(){
   this.numPanel.emit(1);  
@@ -40,6 +46,5 @@ export class NavbarVitrineComponent implements OnInit {
     this.numPanel.emit(2);  
     
   }
-  
 }
 

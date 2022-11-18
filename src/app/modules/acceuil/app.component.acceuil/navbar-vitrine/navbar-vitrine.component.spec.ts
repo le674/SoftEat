@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { DOCUMENT } from '@angular/common';
 import { NavbarVitrineComponent } from './navbar-vitrine.component';
 
 describe('NavbarVitrineComponent', () => {

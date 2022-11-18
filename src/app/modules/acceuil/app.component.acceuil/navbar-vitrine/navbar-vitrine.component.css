@@ -4,6 +4,9 @@
     font-family: 'ABeeZee', sans-serif;
     font-style: italic;
     font-size: 38px;
+    
+    color : rgb(30, 148, 30);
+    
   }
   li a:hover {
     font-weight: bold;
@@ -27,4 +30,12 @@
 
     cursor:pointer;
 
+  }
+  #navbar_top{
+    background-color: rgb(255, 255, 255,0.6);margin-left: 10%;margin-top: 20px;
+  }
+  @media screen and (max-width: 600px) { 
+    #navbar_top{
+      background-color: white;
+    }
   }

@@ -5,9 +5,10 @@ import { AppModuleRoutingModule } from './app.module-routing';
 import { NavbarVitrineComponent } from './app.component.acceuil/navbar-vitrine/navbar-vitrine.component';
 import { ConnectionComponent } from './app.component.acceuil/connection/connection.component';
 import { HomeComponent } from './app.component.acceuil/home/home.component';
-import { FonctionnaliteComponent } from './app.component.acceuil/fonctionnalite/fonctionnalite.component'
+import { FonctionnaliteComponent } from './app.component.acceuil/fonctionnalite/fonctionnalite.component';
+import { PrixComponent } from './app.component.acceuil/prix/prix.component'
 @NgModule({
-  declarations: [ComponentAcceuil, NavbarVitrineComponent, ConnectionComponent, HomeComponent, FonctionnaliteComponent],
+  declarations: [ComponentAcceuil, NavbarVitrineComponent, ConnectionComponent, HomeComponent, FonctionnaliteComponent, PrixComponent],
   imports: [CommonModule, AppModuleRoutingModule],
   exports: [],
   providers: [],
