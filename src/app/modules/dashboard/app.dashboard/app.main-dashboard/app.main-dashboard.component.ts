@@ -14,6 +14,7 @@ export class AppMainDashboardComponent implements OnInit {
   @Output() public numPanel = new EventEmitter();
   
   clickAlertes(){
+    
     this.numPanel.emit(1)
   }
 

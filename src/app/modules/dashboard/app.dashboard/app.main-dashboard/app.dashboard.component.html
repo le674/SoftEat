@@ -16,7 +16,7 @@
 
 
 <body>
-  <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <header class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">SoftEat</a>
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
       data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,34 +35,44 @@
         <div class="position-sticky pt-3 sidebar-sticky">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page"  (click)="clickAlertes()"  href="" onclick="return false;">
-                <span data-feather="home" class="align-text-bottom"></span>
-                Alertes
-              </a>
+              <div class="navigation">
+                <p class="nav-link" aria-current="page"  (click)="clickAlertes()">
+                  <span class="align-text-bottom"></span>
+                  Alertes
+                </p>
+              </div>
             </li>
             <li class="nav-item">
-              <a class="nav-link" (click)="clickStock()"  href="" onclick="return false;">
-                <span data-feather="file" class="align-text-bottom"></span>
-                Stock
-              </a>
+              <div class="navigation">
+                <p class="nav-link" (click)="clickStock()">
+                  <span class="align-text-bottom"></span>
+                  Stock
+                </p>
+              </div>
             </li>
             <li class="nav-item">
-              <a class="nav-link" (click)="clickAnalyse()" href="" onclick="return false;">
-                <span data-feather="shopping-cart" class="align-text-bottom"></span>
-                Analyse
-              </a>
+              <div class="navigation">
+                <p class="nav-link" (click)="clickAnalyse()">
+                  <span class="align-text-bottom"></span>
+                  Analyse
+                </p>
+              </div>
             </li>
             <li class="nav-item">
-              <a class="nav-link" (click)="clickFactures()" href="" onclick="return false;">
-                <span data-feather="users" class="align-text-bottom"></span>
-                Factures
-              </a>
+              <div class="navigation">
+                <p class="nav-link" (click)="clickFactures()">
+                  <span class="align-text-bottom"></span>
+                  Factures
+                </p>
+              </div>
             </li>
             <li class="nav-item">
-              <a class="nav-link" (click)="clickRH()"  href="" onclick="return false;">
-                <span data-feather="bar-chart-2" class="align-text-bottom"></span>
-                Ressources humaine
-              </a>
+              <div class="navigation">
+                <a class="nav-link" (click)="clickRH()">
+                  <span class="align-text-bottom"></span>
+                  Ressources humaine
+                </a>
+              </div>
             </li>
           </ul>
         </div>
