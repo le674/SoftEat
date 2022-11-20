@@ -23,6 +23,7 @@ import { AppDashboardModule } from './modules/dashboard/app.module';
     //import des différent module propre à chacune des pages de l'application
     AppDashboardModule,
     AppAcceuilModule,
+    AppAuthoModule,
     // permet d'initialiser les services firebase à utiliser une fois dans
     //le app.module les objet de classe FirebaseApp contiendrons alors la configuration pour l'api firebase présent dans l'environnement
     provideFirebaseApp(() => initializeApp(environment.firebase)),
