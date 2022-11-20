@@ -54,16 +54,29 @@ header {
   font-weight: normal;
   cursor: pointer;
   color: #333;
+  font-family: 'Inter', sans-serif;
 }
 
-.nav-link:hover {
+
+
+.nav-link:hover{
   font-weight: bold;
-  font-family: 'Inter', sans-serif;;
 }
+
 .nav-link:active {
   color: rgb(30, 148, 30);
 }
-
+.souligneVert::after{
+   content: '';
+   display: block;
+   height: 2px;
+   background: rgb(30, 148, 30);
+   transform: scale(0);
+   transition: transform 0.2s ease-in-out;
+}
+.souligneVert:hover::after{
+  transform: scale(1);
+}
 #alertes:active {
   color: rgb(30, 148, 30);
 }

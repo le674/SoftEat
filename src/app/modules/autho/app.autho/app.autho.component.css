@@ -14,48 +14,38 @@ body {
 header {
     background-color: rgb(30, 148, 30);
   }
-#buttons-row {
 
-}  
-
+  main {
+    color: rgb(207, 32, 32);
+  }
 /* CSS */
-.button-37 {
-  background-color: rgb(30, 148, 30);
-  border: 1px solid rgb(30, 148, 30);
-  border-radius: 4px;
-  box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+.button-36 {
+  background-image: linear-gradient(92.88deg, rgb(30, 148, 30)43.89%, rgb(25, 182, 25)64.72%);
+  border-radius: 8px;
+  border-style: none;
   box-sizing: border-box;
-  color: #fff;
+  color: #FFFFFF;
   cursor: pointer;
-  font-family: "Akzidenz Grotesk BQ Medium", -apple-system, BlinkMacSystemFont, sans-serif;
+  flex-shrink: 0;
+  font-family: 'Inter', sans-serif;
   font-size: 16px;
-  font-weight: 400;
-  outline: none;
-  outline: 0;
-  padding: 10px 25px;
+  font-weight: 500;
+  height: 4rem;
+  padding: 0 1.6rem;
   text-align: center;
-  transform: translateY(0);
-  transition: transform 150ms, box-shadow 150ms;
+  text-shadow: rgba(0, 0, 0, 0.25) 0 3px 8px;
+  transition: all .5s;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
 }
 
-.button-37:hover {
-  box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
-  transform: translateY(-2px);
+.button-36:hover {
+  box-shadow: #228b22 0 1px 30px;
+  transition-duration: .1s;
 }
 
-@media (min-width: 768px) {
-  .button-37 {
-    padding: 10px 30px;
-  }
-}
-
-@media (max-width: 768px) {
-  .button-37 {
-    padding: 10px 30px;
-    margin-top: 15px;
-    
-  }
+.button-36 {
+  padding: 0 2.6rem;
+  margin-top: 15px;
 }
