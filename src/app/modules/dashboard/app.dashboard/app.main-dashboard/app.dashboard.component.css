@@ -1,16 +1,3 @@
-body {
-  font-size: .875rem;
-}
-
-.feather {
-  width: 16px;
-  height: 16px;
-}
-
-/*
-   * Sidebar
-   */
-
 .sidebar {
   position: fixed;
   top: 0;
@@ -44,9 +31,6 @@ body {
   /* Scrollable contents if viewport is shorter than content. */
 }
 
-.sidebar .nav-link {
-  font-weight: 500;
-}
 
 header {
   background-color: #228b22;
@@ -55,7 +39,6 @@ header {
 .sidebar .feather {
   margin-right: 4px;
   color: rgb(30, 148, 30);
-  ;
 }
 
 .navigation {
@@ -68,39 +51,31 @@ header {
 
 
 .nav-link {
+  font-weight: normal;
   cursor: pointer;
   color: #333;
 }
 
-.nav-link:visited {
-  color: #551A8B;
+.nav-link:hover {
+  font-weight: bold;
+  font-family: 'Inter', sans-serif;;
 }
-
-#alertes:visited {
-  color: #551A8B;
-}
-
 .nav-link:active {
-  color: #0000EE;
+  color: rgb(30, 148, 30);
 }
 
 #alertes:active {
-  color: #0000EE;
+  color: rgb(30, 148, 30);
 }
-
-.sidebar-heading {
-  font-size: .75rem;
-}
-
-/*
-   * Navbar
-   */
 
 .navbar-brand {
   padding-top: .75rem;
   padding-bottom: .75rem;
   background-color: rgb(30, 148, 30);
   box-shadow: inset -1px 0 0 rgb(30, 148, 30);
+  font-family : 'ABeeZee', sans-serif;
+  font-style: italic;
+  font-size: 38px;
 }
 
 .navbar .navbar-toggler {
@@ -108,20 +83,6 @@ header {
   right: 1rem;
 }
 
-.navbar .form-control {
-  padding: .75rem 1rem;
-}
-
-.form-control-dark {
-  color: #fff;
-  background-color: rgb(30, 148, 30);
-  border-color: rgba(255, 255, 255, .1);
-}
-
-.form-control-dark:focus {
-  border-color: transparent;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
-}
 
 #alertes {
   color: white;
