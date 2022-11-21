@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { getAuth } from 'firebase/auth';
+
 
 @Component({
   selector: 'app-app.autho',
@@ -7,7 +9,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppAuthoComponent implements OnInit {
 
-  constructor() { }
+  constructor() { 
+  }
 
   ngOnInit(): void {
   }
