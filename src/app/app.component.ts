@@ -1,8 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
 import { getDatabase, ref, child, get} from 'firebase/database';
-import * as firebaseui from 'firebaseui';
-import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
