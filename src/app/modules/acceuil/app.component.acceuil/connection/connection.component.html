@@ -1,16 +1,16 @@
-<div class="displayTable">
+<form class="displayTable" id = "placement">
     <div class="displayTableCell">
       <div class="authBlock">
         <h3>Se connecter</h3>
         <div class="formGroup">
-          <input type="text" class="formControl" placeholder="mail" #userName required>
+          <input type="mail" class="formControl" placeholder="Email" #userName required>
         </div>
         <div class="formGroup">
           <input type="password" class="formControl" placeholder="Mot de passe" #userPassword required>
         </div>
         <!-- Calling SignIn Api from AuthService -->
         <div class="formGroup">
-          <input type="button" class="btn btnPrimary" value="Valider" (click)="authService.SignIn(userName.value, userPassword.value)">
+          <input type="button" class = "btn btn-outline-success" value="Se connecter" (click)="authService.SignIn(userName.value, userPassword.value)">
         </div>
         <div class="formGroup">
           <span class="or"><span class="orInner">Ou</span></span>
@@ -24,4 +24,4 @@
         <span>Tu n'as pas de compte?<span class="redirect" routerLink="/register-user">Inscrit toi</span></span>
       </div>
     </div>
-  </div>
+</form>

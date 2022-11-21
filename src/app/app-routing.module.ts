@@ -8,6 +8,7 @@ const routes: Routes = [
     pathMatch:'full'
    },
    { path: 'sign-in', component: ConnectionComponent},
+   
 ];
 
 @NgModule({
