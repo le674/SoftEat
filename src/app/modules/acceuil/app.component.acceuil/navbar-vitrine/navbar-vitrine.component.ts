@@ -52,6 +52,12 @@ export class NavbarVitrineComponent implements OnInit {
     var element = document.querySelector("#divPrix");
     element?.scrollIntoView();
   }
+  clicPropos(){
+    this.numPanel.emit(2);  
+
+    var element = document.querySelector("#propos");
+    element?.scrollIntoView();
+  }
   clicFonctionnalite(){
     var element = document.querySelector("#divMobile");
 
