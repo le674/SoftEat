@@ -58,7 +58,7 @@ Inscription(email:string,password:string){
     .then((userCredential) => {
       // Signed in 
       const user = userCredential.user;
-      this.router.navigate(['dashboard']);
+      this.router.navigate(['autho']);
       // ...
     })
     .catch((error) => {
