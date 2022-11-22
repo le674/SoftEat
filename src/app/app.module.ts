@@ -10,6 +10,7 @@ import { AppBudgetModule } from './modules/budget/app.module';
 import { AppFacturesModule } from './modules/factures/app.module';
 import { AppStockModule } from './modules/stock/app.module';
 import { AppAcceuilModule } from './modules/acceuil/app.module';
+import { AppDashboardModule } from './modules/dashboard/app.module';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { environment } from 'src/environments/environment';
 import { AuthentificationService } from './services/authentification.service';
@@ -21,7 +22,7 @@ import { provideAuth } from '@angular/fire/auth';
     AppComponent
   ],
   imports: [
-    
+    AppDashboardModule,
     BrowserModule,
     //import des différent module propre à chacune des pages de l'application
     AppAlertesModule,

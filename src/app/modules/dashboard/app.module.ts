@@ -25,7 +25,8 @@ import { AppMainDashboardComponent } from './app.dashboard/app.main-dashboard/ap
     AppBudgetModule,
     AppStockModule,
     AppFacturesModule,
-    RhModule
+    RhModule,
+    
   ],
   exports: [
     AppDashboardComponent

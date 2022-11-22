@@ -26,7 +26,7 @@ const app = initializeApp(firebaseConfig);
 export class AuthentificationService {
   auth = getAuth(app);
 
-  constructor(){
+  constructor(public router: Router){
 
 
   }
@@ -58,7 +58,7 @@ Inscription(email:string,password:string){
     .then((userCredential) => {
       // Signed in 
       const user = userCredential.user;
-
+      this.router.navigate(['dashboard']);
       // ...
     })
     .catch((error) => {
@@ -69,9 +69,7 @@ Inscription(email:string,password:string){
   }
 
 
-
-
-  estConnecter(user:User){
+  getUser(user:User){
     onAuthStateChanged(this.auth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
@@ -83,7 +81,23 @@ Inscription(email:string,password:string){
         // ...
       }
     });
+  }
 
+  estConnecter() : boolean{
+    onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        // ...
+        return true;
+      } else {
+        // User is signed out
+        // ...
+        return false;
+      }
+    });
+    return false;
 
 
   }
