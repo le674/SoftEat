@@ -16,10 +16,10 @@
           <a class="nav-link" (click) = "clicHome()" id ="souligneVert">Accueil <span class="sr-only"></span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" id ="souligneVert">Fonctionnalités</a>
+          <a class="nav-link" (click)="clicFonctionnalite()" id ="souligneVert">Fonctionnalités</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" id ="souligneVert">Tarif</a>
+          <a class="nav-link" (click)="clicTarif()" id ="souligneVert">Tarif</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#" id ="souligneVert">A propos</a>
@@ -29,13 +29,13 @@
         </li>
         
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Language
           </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="#">Français</a>
-            <a class="dropdown-item" href="#">English</a>
-          </div>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Français</a></li>
+            <li><a class="dropdown-item" href="#">English</a></li>
+          </ul>
         </li>
         <li class="nav-item">
           <button class="btn btn-outline-success" (click)="clicConnexion()"type="submit">Se connecter</button>

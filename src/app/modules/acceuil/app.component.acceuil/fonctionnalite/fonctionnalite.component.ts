@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./fonctionnalite.component.css']
 })
 export class FonctionnaliteComponent implements OnInit {
-
+ 
   constructor() { }
 
   ngOnInit(): void {

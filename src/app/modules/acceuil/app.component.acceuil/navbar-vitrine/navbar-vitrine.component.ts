@@ -44,7 +44,19 @@ export class NavbarVitrineComponent implements OnInit {
   }
   clicHome(){
     this.numPanel.emit(2);  
-    
+    window.scrollTo({top:0, behavior: 'smooth'});
+  }
+  clicTarif(){
+    this.numPanel.emit(2);  
+
+    var element = document.querySelector("#divPrix");
+    element?.scrollIntoView();
+  }
+  clicFonctionnalite(){
+    var element = document.querySelector("#divMobile");
+
+    this.numPanel.emit(2)  
+    element?.scrollIntoView();
   }
 }
 
