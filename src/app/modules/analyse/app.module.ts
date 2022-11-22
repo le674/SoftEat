@@ -1,10 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AppAnalyseComponent } from './app.analyse/app.analyse.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    AppAnalyseComponent
+  ],
   imports: [ CommonModule ],
-  exports: [],
+  exports: [
+    AppAnalyseComponent
+  ],
   providers: [],
 })
 export class AppAnalyseModule {}

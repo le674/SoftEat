@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- SEO 1: mettre un titre -->
+    <title> corps de la dashboard</title>
+    <!-- SEO 2: ajouter des balises meta balise  l'ordre doit être titre/description c'est la meta description qui va permettre 
+   a google de référencer le nombre de cliques, (deux mots clefs, 141 caractères/25 mots, unique)-->
+    <meta name="description" content="affiche le contenu des dashboard (i.e, les alertes, le stock, l'analyse, les factures et la
+    gestion rh), cette page permet la gestion des accès aux différentes fonctionnalitées">
+
+    <!--SEO 3 : balise meta viewport permet d'adapter le site au format mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=2.0">
+
+    <!--SEO 4 : important on référence le code dupliqué pour bénéficier des bon points du code-->
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/dashboard/" />
+</head>
+<app-main-dashboard (numPanel)="numeroPanel = $event"></app-main-dashboard>
+<!-- SEO : affichage du corp du site  -->
+<body>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+            id="set_univsible">
+            <h1 class="h2" id="top-alerte" *ngIf="numeroPanel==-2">Alertes</h1>
+            <h1 class="h2" id="top-alerte" *ngIf="numeroPanel==1">Alertes</h1>
+            <h1 class="h2" id="top-alerte" *ngIf="numeroPanel==2">Stock</h1>
+            <h1 class="h2" id="top-alerte" *ngIf="numeroPanel==3">Analyse</h1>
+            <h1 class="h2" id="top-alerte" *ngIf="numeroPanel==4">Factures</h1>
+            <h1 class="h2" id="top-alerte" *ngIf="numeroPanel==5">Ressources humaines</h1>
+            <!--
+            <div class="btn-toolbar mb-2 mb-md-0" id="top-buttons">
+                <div class="btn-group me-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Partager</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Exporter</button>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                    <span data-feather="calendar" class="align-text-bottom"></span>
+                    This week
+                </button>
+            </div>
+            -->
+        </div>
+        <app-alertes *ngIf="numeroPanel==1"></app-alertes>
+        <app-stock *ngIf="numeroPanel==2"></app-stock>
+        <app-analyse *ngIf="numeroPanel==3"></app-analyse>
+        <app-factures *ngIf="numeroPanel==4"></app-factures>
+        <app-rh *ngIf="numeroPanel==5"></app-rh>
+    </main>
+</body>
+
+</html>

@@ -1,10 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AppFacturesComponent } from './app.factures/app.factures.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    AppFacturesComponent
+  ],
   imports: [ CommonModule ],
-  exports: [],
+  exports: [
+    AppFacturesComponent
+  ],
   providers: [],
 })
 export class AppFacturesModule {}

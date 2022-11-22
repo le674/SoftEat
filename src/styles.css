@@ -1,4 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
-
 /*            background-image: url("src/assets/Accueil_fondDroit.png") ;
 */
+
+/* Référencement des fonts */
+/*----------------------------------------*/
+/* Référencement de la fonte inter */
+@font-face {
+    font-family: "Inter";
+    src: local("Inter"), url(./assets/fonts/Inter/static/Inter-Regular.ttf) format("truetype");
+}
+/* Référencement de la fonte ABeeZee */
+@font-face {
+    font-family: "ABeeZee";
+    src: local("Inter"), url(./assets/fonts/ABeeZee/ABeeZee-Regular.ttf) format("truetype");
+}
+

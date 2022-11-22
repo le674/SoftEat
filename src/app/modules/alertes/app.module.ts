@@ -1,10 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AppAlertesComponent } from './app.alertes/app.alertes.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    AppAlertesComponent
+  ],
   imports: [ CommonModule ],
-  exports: [],
+  exports: [
+    AppAlertesComponent
+  ],
   providers: [],
 })
 export class AppAlertesModule {}

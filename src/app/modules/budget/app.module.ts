@@ -1,10 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AppBudgetComponent } from './app.budget/app.budget.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    AppBudgetComponent
+  ],
   imports: [ CommonModule ],
-  exports: [],
+  exports: [
+    AppBudgetComponent
+  ],
   providers: [],
 })
 export class AppBudgetModule {}
