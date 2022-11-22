@@ -1,0 +1,23 @@
+body{
+
+    background: url('src/assets/Accueil_fondDroit.png') no-repeat top right;
+    background-color: white;
+    /*,  rgb(255, 255, 0),  rgb(11, 11, 115);
+    /*background-size: 100px,500px,500px;
+    background-position-y: top,top,500px;
+    /*background-color: rgb(255, 255, 255);
+    /*background-size: 500px;
+    background-color: rgb(240, 240, 240);*/
+}
+
+
+@media screen and (max-width: 1150px) { 
+    body{
+        background: white;
+    }
+}
+
+/**/
+
+
+/**/

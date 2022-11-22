@@ -1,1 +1,16 @@
-<p>app.component.acceuil works!</p>
+<app-navbar-vitrine (numPanel)="numeroPanel = $event" ></app-navbar-vitrine>
+
+<app-connection *ngIf="numeroPanel == 1"></app-connection>
+<div *ngIf="numeroPanel == 2">
+<app-home (numPanel)="numeroPanel = $event"></app-home>
+<!--_____________________________________________________________________________________________________________________-->
+
+
+
+
+<app-fonctionnalite></app-fonctionnalite>
+<app-prix></app-prix>
+<app-propos></app-propos>
+</div>
+<!--_____________________________________________________________________________________________________________________-->
+<!--<p>{{numeroPanel}}</p>-->

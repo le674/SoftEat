@@ -1,0 +1,27 @@
+<form class="displayTable draggable-element" id = "placement">
+    <div class="displayTableCell">
+      <div class="authBlock">
+        <h3>Se connecter</h3>
+        <div class="formGroup">
+          <input type="mail" class="formControl" placeholder="Email" #userName required>
+        </div>
+        <div class="formGroup">
+          <input type="password" class="formControl" placeholder="Mot de passe" #userPassword required>
+        </div>
+        <!-- Calling SignIn Api from AuthService -->
+        <div class="formGroup">
+          <input type="button" class = "btn btn-outline-success" value="Se connecter" (click)="authService.ConnexionUtilisateur(userName.value, userPassword.value)">
+        </div>
+        <div class="formGroup">
+          <span class="or"><span class="orInner">Ou</span></span>
+        </div>
+       
+        <div class="forgotPassword">
+          <span routerLink="/forgot-password">Mot de passe oublié?</span>
+        </div>
+      </div>
+      <div class="redirectToLogin">
+        <span>Tu n'as pas de compte?<span class="redirect" routerLink="/register-user">Inscrit toi</span></span>
+      </div>
+    </div>
+</form>

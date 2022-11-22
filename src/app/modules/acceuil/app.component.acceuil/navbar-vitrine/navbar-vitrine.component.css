@@ -1,0 +1,44 @@
+
+
+  #restaumatiqueT{
+    font-family: 'ABeeZee', sans-serif;
+    font-style: italic;
+    font-size: 38px;
+    
+    color : rgb(30, 148, 30);
+    
+  }
+  li a:hover {
+    font-weight: bold;
+    
+   
+  }
+  #souligneVert::after{
+    content: '';
+     display: block;
+     height: 2px;
+     background: rgb(30, 148, 30);
+     transform: scale(0);
+     transition: transform 0.2s ease-in-out;
+  }
+  #souligneVert:hover::after{
+    transform: scale(1);
+  }
+
+  li a {
+    font-family: 'Inter', sans-serif;
+
+    cursor:pointer;
+
+  }
+  #navbar_top{
+    background-color: rgb(255, 255, 255,0.8);margin-left: 10%;margin-top: 20px;
+    width: max-content;
+  }
+  @media screen and (max-width: 600px) { 
+    #navbar_top{
+      background-color: white;
+      width: max-content;
+      margin-left: 0%;
+    }
+  }
