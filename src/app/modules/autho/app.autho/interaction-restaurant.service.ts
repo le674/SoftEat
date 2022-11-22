@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
-import { getAuth, User } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { child, get, getDatabase, ref } from 'firebase/database';
 
 
@@ -11,16 +11,19 @@ import { child, get, getDatabase, ref } from 'firebase/database';
 export class InteractionRestaurantService {
 
   private db: any;
-  private uid: User;
+  private uid: string;
 
   constructor(private ofApp: FirebaseApp) { 
+      this.uid = "";
       const auth = getAuth(ofApp);
       this.db = getDatabase(ofApp);
-      if(auth.currentUser !== null ){
-        this.uid = auth.currentUser;
-      } else {
-
-      }
+      onAuthStateChanged(auth, (user) => {
+        if(user){
+          console.log("utilisateur inscrit");
+          this.uid = user.uid;
+        }
+        console.log(this.uid);    
+      })
   }
 
   getRestaurants(){
