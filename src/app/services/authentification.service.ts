@@ -1,127 +1,93 @@
 
 import { Injectable, NgZone, Optional } from '@angular/core';
-import { User } from '../services/user';
 import { Router } from '@angular/router';
-import { Auth, browserPopupRedirectResolver, createUserWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
-import { FirebaseApp } from 'firebase/app';
-import { authState } from '@angular/fire/auth';
+import { Auth, browserPopupRedirectResolver, createUserWithEmailAndPassword , getAuth, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, User } from 'firebase/auth';
+import { FirebaseApp, initializeApp } from 'firebase/app';
+import { authState, user } from '@angular/fire/auth';
+
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDGbo4CzfBKbtL-hUaAK8N-0k-O4tAuXc8",
+  authDomain: "project-firebase-44cfe.firebaseapp.com",
+  databaseURL: "https://project-firebase-44cfe-default-rtdb.firebaseio.com",
+  projectId: "project-firebase-44cfe",
+  storageBucket: "project-firebase-44cfe.appspot.com",
+  messagingSenderId: "673925066278",
+  appId: "1:673925066278:web:d4db735057922d05e1c0e7",
+  measurementId: "G-ZNLSYK4LNG"
+};
+const app = initializeApp(firebaseConfig);
 
 @Injectable({
   providedIn: 'root',
 })
+
 export class AuthentificationService {
-  userData: any; // Save logged in user data
-  constructor(
-    private ofApp: FirebaseApp, // Inject Firestore service
-    @Optional() private auth: Auth, // Inject Firebase auth service
-    public router: Router,
-    public ngZone: NgZone // NgZone service to remove outside scope warning
-  ) {
-    /* Saving user data in localstorage when 
-    logged in and setting up null when logged out */
-    authState(this.auth).subscribe(user => {
+  auth = getAuth(app);
+
+  constructor(){
+
+
+  }
+  
+  
+
+
+  
+Inscription(email:string,password:string){
+  createUserWithEmailAndPassword(this.auth, email, password)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    // ...
+  })
+  .catch((error) => {
+
+    const errorCode = error.code;
+    const errorMessage = error.message;
+
+    // ..
+  });
+
+  }
+
+
+  ConnexionUtilisateur(email:string,password:string){
+    signInWithEmailAndPassword(this.auth, email, password)
+    .then((userCredential) => {
+      // Signed in 
+      const user = userCredential.user;
+
+      // ...
+    })
+    .catch((error) => {
+
+      const errorCode = error.code;
+      const errorMessage = error.message;
+    });
+  }
+
+
+
+
+  estConnecter(user:User){
+    onAuthStateChanged(this.auth, (user) => {
       if (user) {
-        this.userData = user;
-        localStorage.setItem('user', JSON.stringify(this.userData));
-        JSON.parse(localStorage.getItem('user')!);
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        // ...
       } else {
-        localStorage.setItem('user', 'null');
-        JSON.parse(localStorage.getItem('user')!);
+        // User is signed out
+        // ...
       }
     });
+
+
+
   }
-  // Sign in with email/password
-  SignIn(email: string, password: string) {
-    return 
-      signInWithEmailAndPassword(this.auth, email, password)
-      .then((result) => {
-        this.SetUserData(result.user);
-          authState(this.auth).subscribe((user) => {
-          if (user) {
-            this.router.navigate(['dashboard']);
-          }
-        });
-      })
-      .catch((error) => {
-        window.alert(error.message);
-      });
-  }
-  // Sign up with email/password
-  SignUp(email: string, password: string) {
-    return
-      createUserWithEmailAndPassword(this.auth, email, password)
-      .then((result) => {
-        /* Call the SendVerificaitonMail() function when new user sign 
-        up and returns promise */
-        this.SendVerificationMail();
-        this.SetUserData(result.user);
-      })
-      .catch((error) => {
-        window.alert(error.message);
-      });
-  }
-  // Send email verfificaiton when new user sign up
-  SendVerificationMail() {
-    return this.auth.onAuthStateChanged((u: any) => sendEmailVerification(u).then(() => {
-      this.router.navigate(['verify-email-address']);
-    }));
-  }
-  // Reset Forggot password
-  ForgotPassword(passwordResetEmail: string) {
-    return sendPasswordResetEmail(this.auth, passwordResetEmail)
-      .then(() => {
-        window.alert('Password reset email sent, check your inbox.');
-      })
-      .catch((error) => {
-        window.alert(error);
-      });
-  }
-  // Returns true when user is looged in and email is verified
-  get isLoggedIn(): boolean {
-    const user = JSON.parse(localStorage.getItem('user')!);
-    return user !== null && user.emailVerified !== false ? true : false;
-  }
-  // Sign in with Google
-  GoogleAuth() {
-    return this.AuthLogin(new auth.GoogleAuthProvider()).then((res: any) => {
-      this.router.navigate(['dashboard']);
-    });
-  }
-  // Auth logic to run auth providers
-  AuthLogin(provider: any) {
-    return signInWithPopup(this.auth, provider, browserPopupRedirectResolver)
-      .then((result) => {
-        this.router.navigate(['dashboard']);
-        this.SetUserData(result.user);
-      })
-      .catch((error) => {
-        window.alert(error);
-      });
-  }
-  /* Setting up user data when sign in with username/password, 
-  sign up with username/password and sign in with social auth  
-  provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
-  SetUserData(user: any) {
-    const userRef: AngularFirestoreDocument<any> = this.afs.doc(
-      `users/${user.uid}`
-    );
-    const userData: User = {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      emailVerified: user.emailVerified,
-    };
-    return userRef.set(userData, {
-      merge: true,
-    });
-  }
-  // Sign out
-  SignOut() {
-    return signOut(this.auth).then(() => {
-      localStorage.removeItem('user');
-      this.router.navigate(['sign-in']);
-    });
-  }
+
+
 }
 
