@@ -16,10 +16,12 @@ export class ConnectionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
   }
 
   connexionTest(){
     
   }
+
 
 }

@@ -22,19 +22,29 @@ const app = initializeApp(firebaseConfig);
 @Injectable({
   providedIn: 'root',
 })
-
 export class AuthentificationService {
   auth = getAuth(app);
-
+  userData: any; // Save logged in user data
+  
   constructor(public router: Router){
-
-
+    onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        this.userData = user;
+       /* localStorage.setItem('user', JSON.stringify(this.userData));
+        JSON.parse(localStorage.getItem('user')!);
+        console.log("Connexion :"+this.auth.currentUser?.email);*/
+        // ...
+      } else {
+        // User is signed out
+        // ...
+        /*localStorage.setItem('user', 'null');
+        JSON.parse(localStorage.getItem('user')!);*/
+      }
+    });
   }
-  
-  
-
-
-  
 Inscription(email:string,password:string){
   createUserWithEmailAndPassword(this.auth, email, password)
   .then((userCredential) => {
@@ -54,26 +64,34 @@ Inscription(email:string,password:string){
 
 
   ConnexionUtilisateur(email:string,password:string){
+    this.auth.updateCurrentUser;
+
     signInWithEmailAndPassword(this.auth, email, password)
     .then((userCredential) => {
       // Signed in 
       const user = userCredential.user;
+      this.userData = user;
+      
       this.router.navigate(['dashboard']);
       // ...
     })
     .catch((error) => {
-
       const errorCode = error.code;
       const errorMessage = error.message;
     });
   }
 
+  /*evoieUser():User{
+    
+    return user;
+  }*/
+  getUser(){
 
-  getUser(user:User){
     onAuthStateChanged(this.auth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
+        alert("Utilisateur connecté");
         const uid = user.uid;
         // ...
       } else {
@@ -82,26 +100,27 @@ Inscription(email:string,password:string){
       }
     });
   }
-
-  estConnecter() : boolean{
+  get estConnecter(): boolean {
+   let connecter = false;
     onAuthStateChanged(this.auth, (user) => {
       if (user) {
+        user.reload();
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
         const uid = user.uid;
         // ...
-        return true;
+        
       } else {
         // User is signed out
         // ...
-        return false;
+        console.log("b");
       }
     });
-    return false;
+    if(this.auth.currentUser){connecter=true;}
+    console.log("."+connecter);
 
-
+    return connecter;
   }
-
-
+  
 }
 
