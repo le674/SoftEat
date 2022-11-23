@@ -12,14 +12,26 @@ export class InteractionRestaurantService {
 
   private db: any;
   private uid: string;
-  private user_auth: object;
-  private restaurant: string[];
+  private user_auth: {
+    "proprietaire": string;
+    "restaurants": [{
+      "adresse":string,
+      "id":string
+    }];
+  };
+  private restaurant: Array<object>;
   private proprietary: string;
 
   constructor(private ofApp: FirebaseApp) { 
       this.uid = "";
       this.proprietary = "";
-      this.user_auth = {};
+      this.user_auth = {   
+      "proprietaire":"",
+      "restaurants":[{
+        "adresse": "",
+        "id": ""
+      }]
+    };
       this.restaurant = [];
       const auth = getAuth(ofApp);
       this.db = getDatabase(ofApp);
@@ -27,32 +39,34 @@ export class InteractionRestaurantService {
 
   //préférer utiliser cette requete si on veut récupérer les deux information car elle fait un seil appel au 
   //web service au lieu de deux
-  getRestaurantsProprietaireFromUser(uid:string){
+  
+ async getRestaurantsProprietaireFromUser(uid:string){
     console.log(`récupération des donées vers 'Users/${uid}/'`);
     const ref_db = ref(this.db);
-    get(child(ref_db, `Users/${uid}`)).then((user) => {
-      if(user.exists()){ 
-      user.forEach((user_info) => {
-        if(user_info.key == "proprietaire"){
-          Object.assign(this.user_auth, {[user_info.key] : user_info.val()})
-        }
-        if(user_info.key == "restaurant"){
-          Object.assign(this.user_auth, {[user_info.key]: user_info.val()})
-        }
-      })
+    await get(child(ref_db, `Users/${uid}`)).then((user) => {
+      if(user.exists()){          
+        this.user_auth.proprietaire = user.child("proprietaire").val();
+        this.user_auth.restaurants = user.child("restaurant").val();
     }
       else{
         console.log("pas de restaurant obtenu");
         
       }
-    }) 
-    return this.user_auth;
+    }).catch((error) => {
+      console.log(error);  
+    })
+    return(
+      {
+        "proprietaire": this.user_auth.proprietaire,
+         "restaurant": this.user_auth.restaurants
+      }
+    );
   }
   
-  getProprietaireFromUser(uid:string){ 
+  async getProprietaireFromUser(uid:string){ 
     console.log(`récupération des donées vers 'Users/${uid}/'`);
     const ref_db = ref(this.db);
-    get(child(ref_db, `Users/${uid}`)).then((user) => {
+    await get(child(ref_db, `Users/${uid}`)).then((user) => {
       if(user.exists()){ 
         user.val().proprietary;
       }
@@ -64,12 +78,12 @@ export class InteractionRestaurantService {
   }
 
 
-  getRestaurantFromUser(uid:string){ 
+  async getRestaurantFromUser(uid:string){ 
     console.log(`récupération des donées vers 'Users/${uid}/'`);
     const ref_db = ref(this.db);
-    get(child(ref_db, `Users/${uid}`)).then((user) => {
+    await get(child(ref_db, `Users/${uid}`)).then((user) => {
       if(user.exists()){ 
-        user.val().restaurant.forEach((restaurant: string) => {
+        user.val().restaurant.forEach((restaurant: object) => {
           this.restaurant.push(restaurant);
         })
       }

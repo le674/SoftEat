@@ -27,15 +27,15 @@
                 <div class="col-lg-3 col-md-4 col-buttons">
                     <button class="button-36" role="button">Supprimer un restaurant</button>
                 </div>
-                <!--
-                <div class="col-lg-3 col-md-4 col-buttons">
-                    <button class="button-36" role="button">{{restaurants}}</button>
-                </div>
-                -->
+                <div class="card text-center" style="width: 18rem;" *ngFor="let restaurant of restaurants">
+                    <div class="card-body">
+                      <h5 class="card-title"> {{restaurant.id}}</h5>
+                      <i class="fa-solid fa-fork-knife"></i>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                  </div>
             </div>
         </div>
-        <i class="fa-solid fa-user"></i>
-        <i class="fa-brands fa-github-square"></i>
         <i class="fa-solid fa-fork-knife"></i>
     </main>
 </body>
