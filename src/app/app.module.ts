@@ -33,6 +33,7 @@ import { provideAuth } from '@angular/fire/auth';
     AppFacturesModule,
     AppStockModule,
     AppAcceuilModule,
+    
     // permet d'initialiser les services firebase à utiliser une fois dans
     //le app.module les objet de classe FirebaseApp contiendrons alors la configuration pour l'api firebase présent dans l'environnement
     provideFirebaseApp(() => initializeApp(environment.firebase)),

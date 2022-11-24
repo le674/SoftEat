@@ -1,6 +1,6 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { getAuth, onAuthStateChanged, updateProfile, User } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { AuthentificationService } from 'src/app/services/authentification.service';
 
 const firebaseConfig = {
@@ -20,19 +20,17 @@ const auth = getAuth(app);
 let email: string | null = null;
 let displayName: string | null = null;
 @Component({
-  selector: 'app-main-dashboard',
-  templateUrl: './app.dashboard.component.html',
-  styleUrls: ['./app.dashboard.component.css']
+  selector: 'app-profil',
+  templateUrl: './profil.component.html',
+  styleUrls: ['./profil.component.css']
 })
 
-export class AppMainDashboardComponent implements OnInit {
-  @Output() public numP = new EventEmitter();
+export class ProfilComponent implements OnInit {
   user = auth.currentUser;
 
   constructor(public authService: AuthentificationService){
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
    // The user object has basic properties such as display name, email, etc.
@@ -51,61 +49,15 @@ export class AppMainDashboardComponent implements OnInit {
         // ...
       }
     });
-    /*if(auth.currentUser!=null){
-      updateProfile(auth.currentUser, {
-        
-      }).then(() => {
-        // Profile updated!
-        // ...
-        alert(auth.currentUser?.displayName);
-      }).catch((error) => {
-        // An error occurred
-        // ...
-      });
-    }*/
-   
-  
-}
-    
-  getNom():string{
-    if(email!=null){
-    return email;
-    }else{
-      return "null"
-    }
+
   }
-  getConnexion():boolean{
-    if(this.user == null){
-      return false;
-    }else{
-      return true;
-    }
+  getEmail(): string|null{
+    return email;
+  }
+  getName(): string|null{
+    return displayName;
   }
   ngOnInit(): void {
   }
-  
-  clickAlertes(){
-    
-    this.numP.emit(1)
-  }
 
-  clickStock(){
-    this.numP.emit(2)
-  }
-
-  clickAnalyse(){
-    this.numP.emit(3)
-  }
-
-  clickFactures(){
-    this.numP.emit(4)
-  }
-
-  clickRH(){
-    this.numP.emit(5)
-  }
-  clickProfil(){
-    
-    this.numP.emit(6)
-  }
 }

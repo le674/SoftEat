@@ -1,7 +1,7 @@
 
 import { Injectable, NgZone, Optional } from '@angular/core';
 import { Router } from '@angular/router';
-import { Auth, browserPopupRedirectResolver, createUserWithEmailAndPassword , getAuth, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, User } from 'firebase/auth';
+import { Auth, browserPopupRedirectResolver, createUserWithEmailAndPassword , getAuth, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile, User } from 'firebase/auth';
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { authState, user } from '@angular/fire/auth';
 
@@ -62,7 +62,10 @@ Inscription(email:string,password:string){
 
   }
 
-
+  miseAJourProfil(){
+    
+   
+  }
   ConnexionUtilisateur(email:string,password:string){
     this.auth.updateCurrentUser;
 
