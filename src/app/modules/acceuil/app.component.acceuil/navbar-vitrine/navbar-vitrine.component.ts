@@ -37,6 +37,7 @@ export class NavbarVitrineComponent implements OnInit {
       auth.updateCurrentUser;
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        user.reload();
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
    // The user object has basic properties such as display name, email, etc.
@@ -51,6 +52,10 @@ export class NavbarVitrineComponent implements OnInit {
    // you have one. Use User.getToken() instead.
    const uid = user.uid;
    console.log("Utilisateur - "+user.displayName+", "+authService.estConnecter);
+   console.log("Utilisateur - "+user.email);
+   console.log("Utilisateur - "+user.uid);
+   console.log("Utilisateur - "+user.providerData);
+   console.log("Utilisateur - "+user.providerId);
         // ...
       } else {
         // User is signed out
