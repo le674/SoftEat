@@ -16,6 +16,35 @@
 
 
 <body>
+  <div>
+  <nav class="sidebar"  >
+      <a href ="#" class = "brand">
+      <h1 id = restaumatiqueT>SoftEat</h1>
+      </a>
+        <ul>
+          <li>
+            <a  (click)="clickAlertes()" id ="souligneVert"><span>Alertes </span></a>
+          </li>
+          <li>
+            <a (click)="clickStock()"><span>Stock</span></a>
+          </li>
+          <li>
+            <a  id ="souligneVert" (click)="clickAnalyse()"><span>Analyse</span></a>
+          </li>
+          <li >
+            <a  id ="souligneVert"  (click)="clickFactures()"><span>Factures</span></a>
+          </li>
+          <li >
+            <a id ="souligneVert" (click)="clickRH()"><span>Ressources humaine</span></a>
+          </li>
+          
+        </ul>
+       
+      
+  </nav>
+</div>
+
+  <!--
   <header class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">SoftEat {{getNom()}}</a>
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
@@ -78,6 +107,6 @@
         </div>
       </nav>
     </div>
-  </div>
+  </div>-->
 </body>
 </html>

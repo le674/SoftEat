@@ -3,8 +3,6 @@ import { ConnectionComponent } from '../connection/connection.component';
 import { DOCUMENT } from '@angular/common'; 
 import { AuthentificationService } from 'src/app/services/authentification.service';
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
-import { idToken, reload } from '@angular/fire/auth';
-import { iif } from 'rxjs';
 import { initializeApp } from 'firebase/app';
 import { Router } from '@angular/router';
 const firebaseConfig = {
@@ -36,6 +34,7 @@ export class NavbarVitrineComponent implements OnInit {
   
   constructor(public authService: AuthentificationService, public router: Router
     ){
+      auth.updateCurrentUser;
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
@@ -45,12 +44,13 @@ export class NavbarVitrineComponent implements OnInit {
    email = user.email;
    const photoURL = user.photoURL;
    const emailVerified = user.emailVerified;
- 
+   this.boutonConnexion=1;
+
    // The user's ID, unique to the Firebase project. Do NOT use
    // this value to authenticate with your backend server, if
    // you have one. Use User.getToken() instead.
    const uid = user.uid;
-   console.log("Utilisateur - "+displayName+", "+authService.estConnecter);
+   console.log("Utilisateur - "+user.displayName+", "+authService.estConnecter);
         // ...
       } else {
         // User is signed out
@@ -61,7 +61,6 @@ export class NavbarVitrineComponent implements OnInit {
 }
   getNom():string{
     if(email!=null){
-      this.boutonConnexion=1;
     return email;
     }else{
       return "Se connecter"
