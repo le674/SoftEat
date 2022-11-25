@@ -6,9 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page d'entrée sur les restaurants du propriétaire le propriétaire
          peut ajouiter des restaurant et donné des droits spcifique aux employées</title>
-    <link rel="stylesheet" href="/src/assets/fontawesome/css/all.css">
-    <link rel="stylesheet" href="/src/assets/fontawesome/css/solid.css">
-
+    <link rel="stylesheet" href="/assets/fontawesome/css/fontawesome.css">
+    <link rel="stylesheet" href="/assets/fontawesome/css/solid.css"> 
 </head>
 <body>
     <header>
@@ -26,16 +25,30 @@
                 <div class="col-lg-3 col-md-4 col-buttons">
                     <button class="button-36" role="button">Supprimer un restaurant</button>
                 </div>
-                <div class="card text-center" style="width: 18rem;" *ngFor="let restaurant of restaurants">
-                    <div class="card-body">
-                      <h5 class="card-title"> {{restaurant.id}}</h5>
-                      <i class="fa-solid fa-fork-knife"></i>
-                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                <div class="container">
+                    <div class="row tours">
+                        <div class="tourcard"  *ngFor="let restaurant of restaurants">
+                            <figure>
+                                <div class="tourpic">
+                                    <img width="300" height="200" src='/assets/images/autho.jpg'>                           
+                                    <span class="tourday hot">rejoindre un restaurant</span>
+                                </div>
+                                <figcaption>
+                                  <h3 class="entry-title">
+                                      <a>{{restaurant.id}}</a></h3>
+                                  <span class="description">{{restaurant.adresse}}</span>
+                                </figcaption>
+                                <div class="tourbtn">
+                                    <a class="btn btn-sm" target="_blank" rel="noreferrer">
+                                        <i class="fa-solid fa-utensils"></i><span>Aller restaurant</span>
+                                    </a>
+                                </div>
+                            </figure>
+                        </div>
                     </div>
-                  </div>
+                </div>
             </div>
         </div>
-        <i class="fa-solid fa-fork-knife"></i>  
     </main>
 </body>
 </html>
