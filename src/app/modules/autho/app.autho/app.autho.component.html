@@ -8,30 +8,40 @@
          peut ajouiter des restaurant et donné des droits spcifique aux employées</title>
     <link rel="stylesheet" href="/assets/fontawesome/css/fontawesome.css">
     <link rel="stylesheet" href="/assets/fontawesome/css/solid.css"> 
+    <link rel="stylesheet" href="/assets/fontawesome/css/regular.css">
 </head>
 <body>
     <header>
-        <h1 id="marque" class="col-md-3 col-lg-2 px-3 fs-6">SoftEat</h1>
+        <p id="marque" class="col-md-5 col-lg-2 px-3">SoftEat</p>
     </header>
     <main>
         <div class="container">
             <div class="row justify-content-between align-items-center">
-                <div class="col-lg-6 col-md-5 col-buttons">
-                    <button id="buttonE" role="button">Analyse des restaurants</button>
-                </div>
-                <div class="col-lg-3 col-md-3 col-buttons">
-                    <button id="buttonE" role="button">Ajouter un restaurant</button>
-                </div>
-                <div class="col-lg-3 col-md-4 col-buttons">
-                    <button id="buttonE" role="button">Supprimer un restaurant</button>
-                </div>
                 <div class="container">
                     <div class="row tours">
+                        <div class="tourcard">
+                            <figure>
+                                <div class="tourpic">
+                                    <img width="300" height="200" src='/assets/images/autho.jpg'>                           
+                                    <span class="tourday hot">Ajouter un restaurant</span>
+                                </div>
+                                <figcaption>
+                                  <h3 class="entry-title">
+                                      <a>Nouveau restaurant</a></h3>
+                                  <span class="description">Cliquer pour ajouter un restaurant</span>
+                                </figcaption>
+                                <div class="tourbtn">
+                                    <a class="btn btn-sm" target="_blank" rel="noreferrer">
+                                        <i class="fa-solid fa-plus"></i>  <br> Ajouter
+                                    </a>   
+                                </div>
+                            </figure>
+                        </div>
                         <div class="tourcard"  *ngFor="let restaurant of restaurants">
                             <figure>
                                 <div class="tourpic">
                                     <img width="300" height="200" src='/assets/images/autho.jpg'>                           
-                                    <span class="tourday hot">rejoindre un restaurant</span>
+                                    <span class="tourday hot">rejoindre se restaurant</span>
                                 </div>
                                 <figcaption>
                                   <h3 class="entry-title">
@@ -40,7 +50,13 @@
                                 </figcaption>
                                 <div class="tourbtn">
                                     <a class="btn btn-sm" target="_blank" rel="noreferrer">
-                                        <i class="fa-solid fa-utensils"></i><span>Aller restaurant</span>
+                                        <i class="fa-solid fa-utensils"></i> <br> Accéder
+                                    </a>
+                                    <a class="btn btn-sm" target="_blank" rel="noreferrer">
+                                        <i class="fa-solid fa-trash"></i> Supprimer
+                                    </a>
+                                    <a class="btn btn-sm" target="_blank" rel="noreferrer">
+                                        <i class="fa-solid fa-gear"></i> Configurer
                                     </a>
                                 </div>
                             </figure>
