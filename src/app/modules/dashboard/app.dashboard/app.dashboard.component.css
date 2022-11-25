@@ -5,6 +5,13 @@
   --text-default:#000;
   --text-primary:#555;
   --text-secondary:#ccc;
+  
+  /*--color_Blue: #3f93f1;*/
+  --color_Blue: rgb(30, 148, 30);
+  --color_Dark1: #1e1e1e;
+  --color_Dark2: #303033;
+  --color_Light1: #dfdfdf;
+  --color_Light2: #c4c4c4;
 }
 :dark-mode{
   --primary:#213348;
@@ -30,10 +37,18 @@ body{
 }
 
 /***********/
+
 main{
   /*temporaire*/
   /*fin temporaire*/
   padding: 2em;
+  padding-top: 4em;
+    transition: all .5s ease;
+}
+
+.sidebar.close ~ main{
+  left: 78px;
+  width: calc(100% - 78px);
 }
 .panel{
   width: 70vmax;

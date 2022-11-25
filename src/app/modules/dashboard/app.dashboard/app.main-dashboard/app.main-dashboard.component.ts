@@ -25,11 +25,16 @@ let displayName: string | null = null;
   styleUrls: ['./app.dashboard.component.css']
 })
 
+
+
 export class AppMainDashboardComponent implements OnInit {
   @Output() public numP = new EventEmitter();
   user = auth.currentUser;
 
   constructor(public authService: AuthentificationService){
+
+
+
     onAuthStateChanged(auth, (user) => {
       if (user) {
         
@@ -66,7 +71,8 @@ export class AppMainDashboardComponent implements OnInit {
    
   
 }
-    
+      
+
   getNom():string{
     if(email!=null){
     return email;
@@ -82,17 +88,48 @@ export class AppMainDashboardComponent implements OnInit {
     }
   }
   ngOnInit(): void {
+    
+  const listItems = document.querySelectorAll(".sidebar-list li");
+
+  listItems.forEach((item) => {
+    item.addEventListener("click", () => {
+      let isActive = item.classList.contains("active");
+
+      listItems.forEach((el) => {
+        el.classList.remove("active");
+      });
+
+      if (isActive) item.classList.remove("active");
+      else item.classList.add("active");
+    });
+  });
   }
   
   clickAlertes(){
-    
+  
     this.numP.emit(1)
+    
   }
 
   clickStock(){
     this.numP.emit(2)
   }
 
+  clickToggle(){
+
+   /* const sidebar = document.querySelector(".sidebar");
+    if(sidebar != null)
+    sidebar.classList.toggle("close");*/
+    }
+    
+  clickLogo(){
+
+    const sidebar = document.querySelector(".sidebar");
+
+  const logo = document.querySelector(".logo-box");
+    if(sidebar!=null)
+  sidebar.classList.toggle("close");
+  }
   clickAnalyse(){
     this.numP.emit(3)
   }
