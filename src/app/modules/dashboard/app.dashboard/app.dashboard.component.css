@@ -1,6 +1,57 @@
+:root{
+  --accent:rgb(30, 148, 30);
+  --primary:#fff;
+  --secondary: rgb(248, 248, 248);
+  --text-default:#000;
+  --text-primary:#555;
+  --text-secondary:#ccc;
+  
+  /*--color_Blue: #3f93f1;*/
+  --color_Blue: rgb(30, 148, 30);
+  --color_Dark1: #1e1e1e;
+  --color_Dark2: #303033;
+  --color_Light1: #dfdfdf;
+  --color_Light2: #c4c4c4;
+}
+:dark-mode{
+  --primary:#213348;
+  --secondary: #0a131c;
+  --text-default:#fff;
+  --text-secondary:#ccc;
+}
 body{
-  background: rgb(255,255,255);
+  background: var(--secondary);
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 18rem auto;
+  transition:0.3s ease-in-out;
+}
+*{
+  box-sizing: border-box;
+  margin: 0;
+}
+ /*temporaire*/
+ h1, p{
+  font-family: 'Inter', sans-serif;
+  color: rgb(20, 20, 20);
+}
 
+/***********/
+
+main{
+  /*temporaire*/
+  /*fin temporaire*/
+  padding: 2em;
+  padding-top: 4em;
+    transition: all .5s ease;
+}
+
+.sidebar.close ~ main{
+  left: 78px;
+  width: calc(100% - 78px);
+}
+.panel{
+  width: 70vmax;
 }
 @media (max-width: 767.98px) {
     .sidebar {

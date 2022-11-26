@@ -27,9 +27,20 @@ export class AuthGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    if(this.getConnexion() !== true) {
-      this.router.navigate(['sign-in'])
+      if(this.authService.estConnecter == true ) {
+        console.log("1");
+
+        return true;
+
+      }
+      else{
+        console.log("2");
+
+      this.router.navigate([''])
+
     }
-    return true;
+    
+        
+    return false;
   }
 }

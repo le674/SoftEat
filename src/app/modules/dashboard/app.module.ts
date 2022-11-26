@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AppAnalyseModule } from '../analyse/app.module';
 import { AppAlertesModule } from '../alertes/app.module';
 import { AppBudgetModule } from '../budget/app.module';
+import { AppAuthenModule } from '../authen/app.module';
 import { AppStockModule } from '../stock/app.module';
 import { AppFacturesModule } from '../factures/app.module';
 import { RhModule } from '../rh/rh.module';
@@ -15,7 +16,8 @@ import { AppMainDashboardComponent } from './app.dashboard/app.main-dashboard/ap
 @NgModule({
   declarations: [
     AppDashboardComponent,
-    AppMainDashboardComponent
+    AppMainDashboardComponent,
+    
   ],
   imports: [ 
     AppRoutingModule,
@@ -26,7 +28,7 @@ import { AppMainDashboardComponent } from './app.dashboard/app.main-dashboard/ap
     AppStockModule,
     AppFacturesModule,
     RhModule,
-    
+    AppAuthenModule,
   ],
   exports: [
     AppDashboardComponent

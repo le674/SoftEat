@@ -39,14 +39,13 @@ import { provideAuth } from '@angular/fire/auth';
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     AppRoutingModule
-    
+
   ],
   providers: [AuthentificationService],
   bootstrap: [AppComponent]
 })
 
 export class AppModule {
-  
-  
-}
 
+
+}

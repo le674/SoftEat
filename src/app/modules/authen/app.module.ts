@@ -7,7 +7,9 @@ import { AppAuthenComponent } from './app.authen/app.authen.component';
     AppAuthenComponent
   ],
   imports: [ CommonModule ],
-  exports: [],
+  exports: [
+    AppAuthenComponent
+  ],
   providers: [],
 })
 export class AppAuthenModule {}

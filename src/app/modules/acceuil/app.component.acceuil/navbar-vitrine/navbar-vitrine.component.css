@@ -24,7 +24,10 @@
   #souligneVert:hover::after{
     transform: scale(1);
   }
+li {
+  margin:3px;
 
+}
   li a {
     font-family: 'Inter', sans-serif;
 
@@ -34,6 +37,7 @@
   #navbar_top{
     background-color: rgb(255, 255, 255,0.8);margin-left: 10%;margin-top: 20px;
     width: max-content;
+    
   }
   @media screen and (max-width: 600px) { 
     #navbar_top{

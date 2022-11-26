@@ -9,75 +9,174 @@
   <meta name="generator" content="Hugo 0.104.2">
   <title>SoftEat</title>
 
-
+  <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+  <!-- Styles 
+  <link rel="shortcut icon" href="assets/img/kxp_fav.png" type="image/x-icon">
   <!-- Custom styles for this template -->
   <link href="app.dashboard.component.css" rel="stylesheet">
 </head>
 
 
 <body>
-  <header class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">SoftEat {{ getConnexion()   }}</a>
-    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
-      data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="navbar-nav">
-      <div class="nav-item text-nowrap">
-        <a class="nav-link px-3" id="alertes" >Alertes </a>
-      </div>
-    </div>
-  </header>
+  <div class="sidebar"><!--close">-->
+      <!-- ========== Logo ============  -->
+      <a class="logo-box" (click)="clickLogo()">
+          <i class='bx bxl-xing'></i>
+          <div class="logo-name" >SoftEat</div>
+      </a>
 
-  <div class="container-fluid">
-    <div class="row">
-      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-        <div class="position-sticky pt-3 sidebar-sticky">
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <div class="navigation">
-                <p class="nav-link souligneVert" aria-current="page"  (click)="clickAlertes()">
-                  <span class="align-text-bottom"></span>
-                  Alertes
-                </p>
+      <!-- ========== List ============  -->
+      <ul class="sidebar-list">
+          <!-- -------- Non Dropdown List Item ------- -->
+          <li>
+              <div class="title">
+                  <a href="#" class="link">
+                      <i class='bx bx-grid-alt'></i>
+                      <span class="name">Dashboard</span>
+                  </a>
+                  <!-- <i class='bx bxs-chevron-down'></i> -->
               </div>
-            </li>
-            <li class="nav-item">
-              <div class="navigation">
-                <p class="nav-link" (click)="clickStock()">
-                  <span class="align-text-bottom"></span>
-                  Stock
-                </p>
+              <div class="submenu">
+                  <a href="#" class="link submenu-title">Dashboard</a>
+                  <!-- submenu links here  -->
               </div>
-            </li>
-            <li class="nav-item">
-              <div class="navigation">
-                <p class="nav-link" (click)="clickAnalyse()">
-                  <span class="align-text-bottom"></span>
-                  Analyse
-                </p>
+          </li>
+
+          <!-- -------- Dropdown List Item ------- -->
+          <li class="dropdown">
+              <div class="title">
+                  <a  class="link">
+                      <i class='bx bx-collection'></i>
+                      <span class="name">Inventaire</span>
+                  </a>
+                  <i class='bx bxs-chevron-down'></i>
               </div>
-            </li>
-            <li class="nav-item">
-              <div class="navigation">
-                <p class="nav-link" (click)="clickFactures()">
-                  <span class="align-text-bottom"></span>
-                  Factures
-                </p>
+              <div class="submenu">
+                  <a href="#" class="link submenu-title">Inventaire</a>
+                  <a href="#" class="link">Menu</a>
+                  <a href="#" class="link">Stock</a>
+                  <a href="#" class="link">Recette</a>
               </div>
-            </li>
-            <li class="nav-item">
-              <div class="navigation">
-                <a class="nav-link" (click)="clickRH()">
-                  <span class="align-text-bottom"></span>
-                  Ressources humaine
-                </a>
+          </li>
+
+          <!-- -------- Dropdown List Item ------- -->
+          <li class="dropdown">
+              <div class="title">
+                  <a href="#" class="link">
+                    <i class='bx bx-line-chart'></i>
+
+                      <span class="name">Analyse</span>
+                  </a>
+                  <i class='bx bxs-chevron-down'></i>
               </div>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </div>
+              <div class="submenu">
+                  <a href="#" class="link submenu-title">Analyse</a>
+                  <a href="#" class="link">Commandes</a>
+                  <a href="#" class="link">Stock</a>
+                  <a href="#" class="link">Fréquentation</a>
+              </div>
+          </li>
+
+          <!-- -------- Non Dropdown List Item ------- -->
+          <li>
+              <div class="title">
+                  <a href="#" class="link">
+                    <i class='bx bx-book-alt'></i>
+
+                      <span class="name">Ressources Humaines</span>
+                  </a>
+                  <!-- <i class='bx bxs-chevron-down'></i> -->
+              </div>
+              <div class="submenu">
+                  <a href="#" class="link submenu-title">Ressources Humaines</a>
+                  <!-- submenu links here  -->
+              </div>
+          </li>
+
+          <!-- -------- Non Dropdown List Item ------- -->
+          <li>
+              <div class="title">
+                  <a href="#" class="link">
+                      <i class='bx bx-pie-chart-alt-2'></i>
+                      <span class="name">Comptabilité</span>
+                  </a>
+                  <!-- <i class='bx bxs-chevron-down'></i> -->
+              </div>
+              <div class="submenu">
+                  <a href="#" class="link submenu-title">Comptabilité</a>
+                  <!-- submenu links here  -->
+              </div>
+          </li>
+
+          <!-- -------- Dropdown List Item ------- -->
+          <li class="dropdown">
+              <div class="title">
+                  <a href="#" class="link">
+                      <i class='bx bx-extension'></i>
+                      <span class="name">Factures</span>
+                  </a>
+                  <i class='bx bxs-chevron-down'></i>
+              </div>
+              <div class="submenu">
+                  <a href="#" class="link submenu-title">Factures</a>
+                  <a href="#" class="link">Scan des factures</a>
+                  <a href="#" class="link">Archivage</a>
+              </div>
+          </li>
+
+          <!-- -------- Non Dropdown List Item ------- -->
+          <li (click) = "clickAlertes()">
+              <div class="title">
+                  <a class="link">
+                      <i class='bx bx-compass'></i>
+                      <span class="name">Alertes</span>
+                  </a>
+                  <!-- <i class='bx bxs-chevron-down'></i> -->
+              </div>
+              <div class="submenu">
+                  <a href="#" class="link submenu-title">Alertes</a>
+                  <!-- submenu links here  -->
+              </div>
+          </li>
+
+          <!-- -------- Non Dropdown List Item ------- -->
+          <li>
+              <div class="title">
+                  <a href="#" class="link">
+                      <i class='bx bx-history'></i>
+                      <span class="name">Profil</span>
+                  </a>
+                  <!-- <i class='bx bxs-chevron-down'></i> -->
+              </div>
+              <div class="submenu">
+                  <a href="#" class="link submenu-title">Profil</a>
+                  <!-- submenu links here  -->
+              </div>
+          </li>
+
+          <!-- -------- Non Dropdown List Item ------- -->
+          <li>
+              <div class="title">
+                  <a href="#" class="link">
+                      <i class='bx bx-cog'></i>
+                      <span class="name">Paramêtres</span>
+                  </a>
+                  <!-- <i class='bx bxs-chevron-down'></i> -->
+              </div>
+              <div class="submenu">
+                  <a href="#" class="link submenu-title">Paramêtres</a>
+                  <!-- submenu links here  -->
+              </div>
+          </li>
+      </ul>
   </div>
+
+  <!-- ============= Home Section =============== -->
+  <section class="home">
+      <div class="toggle-sidebar"  (click)="clickToggle();">
+          <i class='bx bx-menu'></i>
+          <div class="text">Toggle</div>
+      </div>
+  </section>
 </body>
 </html>
