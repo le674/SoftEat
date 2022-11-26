@@ -56,18 +56,6 @@ export class AppMainDashboardComponent implements OnInit {
         // ...
       }
     });
-    /*if(auth.currentUser!=null){
-      updateProfile(auth.currentUser, {
-        
-      }).then(() => {
-        // Profile updated!
-        // ...
-        alert(auth.currentUser?.displayName);
-      }).catch((error) => {
-        // An error occurred
-        // ...
-      });
-    }*/
    
   
 }

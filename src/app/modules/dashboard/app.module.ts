@@ -10,7 +10,6 @@ import { RhModule } from '../rh/rh.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppDashboardComponent } from './app.dashboard/app.dashboard.component';
 import { AppMainDashboardComponent } from './app.dashboard/app.main-dashboard/app.main-dashboard.component';
-import { ProfilComponent } from './app.dashboard/profil/profil.component';
 
 
 
@@ -18,7 +17,7 @@ import { ProfilComponent } from './app.dashboard/profil/profil.component';
   declarations: [
     AppDashboardComponent,
     AppMainDashboardComponent,
-    ProfilComponent
+    
   ],
   imports: [ 
     AppRoutingModule,
