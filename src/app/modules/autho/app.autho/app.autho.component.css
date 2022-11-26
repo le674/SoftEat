@@ -1,6 +1,6 @@
 
 body{
-    background-color: #D3D3D3;
+    background: #D3D3D3;
     height:100vh;
     width: auto;
 }
@@ -21,11 +21,13 @@ body{
     padding: 10px;
     color:  rgb(30, 148, 30);
 }
+
   header{
     background-color: white;
-    margin-left: 10%;
-    margin-top: 20px;
-    margin: 0;
+    height: 68px;
+    display: flex;
+    justify-content:space-between;
+
   }
 
 
@@ -194,6 +196,11 @@ figcaption h3 a {
   opacity: 1;
 }
 
+#boutonDeconnexion{
+  margin-top: 15px;
+  height: 40px;
+
+}
 @media screen and (max-width: 600px) { 
   #navbar_top{
     background-color: white;

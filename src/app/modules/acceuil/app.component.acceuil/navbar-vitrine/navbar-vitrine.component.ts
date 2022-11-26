@@ -81,9 +81,9 @@ export class NavbarVitrineComponent implements OnInit {
   this.numPanel.emit(1);  
   
   }
-  clicDashboard(){
+  clicAutho(){
     
-    this.router.navigate(['dashboard']);
+    this.router.navigate(['autho']);
   }
   clicdeConnexion(){
     auth.signOut();

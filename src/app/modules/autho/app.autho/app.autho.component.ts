@@ -51,5 +51,11 @@ export class AppAuthoComponent implements OnInit {
         }   
       })
   }
+
+  clicdeConnexion(){
+    const auth = getAuth(this.ofApp);
+    auth.signOut(); 
+    window.location.reload();
+  }
 }
 
