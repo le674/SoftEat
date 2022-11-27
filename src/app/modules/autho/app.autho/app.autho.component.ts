@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import {Router} from '@angular/router';
 import { stringLength } from '@firebase/util';
@@ -12,17 +12,20 @@ import { InteractionRestaurantService } from './interaction-restaurant.service';
   styleUrls: ['./app.autho.component.css']
 })
 export class AppAuthoComponent implements OnInit {
+  @ViewChild('widgetsContent') public widgetsContent!: ElementRef;
 
   private uid: string;
+  private screen_width: any;
   public proprietaire: string;
   public restaurants: [{
         adresse: string;
         id: string;
     }];
 
-  constructor(private service : InteractionRestaurantService, private ofApp: FirebaseApp, private router: Router) {   
+  constructor(private service : InteractionRestaurantService, private ofApp: FirebaseApp, private router: Router){   
       this.uid = "";
       this.proprietaire = "";
+      this.screen_width = window.innerWidth;
       this.restaurants = [{
         "adresse": "",
         "id": ""
@@ -56,6 +59,22 @@ export class AppAuthoComponent implements OnInit {
     const auth = getAuth(this.ofApp);
     auth.signOut(); 
     window.location.reload();
+  }
+
+  scrollRight(){
+    let nbr_restaurants = this.restaurants.length
+    console.log("nombre de resto " + nbr_restaurants);
+    console.log("taille de l'écran" + this.screen_width);
+    console.log("le padding est de " + this.screen_width/nbr_restaurants);
+    
+    
+    this.widgetsContent.nativeElement.scrollLeft += this.screen_width/nbr_restaurants;
+    
+  }
+
+  scrollLeft(){
+    let nbr_restaurants = this.restaurants.length
+    this.widgetsContent.nativeElement.scrollLeft -= this.screen_width/nbr_restaurants;
   }
 }
 
