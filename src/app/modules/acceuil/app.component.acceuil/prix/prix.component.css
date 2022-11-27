@@ -1,6 +1,6 @@
 #divPrix{
     position:relative;
-    top:1000px; height:340px;
+    top:1100px; height:340px;
 }
 #titrePrix{
     position:relative;margin-left:40%;font-family: 'Inter';font-size: 64px; color:#101A24;
@@ -9,20 +9,6 @@
     margin-left: 38%; color: rgba(8, 100, 8, 0.5);font-family: 'Inter';font-size: 24px;
 }
 
-@media screen and (max-width: 600px) { 
-    #divPrix{
-        top:1350px;
-    }
-    #titrePrix{
-        font-size: 40px;
-        margin-left: 10%;
-    }
-    #sousTitrePrix{
-        font-size:16px;
-        margin-left: 10%;
-    }
-
-}
 /*--------------*/
 #divCentrerPrix{
     margin-left: 5%;
