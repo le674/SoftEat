@@ -67,7 +67,6 @@ export class AppAuthoComponent implements OnInit {
     console.log("taille de l'écran" + this.screen_width);
     console.log("le padding est de " + this.screen_width/nbr_restaurants);
     
-    
     this.widgetsContent.nativeElement.scrollLeft += this.screen_width/nbr_restaurants;
     
   }
