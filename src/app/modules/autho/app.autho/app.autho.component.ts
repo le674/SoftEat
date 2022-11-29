@@ -1,10 +1,17 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
+import { MatDialog } from '@angular/material/dialog';
 import {Router} from '@angular/router';
 import { stringLength } from '@firebase/util';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { AppModalComponent } from '../app.configue/app.modal/app.modal.component';
 import { InteractionRestaurantService } from './interaction-restaurant.service';
 
+
+export interface DialogData {
+  animal: string;
+  name: string;
+}
 
 @Component({
   selector: 'app-app.autho',
@@ -22,7 +29,7 @@ export class AppAuthoComponent implements OnInit {
         id: string;
     }];
 
-  constructor(private service : InteractionRestaurantService, private ofApp: FirebaseApp, private router: Router){   
+  constructor(private service : InteractionRestaurantService, private ofApp: FirebaseApp, private router: Router, public dialog: MatDialog){   
       this.uid = "";
       this.proprietaire = "";
       this.screen_width = window.innerWidth;
@@ -61,12 +68,30 @@ export class AppAuthoComponent implements OnInit {
     window.location.reload();
   }
 
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(AppModalComponent, {
+      width: '250px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
+
+  envoie_mail(id:string){
+    console.log(id);
+    console.log(this.proprietaire);
+    
+  }
+
   scrollRight(){
     let nbr_restaurants = this.restaurants.length
     console.log("nombre de resto " + nbr_restaurants);
     console.log("taille de l'écran" + this.screen_width);
     console.log("le padding est de " + this.screen_width/nbr_restaurants);
-    
+
     this.widgetsContent.nativeElement.scrollLeft += this.screen_width/nbr_restaurants;
     
   }

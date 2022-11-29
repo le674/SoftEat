@@ -4,6 +4,7 @@ import { AppAuthoComponent } from './app.autho/app.autho.component';
 import { AppRoutingModule } from './app-routing.module';
 import { InteractionRestaurantService } from './app.autho/interaction-restaurant.service';
 import { AppConfigueComponent } from './app.configue/app.configue.component';
+import { AppModalModule } from './app.configue/app.modal/app.modal.module'
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { AppConfigueComponent } from './app.configue/app.configue.component';
   ],
   imports: [ 
     CommonModule,
-    AppRoutingModule
+    AppRoutingModule,
+    AppModalModule
    ],
   exports: [AppAuthoComponent],
   providers: [
