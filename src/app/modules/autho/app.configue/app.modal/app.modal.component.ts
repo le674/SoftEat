@@ -6,7 +6,8 @@ import { Restaurant } from '../../app.autho/restaurant';
 
 @Component({
   selector: 'modal-selector',
-  templateUrl: 'app.modal.component.html'
+  templateUrl: 'app.modal.component.html',
+  styleUrls: ['./app.modal.component.css']
 })
 export class AppModalComponent implements OnInit {
   private readonly _mat_dialog_ref: MatDialogRef<AppModalComponent>;
@@ -29,7 +30,8 @@ export class AppModalComponent implements OnInit {
     console.log(rect.bottom);
 
     mat_dialog_config.autoFocus = true;
-    mat_dialog_config.width = '500px';
+    mat_dialog_config.panelClass = "custom-modal"
+    mat_dialog_config.width = '300px';
     mat_dialog_config.height = '300px';
     this._mat_dialog_ref.updateSize(mat_dialog_config.width, mat_dialog_config.height);
     this._mat_dialog_ref.updatePosition(mat_dialog_config.position);

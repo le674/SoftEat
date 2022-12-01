@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
-import { stringLength } from '@firebase/util';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { AppModalComponent } from '../app.configue/app.modal/app.modal.component';
 import { InteractionRestaurantService } from './interaction-restaurant.service';
@@ -59,6 +58,9 @@ export class AppAuthoComponent implements OnInit {
     window.location.reload();
   }
 
+  clicAcceuil(){
+    this.router.navigate([''])
+  }
 
   openDialog(restaurant:{ adresse: string, id: string}, event:MouseEvent): void {
     const target = new ElementRef(event.currentTarget)

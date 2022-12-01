@@ -1,0 +1,51 @@
+/* header et body commun à de nombreusent applications */ 
+body {
+    background: rgb(245, 245, 245);
+    height: 100vh;
+    width: auto;
+  }
+  
+  header {
+    background-color: white;
+    height: 68px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5%;
+  }
+
+  ul{
+    list-style: none;
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 15px;
+  }
+
+  #boutonDeconnexion {
+    height: 40px;
+  }
+  
+  #bouttonAcceuil{
+    height: 40px;
+    min-width: 96px;
+    margin: 0;
+  }
+  #marque {
+    font-family: 'ABeeZee', sans-serif;
+    font-style: italic;
+    overflow: hidden;
+    font-size: 32px;
+    padding-top: 11px;
+    padding-bottom: 11px;
+    color: rgb(30, 148, 30);
+  }
+
+  /* Fin du header*/
+
+ .accordion-item {
+    margin-top: 2%;
+ }
+
+ .accordion-button{
+    color: rgb(30, 148, 30);;
+ }

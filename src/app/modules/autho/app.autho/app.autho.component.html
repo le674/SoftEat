@@ -15,8 +15,15 @@
 <body>
     <header>
         <p id="marque" class="col-md-5 col-lg-2 px-3">SoftEat</p>
-        <button class="btn btn-outline-danger" (click)="clicdeConnexion()" id="boutonDeconnexion"
-            type="submit">deconnexion</button>
+        <ul>
+            <li> 
+                <button class="btn btn-outline-success" (click)="clicAcceuil()" type="submit">acceuil</button>
+            </li>
+            <li> 
+                <button class="btn btn-outline-danger" (click)="clicdeConnexion()" id="boutonDeconnexion"
+                type="submit">deconnexion</button>
+            </li>
+        </ul>
     </header>
     <main>
         <div id="analyse-wrapper">

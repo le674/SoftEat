@@ -4,8 +4,8 @@
   <h1 mat-dialog-title>information</h1>
   <p mat-dialog-content>Voulez-vous transmettre la demande de suppression pour le restaurant {{data.id}} à l'address
     {{data.adresse}} ? </p>
-  <div mat-dialog-actions>
-    <button mat-button (click)="on_no_click()">NON</button>
-    <button mat-button (click)="on_send_mail()">OUI</button>
+  <div  mat-dialog-actions id="actions">
+    <button mat-raised-button (click)="on_no_click()" id="close">NON</button>
+    <button mat-raised-button (click)="on_send_mail()" id="mail">OUI</button>
   </div>
 </div>

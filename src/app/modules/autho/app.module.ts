@@ -7,7 +7,8 @@ import { AppConfigueComponent } from './app.configue/app.configue.component';
 import { AppModalModule } from './app.configue/app.modal/app.modal.module'
 import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatTableModule} from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -19,14 +20,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppRoutingModule,
     BrowserAnimationsModule,
     MatDialogModule,
+    MatPaginatorModule,
+    MatTableModule,
     AppModalModule
    ],
   exports: [
     AppAuthoComponent
   ],
   providers: [
-    InteractionRestaurantService,
-    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
+    InteractionRestaurantService
   ]
 })
 export class AppAuthoModule {}
