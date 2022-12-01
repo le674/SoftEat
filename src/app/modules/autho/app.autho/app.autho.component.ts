@@ -1,17 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import {Router} from '@angular/router';
 import { stringLength } from '@firebase/util';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { AppModalComponent } from '../app.configue/app.modal/app.modal.component';
 import { InteractionRestaurantService } from './interaction-restaurant.service';
-
-
-export interface DialogData {
-  animal: string;
-  name: string;
-}
 
 @Component({
   selector: 'app-app.autho',
@@ -21,19 +15,20 @@ export interface DialogData {
 export class AppAuthoComponent implements OnInit {
   @ViewChild('widgetsContent') public widgetsContent!: ElementRef;
 
+  private readonly screen_width: any;
   private uid: string;
-  private screen_width: any;
   public proprietaire: string;
-  public restaurants: [{
-        adresse: string;
-        id: string;
+  public restaurants_only: [{
+        adresse: string,
+        id: string
     }];
 
-  constructor(private service : InteractionRestaurantService, private ofApp: FirebaseApp, private router: Router, public dialog: MatDialog){   
+  constructor(private service : InteractionRestaurantService, private ofApp: FirebaseApp,
+     private router: Router, public dialog: MatDialog, private tst_dialog:MatDialog){   
       this.uid = "";
       this.proprietaire = "";
       this.screen_width = window.innerWidth;
-      this.restaurants = [{
+      this.restaurants_only = [{
         "adresse": "",
         "id": ""
       }];
@@ -47,11 +42,7 @@ export class AppAuthoComponent implements OnInit {
           this.uid = user.uid;
           this.service.getRestaurantsProprietaireFromUser(this.uid).then((restaurant) => {
             this.proprietaire =  restaurant.proprietaire;
-            this.restaurants = restaurant.restaurant;
-            console.log(restaurant.restaurant.forEach((resto) => {
-              console.log(resto.adresse);  
-            }));
-            
+            this.restaurants_only= restaurant.restaurants;
           });
         }
         else{
@@ -69,25 +60,22 @@ export class AppAuthoComponent implements OnInit {
   }
 
 
-  openDialog(): void {
+  openDialog(restaurant:{ adresse: string, id: string}, event:MouseEvent): void {
+    const target = new ElementRef(event.currentTarget)
+
     const dialogRef = this.dialog.open(AppModalComponent, {
       width: '250px',
+      data: {
+        adresse: restaurant.adresse,
+        id: restaurant.id,
+        trigger: target
+      }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-  }
-
-
-  envoie_mail(id:string){
-    console.log(id);
-    console.log(this.proprietaire);
-    
   }
 
   scrollRight(){
-    let nbr_restaurants = this.restaurants.length
+    let nbr_restaurants = this.restaurants_only.length
     console.log("nombre de resto " + nbr_restaurants);
     console.log("taille de l'écran" + this.screen_width);
     console.log("le padding est de " + this.screen_width/nbr_restaurants);
@@ -97,7 +85,7 @@ export class AppAuthoComponent implements OnInit {
   }
 
   scrollLeft(){
-    let nbr_restaurants = this.restaurants.length
+    let nbr_restaurants = this.restaurants_only.length
     this.widgetsContent.nativeElement.scrollLeft -= this.screen_width/nbr_restaurants;
   }
 }

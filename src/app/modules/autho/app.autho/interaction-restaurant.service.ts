@@ -2,23 +2,17 @@ import { Injectable } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { child, get, getDatabase, ref } from 'firebase/database';
-
+import { Restaurant } from './restaurant';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class InteractionRestaurantService {
+export class InteractionRestaurantService{
 
   private db: any;
   private uid: string;
-  private user_auth: {
-    "proprietaire": string;
-    "restaurants": [{
-      "adresse":string,
-      "id":string
-    }];
-  };
+  private user_auth: Restaurant
   private restaurant: Array<object>;
   private proprietary: string;
 
@@ -55,12 +49,7 @@ export class InteractionRestaurantService {
     }).catch((error) => {
       console.log(error);  
     })
-    return(
-      {
-        "proprietaire": this.user_auth.proprietaire,
-         "restaurant": this.user_auth.restaurants
-      }
-    );
+    return(this.user_auth);
   }
   
   async getProprietaireFromUser(uid:string){ 

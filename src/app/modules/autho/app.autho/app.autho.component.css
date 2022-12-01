@@ -1,3 +1,5 @@
+
+
 body {
   background: rgb(245, 245, 245);
   height: 100vh;
@@ -35,23 +37,23 @@ main {
 #card_number {
   height: 5%;
   text-align: center;
-  /* align the inline(-block) elements horizontally */
+  /*comment align the inline(-block) elements horizontally */
 }
 
 #card_number::before {
   content: ' ';
   display: inline-block;
   vertical-align: middle;
-  /* vertical alignment of the inline element */
+/*   comment  vertical alignment of the inline element  */
   height: 100%;
 }
 
 #res_card {
   display: inline-block;
   vertical-align: middle;
-  /* vertical alignment of the inline element */
-  font: 16px/1 Arial sans-serif;
-  /* <-- reset the font property */
+/*   comment vertical alignment of the inline element */
+   font: 16px/1 Arial sans-serif;
+  /* comment <-- reset the font property  */
 }
 
 #marque {
@@ -81,10 +83,9 @@ main {
   }
 }
 
-*
 
-/* CSS */
-
+/* comment CSS 
+ */
 .btn {
   background: transparent;
   margin: 3px;

@@ -7,7 +7,9 @@ import { AppConfigueComponent } from './app.configue/app.configue.component';
 const routes: Routes = [
   {
     path:'autho',
-    component: AppAuthoComponent, canActivate: [AuthGuard]
+    component: AppAuthoComponent,
+    canActivate: [AuthGuard],
+    pathMatch:'full'
   },
   {
     path:'autho/configuration',

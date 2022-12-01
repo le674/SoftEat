@@ -24,7 +24,7 @@
         </div>
         <div class="container-fluid" id="card_number">
             <div #widgetsContent class="row card-deck-scrollable flex-nowrap" id="scroll-right">
-                <div class="tourcard" *ngFor="let restaurant of restaurants">
+                <div class="tourcard" *ngFor="let restaurant of restaurants_only">
                     <figure>
                         <div class="tourpic">
                             <img width="300" height="200" src='/assets/images/autho.jpg'>
@@ -40,7 +40,7 @@
                             <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" href="/dashboard">
                               <br>  <i class="fa-solid fa-utensils"></i> <br> Accéder
                             </a>
-                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="envoie_mail(restaurant.id)">
+                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="openDialog(restaurant, $event)">
                                 <br>  <i class="fa-solid fa-trash"> </i> <br> Supprimer
                             </a>
                             <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" href="autho/configuration?new='false'">

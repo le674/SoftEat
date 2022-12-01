@@ -9,9 +9,18 @@ const routes: Routes = [
     redirectTo:'accueil',
     pathMatch:'full'
    },
-   { path: 'sign-in', component: ConnectionComponent},
-   { path: 'autho', component: AppAuthoComponent, canActivate: [AuthGuard]}
-   
+
+   { 
+    path: 'sign-in',
+    component: ConnectionComponent
+    },
+
+   { 
+    path: 'autho',
+    component: AppAuthoComponent,
+    canActivate: [AuthGuard],
+    pathMatch:'full'
+    }
 ];
 
 @NgModule({
