@@ -2,7 +2,7 @@ import {Component, ElementRef, OnInit } from '@angular/core';
 import {Inject} from '@angular/core';
 import { MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { AppAuthoComponent } from '../../app.autho/app.autho.component';
-import { Restaurant } from '../../app.autho/restaurant';
+
 
 @Component({
   selector: 'modal-selector',

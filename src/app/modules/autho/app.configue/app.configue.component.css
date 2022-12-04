@@ -10,7 +10,7 @@ body {
     height: 68px;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 5%;
+    margin-bottom: 3%;
   }
 
   ul{
@@ -30,6 +30,8 @@ body {
     min-width: 96px;
     margin: 0;
   }
+
+ 
   #marque {
     font-family: 'ABeeZee', sans-serif;
     font-style: italic;
@@ -43,9 +45,11 @@ body {
   /* Fin du header*/
 
  .accordion-item {
-    margin-top: 2%;
+    margin-top: 1%;
  }
 
  .accordion-button{
-    color: rgb(30, 148, 30);;
+    color: rgb(30, 148, 30);
+    display:block;
+    text-align: center;
  }

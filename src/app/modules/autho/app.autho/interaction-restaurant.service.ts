@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { child, get, getDatabase, ref } from 'firebase/database';
-import { Restaurant } from './restaurant';
+import { Restaurant } from 'src/app/interfaces/restaurant';
+
 
 
 @Injectable({
@@ -35,9 +36,9 @@ export class InteractionRestaurantService{
   //web service au lieu de deux
   
  async getRestaurantsProprietaireFromUser(uid:string){
-    console.log(`récupération des donées vers 'Users/${uid}/'`);
+    console.log(`récupération des donées vers 'Users/foodandboost_prop/${uid}/'`);
     const ref_db = ref(this.db);
-    await get(child(ref_db, `Users/${uid}`)).then((user) => {
+    await get(child(ref_db, `Users/foodandboost_prop/${uid}`)).then((user) => {
       if(user.exists()){          
         this.user_auth.proprietaire = user.child("proprietaire").val();
         this.user_auth.restaurants = user.child("restaurant").val();
