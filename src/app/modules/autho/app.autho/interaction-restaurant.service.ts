@@ -10,6 +10,7 @@ import { Restaurant } from 'src/app/interfaces/restaurant';
   providedIn: 'root'
 })
 export class InteractionRestaurantService{
+  [x: string]: any;
 
   private db: any;
   private uid: string;
@@ -35,8 +36,9 @@ export class InteractionRestaurantService{
   //préférer utiliser cette requete si on veut récupérer les deux information car elle fait un seil appel au 
   //web service au lieu de deux
   
- async getRestaurantsProprietaireFromUser(uid:string){
-    console.log(`récupération des donées vers 'Users/foodandboost_prop/${uid}/'`);
+ async getRestaurantsProprietaireFromUser(uid:string, prop_to_get:string){
+    console.log(prop_to_get);
+    console.log(`récupération des donées vers 'Users/${prop_to_get}/${uid}/'`);
     const ref_db = ref(this.db);
     await get(child(ref_db, `Users/foodandboost_prop/${uid}`)).then((user) => {
       if(user.exists()){          
@@ -52,24 +54,10 @@ export class InteractionRestaurantService{
     })
     return(this.user_auth);
   }
-  
-  async getProprietaireFromUser(uid:string){ 
-    console.log(`récupération des donées vers 'Users/${uid}/'`);
-    const ref_db = ref(this.db);
-    await get(child(ref_db, `Users/${uid}`)).then((user) => {
-      if(user.exists()){ 
-        user.val().proprietary;
-      }
-      else{
-        console.log("pas de restaurant obtenu");
-        
-      }
-    }) 
-  }
 
 
-  async getRestaurantFromUser(uid:string){ 
-    console.log(`récupération des donées vers 'Users/${uid}/'`);
+  async getRestaurantFromUser(uid:string, prop_to_get:string){ 
+    console.log(`récupération des donées vers 'Users/${prop_to_get}/${uid}/'`);
     const ref_db = ref(this.db);
     await get(child(ref_db, `Users/${uid}`)).then((user) => {
       if(user.exists()){ 

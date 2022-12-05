@@ -5,6 +5,7 @@ import {Router} from '@angular/router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { AppModalComponent } from '../app.configue/app.modal/app.modal.component';
 import { InteractionRestaurantService } from './interaction-restaurant.service';
+import {UserInteractionService} from 'src/app/services/user-interaction.service'
 
 @Component({
   selector: 'app-app.autho',
@@ -22,7 +23,7 @@ export class AppAuthoComponent implements OnInit {
         id: string
     }];
 
-  constructor(private service : InteractionRestaurantService, private ofApp: FirebaseApp,
+  constructor(private service : InteractionRestaurantService,private user_services : UserInteractionService, private ofApp: FirebaseApp,
      private router: Router, public dialog: MatDialog, private tst_dialog:MatDialog){   
       this.uid = "";
       this.proprietaire = "";
@@ -37,12 +38,15 @@ export class AppAuthoComponent implements OnInit {
     const auth = getAuth(this.ofApp);
       onAuthStateChanged(auth, (user) => {
         if(user){
+          let prop_to_get:string;
           console.log("utilisateur inscrit");
           this.uid = user.uid;
-          this.service.getRestaurantsProprietaireFromUser(this.uid).then((restaurant) => {
-            this.proprietaire =  restaurant.proprietaire;
-            this.restaurants_only= restaurant.restaurants;
-          });
+          this.user_services.getProprietaireFromUsers(this.uid).then((prop:string) => {
+            this.service.getRestaurantsProprietaireFromUser(this.uid, prop).then((restaurant) => {
+              this.proprietaire =  restaurant.proprietaire;
+              this.restaurants_only= restaurant.restaurants;
+            });
+          })
         }
         else{
           console.log("pas d'autentification");

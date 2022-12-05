@@ -1,9 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import {Router} from '@angular/router';
 import { User } from 'src/app/interfaces/user';
 import {MatTableDataSource} from '@angular/material/table';
+import { InteractionRestaurantService } from '../app.autho/interaction-restaurant.service';
+import { UserInteractionService } from 'src/app/services/user-interaction.service';
+import { Proprietaire } from 'src/app/interfaces/proprietaire';
 
 
 @Component({
@@ -12,7 +15,8 @@ import {MatTableDataSource} from '@angular/material/table';
   styleUrls: ['./app.configue.component.css']
 })
 export class AppConfigueComponent implements OnInit {
-  public users!: Array<User>;
+  public users: Array<Proprietaire>;
+  private uid: string;
   public display_columns: string[] = ["email", "restaurants","statut", "analyse", "budget", "facture", "stock", "planning"];
 
 
@@ -25,12 +29,24 @@ export class AppConfigueComponent implements OnInit {
     index_6:boolean,
     index_7:boolean
   };
-  constructor(private ofApp: FirebaseApp,private router: Router) { 
+  constructor(private service : InteractionRestaurantService,private user_services : UserInteractionService,
+    private ofApp: FirebaseApp,private router: Router) { 
     this.visibles = {index_1: true, index_2: true, index_3: true, index_4:true, index_5:true, index_6:true, index_7:true};
     this.users = [];
+    this.uid = "";
   }
 
   ngOnInit(): void {
+    const auth = getAuth(this.ofApp);
+    onAuthStateChanged(auth, (user) =>{
+      if(user){
+        this.user_services.getAllIdFromProp().then((props) => {
+          this.user_services.getProprietaireFromUsers(user.uid).then((name:string) => {
+            this.users = props.filter(proprio => (proprio.proprietaire === name))
+          })
+        })
+      }
+    })
   }
   
   clicdeConnexion(){
@@ -95,3 +111,7 @@ export class AppConfigueComponent implements OnInit {
     console.log("test");
   }
 }
+function getProprietaireFromUsers(uid: string) {
+  throw new Error('Function not implemented.');
+}
+

@@ -1,5 +1,7 @@
 export class User {
   public "name": string;
+  public "email":string;
+  public "id":string;
   public "proprietaire": string;
   public "restaurants": [{
     "adresse": string,
@@ -15,6 +17,28 @@ export class User {
   public "planning": string;
   public "prev_aliments": string;
   public "time_work": string;
+
+  constructor(){
+    this.name = ""
+    this.email = ""
+    this.id = ""
+    this.proprietaire = ""
+    this. restaurants = [{
+      adresse: "",
+      id:""
+    }]
+    this.roles = []
+    this.is_prop = false,
+    this. alertes = "",
+    this.analyse = "",
+    this.budget = "",
+    this.facture = "",
+    this.stock = "",
+    this.planning = "",
+    this.prev_aliments = "",
+    this.time_work = ""
+  }
+
 
   to_roles() {
     if (this.is_prop) {
