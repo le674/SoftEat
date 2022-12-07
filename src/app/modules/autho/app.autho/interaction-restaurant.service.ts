@@ -54,15 +54,27 @@ export class InteractionRestaurantService{
 
   async getRestaurantFromUser(uid:string, prop_to_get:string){ 
     const ref_db = ref(this.db);
+    console.log(`Users/${prop_to_get}/${uid}/restaurant/`);
     await get(child(ref_db, `Users/${prop_to_get}/${uid}/restaurant/`)).then((user_restaurant) => {
       this.restaurant = []
       if(user_restaurant.exists()){ 
-        user_restaurant.forEach((restaurant) => {
+        if(user_restaurant.child('id').exists()){
+          console.log('il n y a qu un restaurant');
           let restau = new Restaurant()
-          restau.id = restaurant.val().id
-          restau.adresse = restaurant.val().adresse
+          restau.id = user_restaurant.val().id
+          restau.adresse = user_restaurant.val().adresse
+          console.log(`le restaurant de ${uid} est ${restau.id}`);
           this.restaurant.push(restau)
-        })
+        }
+        else{
+          user_restaurant.forEach((restaurant) => {
+            let restau = new Restaurant()
+            restau.id = restaurant.val().id
+            restau.adresse = restaurant.val().adresse
+            console.log(`le restaurant de ${uid} est ${restau.id}`);
+            this.restaurant.push(restau)
+          })
+        }
       }
     })
     return(this.restaurant) 
@@ -76,8 +88,8 @@ async getAllRestaurants(prop:string){
     if(restaurants.exists()){
       restaurants.forEach((restaurant) => {
         let new_restaurant = new Restaurant();
-        new_restaurant.id = restaurant.val().adress
-        new_restaurant.adresse = (restaurant.key === null) ? "" : restaurant.key
+        new_restaurant.id = (restaurant.key === null) ? "" : restaurant.key
+        new_restaurant.adresse =  restaurant.val().adress
         this.restaurant.push(new_restaurant)
         
       })

@@ -20,24 +20,12 @@ export class AppConfigueComponent implements OnInit {
   public restau_list: Array<Restaurant>;
   private users: Array<Proprietaire>;
   private proprietaire: string;
-  public dataSource: [{
-    id: string;
-    email: string;
-    restaurants: Array<string>;
-  }];
-  public prop_user: [{
-    id:string,
-    email:string,
-    restaurants: Array<string>
-  }];
+  public dataSource: Array<User>;
+  public prop_user: Array<User>;
   private uid: string;
   public display_columns: string[] = ["id", "email", "restaurants"];
   @ViewChild(MatTable)
-  table!: MatTable<[{
-    id: string;
-    email: string;
-    restaurants: Array<string>;
-  }]>;
+  table!: MatTable<Array<User>>;
 
   public visibles: {
     index_1: boolean,
@@ -51,11 +39,7 @@ export class AppConfigueComponent implements OnInit {
   constructor(private service: InteractionRestaurantService, private user_services: UserInteractionService,
     private ofApp: FirebaseApp, private router: Router) {
     this.visibles = { index_1: true, index_2: true, index_3: true, index_4: true, index_5: true, index_6: true, index_7: true };
-    this.prop_user = [{
-      id: "test",
-      email:  "",
-      restaurants:  [""]
-    }];
+    this.prop_user = [new User()]
     this.dataSource = this.prop_user
     this.users = [];
     this.uid = "";
@@ -64,11 +48,7 @@ export class AppConfigueComponent implements OnInit {
   }
   ngOnInit(): void {
     const auth = getAuth(this.ofApp);
-    this.prop_user = [{
-      id: "",
-      email:  "",
-      restaurants:  [""]
-    }]
+    this.prop_user = [new User()]
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const prop_user = this.user_services.getProprietaireFromUsers(user.uid).then((name: string) => {
@@ -86,20 +66,13 @@ export class AppConfigueComponent implements OnInit {
         all_id.then((users) => {
           if (users !== null) {
             for(let employee of users.employee){
-              const Urestaurant = this.service.getRestaurantFromUser(employee.id, this.proprietaire)
-              Urestaurant.then((restaurants) => {
-                if (restaurants.length !== 0) {
-                  employee.restaurants = restaurants
+              console.log(employee);
+                if (employee.restaurants !== null) {
                   let new_user = new User();
                   new_user.id = employee.id;
                   new_user.restaurants = employee.restaurants;
                   new_user.email = employee.email;
-                  let restaurants_ids = new_user.restaurants.map((restaurant) => restaurant.id)
-                  this.prop_user.push({
-                    id: new_user.id,
-                    email: new_user.email,
-                    restaurants: restaurants_ids
-                  })
+                  this.prop_user.push(new_user)
                   this.table.renderRows()
                 }
                 else {
@@ -109,17 +82,10 @@ export class AppConfigueComponent implements OnInit {
                     new_user.id = employee.id;
                     new_user.restaurants = employee.restaurants;
                     new_user.email = employee.email;
-                    let restaurants_ids = new_user.restaurants.map((restaurant) => restaurant.id)
-                    console.log(restaurants_ids);
-                    this.prop_user.push({
-                      id: new_user.id,
-                      email: new_user.email,
-                      restaurants: restaurants_ids
-                    })
+                    this.prop_user.push(new_user)
                     this.table.renderRows()
                   })
                 }
-              })
             }
           }
           else {
@@ -128,6 +94,7 @@ export class AppConfigueComponent implements OnInit {
         });
       }
     })
+    this.prop_user.shift()
     this.dataSource = this.prop_user
   }
 

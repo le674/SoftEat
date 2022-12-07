@@ -38,10 +38,23 @@ export class User {
     this.time_work = ""
   }
 
+  remove_null(){
+    this.alertes = (this.alertes === null) ? "" : this.alertes
+    this.analyse = (this.analyse === null) ? "" : this.analyse
+    this.budget = (this.budget === null) ? "" : this.budget
+    this.planning = (this.planning === null) ? "" : this.planning
+    this.stock = (this.stock === null) ? "" : this.stock
+    this.facture = (this.facture === null) ? "" : this.facture
+    this.email = (this.email === null) ? "" : this.email
+    this.id = (this.id === null) ? "" : this.id
+    this.name = (this.name === null) ? "" : this.name
+    this.is_prop = (this.is_prop === null) ? false : this.is_prop
+  }
 
   to_roles() {
+    this.roles = []
     if (this.is_prop) {
-      this.roles.includes("proprietaire");
+      this.roles.push("proprietaire");
       return null;
     }
     if (this.stock.includes("r")) {
