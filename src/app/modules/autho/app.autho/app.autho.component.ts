@@ -6,6 +6,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { AppModalComponent } from '../app.configue/app.modal/app.modal.component';
 import { InteractionRestaurantService } from './interaction-restaurant.service';
 import {UserInteractionService} from 'src/app/services/user-interaction.service'
+import { Restaurant } from 'src/app/interfaces/restaurant';
 
 @Component({
   selector: 'app-app.autho',
@@ -18,20 +19,16 @@ export class AppAuthoComponent implements OnInit {
   private readonly screen_width: any;
   private uid: string;
   public proprietaire: string;
-  public restaurants_only: [{
-        adresse: string,
-        id: string
-    }];
+  public restaurants_only: Array<Restaurant>;
 
   constructor(private service : InteractionRestaurantService,private user_services : UserInteractionService, private ofApp: FirebaseApp,
      private router: Router, public dialog: MatDialog, private tst_dialog:MatDialog){   
       this.uid = "";
       this.proprietaire = "";
       this.screen_width = window.innerWidth;
-      this.restaurants_only = [{
-        "adresse": "",
-        "id": ""
-      }];
+      this.restaurants_only = [
+        new Restaurant()
+      ];
   }
 
   ngOnInit(): void {

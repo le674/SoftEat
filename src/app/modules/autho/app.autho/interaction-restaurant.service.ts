@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { child, get, getDatabase, ref } from 'firebase/database';
-import { Restaurant } from 'src/app/interfaces/restaurant';
+import { Restaurant, UserRestaurant } from 'src/app/interfaces/restaurant';
 
 
 
@@ -14,8 +14,8 @@ export class InteractionRestaurantService{
 
   private db: any;
   private uid: string;
-  private user_auth: Restaurant
-  private restaurant: Array<object>;
+  private user_auth: UserRestaurant
+  private restaurant: Array<Restaurant>;
   private proprietary: string;
 
   constructor(private ofApp: FirebaseApp) { 
@@ -23,10 +23,7 @@ export class InteractionRestaurantService{
       this.proprietary = "";
       this.user_auth = {   
       "proprietaire":"",
-      "restaurants":[{
-        "adresse": "",
-        "id": ""
-      }]
+      "restaurants":[new Restaurant()]
     };
       this.restaurant = [];
       const auth = getAuth(ofApp);
@@ -37,10 +34,9 @@ export class InteractionRestaurantService{
   //web service au lieu de deux
   
  async getRestaurantsProprietaireFromUser(uid:string, prop_to_get:string){
-    console.log(prop_to_get);
-    console.log(`récupération des donées vers 'Users/${prop_to_get}/${uid}/'`);
     const ref_db = ref(this.db);
     await get(child(ref_db, `Users/foodandboost_prop/${uid}`)).then((user) => {
+      this.restaurant = []
       if(user.exists()){          
         this.user_auth.proprietaire = user.child("proprietaire").val();
         this.user_auth.restaurants = user.child("restaurant").val();
@@ -57,19 +53,40 @@ export class InteractionRestaurantService{
 
 
   async getRestaurantFromUser(uid:string, prop_to_get:string){ 
-    console.log(`récupération des donées vers 'Users/${prop_to_get}/${uid}/'`);
     const ref_db = ref(this.db);
-    await get(child(ref_db, `Users/${uid}`)).then((user) => {
-      if(user.exists()){ 
-        user.val().restaurant.forEach((restaurant: object) => {
-          this.restaurant.push(restaurant);
+    await get(child(ref_db, `Users/${prop_to_get}/${uid}/restaurant/`)).then((user_restaurant) => {
+      this.restaurant = []
+      if(user_restaurant.exists()){ 
+        user_restaurant.forEach((restaurant) => {
+          let restau = new Restaurant()
+          restau.id = restaurant.val().id
+          restau.adresse = restaurant.val().adresse
+          this.restaurant.push(restau)
         })
       }
-      else{
-        console.log("pas de restaurant obtenu");
-        
-      }
-    }) 
+    })
+    return(this.restaurant) 
   }
+
+
+async getAllRestaurants(prop:string){
+  const ref_db = ref(this.db);
+  await get(child(ref_db, `restaurants/${prop}/`)).then((restaurants) => {
+    this.restaurant = []
+    if(restaurants.exists()){
+      restaurants.forEach((restaurant) => {
+        let new_restaurant = new Restaurant();
+        new_restaurant.id = restaurant.val().adress
+        new_restaurant.adresse = (restaurant.key === null) ? "" : restaurant.key
+        this.restaurant.push(new_restaurant)
+        
+      })
+    }
+    else{
+      console.log("pas de restaurants actuellement");
+    }
+  })
+  return(this.restaurant)  
+}
 
 }

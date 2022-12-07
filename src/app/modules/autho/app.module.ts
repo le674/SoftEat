@@ -8,7 +8,11 @@ import { AppModalModule } from './app.configue/app.modal/app.modal.module'
 import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatPaginatorModule} from '@angular/material/paginator';
-import {MatTableModule} from '@angular/material/table';
+import {MatSelectModule} from '@angular/material/select'; 
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatOptionModule } from '@angular/material/core';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -17,11 +21,15 @@ import {MatTableModule} from '@angular/material/table';
   ],
   imports: [ 
     CommonModule,
+    MatFormFieldModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatDialogModule,
+    ReactiveFormsModule,
     MatPaginatorModule,
     MatTableModule,
+    MatSelectModule,
+    MatOptionModule,
     AppModalModule
    ],
   exports: [

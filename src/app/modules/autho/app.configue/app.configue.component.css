@@ -53,3 +53,12 @@ body {
     display:block;
     text-align: center;
  }
+
+ /*édition du tableau */
+.mat-row {
+  height: auto;
+}
+
+.mat-cell {
+  padding: 10px 15px 8px 0;
+}

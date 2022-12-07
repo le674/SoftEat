@@ -1,12 +1,11 @@
+import { Restaurant } from "./restaurant";
+
 export class User {
   public "name": string;
   public "email":string;
   public "id":string;
   public "proprietaire": string;
-  public "restaurants": [{
-    "adresse": string,
-    "id": string
-  }];
+  public "restaurants": Array<Restaurant>;
   public "roles": Array<string>;
   public "is_prop": boolean;
   public "alertes": string;
