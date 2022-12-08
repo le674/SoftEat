@@ -1,3 +1,4 @@
+import { map } from "@firebase/util";
 import { Restaurant } from "./restaurant";
 
 export class User {
@@ -104,5 +105,32 @@ export class User {
     }
 
     return null;
+  }
+}
+
+export class ShortUser {
+  public "name": string;
+  public "email":string;
+  public "id":string;
+  public "proprietaire": string;
+  public "restaurants": string;
+  public "roles": string;
+  public "is_prop": boolean;
+  public "alertes": string;
+  public "analyse": string;
+  public "budget": string;
+  public "facture": string;
+  public "stock": string;
+  public "planning": string;
+  public "prev_aliments": string;
+  public "time_work": string;
+
+  restToString(restaurants: Array<Restaurant>){
+    let restau = restaurants.map((restaurant) => restaurant.id)
+    this.restaurants = restau.toString()
+  }
+
+  restToList(restaurants:string){
+    return(restaurants.split(','))
   }
 }

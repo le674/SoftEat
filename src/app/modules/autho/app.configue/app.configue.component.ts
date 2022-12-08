@@ -2,13 +2,14 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { Router } from '@angular/router';
-import { User } from 'src/app/interfaces/user';
+import { ShortUser, User } from 'src/app/interfaces/user';
 import { InteractionRestaurantService } from '../app.autho/interaction-restaurant.service';
 import { UserInteractionService } from 'src/app/services/user-interaction.service';
 import { Proprietaire } from 'src/app/interfaces/proprietaire';
 import { Restaurant } from 'src/app/interfaces/restaurant';
 import { FormControl } from '@angular/forms';
-import { MatTable } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-app.configue',
@@ -20,12 +21,15 @@ export class AppConfigueComponent implements OnInit {
   public restau_list: Array<Restaurant>;
   private users: Array<Proprietaire>;
   private proprietaire: string;
-  public dataSource: Array<User>;
-  public prop_user: Array<User>;
+  public prop_user: Array<ShortUser>;
+  public dataSource : MatTableDataSource<ShortUser>;
   private uid: string;
   public display_columns: string[] = ["id", "email", "restaurants"];
-  @ViewChild(MatTable)
-  table!: MatTable<Array<User>>;
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
+
+
+  
 
   public visibles: {
     index_1: boolean,
@@ -39,8 +43,8 @@ export class AppConfigueComponent implements OnInit {
   constructor(private service: InteractionRestaurantService, private user_services: UserInteractionService,
     private ofApp: FirebaseApp, private router: Router) {
     this.visibles = { index_1: true, index_2: true, index_3: true, index_4: true, index_5: true, index_6: true, index_7: true };
-    this.prop_user = [new User()]
-    this.dataSource = this.prop_user
+    this.prop_user = []
+    this.dataSource = new MatTableDataSource([new ShortUser()])
     this.users = [];
     this.uid = "";
     this.restau_list = [];
@@ -48,7 +52,6 @@ export class AppConfigueComponent implements OnInit {
   }
   ngOnInit(): void {
     const auth = getAuth(this.ofApp);
-    this.prop_user = [new User()]
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const prop_user = this.user_services.getProprietaireFromUsers(user.uid).then((name: string) => {
@@ -68,24 +71,26 @@ export class AppConfigueComponent implements OnInit {
             for(let employee of users.employee){
               console.log(employee);
                 if (employee.restaurants !== null) {
-                  let new_user = new User();
-                  new_user.id = employee.id;
-                  new_user.restaurants = employee.restaurants;
-                  new_user.email = employee.email;
-                  this.prop_user.push(new_user)
-                  this.table.renderRows()
+                  let row_user = new ShortUser()
+                  row_user.id = employee.id;
+                  row_user.email = employee.email;
+                  row_user.restToString(employee.restaurants);
+                  console.log(row_user);
+                  
+                  this.prop_user.push(row_user)
                 }
                 else {
                   this.service.getAllRestaurants(this.proprietaire).then((restau_list) => {
                     employee.restaurants = restau_list
-                    let new_user = new User();
-                    new_user.id = employee.id;
-                    new_user.restaurants = employee.restaurants;
-                    new_user.email = employee.email;
-                    this.prop_user.push(new_user)
-                    this.table.renderRows()
+                    let row_user = new ShortUser()
+                    row_user.id = employee.id;
+                    row_user.email = employee.email;
+                    row_user.restToString(employee.restaurants);
+                    console.log(row_user);
+                    this.prop_user.push(row_user)
                   })
                 }
+                this.dataSource.data = this.prop_user
             }
           }
           else {
@@ -94,12 +99,21 @@ export class AppConfigueComponent implements OnInit {
         });
       }
     })
-    this.prop_user.shift()
-    this.dataSource = this.prop_user
+    this.pageChanged({
+      pageIndex: 1,
+      pageSize: 6,
+      length:  this.prop_user.length,
+    });
   }
 
   ngAfterViewInit(): void {
-    this.table.renderRows()
+  }
+
+  pageChanged(event: PageEvent) {
+    event.length;
+    const datasource = [... this.prop_user];
+    this.dataSource.data = 
+    datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
   }
 
 
@@ -162,7 +176,6 @@ export class AppConfigueComponent implements OnInit {
     else {
       this.visibles.index_7 = true;
     }
-    console.log("test");
   }
 }
 function getProprietaireFromUsers(uid: string) {

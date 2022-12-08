@@ -49,7 +49,7 @@
                         <mat-form-field appearance="fill">
                           <mat-label>restaurants</mat-label>
                           <mat-select [formControl]="restauts" multiple>
-                           <mat-option *ngFor="let restau of element.restaurants" [value]="restau.id">{{restau.id}}</mat-option>
+                           <mat-option *ngFor="let restau of element.restaurants.split(',')" [value]="restau">{{restau}}</mat-option>
                           </mat-select>
                         </mat-form-field>                         
                       </td>
@@ -57,7 +57,8 @@
                     <tr mat-header-row *matHeaderRowDef="display_columns"></tr>
                     <tr mat-row *matRowDef="let row; columns: display_columns;"></tr>
                   </table>
-                 <!--  <mat-paginator #paginator [pageSizeOptions]="[2, 4, 6]" showFirstLastButtons></mat-paginator> -->
+                 <mat-paginator #paginator (page)="pageChanged($event)" [length]="prop_user.length"
+                  [pageSizeOptions]="[6]" showFirstLastButtons></mat-paginator> 
                 </div>
               </div>
             </div>
