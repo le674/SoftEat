@@ -10,8 +10,8 @@ import { Proprietaire } from '../interfaces/proprietaire';
 })
 export class UserInteractionService{
   private db: any;
-  private uid!: string;
-  private proprietary!: string;
+  private uid: string;
+  private proprietary: string;
   private prop_list: Proprietaire;
   private user: User;
   private count;
@@ -24,6 +24,9 @@ export class UserInteractionService{
     this.db = getDatabase(ofApp);
     this.user = new User();
     this.count = 0;
+    this.proprietary = "";
+    this.uid = ""
+
   }
   async getAllIdFromProp(prop:string){
     const ref_db = ref(this.db);

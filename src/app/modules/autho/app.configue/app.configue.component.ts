@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { Router } from '@angular/router';
@@ -8,8 +8,10 @@ import { UserInteractionService } from 'src/app/services/user-interaction.servic
 import { Proprietaire } from 'src/app/interfaces/proprietaire';
 import { Restaurant } from 'src/app/interfaces/restaurant';
 import { FormControl } from '@angular/forms';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
+import {MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSelect, MatSelectChange } from '@angular/material/select';
+import { MatOption } from '@angular/material/core';
 
 @Component({
   selector: 'app-app.configue',
@@ -17,19 +19,25 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
   styleUrls: ['./app.configue.component.css']
 })
 export class AppConfigueComponent implements OnInit {
-  public restauts = new FormControl('');
-  public restau_list: Array<Restaurant>;
-  private users: Array<Proprietaire>;
+  private uid: string;
   private proprietaire: string;
+
+  private rest_max_length: number;
+  public restau_list: Array<Restaurant>;
+ 
+  private users: Array<User>;
   public prop_user: Array<ShortUser>;
   public dataSource : MatTableDataSource<ShortUser>;
-  private uid: string;
   public display_columns: string[] = ["id", "email", "restaurants"];
+
+  private page_number:number;
+
+  
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
-
-  
+  @ViewChildren(MatOption)
+  options!: QueryList<MatOption>
 
   public visibles: {
     index_1: boolean,
@@ -43,12 +51,17 @@ export class AppConfigueComponent implements OnInit {
   constructor(private service: InteractionRestaurantService, private user_services: UserInteractionService,
     private ofApp: FirebaseApp, private router: Router) {
     this.visibles = { index_1: true, index_2: true, index_3: true, index_4: true, index_5: true, index_6: true, index_7: true };
-    this.prop_user = []
-    this.dataSource = new MatTableDataSource([new ShortUser()])
-    this.users = [];
+    this.prop_user = [];
+    this.users = []
+    const first_user = new ShortUser()
+    first_user.restaurants = "1,2"
+    this.dataSource = new MatTableDataSource([first_user]);
+
     this.uid = "";
     this.restau_list = [];
     this.proprietaire = "";
+    this.page_number = 1;
+    this.rest_max_length = 0;
   }
   ngOnInit(): void {
     const auth = getAuth(this.ofApp);
@@ -67,30 +80,35 @@ export class AppConfigueComponent implements OnInit {
         })
 
         all_id.then((users) => {
-          if (users !== null) {
-            for(let employee of users.employee){
-              console.log(employee);
-                if (employee.restaurants !== null) {
-                  let row_user = new ShortUser()
-                  row_user.id = employee.id;
-                  row_user.email = employee.email;
-                  row_user.restToString(employee.restaurants);
-                  console.log(row_user);
-                  
-                  this.prop_user.push(row_user)
-                }
-                else {
-                  this.service.getAllRestaurants(this.proprietaire).then((restau_list) => {
-                    employee.restaurants = restau_list
-                    let row_user = new ShortUser()
-                    row_user.id = employee.id;
-                    row_user.email = employee.email;
-                    row_user.restToString(employee.restaurants);
-                    console.log(row_user);
-                    this.prop_user.push(row_user)
-                  })
-                }
-                this.dataSource.data = this.prop_user
+          if (users.employee !== null) {
+            const rest_prom = this.service.getAllRestaurants(this.proprietaire).then((restau_list) => {
+              return(restau_list)
+            })
+            const employees = users.employee
+            for(let i = 0; i < employees.length; i++){
+        
+              let user = new User()
+              user.id = employees[i].id;
+              user.email = employees[i].email;
+              user.restaurants = (employees[i].restaurants === null) ? [] : employees[i].restaurants
+              this.users.push(user)
+
+              rest_prom.then((restau_list) => {
+                
+                let row_user = new ShortUser()
+                
+                row_user.id = employees[i].id;
+                row_user.email = employees[i].email;
+                row_user.restToString(restau_list);
+                this.rest_max_length = restau_list.length
+                this.prop_user.push(row_user)
+
+                const first_event = new PageEvent();
+                first_event.length = this.prop_user.length
+                first_event.pageSize = 6
+                first_event.pageIndex = 0
+                this.pageChanged(first_event);
+              })
             }
           }
           else {
@@ -99,11 +117,6 @@ export class AppConfigueComponent implements OnInit {
         });
       }
     })
-    this.pageChanged({
-      pageIndex: 1,
-      pageSize: 6,
-      length:  this.prop_user.length,
-    });
   }
 
   ngAfterViewInit(): void {
@@ -111,11 +124,61 @@ export class AppConfigueComponent implements OnInit {
 
   pageChanged(event: PageEvent) {
     event.length;
-    const datasource = [... this.prop_user];
-    this.dataSource.data = 
-    datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
+    let datasource = [... this.prop_user];
+    let restaurants_ids:string[] = []
+    this.page_number = event.pageIndex
+    datasource =  datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
+    if(datasource != null){
+      this.dataSource.data = datasource
+    }
+    for(let i = 0; i < this.users.length; i++){
+      let restaurants_ids = this.users[i].restaurants.map((restaurant) => restaurant.id)
+    }
+    console.log(this.options.get(1));
+    this.options.get(1)?.select()
+    let options = this.options.filter((option:MatOption, index:number) => {
+          return(restaurants_ids.includes(option.value))
+    })
+    
+    if(options.length !== 0 ){
+         options.forEach((option) => option.select())
+         console.log("options", options);
+    }
+
   }
 
+/*   set_restaurant(event:boolean, index:number){
+    if(event){
+      //modifier si la taille de la pagination change 
+      let prev_index = index
+      index = 6*this.page_number + index
+      let user = this.prop_user.at(index)
+      if(user){
+        console.log(user);
+        if(user.restaurants !== null) {
+          this.s_restau = user.restToList(user.restaurants)
+          console.log(this.s_restau);
+
+          let options = this.options.filter((option:MatOption, index_opt:number) => {
+            const min_length = this.rest_max_length*prev_index
+            const max_length = this.rest_max_length*(prev_index + 1)
+            return((index_opt >= min_length) && (index_opt < max_length))
+          })
+
+          options.forEach((option) => {
+            option.select()
+          })
+
+        }
+      }
+    }
+    console.log(event);
+  } */
+
+  modif_restau(event: MatSelectChange, index:number){
+    console.log(event.value);
+    
+  }
 
   clicdeConnexion() {
     const auth = getAuth(this.ofApp);
