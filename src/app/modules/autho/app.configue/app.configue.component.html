@@ -48,7 +48,7 @@
                       <td mat-cell *matCellDef="let element; let cell_index = index;">
                         <mat-form-field appearance="fill">
                           <mat-label>restaurants</mat-label>
-                          <mat-select (selectionChange)="modif_restau($event, cell_index)" multiple>
+                          <mat-select (openedChange)="set_restaurant($event,cell_index)"  (selectionChange)="modif_restau($event, cell_index)" multiple>
                            <mat-option #options *ngFor="let restau of element.restaurants.split(',')" [value]="restau">{{restau}}</mat-option>
                           </mat-select>
                         </mat-form-field>                         

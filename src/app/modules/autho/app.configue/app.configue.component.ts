@@ -12,6 +12,7 @@ import {MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
+import { map } from '@firebase/util';
 
 @Component({
   selector: 'app-app.configue',
@@ -131,40 +132,28 @@ export class AppConfigueComponent implements OnInit {
     if(datasource != null){
       this.dataSource.data = datasource
     }
-    for(let i = 0; i < this.users.length; i++){
-      let restaurants_ids = this.users[i].restaurants.map((restaurant) => restaurant.id)
-    }
-    console.log(this.options.get(1));
-    this.options.get(1)?.select()
-    let options = this.options.filter((option:MatOption, index:number) => {
-          return(restaurants_ids.includes(option.value))
-    })
-    
-    if(options.length !== 0 ){
-         options.forEach((option) => option.select())
-         console.log("options", options);
-    }
-
   }
 
-/*   set_restaurant(event:boolean, index:number){
+  set_restaurant(event:boolean, index:number){
     if(event){
       //modifier si la taille de la pagination change 
       let prev_index = index
       index = 6*this.page_number + index
-      let user = this.prop_user.at(index)
+      let user = this.users.at(index)
       if(user){
         console.log(user);
         if(user.restaurants !== null) {
-          this.s_restau = user.restToList(user.restaurants)
-          console.log(this.s_restau);
-
-          let options = this.options.filter((option:MatOption, index_opt:number) => {
+          console.log(user.restaurants);
+          let restaurants = user.restaurants.map((restaurant) => restaurant.id)
+         
+          console.log(this.options);
+          let options = this.options.filter((option: MatOption, index_opt:number) => {
             const min_length = this.rest_max_length*prev_index
             const max_length = this.rest_max_length*(prev_index + 1)
-            return((index_opt >= min_length) && (index_opt < max_length))
+            return(restaurants.includes(option.value) && (index_opt >= min_length) && (index_opt < max_length))
           })
-
+          console.log(options);
+          
           options.forEach((option) => {
             option.select()
           })
@@ -173,7 +162,7 @@ export class AppConfigueComponent implements OnInit {
       }
     }
     console.log(event);
-  } */
+  }
 
   modif_restau(event: MatSelectChange, index:number){
     console.log(event.value);
