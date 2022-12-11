@@ -23,10 +23,7 @@ export class User {
     this.email = ""
     this.id = ""
     this.proprietaire = ""
-    this. restaurants = [{
-      adresse: "",
-      id:""
-    }]
+    this. restaurants = [new Restaurant()]
     this.roles = []
     this.is_prop = false,
     this. alertes = "",
@@ -39,17 +36,26 @@ export class User {
     this.time_work = ""
   }
 
+  setStatus(user:User){
+    this.alertes = user.alertes;
+    this.analyse = user.analyse;
+    this.budget = user.budget;
+    this.facture = user.facture;
+    this.is_prop = user.is_prop;
+    this.stock = user.stock;
+    this.planning = user.planning;
+  }
   remove_null(){
-    this.alertes = (this.alertes === null) ? "" : this.alertes
-    this.analyse = (this.analyse === null) ? "" : this.analyse
-    this.budget = (this.budget === null) ? "" : this.budget
-    this.planning = (this.planning === null) ? "" : this.planning
-    this.stock = (this.stock === null) ? "" : this.stock
-    this.facture = (this.facture === null) ? "" : this.facture
-    this.email = (this.email === null) ? "" : this.email
-    this.id = (this.id === null) ? "" : this.id
-    this.name = (this.name === null) ? "" : this.name
-    this.is_prop = (this.is_prop === null) ? false : this.is_prop
+    this.alertes = (this.alertes === null) ? "" : this.alertes;
+    this.analyse = (this.analyse === null) ? "" : this.analyse;
+    this.budget = (this.budget === null) ? "" : this.budget;
+    this.planning = (this.planning === null) ? "" : this.planning;
+    this.stock = (this.stock === null) ? "" : this.stock;
+    this.facture = (this.facture === null) ? "" : this.facture;
+    this.email = (this.email === null) ? "" : this.email;
+    this.id = (this.id === null) ? "" : this.id;
+    this.name = (this.name === null) ? "" : this.name;
+    this.is_prop = (this.is_prop === null) ? false : this.is_prop;
   }
 
   to_roles() {
@@ -131,6 +137,11 @@ export class ShortUser {
   }
 
   restToList(restaurants:string){
-    return(restaurants.split(','))
+    return restaurants.split(',')
   }
+
+  rolesToString(roles:string[]){
+    this.roles = roles.toString()
+  }
+
 }

@@ -62,3 +62,21 @@ body {
 .mat-cell {
   padding: 10px 15px 8px 0;
 }
+
+/* tableau formulaire*/
+#form_right{
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+  padding: 0;
+}
+
+#validate{
+    text-align: center;
+    justify-content:center;
+}
+
+.accordion-body{
+  display: flex;
+  justify-content: center;
+}

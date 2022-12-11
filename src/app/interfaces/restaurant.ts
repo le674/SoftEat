@@ -11,4 +11,20 @@ export class Restaurant {
       this.adresse = ""
       this.id = ""
     }
+
+    getId(){
+      return this.id
+    }
+
+    setId(id:string){
+      this.id = id;
+    }
+
+    setAdress(adresse:string){
+      this.adresse = adresse
+    }
+
+    getAdress(){  
+      return this.adresse
+    }
 }
