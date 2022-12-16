@@ -25,7 +25,17 @@ export class AppConfigueComponent implements OnInit {
   public restau_list: Array<Restaurant>;
 
   private users: Array<User>;
+  private curr_user: {
+    user0: Array<User>,
+    user1: Array<User>,
+    user2: Array<User>,
+    user3: Array<User>,
+    user4: Array<User>,
+    user5: Array<User>,
+    user6: Array<User>
+  }
   public prop_user: Array<ShortUser>;
+
   public dataSource: {
     data0:  MatTableDataSource<ShortUser>;
     data1:  MatTableDataSource<ShortUser>;
@@ -35,6 +45,16 @@ export class AppConfigueComponent implements OnInit {
     data5:  MatTableDataSource<ShortUser>;
     data6:  MatTableDataSource<ShortUser>;
   }
+  private filter_datasource: {
+    na: Array<ShortUser>,
+    cuisinier: Array<ShortUser>,
+    serveur: Array<ShortUser>,
+    comptable: Array<ShortUser>,
+    rh: Array<ShortUser>,
+    gérant: Array<ShortUser>,
+    proprietaire: Array<ShortUser>
+  }
+
   public display_columns: string[];
 
   private page_number: number;
@@ -69,10 +89,11 @@ export class AppConfigueComponent implements OnInit {
     this.prop_user = [];
     this.users = [];
     this.display_columns = ["id", "email", "restaurants", "read_right", "write_right", "validation"];
-    this.roles = ["proprietaire", "stock", "alertes", "analyse ", "budget ", "facture ", "planning"];
+    this.roles = ["proprietaire", "stock", "alertes", "analyse", "budget", "facture", "planning"];
     const first_user = new ShortUser();
     first_user.restaurants = "1,2";
     first_user.roles = "1,2";
+    first_user.row_roles = "1,2"
     this.dataSource = {
       "data0": new MatTableDataSource([first_user]),
       "data1": new MatTableDataSource([first_user]),
@@ -82,6 +103,26 @@ export class AppConfigueComponent implements OnInit {
       "data5": new MatTableDataSource([first_user]),
       "data6": new MatTableDataSource([first_user]),
     }
+    this.curr_user = {
+      "user0": [new User()],
+      "user1": [new User()],
+      "user2": [new User()],
+      "user3": [new User()],
+      "user4": [new User()],
+      "user5": [new User()],
+      "user6": [new User()]
+    };
+
+    this.filter_datasource = {
+      na: [],
+      comptable: [],
+      cuisinier: [],
+      gérant: [],
+      proprietaire: [],
+      rh: [],
+      serveur: []
+    }
+
     this.statuts = ["Ajouter des employées au restaurant",
       "Cuisinier", "Serveur", "Économiste Comptable Analyste", "Ressources humaines", "Gérant", "Propriétaire"];
     this.uid = "";
@@ -118,7 +159,7 @@ export class AppConfigueComponent implements OnInit {
               user.id = employees[i].id;
               user.email = employees[i].email;
               user.restaurants = (employees[i].restaurants === null) ? [] : employees[i].restaurants
-              user.setStatus(employees[i])
+              user.setStatusFromUser(employees[i]) 
               this.users.push(user)
 
               rest_prom.then((restau_list) => {
@@ -128,7 +169,7 @@ export class AppConfigueComponent implements OnInit {
                 row_user.id = employees[i].id;
                 row_user.email = employees[i].email;
                 row_user.restToString(restau_list);
-                row_user.roles = this.roles.toString()
+                row_user.row_roles = this.roles.toString()
                 this.rest_max_length = restau_list.length
                 this.prop_user.push(row_user)
 
@@ -136,7 +177,13 @@ export class AppConfigueComponent implements OnInit {
                 first_event.length = this.prop_user.length
                 first_event.pageSize = 6
                 first_event.pageIndex = 0
-                this.pageChanged(first_event);
+                this.pageChanged(first_event, 0);
+                this.pageChanged(first_event, 1);
+                this.pageChanged(first_event, 2);
+                this.pageChanged(first_event, 3); 
+                this.pageChanged(first_event, 4);
+                this.pageChanged(first_event, 5);
+                this.pageChanged(first_event, 6);
               })
             }
           }
@@ -151,29 +198,61 @@ export class AppConfigueComponent implements OnInit {
   ngAfterViewInit(): void {
   }
 
-  pageChanged(event: PageEvent) {
+  pageChanged(event: PageEvent, i: number) {
     event.length;
+    let users_data = [] as User[];
+    let role_names = ["","cuisinié", "serveur",
+     ["analyste", "economiste", "prévisionniste", "comptable", "comptable +"], "RH", "gérant", "proprietaire"] 
+    for(let user in this.curr_user){
+      this.curr_user[user as keyof typeof this.curr_user] = this.users;
+    }
+    for(let i = 0; i < this.users.length; i++){
+      this.users[i].to_roles();
+      if(this.prop_user.at(i) !== undefined){
+        this.prop_user[i].roles = this.users[i].roles.toString();
+      }
+    }
+    
     let datasource = [... this.prop_user];
-    this.page_number = event.pageIndex
+
+    this.page_number = event.pageIndex;
+   
+    if(typeof role_names[i] === "string"){
+      datasource = datasource.filter((data) => data.roles === role_names[i])
+    }
+    else{
+      datasource = datasource.filter((data) => {
+        let role_check = role_names[i] as string[]
+        console.log(role_check);
+        let is_role = role_check.map((role) => {
+          return data.roles.includes(role)
+        })
+        console.log(is_role);
+        return(is_role.reduce((previousValue,currentValue) => {
+          console.log(currentValue);
+          return(currentValue || previousValue)
+        }))
+      })
+    }
+    for(let dt_index = 0; dt_index < datasource.length; dt_index++){
+      users_data = this.curr_user[("user"+ i) as keyof typeof  this.curr_user].filter((user) => user.id === datasource[dt_index].id);
+    }
+    this.curr_user[("user" + i) as keyof typeof  this.curr_user] = users_data;
     datasource = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
     if (datasource != null) {
-      this.dataSource.data0.data = datasource
+      this.dataSource["data" + i  as keyof typeof this.dataSource].data =  datasource;
     }
   }
 
-  get_restaurant(event: boolean, index: number) {
+  get_restaurant(event: boolean, index: number, categorie:number) {
     if (event) {
-      console.log("set_restaurant");
-
       //modifier si la taille de la pagination change 
       let prev_index = index
       index = 6 * this.page_number + index
-      let user = this.users.at(index)
+      let user = this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
       if (user) {
         if (user.restaurants !== null) {
           let restaurants = user.restaurants.map((restaurant) => restaurant.id)
-
-          console.log(this.options);
           let options = this.options.filter((option: MatOption, index_opt: number) => {
             const min_length = this.rest_max_length * prev_index
             const max_length = this.rest_max_length * (prev_index + 1)
@@ -189,133 +268,115 @@ export class AppConfigueComponent implements OnInit {
     }
   }
 
-  get_read_right(event: boolean, index: number) {
+  get_read_right(event: boolean, index: number,  categorie:number) {
     if (event) {
       //modifier si la taille de la pagination change 
-
-      let prev_index = index
-      index = 6 * this.page_number + index
-      let user = this.users.at(index)
+      let prev_index = index;
+      let options_list = [];
+      index = 6 * this.page_number + index;
+      let user = this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
+      let i = 0;
       if (user) {
-        console.log(this.options_read);
-        console.log(index);
-
         let options = this.options_read.filter((option: MatOption, index_opt: number) => {
           const min_length = 7 * prev_index
           const max_length = 7 * (prev_index + 1)
           return ((index_opt >= min_length) && (index_opt < max_length))
         })
-        console.log(options);
-
-        if (user.is_prop) {
-          options.at(0)?.select()
+        if(user.is_prop){
+          options_list.push(options.at(0))
         }
-
-        if (user.stock.includes("r")) {
-          options.at(1)?.select()
+        for(let key in user.statut){
+          const role = user.statut[key as keyof typeof user.statut] as string
+          if(typeof role === "string"){
+            if(role.includes('r')){
+              console.log("options", options_list);
+              options_list.push(options.at(i))
+            }
+          }
+          i = i + 1 
         }
-
-        if (user.alertes.includes("r")) {
-          options.at(2)?.select()
-        }
-        if (user.analyse.includes("r")) {
-          options.at(3)?.select()
-        }
-
-        if (user.budget.includes("r")) {
-          options.at(4)?.select()
-        }
-
-        if (user.facture.includes("r")) {
-          options.at(5)?.select()
-        }
-
-        if (user.planning.includes("r")) {
-          options.at(6)?.select()
-        }
+        options_list.forEach((option) => {
+          option?.select()
+        })
       }
     }
   }
 
-  get_write_right(event: boolean, index: number) {
+  get_write_right(event: boolean, index: number,  categorie:number) {
     if (event) {
       //modifier si la taille de la pagination change 
       let prev_index = index
       index = 6 * this.page_number + index
-      let user = this.users.at(index)
+      let user = this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
+      
+      let i = 0;
+      let options_list = []
       if (user) {
         let options = this.options_write.filter((option: MatOption, index_opt: number) => {
           const min_length = 7 * prev_index
           const max_length = 7 * (prev_index + 1)
           return ((index_opt >= min_length) && (index_opt < max_length))
         })
-
-        if (user.is_prop) {
-          options.at(0)?.select()
+        if(user.is_prop){
+          options_list.push(options.at(0))
         }
-
-        if (user.stock.includes("w")) {
-          options.at(1)?.select()
+        for(let key in user.statut){
+          const role = user.statut[key as keyof typeof user.statut] as string
+          if(typeof role === "string"){
+            if(role.includes('w')){
+              options_list.push(options.at(i))
+            }
+          }
+          i = i + 1 
         }
-
-        if (user.alertes.includes("w")) {
-          options.at(2)?.select()
-        }
-        if (user.analyse.includes("w")) {
-          options.at(3)?.select()
-        }
-
-        if (user.budget.includes("w")) {
-          options.at(4)?.select()
-        }
-
-        if (user.facture.includes("w")) {
-          options.at(5)?.select()
-        }
-
-        if (user.planning.includes("w")) {
-          options.at(6)?.select()
-        }
+        options_list.forEach((option) => {
+          option?.select()
+        })
       }
     }
   }
 
-  set_restaurants(event:MatSelectChange, index:number){
+  set_restaurants(event:MatSelectChange, index:number,  categorie:number){
     index = 6 * this.page_number + index
-    console.log(index);
     const restaurants = event.value
-    console.log(restaurants);
-    const user = this.users.at(index)
-    console.log(user?.id);
+    let user = this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
     if(user?.restaurants !== undefined){
       user.restaurants.forEach((restaurant:Restaurant, index:number) => {
         if(restaurants.includes(restaurant.id)){
-          restaurants.filter((restaurant: { id: any; }) => (restaurant !== restaurant.id))
+          restaurants.filter((restaurant: {id: any;}) => (restaurant !== restaurant.id))
         }
-        user.restaurants.shift()
+        user?.restaurants.shift()
       })
-      restaurants.forEach((restaurant_id: any) => {
-        const restaurant = new Restaurant();
-        restaurant.setId(restaurant_id)
-        user.restaurants.push(restaurants)
-      })
+      user.restaurants.push(restaurants)
       if(user.restaurants.length === 2) user.restaurants.shift()
-      console.log(user);
-      
     } 
     
   }
 
-  set_read_right(event:MatSelectChange, index:number){
-    console.log(event);
+  set_read_right(event:MatSelectChange, index:number,  categorie:number){
+    index = 6 * this.page_number + index;
+    const new_rights = event.value;
+    const user = this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
+    console.log(user);
+    user?.setStatus(new_rights, "r");  
+    console.log(user);
   }
 
-  set_write_right(event:MatSelectChange, index:number){
-    console.log(event);
+  set_write_right(event:MatSelectChange, index:number,  categorie:number){
+    index = 6 * this.page_number + index;
+    const new_rights = event.value;
+    const user = this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
+    console.log(user);
+    user?.setStatus(new_rights, "w"); 
+    console.log(user);
   }
 
-  modif_right(index:number) {
-
+  modif_right(index:number,  categorie:number) {
+    index = 6*this.page_number + index
+    let user =this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
+    if(user !== undefined){
+      this.user_services.setUser(this.proprietaire, user)
+    }
   }
 
 

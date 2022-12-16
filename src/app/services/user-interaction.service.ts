@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { child, get, getDatabase, ref } from 'firebase/database';
+import { child, get, getDatabase, ref, set, update } from 'firebase/database';
 import { User } from '../interfaces/user';
 import { FirebaseApp } from "@angular/fire/app";
 import { Proprietaire } from '../interfaces/proprietaire';
+import { Restaurant } from '../interfaces/restaurant';
 
 @Injectable({
   providedIn: 'root'
@@ -37,14 +38,13 @@ export class UserInteractionService{
           add_user.id = (user.key === null)? '' : user.key
           add_user.email = user.val().email
           add_user.restaurants = user.child('restaurant').val()
-          add_user.alertes = user.child('statut/alertes').val()
-          add_user.analyse = user.child('statut/analyse').val()
-          add_user.budget = user.child('statut/budget').val()
-          add_user.facture = user.child('statut/factures').val()
-          add_user.is_prop = user.child('statut/is_prop').val()
-          add_user.planning = user.child('statut/rh').val()
-          add_user.stock = user.child('statut/stock').val()
-          add_user.remove_null()
+          add_user.statut.alertes = user.child("statut/alertes").val()
+          add_user.statut.analyse = user.child("statut/analyse").val()
+          add_user.statut.budget = user.child("statut/budget").val()
+          add_user.statut.facture = user.child("statut/facture").val()
+          add_user.statut.stock = user.child("statut/stock").val()
+          add_user.statut.planning = user.child("statut/planning").val()
+          add_user.is_prop = user.child(`statut/is_prop`).val()
           add_user.to_roles()
           this.prop_list.employee.push(add_user)
         })
@@ -67,5 +67,14 @@ export class UserInteractionService{
         console.log(error);  
       })
       return(this.user.proprietaire);
+  }
+
+  async setUser(prop:string, user:User){
+    const ref_db = ref(this.db, `Users/${prop}/${user.id}`);
+    Object.assign(user.statut, {"is_prop":user.is_prop})
+    await update(ref_db, {
+      "/statut/": user.statut,
+      "/restaurant/": user.restaurants
+    })
   }
 }

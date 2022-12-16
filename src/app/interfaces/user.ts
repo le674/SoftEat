@@ -1,20 +1,24 @@
 import { map } from "@firebase/util";
 import { Restaurant } from "./restaurant";
+import { Statut } from "./statut";
 
 export class User {
   public "name": string;
+  public "surname": string;
   public "email":string;
   public "id":string;
   public "proprietaire": string;
   public "restaurants": Array<Restaurant>;
-  public "roles": Array<string>;
+  public "statut": {
+    alertes?:string,
+    stock?:string,
+    analyse?:string,
+    budget?:string,
+    facture?:string,
+    planning?:string
+  };
   public "is_prop": boolean;
-  public "alertes": string;
-  public "analyse": string;
-  public "budget": string;
-  public "facture": string;
-  public "stock": string;
-  public "planning": string;
+  public "roles": Array<string>;
   public "prev_aliments": string;
   public "time_work": string;
 
@@ -23,49 +27,104 @@ export class User {
     this.email = ""
     this.id = ""
     this.proprietaire = ""
-    this. restaurants = [new Restaurant()]
+    this.restaurants = [new Restaurant()]
     this.roles = []
-    this.is_prop = false,
-    this. alertes = "",
-    this.analyse = "",
-    this.budget = "",
-    this.facture = "",
-    this.stock = "",
-    this.planning = "",
     this.prev_aliments = "",
-    this.time_work = ""
+    this.time_work = "",
+    this.is_prop = false
+    this.statut = Object.assign({"alertes": ""},{"stock": ""},
+     {"analyse": ""}, {"budget": ""},{ "facture": ""}, {"planning": ""})
   }
 
-  setStatus(user:User){
-    this.alertes = user.alertes;
-    this.analyse = user.analyse;
-    this.budget = user.budget;
-    this.facture = user.facture;
-    this.is_prop = user.is_prop;
-    this.stock = user.stock;
-    this.planning = user.planning;
+  getStatus(right:string):string[]{
+    let status = []
+    let roles = ["proprietaire", "stock", "alertes", "analyse", "budget", "facture", "planning"];
+    for(let key in this.statut){
+      console.log(key);
+      if(key === "is_prop"){
+        status.push('proprietaire')
+      } 
+      else{
+        console.log(key);
+         const role = this.statut[key as keyof typeof this.statut] as string
+          if(typeof role === "string"){
+            if(role.includes(right)) status.push(key) 
+          }  
+        }
+      }
+      return status
+    }
+
+  setStatus(status:string[], right:string){
+    console.log('statut', status);
+    let roles = ["proprietaire", "stock", "alertes", "analyse", "budget", "facture", "planning"];
+
+    roles.forEach((role) => {
+      if(role === 'proprietaire'){
+        if(status.includes('proprietaire')){
+          this.is_prop = true;
+        } 
+        else{
+          this.is_prop = false;
+        }
+      }
+      else{
+        let u_role = (this.statut[role as keyof typeof this.statut] == undefined) ? "" : this.statut[role as keyof typeof this.statut]
+        if(status.includes(role)){
+          if(typeof u_role === 'string'){
+            if(!u_role.includes('r')){
+              if(right === 'r') u_role = u_role + 'r'
+            }
+            if(!u_role.includes('w')){
+              if(right === 'w') u_role = u_role + 'w'
+            }
+          }
+        }
+        else{
+          if(typeof u_role === 'string'){
+            if(u_role.includes('r')){
+              if(right === 'r') u_role = u_role.replace('r', '')
+            }
+            if(u_role.includes('w')){
+              if(right === 'w') u_role = u_role.replace('w', '')
+            }
+          }
+        }
+        this.statut[role as keyof typeof this.statut] = u_role
+      }
+    })   
   }
+
+  setStatusFromUser(user:User){
+    console.log(this.statut);
+    for(let key in this.statut){
+      this.statut[key as keyof typeof this.statut] = user.statut[key as keyof typeof this.statut]
+    }
+  }
+
+
   remove_null(){
-    this.alertes = (this.alertes === null) ? "" : this.alertes;
-    this.analyse = (this.analyse === null) ? "" : this.analyse;
-    this.budget = (this.budget === null) ? "" : this.budget;
-    this.planning = (this.planning === null) ? "" : this.planning;
-    this.stock = (this.stock === null) ? "" : this.stock;
-    this.facture = (this.facture === null) ? "" : this.facture;
-    this.email = (this.email === null) ? "" : this.email;
-    this.id = (this.id === null) ? "" : this.id;
-    this.name = (this.name === null) ? "" : this.name;
-    this.is_prop = (this.is_prop === null) ? false : this.is_prop;
+    this.is_prop = false
+    this.statut = {
+      analyse: "",
+      budget: "",
+      facture: "",
+      stock: "",
+      planning: "",
+      alertes: ""
+    }
   }
+
 
   to_roles() {
     this.roles = []
-    if (this.is_prop) {
+    if(this.is_prop) {
       this.roles.push("proprietaire");
       return null;
     }
-    if (this.stock.includes("r")) {
-      if (this.stock.includes("w")) {
+  
+    if (this.statut.stock?.includes("r")) {
+      if (this.statut.stock?.includes("w")) {
         this.roles.push("cuisinié");
       }
       else {
@@ -73,8 +132,8 @@ export class User {
       }
     }
 
-    if (this.analyse.includes("r")) {
-      if (this.analyse.includes("w")) {
+    if (this.statut.analyse?.includes("r")) {
+      if (this.statut.analyse?.includes("w")) {
         this.roles.push("prévisionniste");
       }
       else {
@@ -82,8 +141,8 @@ export class User {
       }
     }
 
-    if (this.budget.includes("r")) {
-      if (this.budget.includes("w")) {
+    if (this.statut.budget?.includes("r")) {
+      if (this.statut.budget?.includes("w")) {
         this.roles.push("economiste")
       }
       else {
@@ -91,8 +150,8 @@ export class User {
       }
     }
 
-    if (this.facture.includes("r")) {
-      if (this.facture.includes("w")) {
+    if (this.statut.facture?.includes("r")) {
+      if (this.statut.facture?.includes("w")) {
         this.roles.push("comptable +");
       }
       else {
@@ -100,13 +159,13 @@ export class User {
       }
     }
 
-    if (this.planning.includes("w")) {
+    if (this.statut.planning?.includes("w")) {
       this.roles.push("RH");
     }
 
-    if(this.stock.includes("w") && this.planning.includes("w") &&
-     this.facture.includes("w") && this.analyse.includes("w") &&
-      this.budget.includes("w")) {
+    if(this.statut.stock?.includes("w") && this.statut.planning?.includes("w") &&
+    this.statut.facture?.includes("w") && this.statut.analyse?.includes("w") &&
+    this.statut.budget?.includes("w")) {
       this.roles = ["gérant"];
     }
 
@@ -121,6 +180,7 @@ export class ShortUser {
   public "proprietaire": string;
   public "restaurants": string;
   public "roles": string;
+  public "row_roles":string;
   public "is_prop": boolean;
   public "alertes": string;
   public "analyse": string;
@@ -141,7 +201,7 @@ export class ShortUser {
   }
 
   rolesToString(roles:string[]){
-    this.roles = roles.toString()
+    this.row_roles= roles.toString()
   }
 
 }
