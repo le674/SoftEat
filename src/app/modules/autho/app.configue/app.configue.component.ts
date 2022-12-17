@@ -58,6 +58,7 @@ export class AppConfigueComponent implements OnInit {
   public display_columns: string[];
 
   private page_number: number;
+  private curr_categorie: number;
 
   private roles: string[];
   public statuts: string[];
@@ -130,6 +131,7 @@ export class AppConfigueComponent implements OnInit {
     this.proprietaire = "";
     this.page_number = 1;
     this.rest_max_length = 0;
+    this.curr_categorie = 0;
   }
   ngOnInit(): void {
     const auth = getAuth(this.ofApp);
@@ -147,7 +149,7 @@ export class AppConfigueComponent implements OnInit {
           return (all_id)
         })
 
-        all_id.then((users) => {
+       all_id.then((users) => {
           if (users.employee !== null) {
             const rest_prom = this.service.getAllRestaurants(this.proprietaire).then((restau_list) => {
               return (restau_list)
@@ -161,7 +163,6 @@ export class AppConfigueComponent implements OnInit {
               user.restaurants = (employees[i].restaurants === null) ? [] : employees[i].restaurants
               user.setStatusFromUser(employees[i]) 
               this.users.push(user)
-
               rest_prom.then((restau_list) => {
 
                 let row_user = new ShortUser()
@@ -172,24 +173,26 @@ export class AppConfigueComponent implements OnInit {
                 row_user.row_roles = this.roles.toString()
                 this.rest_max_length = restau_list.length
                 this.prop_user.push(row_user)
-
-                const first_event = new PageEvent();
-                first_event.length = this.prop_user.length
-                first_event.pageSize = 6
-                first_event.pageIndex = 0
-                this.pageChanged(first_event, 0);
-                this.pageChanged(first_event, 1);
-                this.pageChanged(first_event, 2);
-                this.pageChanged(first_event, 3); 
-                this.pageChanged(first_event, 4);
-                this.pageChanged(first_event, 5);
-                this.pageChanged(first_event, 6);
+                if(i === (employees.length - 1)){
+                  const first_event = new PageEvent();
+                  first_event.length = this.prop_user.length
+                  first_event.pageSize = 6
+                  first_event.pageIndex = 0
+                  this.pageChanged(first_event, 0);
+                  this.pageChanged(first_event, 1);
+                  this.pageChanged(first_event, 2);
+                  this.pageChanged(first_event, 3); 
+                  this.pageChanged(first_event, 4);
+                  this.pageChanged(first_event, 5);
+                  this.pageChanged(first_event, 6);
+                }
               })
             }
           }
           else {
             console.log("pas d'utilisateur");
           }
+          return this.users
         });
       }
     })
@@ -201,11 +204,9 @@ export class AppConfigueComponent implements OnInit {
   pageChanged(event: PageEvent, i: number) {
     event.length;
     let users_data = [] as User[];
+    this.curr_user["user" + i as keyof typeof this.curr_user] = this.users;
     let role_names = ["","cuisinié", "serveur",
      ["analyste", "economiste", "prévisionniste", "comptable", "comptable +"], "RH", "gérant", "proprietaire"] 
-    for(let user in this.curr_user){
-      this.curr_user[user as keyof typeof this.curr_user] = this.users;
-    }
     for(let i = 0; i < this.users.length; i++){
       this.users[i].to_roles();
       if(this.prop_user.at(i) !== undefined){
@@ -216,28 +217,29 @@ export class AppConfigueComponent implements OnInit {
     let datasource = [... this.prop_user];
 
     this.page_number = event.pageIndex;
-   
+
+
     if(typeof role_names[i] === "string"){
       datasource = datasource.filter((data) => data.roles === role_names[i])
     }
     else{
       datasource = datasource.filter((data) => {
         let role_check = role_names[i] as string[]
-        console.log(role_check);
         let is_role = role_check.map((role) => {
           return data.roles.includes(role)
         })
         console.log(is_role);
         return(is_role.reduce((previousValue,currentValue) => {
-          console.log(currentValue);
           return(currentValue || previousValue)
         }))
       })
     }
-    for(let dt_index = 0; dt_index < datasource.length; dt_index++){
-      users_data = this.curr_user[("user"+ i) as keyof typeof  this.curr_user].filter((user) => user.id === datasource[dt_index].id);
-    }
-    this.curr_user[("user" + i) as keyof typeof  this.curr_user] = users_data;
+
+    let datasource_ids = datasource.map((data) => data.id);
+    let datas_user = this.curr_user[("user"+ i) as keyof typeof  this.curr_user].filter((user) => datasource_ids.includes(user.id));
+    this.curr_user[("user" + i) as keyof typeof  this.curr_user] = datas_user;
+    
+    
     datasource = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
     if (datasource != null) {
       this.dataSource["data" + i  as keyof typeof this.dataSource].data =  datasource;
@@ -246,16 +248,21 @@ export class AppConfigueComponent implements OnInit {
 
   get_restaurant(event: boolean, index: number, categorie:number) {
     if (event) {
+      let cum_length_pages = 0;
+      this.curr_categorie = categorie;
       //modifier si la taille de la pagination change 
-      let prev_index = index
-      index = 6 * this.page_number + index
+      let prev_index = index;
+      index = 6 * this.page_number + index;
       let user = this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
+      for(let i = 0; i < categorie; i++){
+        cum_length_pages = cum_length_pages + this.curr_user["user" + i as keyof typeof this.curr_user].length ;
+      }
       if (user) {
         if (user.restaurants !== null) {
           let restaurants = user.restaurants.map((restaurant) => restaurant.id)
-          let options = this.options.filter((option: MatOption, index_opt: number) => {
-            const min_length = this.rest_max_length * prev_index
-            const max_length = this.rest_max_length * (prev_index + 1)
+          let options = this.options.filter((option: MatOption, index_opt: number) => {  
+            const min_length = this.rest_max_length * prev_index + cum_length_pages*this.rest_max_length
+            const max_length = this.rest_max_length * (prev_index + 1) + cum_length_pages*this.rest_max_length
             return (restaurants.includes(option.value) && (index_opt >= min_length) && (index_opt < max_length))
           })
 
@@ -270,16 +277,21 @@ export class AppConfigueComponent implements OnInit {
 
   get_read_right(event: boolean, index: number,  categorie:number) {
     if (event) {
+      let cum_length_pages = 0;
+      this.curr_categorie = categorie
       //modifier si la taille de la pagination change 
       let prev_index = index;
       let options_list = [];
       index = 6 * this.page_number + index;
+      for(let i = 0; i < categorie; i++){
+        cum_length_pages = cum_length_pages + this.curr_user["user" + i as keyof typeof this.curr_user].length ;
+      }
       let user = this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
       let i = 0;
       if (user) {
         let options = this.options_read.filter((option: MatOption, index_opt: number) => {
-          const min_length = 7 * prev_index
-          const max_length = 7 * (prev_index + 1)
+          const min_length = 7 * (prev_index + cum_length_pages)
+          const max_length = 7 * (prev_index + cum_length_pages + 1)
           return ((index_opt >= min_length) && (index_opt < max_length))
         })
         if(user.is_prop){
@@ -304,17 +316,22 @@ export class AppConfigueComponent implements OnInit {
 
   get_write_right(event: boolean, index: number,  categorie:number) {
     if (event) {
+      this.curr_categorie = categorie
+      let cum_length_pages = 0;
       //modifier si la taille de la pagination change 
       let prev_index = index
       index = 6 * this.page_number + index
+      for(let i = 0; i < categorie; i++){
+        cum_length_pages = cum_length_pages + this.curr_user["user" + i as keyof typeof this.curr_user].length ;
+      }
       let user = this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
-      
+
       let i = 0;
       let options_list = []
       if (user) {
         let options = this.options_write.filter((option: MatOption, index_opt: number) => {
-          const min_length = 7 * prev_index
-          const max_length = 7 * (prev_index + 1)
+          const min_length = 7 * (prev_index + cum_length_pages) 
+          const max_length = 7 * (prev_index + cum_length_pages + 1)
           return ((index_opt >= min_length) && (index_opt < max_length))
         })
         if(user.is_prop){
@@ -339,7 +356,8 @@ export class AppConfigueComponent implements OnInit {
   set_restaurants(event:MatSelectChange, index:number,  categorie:number){
     index = 6 * this.page_number + index
     const restaurants = event.value
-    let user = this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
+    let user = this.curr_user["user" +  this.curr_categorie as keyof typeof this.curr_user].at(index);
+
     if(user?.restaurants !== undefined){
       user.restaurants.forEach((restaurant:Restaurant, index:number) => {
         if(restaurants.includes(restaurant.id)){
@@ -347,8 +365,12 @@ export class AppConfigueComponent implements OnInit {
         }
         user?.restaurants.shift()
       })
-      user.restaurants.push(restaurants)
-      if(user.restaurants.length === 2) user.restaurants.shift()
+      
+      for(let restaurant of restaurants){
+        let restau = new Restaurant()
+        restau.id = restaurant 
+        user.restaurants.push(restau)
+      }
     } 
     
   }
@@ -356,27 +378,26 @@ export class AppConfigueComponent implements OnInit {
   set_read_right(event:MatSelectChange, index:number,  categorie:number){
     index = 6 * this.page_number + index;
     const new_rights = event.value;
-    const user = this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
-    console.log(user);
+    const user = this.curr_user["user" +  this.curr_categorie as keyof typeof this.curr_user].at(index);
     user?.setStatus(new_rights, "r");  
-    console.log(user);
   }
 
   set_write_right(event:MatSelectChange, index:number,  categorie:number){
     index = 6 * this.page_number + index;
     const new_rights = event.value;
-    const user = this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
-    console.log(user);
+    const user = this.curr_user["user" +  this.curr_categorie as keyof typeof this.curr_user].at(index);
     user?.setStatus(new_rights, "w"); 
-    console.log(user);
   }
 
   modif_right(index:number,  categorie:number) {
     index = 6*this.page_number + index
     let user =this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
+    console.log(user);
+    
     if(user !== undefined){
       this.user_services.setUser(this.proprietaire, user)
     }
+    alert("vous avez bien modifier l'ultilisateur")
   }
 
 

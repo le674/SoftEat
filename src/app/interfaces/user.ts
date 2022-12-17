@@ -45,7 +45,6 @@ export class User {
         status.push('proprietaire')
       } 
       else{
-        console.log(key);
          const role = this.statut[key as keyof typeof this.statut] as string
           if(typeof role === "string"){
             if(role.includes(right)) status.push(key) 

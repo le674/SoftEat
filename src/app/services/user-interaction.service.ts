@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { child, get, getDatabase, ref, set, update } from 'firebase/database';
+import { child, get, getDatabase, push, ref, set, update } from 'firebase/database';
 import { User } from '../interfaces/user';
 import { FirebaseApp } from "@angular/fire/app";
 import { Proprietaire } from '../interfaces/proprietaire';
@@ -37,7 +37,12 @@ export class UserInteractionService{
           let add_user = new User()
           add_user.id = (user.key === null)? '' : user.key
           add_user.email = user.val().email
-          add_user.restaurants = user.child('restaurant').val()
+          user.child('restaurant').forEach((restaurant: any) => {
+            console.log(restaurant);
+            let tmp_restaurant = new Restaurant()
+            tmp_restaurant.id = restaurant.val().id
+            add_user.restaurants.push(tmp_restaurant)
+          })
           add_user.statut.alertes = user.child("statut/alertes").val()
           add_user.statut.analyse = user.child("statut/analyse").val()
           add_user.statut.budget = user.child("statut/budget").val()
@@ -49,6 +54,8 @@ export class UserInteractionService{
           this.prop_list.employee.push(add_user)
         })
      })
+     console.log(this.prop_list);
+     
      return(this.prop_list)  
   }
 
@@ -71,10 +78,12 @@ export class UserInteractionService{
 
   async setUser(prop:string, user:User){
     const ref_db = ref(this.db, `Users/${prop}/${user.id}`);
-    Object.assign(user.statut, {"is_prop":user.is_prop})
+    console.log(user.restaurants);
+    
     await update(ref_db, {
       "/statut/": user.statut,
       "/restaurant/": user.restaurants
     })
+
   }
 }

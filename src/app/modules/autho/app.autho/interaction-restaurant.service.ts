@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
-import { child, get, getDatabase, ref, set } from 'firebase/database';
+import { child, get, getDatabase, push, ref, set, update } from 'firebase/database';
 import { Restaurant, UserRestaurant } from 'src/app/interfaces/restaurant';
 
 
@@ -101,9 +101,14 @@ async getAllRestaurants(prop:string){
   return(this.restaurant)  
 }
 
-async setRestaurant(prop:string, user_id: string, restaurants:string[]){
+async setRestaurant(prop:string, user_id: string, str_restaurants:string[]){
   const ref_db = ref(this.db, `Users/${prop}/${user_id}/restaurant/`);
-  await set(ref_db, restaurants)
+  for(let str_restaurant of str_restaurants){
+    let restaurant = new Restaurant()
+    restaurant.id = str_restaurant
+    restaurant.adresse = "test"
+  }
+  await set(ref_db, this.restaurant)
 }
 
 }
