@@ -16,7 +16,7 @@ export class AppFormComponent implements OnInit {
   private proprietaire: string;
   public restaurant_section = new FormGroup({
     id: new FormControl('', Validators.required),
-    adresse: new FormControl('')
+    adresse: new FormControl('', Validators.required)
   })
 
   constructor(@Inject(MAT_DIALOG_DATA) public data:{

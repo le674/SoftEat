@@ -118,8 +118,6 @@ Inscription(email:string,password:string){
       }
     });
     if(this.auth.currentUser){connecter=true;}
-    console.log("."+connecter);
-
     return connecter;
   }
 

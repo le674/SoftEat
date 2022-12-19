@@ -38,7 +38,6 @@ export class UserInteractionService{
           add_user.id = (user.key === null)? '' : user.key
           add_user.email = user.val().email
           user.child('restaurant').forEach((restaurant: any) => {
-            console.log(restaurant);
             let tmp_restaurant = new Restaurant()
             tmp_restaurant.id = restaurant.val().id
             add_user.restaurants.push(tmp_restaurant)
@@ -54,8 +53,6 @@ export class UserInteractionService{
           this.prop_list.employee.push(add_user)
         })
      })
-     console.log(this.prop_list);
-     
      return(this.prop_list)  
   }
 
@@ -91,7 +88,6 @@ export class UserInteractionService{
           })
         // on supprime le premer utilisateur lié à la création de User
         this.user.restaurants.shift() 
-        console.log(this.user.restaurants);
         
         this.user.statut.alertes = user.child("statut/alertes").val()
         this.user.statut.analyse = user.child("statut/analyse").val()
@@ -107,13 +103,8 @@ export class UserInteractionService{
   }
   async setUser(prop:string, user:User){
     const ref_db = ref(this.db, `Users/${prop}/${user.id}`);
-    console.log(user.restaurants);
-    
     await update(ref_db, {
-      "/statut/": user.statut
-    })
-
-    await set(ref_db, {
+      "/statut/": user.statut,
       "/restaurant/": user.restaurants
     })
 

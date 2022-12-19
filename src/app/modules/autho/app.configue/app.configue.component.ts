@@ -392,9 +392,21 @@ export class AppConfigueComponent implements OnInit {
   modif_right(index:number,  categorie:number) {
     index = 6*this.page_number + index
     let user =this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
-    console.log(user);
-    
+    const restaurant_ids = user?.restaurants.map((restaurant) => restaurant.id)
+    const unique_restau = Array.from(new Set(restaurant_ids))
+    console.log(unique_restau);
+    let filter_user = user?.restaurants.filter((restaurant) => {
+      if(unique_restau.includes(restaurant.id)){
+        unique_restau.shift();
+        return true
+      }else{
+        return false
+      }
+    })
+
     if(user !== undefined){
+      if(filter_user != undefined) user.restaurants = filter_user
+      console.log(user);
       this.user_services.setUser(this.proprietaire, user)
     }
     alert("vous avez bien modifier l'ultilisateur")

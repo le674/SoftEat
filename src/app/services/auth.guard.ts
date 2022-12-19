@@ -28,14 +28,11 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
       if(this.authService.estConnecter == true ) {
-        console.log("1");
 
         return true;
 
       }
       else{
-        console.log("2");
-
       this.router.navigate([''])
 
     }

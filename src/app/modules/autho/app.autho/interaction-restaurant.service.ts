@@ -106,9 +106,11 @@ async getAllRestaurants(prop:string){
 async setRestaurant(prop:string, restaurant:Restaurant){
   const ref_db = ref(this.db, `restaurants/${prop}`);
   await update(ref_db, {
-    [restaurant.id]: restaurant.adresse
-  })
-}
+    [restaurant.id]: {
+        adress: restaurant.adresse
+      }
+    })
+  }
 
 async setRestaurantId(prop:string, user_id: string, str_restaurants:string[]){
   const ref_db = ref(this.db, `Users/${prop}/${user_id}/restaurant/`);
