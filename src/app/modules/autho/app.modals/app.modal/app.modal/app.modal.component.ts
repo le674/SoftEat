@@ -1,7 +1,6 @@
 import {Component, ElementRef, OnInit } from '@angular/core';
 import {Inject} from '@angular/core';
 import { MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { AppAuthoComponent } from '../../app.autho/app.autho.component';
 
 
 @Component({
@@ -23,11 +22,8 @@ export class AppModalComponent implements OnInit {
     }
   ngOnInit(): void {
     const mat_dialog_config: MatDialogConfig = new MatDialogConfig();
-    console.log(this.triggerElementRef);
     
     const rect = this.triggerElementRef.nativeElement.getBoundingClientRect();
-    console.log(rect.left);
-    console.log(rect.bottom);
 
     mat_dialog_config.autoFocus = true;
     mat_dialog_config.panelClass = "custom-modal"

@@ -76,12 +76,44 @@ export class UserInteractionService{
       return(this.user.proprietaire);
   }
 
+  async getUserFromUid(uid:string, prop:string){
+    this.user = new User()
+    const ref_db = ref(this.db, `Users/${prop}/${uid}`);
+    await get(ref_db).then((user : any) => {
+      if(user.exists()){
+        this.user.id = uid;
+        this.user.email = user.val().email;
+        this.user.statut.alertes
+        user.child('restaurant').forEach((restaurant: any) => {
+            let tmp_restaurant = new Restaurant()
+            tmp_restaurant.id = restaurant.val().id
+            this.user.restaurants.push(tmp_restaurant)
+          })
+        // on supprime le premer utilisateur lié à la création de User
+        this.user.restaurants.shift() 
+        console.log(this.user.restaurants);
+        
+        this.user.statut.alertes = user.child("statut/alertes").val()
+        this.user.statut.analyse = user.child("statut/analyse").val()
+        this.user.statut.budget = user.child("statut/budget").val()
+        this.user.statut.facture = user.child("statut/facture").val()
+        this.user.statut.stock = user.child("statut/stock").val()
+        this.user.statut.planning = user.child("statut/planning").val()
+        this.user.is_prop = user.child(`statut/is_prop`).val()
+        this.user.to_roles()
+      }
+    })
+    return this.user
+  }
   async setUser(prop:string, user:User){
     const ref_db = ref(this.db, `Users/${prop}/${user.id}`);
     console.log(user.restaurants);
     
     await update(ref_db, {
-      "/statut/": user.statut,
+      "/statut/": user.statut
+    })
+
+    await set(ref_db, {
       "/restaurant/": user.restaurants
     })
 

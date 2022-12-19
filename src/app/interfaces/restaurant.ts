@@ -3,6 +3,12 @@ export interface UserRestaurant {
     "restaurants": Array<Restaurant>;
 }
 
+
+export interface UserRestaurantRole {
+  "proprietaire": string;
+  "restaurants": Array<Restaurant>;
+}
+
 export class Restaurant {
     "id": string;
     "adresse": string

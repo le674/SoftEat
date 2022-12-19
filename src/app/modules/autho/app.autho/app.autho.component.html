@@ -27,6 +27,11 @@
     </header>
     <main>
         <div id="analyse-wrapper">
+            <a href="autho/configuration?new='true'" id="link_configure">
+                <button class="btn btn-outline-success" id="configurer" [ngStyle]="{'visibility': is_confique}">
+                    configuration des restaurants
+                </button>
+            </a> 
             <button class="btn btn-outline-success" id="analyse" > Analyse des restaurants</button>
         </div>
         <div class="container-fluid" id="card_number">
@@ -50,9 +55,6 @@
                             <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="openDialog(restaurant, $event)">
                                 <br>  <i class="fa-solid fa-trash"> </i> <br> Supprimer
                             </a>
-                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" href="autho/configuration?new='false'">
-                                <br>   <i class="fa-solid fa-gear"></i> Configurer
-                            </a>
                         </div>
                     </figure>
                 </div>
@@ -69,7 +71,7 @@
                             <span class="description">Cliquer pour ajouter un restaurant</span>
                         </figcaption>
                         <div class="tourbtn">
-                            <a class="btn btn-sm" target="_blank" rel="noreferrer" href="autho/configuration?new='true'">
+                            <a class="btn btn-sm" target="_blank" rel="noreferrer" (click)="openFormular($event)">
                                 <i class="fa-solid fa-plus"></i> <br> Ajouter
                             </a>
                         </div>

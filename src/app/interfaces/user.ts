@@ -27,7 +27,7 @@ export class User {
     this.email = ""
     this.id = ""
     this.proprietaire = ""
-    this.restaurants = [new Restaurant()]
+    this.restaurants = []
     this.roles = []
     this.prev_aliments = "",
     this.time_work = "",

@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { FirebaseApp } from "@angular/fire/app";
-import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
-import { child, get, getDatabase, push, ref, set, update } from 'firebase/database';
-import { Restaurant, UserRestaurant } from 'src/app/interfaces/restaurant';
+import {ElementRef, Injectable, ViewChild} from '@angular/core';
+import {FirebaseApp} from "@angular/fire/app";
+import {getAuth} from 'firebase/auth';
+import {child, get, getDatabase, ref, set, update} from 'firebase/database';
+import {Restaurant, UserRestaurant} from 'src/app/interfaces/restaurant';
 
 
 
@@ -24,6 +24,7 @@ export class InteractionRestaurantService{
       this.user_auth = {   
       "proprietaire":"",
       "restaurants":[new Restaurant()]
+      
     };
       this.restaurant = [];
       const auth = getAuth(ofApp);
@@ -101,7 +102,15 @@ async getAllRestaurants(prop:string){
   return(this.restaurant)  
 }
 
-async setRestaurant(prop:string, user_id: string, str_restaurants:string[]){
+
+async setRestaurant(prop:string, restaurant:Restaurant){
+  const ref_db = ref(this.db, `restaurants/${prop}`);
+  await update(ref_db, {
+    [restaurant.id]: restaurant.adresse
+  })
+}
+
+async setRestaurantId(prop:string, user_id: string, str_restaurants:string[]){
   const ref_db = ref(this.db, `Users/${prop}/${user_id}/restaurant/`);
   for(let str_restaurant of str_restaurants){
     let restaurant = new Restaurant()

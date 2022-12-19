@@ -1,0 +1,18 @@
+<form [formGroup]="restaurant_section" (ngSubmit)="on_validate()">
+    <div mat-dialog-content id="container" >
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer le nom du restaurant</mat-label>
+            <input matInput  formControlName="id" placeholder="Ex. foodandboost">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer l'adresse du restaurant</mat-label>
+            <input matInput  formControlName="adresse" placeholder="Ex. 2 rue des mimosa, 42000 Saint-Étienne">
+        </mat-form-field>
+        <div>
+            <div mat-dialog-actions id="actions">
+                <button mat-raised-button (click)="on_no_click()" id="close">Fermer</button>
+                <button type="submit" mat-raised-button  id="valider">Valider</button>
+            </div>
+        </div>
+    </div>
+</form>

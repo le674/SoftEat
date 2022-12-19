@@ -3,10 +3,11 @@ import { FirebaseApp } from '@angular/fire/app';
 import { MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { AppModalComponent } from '../app.configue/app.modal/app.modal.component';
 import { InteractionRestaurantService } from './interaction-restaurant.service';
 import {UserInteractionService} from 'src/app/services/user-interaction.service'
 import { Restaurant } from 'src/app/interfaces/restaurant';
+import { AppModalComponent } from '../app.modals/app.modal/app.modal/app.modal.component';
+import { AppFormComponent } from '../app.modals/app.form/app.form/app.form.component';
 
 @Component({
   selector: 'app-app.autho',
@@ -18,6 +19,7 @@ export class AppAuthoComponent implements OnInit {
 
   private readonly screen_width: any;
   private uid: string;
+  public is_confique: string;
   public proprietaire: string;
   public restaurants_only: Array<Restaurant>;
 
@@ -29,20 +31,23 @@ export class AppAuthoComponent implements OnInit {
       this.restaurants_only = [
         new Restaurant()
       ];
+      this.is_confique = "hidden";
   }
 
   ngOnInit(): void {
     const auth = getAuth(this.ofApp);
       onAuthStateChanged(auth, (user) => {
         if(user){
-          let prop_to_get:string;
-          console.log("utilisateur inscrit");
           this.uid = user.uid;
-          this.user_services.getProprietaireFromUsers(this.uid).then((prop:string) => {
-            this.service.getRestaurantsProprietaireFromUser(this.uid, prop).then((restaurant) => {
-              this.proprietaire =  restaurant.proprietaire;
-              this.restaurants_only= restaurant.restaurants;
-            });
+          const my_prop = this.user_services.getProprietaireFromUsers(this.uid)
+          my_prop.then((prop) => {
+            this.proprietaire = prop
+            this.user_services.getUserFromUid(user.uid, prop).then((user) => {
+              this.restaurants_only = user.restaurants   
+              if(user.roles.includes("gérant") || user.roles.includes("proprietaire")){
+                this.is_confique = "visible"
+              }
+            })
           })
         }
         else{
@@ -77,14 +82,24 @@ export class AppAuthoComponent implements OnInit {
 
   }
 
+  openFormular(event:MouseEvent): void{
+    
+    const target= new ElementRef(event.currentTarget);
+    
+    this.dialog.open(AppFormComponent,{
+      width: '400px',
+      height: '290px',
+      data: {
+        prop: this.proprietaire,
+        uid: this.uid,
+        trigger: target
+      }
+    });
+  }
+
   scrollRight(){
     let nbr_restaurants = this.restaurants_only.length
-    console.log("nombre de resto " + nbr_restaurants);
-    console.log("taille de l'écran" + this.screen_width);
-    console.log("le padding est de " + this.screen_width/nbr_restaurants);
-
     this.widgetsContent.nativeElement.scrollLeft += this.screen_width/nbr_restaurants;
-    
   }
 
   scrollLeft(){

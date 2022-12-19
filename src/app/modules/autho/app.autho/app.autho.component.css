@@ -14,6 +14,7 @@ header {
 
 }
 
+
 ul{
   list-style: none;
   display: inline-flex;
@@ -31,6 +32,22 @@ ul{
 }
 
 #analyse:hover {
+  background: rgb(30, 148, 30);
+  color: #fff;
+}
+
+#link_configure{
+  margin-top: 3%;
+  margin-bottom: 3%;
+}
+
+#configurer{
+  background: #fff;
+  width: 300px;
+  height: auto;
+}
+
+#configurer:hover {
   background: rgb(30, 148, 30);
   color: #fff;
 }
@@ -318,6 +335,7 @@ figcaption h3 a {
   margin: 0;
 }
 
+
 @media screen and (max-width: 768px) {
   #navbar_top {
     background-color: white;
@@ -335,6 +353,11 @@ figcaption h3 a {
 
   #scroll-right > * {
     scroll-snap-align: start;
+  }
+  #analyse-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
   }
 }
 
@@ -382,6 +405,22 @@ figcaption h3 a {
     height: auto;
   }
 
+  #configurer{
+    background: #fff;
+    width: 300px;
+    height: auto;
+  }
+  #link_configure{
+    margin-top: 20%;
+    margin-bottom: 3%;
+  }
+  #analyse-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-right: 2%;
+    margin-left: 2%;
+  }
 } 
 
 @media screen and (min-width: 992px) and (max-width: 1200px) {
@@ -402,8 +441,9 @@ figcaption h3 a {
   #analyse-wrapper {
     display: flex;
     align-items: flex-start;
-    justify-content: end;
+    justify-content: space-between;
     margin-right: 2%;
+    margin-left: 2%;
   }
 
   #button-slide-left:hover{
@@ -425,8 +465,9 @@ figcaption h3 a {
   #analyse-wrapper {
     display: flex;
     align-items: flex-start;
-    justify-content: end;
+    justify-content: space-between;
     margin-right: 2%;
+    margin-left: 2%;
   }
   #button-slide-left:hover{
     color: rgba(0, 0, 0, 0.87);   
