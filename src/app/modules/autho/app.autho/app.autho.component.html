@@ -27,7 +27,7 @@
     </header>
     <main>
         <div id="analyse-wrapper">
-            <a href="autho/configuration?new='true'" id="link_configure">
+            <a *ngIf="is_confique" href="autho/configuration?new='true'" id="link_configure">
                 <button class="btn btn-outline-success" id="configurer" [ngStyle]="{'visibility': is_confique}">
                     configuration des restaurants
                 </button>
@@ -49,7 +49,7 @@
                             <span class="description">{{restaurant.adresse}}</span>
                         </figcaption>
                         <div class="tourbtn">
-                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" href="/dashboard">
+                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" href="/dashboard?restaurant={{restaurant.id}}&prop={{proprietaire}}">
                               <br>  <i class="fa-solid fa-utensils"></i> <br> Accéder
                             </a>
                             <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="openDialog(restaurant, $event)">
@@ -71,7 +71,7 @@
                             <span class="description">Cliquer pour ajouter un restaurant</span>
                         </figcaption>
                         <div class="tourbtn">
-                            <a class="btn btn-sm" target="_blank" rel="noreferrer" (click)="openFormular($event)">
+                            <a *ngIf="is_confique" class="btn btn-sm" target="_blank" rel="noreferrer" (click)="openFormular($event)">
                                 <i class="fa-solid fa-plus"></i> <br> Ajouter
                             </a>
                         </div>

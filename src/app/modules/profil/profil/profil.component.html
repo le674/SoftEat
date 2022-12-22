@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <header id="action-buttons">
+        <div id="gestion_compte">
+            <button mat-stroked-button>
+                <i class="fa-regular fa-pen"></i>
+                modifier mot de passe
+            </button>
+            <button mat-stroked-button>
+                <i class="fa-regular fa-trash"></i>
+                supprimer le compte
+            </button>
+        </div>
+        <button id="deco_button" class="btn btn-outline-danger"  mat-stroked-button>
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                déconnexion 
+        </button>
+    </header>
+    <footer>
+        <div id="logo_section">
+            <img src="/assets/images/SoftEat_nuance_blanc.png/" alt="">
+            <div class="icon_soft_eat">
+                <i class="fa-solid fa-phone"> </i>
+                <p>07 82 21 76 90</p>
+            </div>
+
+            <div id="mail" class="icon_soft_eat">
+                <i class="fa-solid fa-envelope"></i>
+                <p>SoftEat.contact@gmail.com</p>
+            </div>
+        </div>
+        <div id="a_propos_section">
+            <h1 class="title_footer"> A propos </h1>
+            <ul>
+                <li>
+                    <a href="">concept</a>
+                </li>
+                <li>
+                    <a href="">qui sommes nous ?</a>
+                </li>
+                <li>
+                    <a href="">charte d'utilisation</a>
+                </li>
+                <li>
+                    <a href="">aide</a>
+                </li>
+            </ul>
+        </div>
+        <form id="contact_section">
+            <fieldset id="first_filed" class="form-group">
+                <h1 class="title_footer"> Nous contacter </h1>
+                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="entrer votre email">
+            </fieldset>
+            <fieldset class="form-group not_email">
+                <textarea class="form-control" id="exampleMessage" placeholder="entrer le message ..."></textarea>
+            </fieldset>
+            <fieldset class="form-group text-xs-right not_email">
+                <button mat-stroked-button>Envoyer</button>
+            </fieldset>
+        </form>
+    </footer>
+
+    <main class="row">
+    </main>
+</body>
+
+</html>

@@ -16,11 +16,13 @@
 
 /* Variables  */
 :root{
-    --color_Blue: #3f93f1;
-    --color_Dark1: #1e1e1e;
-    --color_Dark2: #303033;
-    --color_Light1: #dfdfdf;
-    --color_Light2: #c4c4c4;
+    --color_green: rgb(30, 148, 30);
+    --color_secondary: rgb(148, 30, 148);
+    --color_Light1: rgb(245, 245, 245);
+}
+
+main{
+    background: var(--color_Light1);
 }
 
 /* =============== Sidebar =============== */
@@ -30,11 +32,11 @@
     left: 0;
     height: 100%;
     width: 260px;
-    background-color: var(--color_Dark1);
+    background-color: white;
 
     border-right: 1px rgb(210, 210, 210) solid;
     transition: all .5s ease;
-    z-index: 100;;
+    z-index: 100;
 
 }
 .sidebar.close{
@@ -47,11 +49,11 @@
     width: 100%;
     display: flex;
     align-items: center;
-    color: var(--color_Light1);
+    color: rgb(30, 148, 30);
     transition: all .5s ease;
 }
 .logo-box:hover{
-    color: var(--color_Blue);
+    color: rgb(148, 30, 148);
 }
 .logo-box i{
     font-size: 30px;
@@ -64,9 +66,13 @@
 .sidebar.close .logo-box i{
     transform: rotate(360deg);
 }
+
 .logo-name{
-    font-size: 22px;
-    font-weight: 600;
+    font-family: 'ABeeZee', sans-serif;
+    font-style: italic;
+    font-size: 32px;
+    padding-top: 11px;
+    padding-bottom: 11px;
 }
 
 /* ---------- Sidebar List ---------- */
@@ -82,7 +88,7 @@
     transition: all .5s ease;
 }
 .sidebar-list li:hover{
-    background-color: var(--color_Dark2);
+    background-color: white;
 }
 .sidebar-list li .title{
     display: flex;
@@ -92,7 +98,7 @@
     cursor: pointer;
 }
 .sidebar-list li.active .title{
-    background-color: var(--color_Blue);
+    background-color: rgb(30, 148, 30, 0.3);
 }
 .sidebar-list li.active .bxs-chevron-down{
     transition: all .5s ease;
@@ -107,13 +113,13 @@
     min-width: 78px;
     text-align: center;
     line-height: 50px;
-    color: var(--color_Light1);
+    color: rgb(30, 148, 30);
     font-size: 20px;
 }
 .sidebar-list li .title .name{
     font-size: 18px;
     font-weight: 400;
-    color: var(--color_Light1);
+    color: rgb(30, 148, 30);
 }
 
 /* ---------------- Submenu ------------- */
@@ -130,16 +136,16 @@
     display: flex;
     flex-direction: column;
     padding: 6px 6px 14px 80px;
-    background-color: var(--color_Dark2);
+    background-color: white;
 }
 .submenu .link{
-    color: var(--color_Light2);
+    color: rgb(30, 148, 30);
     font-size: 15px;
     padding: 5px 0;
     transition: all .5s ease;
 }
 .submenu .link:hover{
-    color: #fff;
+    color: rgb(148, 30, 148);
 }
 .submenu-title{
     display: none;
@@ -178,12 +184,12 @@
     opacity: 1;
     top: 0;
     pointer-events: initial;
-    background-color: var(--color_Dark2);
+    background-color: white;
 }
 .sidebar.close .submenu-title{
     display: block;
     font-style: 18px;
-    color: var(--color_Light1);
+    color: rgb(30, 148, 30);
 }
 
 /* =============== Home Section =============== */
@@ -208,12 +214,10 @@
 }
 .home .toggle-sidebar i{
     font-size: 35px;
-    color: var(--color_Dark1);
     margin-left: 15px;
 }
 .home .toggle-sidebar .text{
     font-size: 25px;
-    color: var(--color_Dark1);
     font-weight: 600;
 }
 

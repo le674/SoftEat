@@ -1,0 +1,165 @@
+
+
+img{
+    width: 185px;
+    height: 100px;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+}
+
+p{
+    color: white;
+}
+
+header{
+    margin-top: 50px;
+}
+
+.icon_soft_eat{
+    color:  white;
+    margin-left: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: start;
+}
+#mail{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.fa-envelope .fa-phone{
+    margin-top: 4px;
+}
+.not_email{
+    margin-left: 102px;
+}
+#logo_section{
+    margin-left: 30px;
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
+
+}
+
+#a_propos_section{
+    display:flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+#contact_section{
+    display:flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    margin-right: 30px;
+    margin-top: 73px;
+}
+
+#submit{
+    margin-bottom: 10px;
+}
+
+footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(125, 181, 46);
+}
+
+a{
+    color: white;
+    text-decoration: none;
+}
+
+a:hover{
+    color: rgb(245, 245, 245);
+}
+
+ul{
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+h1, h2{
+    font-family: 'Inter', sans-serif;
+    color: white;
+}
+
+.title_footer{
+    font-size: larger;
+    font-weight: normal;
+}
+
+
+.mat-stroked-button{
+    color: rgb(30, 148, 30);
+    background-color: white;
+}
+
+.mat-stroked-button:hover{
+    background-color: rgb(245,245,245);
+    color: rgb(30, 148, 30);
+}
+
+
+/* Border */
+.mat-form-field-appearance-outline .mat-form-field-outline {
+    color: white;
+  }
+  /* Font color */
+input.mat-input-element {
+    color: white;
+}
+
+input{
+    color: white;
+}
+
+#first_filed{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+}
+
+.form-group{
+    margin-bottom: 20px;
+}
+
+footer .form-control {
+    background-color: white;
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    border: none;
+    resize: none;
+    color: rgb(125, 181, 46);
+    padding: 0.7em 1em;
+}
+
+#action-buttons{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+#gestion_compte{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#deco_button{
+    color: red;
+}
+
+#identitee{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+}

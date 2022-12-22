@@ -103,6 +103,10 @@ export class AppMainDashboardComponent implements OnInit {
     this.numP.emit(2)
   }
 
+  clickCompta(){
+    this.numP.emit(7)
+  }
+
   clickToggle(){
 
    /* const sidebar = document.querySelector(".sidebar");

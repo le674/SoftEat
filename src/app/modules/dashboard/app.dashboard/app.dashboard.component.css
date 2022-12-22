@@ -1,24 +1,11 @@
 :root{
   --accent:rgb(30, 148, 30);
-  --primary:#fff;
-  --secondary: rgb(248, 248, 248);
-  --text-default:#000;
-  --text-primary:#555;
-  --text-secondary:#ccc;
-  
+
   /*--color_Blue: #3f93f1;*/
   --color_Blue: rgb(30, 148, 30);
-  --color_Dark1: #1e1e1e;
-  --color_Dark2: #303033;
   --color_Light1: #dfdfdf;
-  --color_Light2: #c4c4c4;
 }
-:dark-mode{
-  --primary:#213348;
-  --secondary: #0a131c;
-  --text-default:#fff;
-  --text-secondary:#ccc;
-}
+
 body{
   background: var(--secondary);
   min-height: 100vh;
