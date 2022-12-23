@@ -49,7 +49,7 @@
                             <span class="description">{{restaurant.adresse}}</span>
                         </figcaption>
                         <div class="tourbtn">
-                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" href="/dashboard?restaurant={{restaurant.id}}&prop={{proprietaire}}">
+                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="restaurantNavigate(restaurant.id, proprietaire)">
                               <br>  <i class="fa-solid fa-utensils"></i> <br> Accéder
                             </a>
                             <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="openDialog(restaurant, $event)">

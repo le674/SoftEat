@@ -21,16 +21,19 @@ export class User {
   public "roles": Array<string>;
   public "prev_aliments": string;
   public "time_work": string;
+  public "numero": string;
 
   constructor(){
     this.name = ""
     this.email = ""
+    this.surname = ""
     this.id = ""
     this.proprietaire = ""
     this.restaurants = []
     this.roles = []
     this.prev_aliments = "",
     this.time_work = "",
+    this.numero = ""
     this.is_prop = false
     this.statut = Object.assign({"alertes": ""},{"stock": ""},
      {"analyse": ""}, {"budget": ""},{ "facture": ""}, {"planning": ""})
@@ -189,6 +192,7 @@ export class ShortUser {
   public "planning": string;
   public "prev_aliments": string;
   public "time_work": string;
+  public "numero": string
 
   restToString(restaurants: Array<Restaurant>){
     let restau = restaurants.map((restaurant) => restaurant.id)

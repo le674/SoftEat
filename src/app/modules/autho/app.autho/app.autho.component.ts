@@ -1,13 +1,14 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import { MatDialog} from '@angular/material/dialog';
-import {Router} from '@angular/router';
+import {Router, UrlSerializer} from '@angular/router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { InteractionRestaurantService } from './interaction-restaurant.service';
 import {UserInteractionService} from 'src/app/services/user-interaction.service'
 import { Restaurant } from 'src/app/interfaces/restaurant';
 import { AppModalComponent } from '../app.modals/app.modal/app.modal/app.modal.component';
 import { AppFormComponent } from '../app.modals/app.form/app.form/app.form.component';
+import { Serializer } from '@angular/compiler';
 
 @Component({
   selector: 'app-app.autho',
@@ -22,15 +23,17 @@ export class AppAuthoComponent implements OnInit {
   public is_confique: string;
   public proprietaire: string;
   public restaurants_only: Array<Restaurant>;
+  public url:string;
 
   constructor(private service : InteractionRestaurantService,private user_services : UserInteractionService, private ofApp: FirebaseApp,
-     private router: Router, public dialog: MatDialog, private tst_dialog:MatDialog){   
+     private router: Router, public dialog: MatDialog, private tst_dialog:MatDialog, private serealizer: UrlSerializer){   
       this.uid = "";
       this.proprietaire = "";
       this.screen_width = window.innerWidth;
       this.restaurants_only = [
         new Restaurant()
       ];
+      this.url = "";
       this.is_confique = "hidden";
   }
 
@@ -95,6 +98,12 @@ export class AppAuthoComponent implements OnInit {
         trigger: target
       }
     });
+  }
+  restaurantNavigate(restaurant:string, proprietaire:string){
+    
+    const dashboard = this.router.createUrlTree(["/dashboard"],{ queryParams: { restaurant: restaurant, prop: proprietaire}})
+    this.url =  this.serealizer.serialize(dashboard)
+    window.location.href = this.url
   }
 
   scrollRight(){

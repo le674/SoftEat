@@ -20,11 +20,61 @@
                 supprimer le compte
             </button>
         </div>
-        <button id="deco_button" class="btn btn-outline-danger"  mat-stroked-button>
+        <button id="deco_button" class="btn btn-outline-danger" (click)="clicdeConnexion()" mat-stroked-button>
                 <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 déconnexion 
         </button>
     </header>
+    <mat-list>
+        <mat-list-item class="row">
+            <div>
+                <p class="main_panel title">Informations</p>
+            </div>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item class="row">
+            <div class="row_list">
+                <p class="main_panel">Nom</p>
+                <p class="main_panel">{{user_db.name}}</p>
+            </div>
+        </mat-list-item>
+        <mat-list-item class="row">
+            <div class="row_list">
+                <p class="main_panel">Prénom</p>
+                <p class="main_panel">{{user_db.surname}}</p>
+            </div>
+        </mat-list-item>
+        <mat-list-item class="row">
+            <div class="row_list">
+                <p class="main_panel">Enseigne</p>
+                <p class="main_panel">{{enseigne}}</p>
+            </div>
+        </mat-list-item>
+        <mat-list-item class="row">
+            <div class="row_list">
+                <p class="main_panel">Adresse mail</p>
+                <p class="main_panel">{{user_db.email}}</p>
+            </div>
+        </mat-list-item>
+        <mat-list-item class="row">
+            <div class="row_list">
+                <p class="main_panel">restaurants</p>
+                <mat-select>
+                    <mat-option *ngFor="let restaurant of user_db.restaurants">
+                      {{restaurant.id}}
+                    </mat-option>
+                 </mat-select>
+            </div>
+        </mat-list-item>
+        <mat-list-item class="row">
+            <div class="row_list">
+                <p class="main_panel">Droit</p>
+                <mat-option *ngFor="let droit of user_db.statut | keyvalue">
+                    {{droit.key}} : {{droit.value}}
+                  </mat-option>
+            </div>
+        </mat-list-item>
+    </mat-list>      
     <footer>
         <div id="logo_section">
             <img src="/assets/images/SoftEat_nuance_blanc.png/" alt="">
@@ -39,7 +89,7 @@
             </div>
         </div>
         <div id="a_propos_section">
-            <h1 class="title_footer"> A propos </h1>
+            <h1 class="title"> A propos </h1>
             <ul>
                 <li>
                     <a href="">concept</a>
@@ -57,7 +107,7 @@
         </div>
         <form id="contact_section">
             <fieldset id="first_filed" class="form-group">
-                <h1 class="title_footer"> Nous contacter </h1>
+                <h1 class="title"> Nous contacter </h1>
                 <input type="email" class="form-control" id="exampleInputEmail1" placeholder="entrer votre email">
             </fieldset>
             <fieldset class="form-group not_email">
