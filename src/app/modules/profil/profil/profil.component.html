@@ -11,11 +11,11 @@
 <body>
     <header id="action-buttons">
         <div id="gestion_compte">
-            <button mat-stroked-button>
+            <button mat-stroked-button (click)="openModif()">
                 <i class="fa-regular fa-pen"></i>
                 modifier mot de passe
             </button>
-            <button mat-stroked-button>
+            <button mat-stroked-button (click)="suppCompte()">
                 <i class="fa-regular fa-trash"></i>
                 supprimer le compte
             </button>

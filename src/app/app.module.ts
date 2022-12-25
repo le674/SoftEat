@@ -14,6 +14,7 @@ import { AppDashboardModule } from './modules/dashboard/app.module';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { environment } from 'src/environments/environment';
 import { AuthentificationService } from './services/authentification.service';
+import { HttpClientModule } from '@angular/common/http';
 import { getAuth } from 'firebase/auth';
 import { provideAuth } from '@angular/fire/auth';
 
@@ -24,6 +25,7 @@ import { provideAuth } from '@angular/fire/auth';
   imports: [
     AppDashboardModule,
     BrowserModule,
+    HttpClientModule,
     //import des différent module propre à chacune des pages de l'application
     AppAlertesModule,
     AppAnalyseModule,

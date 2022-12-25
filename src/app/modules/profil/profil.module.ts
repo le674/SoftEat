@@ -8,11 +8,16 @@ import { RouterModule } from '@angular/router';
 import {MatDividerModule} from '@angular/material/divider'; 
 import {MatListModule} from '@angular/material/list'; 
 import {MatSelectModule} from '@angular/material/select'; 
+import {MatDialogModule } from '@angular/material/dialog';
+import { ModifMdpComponent } from './modif-mdp/modif-mdp.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import {MatSnackBarModule} from '@angular/material/snack-bar'; 
 
 
 @NgModule({
   declarations: [
-    ProfilComponent
+    ProfilComponent,
+    ModifMdpComponent
   ],
   imports: [
     CommonModule,
@@ -20,8 +25,12 @@ import {MatSelectModule} from '@angular/material/select';
     MatFormFieldModule,
     MatInputModule,
     MatDividerModule,
+    MatButtonModule,
     MatListModule,
-    MatSelectModule
+    MatSelectModule,
+    ReactiveFormsModule,
+    MatSnackBarModule,
+    MatDialogModule
   ],
   exports: [
     ProfilComponent

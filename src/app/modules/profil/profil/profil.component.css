@@ -14,6 +14,10 @@ p{
     color: white;
 }
 
+button{
+    font-size: larger;
+}
+
 .main_panel{
     color: black;
 }
