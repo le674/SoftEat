@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppDashboardComponent } from './app.dashboard/app.dashboard.component';
 import { AppMainDashboardComponent } from './app.dashboard/app.main-dashboard/app.main-dashboard.component';
 import { ProfilModule } from '../profil/profil.module';
+import {MatMenuModule} from '@angular/material/menu';
 
 
 
@@ -30,7 +31,8 @@ import { ProfilModule } from '../profil/profil.module';
     AppFacturesModule,
     RhModule,
     AppAuthenModule,
-    ProfilModule
+    ProfilModule,
+    MatMenuModule
   ],
   exports: [
     AppDashboardComponent

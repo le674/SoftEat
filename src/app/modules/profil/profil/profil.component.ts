@@ -18,11 +18,13 @@ export class ProfilComponent implements OnInit {
   public user_db: User;
   public enseigne:string;
   public restaurants: string;
+  public mobile: boolean;
   constructor(private ofApp: FirebaseApp, router: Router, private service:UserInteractionService) { 
     this.router = router;
     this.user_db = new User()
     this.enseigne = "";
     this.restaurants = "";
+    this.mobile = false;
     // Attention l'url doit contenir l'information concernant le restaurant et le proprietaire
     this.url = this.router.parseUrl(this.router.url)
   }
@@ -42,7 +44,9 @@ export class ProfilComponent implements OnInit {
         })
       }
     })
-    
+    if (window.screen.width > 1040) { // 768px portrait
+      this.mobile = true;
+    }
   }
 
   

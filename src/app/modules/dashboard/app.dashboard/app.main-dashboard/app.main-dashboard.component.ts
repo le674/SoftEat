@@ -91,6 +91,15 @@ export class AppMainDashboardComponent implements OnInit {
       else item.classList.add("active");
     });
   });
+  const sidebar = document.querySelector(".sidebar");
+  if(sidebar!=null) sidebar.classList.toggle("close");
+  // on enlève le panel de gauche dans le cas d'un mobile si on à se comportement il aut s'assurer que 
+  //lorsque la navebar est toggle les component se mettent sur la gauche
+/*   if (window.screen.width < 1040) { // 768px portrait
+    const sidebar = document.querySelector(".sidebar");
+    if(sidebar!=null) sidebar.classList.toggle("close");
+  } */
+
   }
   
   clickAlertes(){
@@ -115,12 +124,9 @@ export class AppMainDashboardComponent implements OnInit {
     }
     
   clickLogo(){
-
     const sidebar = document.querySelector(".sidebar");
-
-  const logo = document.querySelector(".logo-box");
-    if(sidebar!=null)
-  sidebar.classList.toggle("close");
+    const logo = document.querySelector(".logo-box");
+    if(sidebar!=null) sidebar.classList.toggle("close");
   }
   clickAnalyse(){
     this.numP.emit(3)

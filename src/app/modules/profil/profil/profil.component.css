@@ -17,7 +17,7 @@ p{
 .main_panel{
     color: black;
 }
-.row_list{
+#first_liste{
     margin-left: 10%;
     display:flex;
     justify-content: space-between;
@@ -28,6 +28,13 @@ header{
     margin-top: 50px;
 }
 
+.items_liste{
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   flex-wrap: wrap;
+   gap: 20px; 
+}
 .icon_soft_eat{
     color:  white;
     margin-left: 20px;
@@ -36,6 +43,24 @@ header{
     gap: 10px;
     justify-content: start;
 }
+
+.pen_body{
+    border:1px solid;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.fa-pen:hover{
+    background-color: rgb(125, 181, 46);
+}
+
+/* on supprime la possibiliter de cliquer sur l'icon */
+.disable{
+    cursor: none;
+    pointer-events: none;
+    background-color: rgb(120,120,120);
+}
+
 #mail{
     margin-top: 10px;
     margin-bottom: 10px;
@@ -183,4 +208,73 @@ footer .form-control {
     flex-wrap: wrap;
     align-items: baseline;
     gap: 10px;
+}
+ /* modification de la taille de l'input lorsque on passe sur un écran plus petit */
+@media (max-width: 1040px){
+    footer{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #a_propos_section{
+        margin-left: 45px;
+        justify-content: center;
+    }
+
+    #contact_section{
+        margin-left: 45px;
+        justify-content: center;
+    }
+
+    #first_liste{
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 800px){
+
+    .items_liste{
+        max-width: 200px;
+    }
+
+    #first_liste{
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    main{
+        padding-left: 0px;
+    }
+
+    #action-buttons{
+        display: block;
+    }
+
+    #gestion_compte{
+        display: block;
+    }
+
+}
+
+@media (min-width: 1040px){
+    .mat-select {
+        width: fit-content !important;
+        min-width: 100%;
+    }
+
+    ::ng-deep .mat-form-field-infix {
+        min-width: 120px !important;
+        width: fit-content !important;
+    }
+    
+    ::ng-deep .mat-select .mat-select-value {
+        width: fit-content;
+        min-width: 18ch;
+        max-width: 200ch;
+    }
+    ::ng-deep .mat-select .mat-select-placeholder {
+        width: fit-content;
+        min-width: 32ch;
+    }
 }

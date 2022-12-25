@@ -25,6 +25,14 @@ main{
     background: var(--color_Light1);
 }
 
+/* =============== Logo ================== */
+
+img{
+    width: 75px;
+    height: 50px;
+}
+
+
 /* =============== Sidebar =============== */
 .sidebar{
     position: fixed;
@@ -49,7 +57,6 @@ main{
     width: 100%;
     display: flex;
     align-items: center;
-    color: rgb(30, 148, 30);
     transition: all .5s ease;
 }
 .logo-box:hover{
@@ -108,6 +115,10 @@ main{
     display: flex;
     align-items: center;
 }
+.link{
+    cursor: pointer;
+}
+
 .sidebar-list li .title i{
     height: 50px;
     min-width: 78px;
@@ -226,7 +237,17 @@ main{
 
 /* ============ Responsive / Breakpoints ========== */
 @media (max-width: 1080px){
-    
+    .html{
+        width: 80px;
+    }
+    body{
+        width: 80px;
+        height: auto;
+        margin: 0;
+    }
+    .logo-box{
+        pointer-events: none;
+    }
 }
 
 /* For Medium Devices */

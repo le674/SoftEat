@@ -10,19 +10,19 @@ body{
   background: var(--secondary);
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 18rem auto;
+  grid-template-columns: 7rem auto;
   transition:0.3s ease-in-out;
 }
 *{
   box-sizing: border-box;
   margin: 0;
 }
+
  /*temporaire*/
  h1, p{
   font-family: 'Inter', sans-serif;
   color: rgb(20, 20, 20);
 }
-
 /***********/
 
 main{
@@ -38,7 +38,7 @@ main{
   width: calc(100% - 78px);
 }
 .panel{
-  width: 70vmax;
+  width: 90vmax;
 }
 @media (max-width: 767.98px) {
     .sidebar {
@@ -53,4 +53,18 @@ main{
   #top-buttons{
     padding: 20px;
    }
+}
+
+@media (max-width: 1080px){
+  .home{
+      display: none;
+  }
+  .logo-box{
+      pointer-events: none;
+  }
+
+  .app-main-dashboard{
+    width: 60px;
+  } 
+
 }

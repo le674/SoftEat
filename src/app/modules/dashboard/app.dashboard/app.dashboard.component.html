@@ -18,23 +18,21 @@
 <!-- SEO : affichage du corp du site  -->
 <body>
     <app-main-dashboard (numP)="numP = $event" ></app-main-dashboard>
-    <main>
-        <div class = "panel">
-            <h1 *ngIf="numP==-2">Alertes</h1>
-            <h1 *ngIf="numP==1">Alertes</h1>
-            <h1 *ngIf="numP==2">Stock</h1>
-            <h1 *ngIf="numP==3">Analyse</h1>
-            <h1 *ngIf="numP==4">Factures</h1>
-            <h1 *ngIf="numP==5">Ressources humaines</h1>
-            <app-profil *ngIf="numP==6">Profil</app-profil>
-            <h1 *ngIf="numP==7">Comptabilité</h1>
-            <app-alertes *ngIf="numP==1"></app-alertes>
-            <app-stock *ngIf="numP==2"></app-stock>
-            <app-analyse *ngIf="numP==3"></app-analyse>
-            <app-factures *ngIf="numP==4"></app-factures>
-            <app-rh *ngIf="numP==5"></app-rh>
-        </div>
-       </main>
+    <div class = "panel">
+        <h1 *ngIf="numP==-2">Alertes</h1>
+        <h1 *ngIf="numP==1">Alertes</h1>
+        <h1 *ngIf="numP==2">Stock</h1>
+        <h1 *ngIf="numP==3">Analyse</h1>
+        <h1 *ngIf="numP==4">Factures</h1>
+        <h1 *ngIf="numP==5">Ressources humaines</h1>
+        <app-profil *ngIf="numP==6">Profil</app-profil>
+        <h1 *ngIf="numP==7">Comptabilité</h1>
+        <app-alertes *ngIf="numP==1"></app-alertes>
+        <app-stock *ngIf="numP==2"></app-stock>
+        <app-analyse *ngIf="numP==3"></app-analyse>
+        <app-factures *ngIf="numP==4"></app-factures>
+        <app-rh *ngIf="numP==5"></app-rh>
+    </div>
 </body>
 
 </html>
