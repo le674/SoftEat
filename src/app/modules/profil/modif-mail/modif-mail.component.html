@@ -1,0 +1,15 @@
+<i class="fa-regular fa-xmark" (click)="onNoClick()"></i>
+<form (ngSubmit)="sendNewMail()" [formGroup]="email_modification">
+    <div mat-dialog-content id="container">
+        <p>
+            <mat-form-field appearance="fill">
+              <mat-label>Entrer le nouveau email</mat-label>
+              <input matInput placeholder="Placeholder" formControlName="email">
+              <mat-hint>Entrer le nouveau email</mat-hint>
+            </mat-form-field>
+          </p>
+        <button type="submit" mat-stroked-button> Valider </button>
+    </div>
+</form>
+
+

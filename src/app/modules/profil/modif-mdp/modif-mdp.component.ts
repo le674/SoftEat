@@ -3,7 +3,7 @@ import { FirebaseApp } from '@angular/fire/app';
 import { Auth, getAuth, updateCurrentUser } from '@angular/fire/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { sendEmailVerification, updatePassword } from 'firebase/auth';
+import {updatePassword } from 'firebase/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -30,7 +30,7 @@ export class ModifMdpComponent implements OnInit {
 
 
   sendMailVerif() {
-    if (this.auth.currentUser != null) {
+    if ((this.auth.currentUser != null) && this.mdp_modification.valid){
       const user = this.auth.currentUser
       let mdp = this.mdp_modification.value.new_mdp;
       let mdp_prev = this.mdp_modification.value.prev_mdp;
@@ -47,7 +47,7 @@ export class ModifMdpComponent implements OnInit {
             "(si cela ne marche pas contactez SoftEat)"
           let snack_bar_ref =
             this._snackBar.open(msg, "reconnection", {
-              duration: 5000
+              duration: 10000
             })
           snack_bar_ref.onAction().subscribe(() => {
             this.auth.signOut();

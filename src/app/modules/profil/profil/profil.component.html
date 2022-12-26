@@ -90,10 +90,10 @@
                         <i class="fa-regular fa-pen pen_body disable"></i>
                     </mat-list-item>
                     <mat-list-item class="main_panel">
-                        <i class="fa-regular pen_body fa-pen"></i>
+                        <i class="fa-regular pen_body fa-pen" (click)="openMail()"></i>
                     </mat-list-item>
                     <mat-list-item class="main_panel">
-                        <i class="fa-regular pen_body fa-pen"></i>
+                        <i class="fa-regular pen_body fa-pen" (click)="openNumber()"></i>
                     </mat-list-item>
                     <mat-list-item class="main_panel">
                         <i class="fa-regular fa-pen pen_body disable"></i>
@@ -135,16 +135,16 @@
                 </li>
             </ul>
         </div>
-        <form id="contact_section">
+        <form (ngSubmit)="sendMessage()" id="contact_section" [formGroup]="contact_form" >
             <fieldset id="first_filed" class="form-group">
                 <h1 class="title"> Nous contacter </h1>
-                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="entrer votre email">
+                <input type="email" class="form-control" formControlName="sender" id="exampleInputEmail1" placeholder="entrer votre email">
             </fieldset>
             <fieldset class="form-group not_email">
-                <textarea class="form-control" id="exampleMessage" placeholder="entrer le message ..."></textarea>
+                <textarea class="form-control"  formControlName="message" id="exampleMessage" placeholder="entrer le message ..."></textarea>
             </fieldset>
             <fieldset class="form-group text-xs-right not_email">
-                <button mat-stroked-button>Envoyer</button>
+                <button type="submit" mat-stroked-button>Envoyer</button>
             </fieldset>
         </form>
     </footer>
