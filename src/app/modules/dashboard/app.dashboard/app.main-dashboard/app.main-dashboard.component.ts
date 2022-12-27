@@ -108,12 +108,70 @@ export class AppMainDashboardComponent implements OnInit {
     
   }
 
-  clickStock(){
+  clickProfil(){
+    
     this.numP.emit(2)
   }
 
-  clickCompta(){
+  clickIngredients(){
+    this.numP.emit(3)
+  }
+
+  clickConso(){
+    this.numP.emit(4)
+  }
+
+  clickMenu(){
+    this.numP.emit(5)
+  }
+
+  clickPlats(){
+    this.numP.emit(6)
+  }
+
+  clickPreparation(){
     this.numP.emit(7)
+  }
+
+  clickCAnalyseStock(){
+    this.numP.emit(8)
+  }
+  
+  clickAnalyseFreq(){
+    this.numP.emit(9)
+  }  
+
+  clickAnalyseTable(){
+    this.numP.emit(10)
+  }
+
+  clickAnalyseConso(){
+    this.numP.emit(11)
+  }
+
+  clickAnalyseCA(){
+    this.numP.emit(12)
+  }
+
+  clickAnalyseMenu(){
+    this.numP.emit(13)
+  }
+
+  clickCompta(){
+    this.numP.emit(14)
+  }
+  
+  clickScFactures(){
+    this.numP.emit(15)
+  }
+
+  clickArchi(){
+    this.numP.emit(16)
+  }
+
+
+  clickRH(){
+    this.numP.emit(17)
   }
 
   clickToggle(){
@@ -128,19 +186,5 @@ export class AppMainDashboardComponent implements OnInit {
     const logo = document.querySelector(".logo-box");
     if(sidebar!=null) sidebar.classList.toggle("close");
   }
-  clickAnalyse(){
-    this.numP.emit(3)
-  }
-
-  clickFactures(){
-    this.numP.emit(4)
-  }
-
-  clickRH(){
-    this.numP.emit(5)
-  }
-  clickProfil(){
-    
-    this.numP.emit(6)
-  }
+ 
 }

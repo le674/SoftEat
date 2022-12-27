@@ -6,7 +6,7 @@
 
 /* Globals  */
 *{
-    font-family: 'Poppins', sans-serif;
+   /*  font-family: 'Poppins', sans-serif; */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -16,7 +16,7 @@
 
 /* Variables  */
 :root{
-    --color_green: rgb(30, 148, 30);
+    --color_green: rgb(125, 181, 46);
     --color_secondary: rgb(148, 30, 148);
     --color_Light1: rgb(245, 245, 245);
 }
@@ -83,6 +83,12 @@ img{
 }
 
 /* ---------- Sidebar List ---------- */
+ul{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .sidebar-list{
     height: 100%;
     padding: 30px 0 150px 0;
@@ -105,7 +111,7 @@ img{
     cursor: pointer;
 }
 .sidebar-list li.active .title{
-    background-color: rgb(30, 148, 30, 0.3);
+    background-color: rgb(125, 181, 46, 0.3);
 }
 .sidebar-list li.active .bxs-chevron-down{
     transition: all .5s ease;
@@ -124,13 +130,13 @@ img{
     min-width: 78px;
     text-align: center;
     line-height: 50px;
-    color: rgb(30, 148, 30);
+    color: rgb(125, 181, 46);
     font-size: 20px;
 }
 .sidebar-list li .title .name{
     font-size: 18px;
     font-weight: 400;
-    color: rgb(30, 148, 30);
+    color: rgb(125, 181, 46);
 }
 
 /* ---------------- Submenu ------------- */
@@ -150,7 +156,7 @@ img{
     background-color: white;
 }
 .submenu .link{
-    color: rgb(30, 148, 30);
+    color: rgb(125, 181, 46);
     font-size: 15px;
     padding: 5px 0;
     transition: all .5s ease;
@@ -160,6 +166,15 @@ img{
 }
 .submenu-title{
     display: none;
+    font-size: larger !important;
+    font-weight: bold;
+    cursor: default;
+    pointer-events: none;
+}
+
+.multi-section{
+    cursor: default;
+    pointer-events: none;
 }
 
 /* ---------------- Submenu Close ------------- */
@@ -200,7 +215,7 @@ img{
 .sidebar.close .submenu-title{
     display: block;
     font-style: 18px;
-    color: rgb(30, 148, 30);
+    color: rgb(125, 181, 46);
 }
 
 /* =============== Home Section =============== */

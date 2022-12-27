@@ -134,7 +134,7 @@ h1, h2{
 }
 
 .mat-stroked-button{
-    color: rgb(30, 148, 30);
+    color: rgb(125, 181, 46);
     background-color: white;
     height: 40px;
     min-width: 96px;
@@ -142,7 +142,7 @@ h1, h2{
 }
 
 .mat-stroked-button:hover{
-    background-color: rgb(30, 148, 30);
+    background-color: rgb(125, 181, 46);
     color: white;
 }
 
