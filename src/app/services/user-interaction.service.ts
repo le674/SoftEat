@@ -92,8 +92,10 @@ export class UserInteractionService{
             this.user.restaurants.push(tmp_restaurant)
           });
         // on supprime le premer utilisateur lié à la création de User
-        this.user.restaurants.shift();
-        
+        if((this.user.restaurants.at(1)?.id != null) && (this.user.restaurants.at(1)?.id == "")){
+          this.user.restaurants.shift();
+        }
+  
         this.user.statut.alertes = user.child("statut/alertes").val();
         this.user.statut.analyse = user.child("statut/analyse").val();
         this.user.statut.budget = user.child("statut/budget").val();

@@ -1,0 +1,26 @@
+mat-tab-group{
+    margin-top: 50px;
+    width: 100%;
+}
+
+ul{
+    margin-top: 20px;
+}
+
+.sub-tab{
+    background-color: rgb(125, 181, 46);
+    color: white;
+    border-width: 9px;
+    border-style: solid;
+    border-color: red;
+}
+
+.nav-link{
+    background-color: white;
+    color: rgb(125, 181, 46);
+}
+
+.active.nav-link{
+    background-color: rgb(125, 181, 46);
+    color: white;
+}

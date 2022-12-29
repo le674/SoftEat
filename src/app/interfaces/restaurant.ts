@@ -1,3 +1,5 @@
+import { Menu } from "./menu";
+
 export interface UserRestaurant {
     "proprietaire": string;
     "restaurants": Array<Restaurant>;
@@ -12,10 +14,12 @@ export interface UserRestaurantRole {
 export class Restaurant {
     "id": string;
     "adresse": string
+    "menus": Array<Menu>
 
     constructor(){
       this.adresse = ""
       this.id = ""
+      this.menus = []
     }
 
     getId(){

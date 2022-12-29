@@ -10,7 +10,7 @@
     gestion rh), cette page permet la gestion des accès aux différentes fonctionnalitées">
 
     <!--SEO 3 : balise meta viewport permet d'adapter le site au format mobile-->
-    <meta name="viewport" content="width=device-width, initial-scale=2.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!--SEO 4 : important on référence le code dupliqué pour bénéficier des bon points du code-->
     <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/dashboard/" />
@@ -20,7 +20,7 @@
     <app-main-dashboard (numP)="numP = $event" ></app-main-dashboard>
     <div class = "panel">
         <app-alertes *ngIf="numP==1"></app-alertes>
-        <app-profil *ngIf="numP==2">Profil</app-profil>
+        <app-profil *ngIf="numP==2"></app-profil>
         <app-stock *ngIf="numP==3"></app-stock>
         <app-conso *ngIf="numP==4"></app-conso>
         <app-menu *ngIf="numP==5"></app-menu>

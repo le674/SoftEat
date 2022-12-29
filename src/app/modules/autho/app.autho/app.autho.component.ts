@@ -46,6 +46,7 @@ export class AppAuthoComponent implements OnInit {
           my_prop.then((prop) => {
             this.proprietaire = prop
             this.user_services.getUserFromUid(user.uid, prop).then((user) => {
+              console.log(user.restaurants);
               this.restaurants_only = user.restaurants   
               if(user.roles.includes("gérant") || user.roles.includes("proprietaire")){
                 this.is_confique = "visible"
@@ -104,16 +105,6 @@ export class AppAuthoComponent implements OnInit {
     const dashboard = this.router.createUrlTree(["/dashboard"],{ queryParams: { restaurant: restaurant, prop: proprietaire}})
     this.url =  this.serealizer.serialize(dashboard)
     window.location.href = this.url
-  }
-
-  scrollRight(){
-    let nbr_restaurants = this.restaurants_only.length
-    this.widgetsContent.nativeElement.scrollLeft += this.screen_width/nbr_restaurants;
-  }
-
-  scrollLeft(){
-    let nbr_restaurants = this.restaurants_only.length
-    this.widgetsContent.nativeElement.scrollLeft -= this.screen_width/nbr_restaurants;
   }
 }
 

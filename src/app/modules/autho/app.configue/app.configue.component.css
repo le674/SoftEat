@@ -32,16 +32,10 @@ body {
   }
 
  
-  #marque {
-    font-family: 'ABeeZee', sans-serif;
-    font-style: italic;
-    overflow: hidden;
-    font-size: 32px;
-    padding-top: 11px;
-    padding-bottom: 11px;
-    color: rgb(30, 148, 30);
+  img{
+    width: 168px;
+    height: 82px;
   }
-
   /* Fin du header*/
 
  .accordion-item {
