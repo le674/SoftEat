@@ -5,6 +5,8 @@ body{
 }
 
 main{
+    margin-top: 50px;
+    padding: 0px;
     display: flex;
     justify-content:flex-start;
     flex-direction: column;

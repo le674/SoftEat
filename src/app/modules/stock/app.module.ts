@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AppStockComponent } from './app.stock/app.stock.component';
 import { AppConsoComponent } from './app.conso/app.conso.component';
 import {MatTableModule} from '@angular/material/table'; 
+import { CIngredient } from 'src/app/interfaces/ingredient';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,8 @@ import {MatTableModule} from '@angular/material/table';
     AppStockComponent,
     AppConsoComponent
   ],
-  providers: [],
+  providers: [
+    CIngredient
+  ],
 })
 export class AppStockModule {}
