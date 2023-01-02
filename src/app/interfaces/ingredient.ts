@@ -6,11 +6,13 @@ export interface Ingredient {
     "nom": string;
     "categorie_restaurant": string;
     "categorie_tva": string;
+    "taux_tva": number;
     "categorie_dico": string;
     "cost": number;
     "quantity": number;
     "quantity_unity": number;
     "unity": string;
+    "date_reception":Date;
     "dlc": Date;
     "cost_ttc": number;
     "val_bouch": number;
@@ -28,6 +30,8 @@ export interface Ingredient {
     setCategorieRestaurant(categorie: string | null): void;
     getCategorieTva(): string;
     setCategorieTva(categorie: string | null): void;
+    getTauxTva(): number;
+    setTauxTva(taux: number | null): void;
     getCategorieDico(): string;
     setCategorieDico(categorie: string | null): void;
     getCost(): number;
@@ -44,6 +48,8 @@ export interface Ingredient {
     setUnity(unity: string | null): void;
     getDlc(): Date;
     setDlc(val: Date | null): void;
+    getDateReception(): Date;
+    setDateReception(val: Date | null): void;
     getCostTtc(): number;
     setCostTtc(val: number | null): void;
     getRefrigiree(): boolean;
@@ -81,11 +87,13 @@ export class CIngredient implements Ingredient {
     "nom": string;
     "categorie_restaurant": string;
     "categorie_tva": string;
+    "taux_tva": number;
     "categorie_dico": string;
     "cost": number;
     "quantity": number;
     "quantity_unity": number;
     "unity": string;
+    "date_reception":Date;
     "dlc": Date;
     "cost_ttc": number;
     "conditionnement": boolean;
@@ -94,11 +102,13 @@ export class CIngredient implements Ingredient {
     "quantity_bef_prep": number;
     "quantity_after_prep": number;
     "val_bouch": number;
+    "is_similar":number;
 
     constructor(private service: CalculService, private db_service: IngredientsInteractionService) {
         this.nom = "";
         this.categorie_restaurant = "";
         this.categorie_tva = "";
+        this.taux_tva = 0;
         this.cost = 0;
         this.quantity = 0;
         this.quantity_unity = 0;
@@ -106,12 +116,12 @@ export class CIngredient implements Ingredient {
         this.categorie_tva = "";
         this.categorie_dico = "";
         this.dlc = new Date();
+        this.date_reception = new Date()
         this.cost_ttc = 0;
         this.val_bouch = 0;
         this.quantity_bef_prep = 0;
         this.quantity_after_prep = 0;
     }
-
     getValBouchFromNewQauntity() {
         let ingredient = new CIngredient(this.service, this.db_service);
         ingredient = this;
@@ -120,22 +130,37 @@ export class CIngredient implements Ingredient {
     }
 
     async getInfoDico(): Promise<CIngredient> {
-        const Pingredient =  this.db_service.getInfoIngFromDico(this.nom)
-        await Pingredient.then((ingredient) => {
-            this.categorie_dico = ingredient.categorie_dico;
-            this.conditionnement = ingredient.conditionnement;
-            // on réecrit la catégori en onction du conditionnement important pour le calcul de tva 
-            this.categorie_tva = this.service.getTvaCategorieFromConditionnement(ingredient.categorie_tva, ingredient.conditionnement);
-            this.dlc = ingredient.dlc;
-            this.gelee = ingredient.gelee;
-            this.refrigiree = ingredient.refrigiree;
-        })
+        const Pingredient = await this.db_service.getInfoIngFromDico(this.nom);
+        this.categorie_dico = Pingredient.categorie_dico;
+        this.conditionnement = Pingredient.conditionnement;
+        // on réecrit la catégori en onction du conditionnement important pour le calcul de tva
+        if((this.categorie_tva=== "") || (this.categorie_tva === undefined)){
+            this.categorie_tva = this.service.getTvaCategorieFromConditionnement(Pingredient.categorie_tva, Pingredient.conditionnement);
+        } 
+
+        console.log("dlc :", this.dlc);
+        
+        this.dlc.setHours(this.date_reception.getHours() + 24*Pingredient.dlc);
+        this.gelee = Pingredient.gelee;
+        this.refrigiree = Pingredient.refrigiree;
+
         return this
     }
 
 
     getCostTtcFromCat(): void {
         this.cost_ttc = this.service.getCostTtcFromCat(this.categorie_tva, this.cost);
+    }
+
+    getCostTtcFromTaux():void{
+        this.cost_ttc = this.service.getCostTtcFromTaux(this.taux_tva, this.cost)
+    }
+
+    getDateReception(): Date {
+        return this.date_reception;
+    }
+    setDateReception(val: Date | null): void {
+        if (val !== null) this.date_reception = val;
     }
 
     getDlc(): Date {
@@ -169,6 +194,12 @@ export class CIngredient implements Ingredient {
     setCategorieTva(categorie: string | null): void {
         if (categorie !== null) this.categorie_tva = categorie;
     }
+    getTauxTva(): number {
+        return this.taux_tva;
+    }
+    setTauxTva(taux: number | null): void {
+        if (taux !== null) this.taux_tva = taux;
+    }
     getCategorieDico(): string {
         return this.categorie_dico
     }
@@ -186,6 +217,13 @@ export class CIngredient implements Ingredient {
     }
     setQuantity(quantity: number | null): void {
         if (quantity !== null) this.quantity = quantity
+    }
+
+    getIsSimilar(): number {
+        return this.is_similar
+    }
+    setIsSimilar(coeff: number | null): void {
+        if (coeff !== null) this.is_similar = coeff
     }
 
     setQuantityAfterPrep(quantity: number | null): void {

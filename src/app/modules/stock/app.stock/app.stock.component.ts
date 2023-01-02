@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, UrlTree } from '@angular/router';
 import { CIngredient, Ingredient } from 'src/app/interfaces/ingredient';
 import { Restaurant } from 'src/app/interfaces/restaurant';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
+import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.component';
 
 @Component({
   selector: 'app-stock',
@@ -12,11 +14,10 @@ import { IngredientsInteractionService } from 'src/app/services/menus/ingredient
 })
 export class AppStockComponent implements OnInit {
 
-  public displayedColumns: string[] = ['nom', 'categorie_restaurant', 'categorie_tva', 'quantity', 'quantity_unity',
-  'unity','cost', 'cost_ttc', 'dlc', 'bef_prep', 'after_prep', 'val_bouch', 'cuisinee'];
+  public displayedColumns: string[] = ['nom', 'categorie_tva', 'quantity', 'quantity_unity',
+  'unity','cost', 'cost_ttc', 'date_reception', 'dlc', 'bef_prep', 'after_prep', 'val_bouch', 'cuisinee', 'actions'];
   private ingredients_displayed: Array<{
     nom:string;
-    categorie_restaurant:string;
     categorie_tva:string;
     cost:number;
     cost_ttc:number;
@@ -25,8 +26,9 @@ export class AppStockComponent implements OnInit {
     after_prep:number;
     quantity:number;
     quantity_unity:number;
-    unity:string,
+    unity:string;
     cuisinee:string;
+    date_reception: string;
     dlc:string;
   }>
   private router: Router;
@@ -34,7 +36,6 @@ export class AppStockComponent implements OnInit {
   private url: UrlTree;
   public dataSource: MatTableDataSource<{
     nom:string;
-    categorie_restaurant:string;
     categorie_tva:string;
     cost:number;
     cost_ttc:number;
@@ -45,9 +46,10 @@ export class AppStockComponent implements OnInit {
     quantity_unity:number;
     unity:string,
     cuisinee:string;
+    date_reception: string;
     dlc:string;
   }>;
-  constructor(private service:IngredientsInteractionService, router: Router) { 
+  constructor(private service:IngredientsInteractionService, router: Router, public dialog: MatDialog) { 
     this.router = router;
     this.ingredient_table = [];
     this.ingredients_displayed = [];
@@ -55,20 +57,25 @@ export class AppStockComponent implements OnInit {
     this.url = this.router.parseUrl(this.router.url)
   }
 
-  ngOnInit(): void {
+ngOnInit(): void{
     let user_info = this.url.queryParams;
     const prop = user_info["prop"];
     const restaurant = user_info["restaurant"];
 
-    const first_step = this.service.getIngredientsBrFromRestaurants(prop, restaurant).then((ingredients) => {
+    const first_step = this.service.getIngredientsBrFromRestaurants(prop, restaurant).then(async (ingredients) => {
        for(let i = 0; i < ingredients.length; i++){
-        ingredients[i].getInfoDico().then((ingredient) => {
-          ingredient.getCostTtcFromCat();
-          console.log(ingredient);
+        console.log(i);
+        
+        await ingredients[i].getInfoDico().then((ingredient) => {
+          if((ingredients[i].getTauxTva() === 0) || (ingredients[i].getTauxTva === undefined)){
+            ingredient.getCostTtcFromCat();
+          }
+          else{
+            ingredient.getCostTtcFromTaux();
+          }
           let row_ingredient = {
-            nom: ingredients[i].nom,
-            categorie_restaurant: ingredient.categorie_restaurant,
-            categorie_tva: ingredient.categorie_tva,
+            nom: ingredients[i].nom.split('_').join('<br>'),
+            categorie_tva: ingredient.categorie_tva.split(' ').join('<br>'),
             cost: ingredient.cost,
             cost_ttc: ingredient.cost_ttc,
             val_bouch: 0,
@@ -78,6 +85,7 @@ export class AppStockComponent implements OnInit {
             quantity_unity: ingredient.quantity_unity,
             unity: ingredient.unity,
             cuisinee: 'non',
+            date_reception: ingredient.date_reception.toLocaleString(),
             dlc: ingredient.dlc.toLocaleString()
           };
           this.ingredients_displayed.push(row_ingredient);
@@ -118,9 +126,8 @@ export class AppStockComponent implements OnInit {
           ingredients[i].getValBouchFromNewQauntity();
     
           let row_ingredient = {
-            nom: ingredients[i].nom,
-            categorie_restaurant: ingredients[i].categorie_restaurant,
-            categorie_tva: ingredients[i].categorie_tva,
+            nom: ingredients[i].nom.split('_').join('<br>'),
+            categorie_tva: ingredients[i].categorie_tva.split(' ').join('<br>'),
             cost: ingredients[i].cost,
             cost_ttc: ingredients[i].cost_ttc,
             val_bouch: ingredients[i].val_bouch,
@@ -130,6 +137,7 @@ export class AppStockComponent implements OnInit {
             quantity_unity: ingredients[i].quantity_unity,
             unity: ingredients[i].unity,
             cuisinee: 'oui',
+            date_reception: ingredients[i].date_reception.toLocaleString(),
             dlc: ingredients[i].dlc.toLocaleString()
           };
           this.ingredients_displayed.push(row_ingredient);
@@ -137,9 +145,12 @@ export class AppStockComponent implements OnInit {
         this.dataSource.data = this.ingredients_displayed;
       })
     }) 
-
-
-
   }
 
+  OpenAddIngForm(){
+    const dialogRef = this.dialog.open(AddIngComponent, {
+      height: `${window.innerHeight - window.innerHeight/16}px`,
+      width:`${window.innerWidth - window.innerWidth/4}px`,
+    });
+  }
 }
