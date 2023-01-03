@@ -51,7 +51,12 @@ export class AppStockComponent implements OnInit {
   private router: Router;
   private ingredient_table: Array<CIngredient>;
   private url: UrlTree;
+  private prop:string;
+  private restaurant:string;
+
   constructor(private service:IngredientsInteractionService, private calc_service:CalculService,router: Router, public dialog: MatDialog) { 
+    this.prop = "";
+    this.restaurant = "";
     this.router = router;
     this.ingredient_table = [];
     this.ingredients_displayed = [];
@@ -60,11 +65,11 @@ export class AppStockComponent implements OnInit {
   }
 
 ngOnInit(): void{
-    let user_info = this.url.queryParams;
-    const prop = user_info["prop"];
-    const restaurant = user_info["restaurant"];
+     let user_info = this.url.queryParams;
+     this.prop = user_info["prop"];
+     this.restaurant = user_info["restaurant"];
 
-    const first_step = this.service.getIngredientsBrFromRestaurants(prop, restaurant).then(async (ingredients) => {
+    const first_step = this.service.getIngredientsBrFromRestaurants(this.prop, this.restaurant).then(async (ingredients) => {
        for(let i = 0; i < ingredients.length; i++){
         console.log(i);
         
@@ -100,7 +105,7 @@ ngOnInit(): void{
     })
 
     first_step.then(() => {
-      this.service.getIngredientsPrepFromRestaurants(prop, restaurant).then((ingredients) => {
+      this.service.getIngredientsPrepFromRestaurants(this.prop, this.restaurant).then((ingredients) => {
         for(let i = 0; i < ingredients.length; i++){
           console.log(this.ingredient_table);
           console.log( ingredients[i]);
@@ -140,6 +145,10 @@ ngOnInit(): void{
     const dialogRef = this.dialog.open(AddIngComponent, {
       height: `${window.innerHeight - window.innerHeight/5}px`,
       width:`${window.innerWidth - window.innerWidth/15}px`,
+      data: {
+        restaurant: this.restaurant,
+        prop: this.prop
+      }
     });
   }
 }

@@ -1,7 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { CIngredient } from 'src/app/interfaces/ingredient';
+import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 
 @Component({
   selector: 'app-add.ing',
@@ -21,16 +23,31 @@ export class AddIngComponent implements OnInit {
     unity: new FormControl('', Validators.required),
     unitary_cost:  new FormControl(0, Validators.required),
     dlc: new FormControl(0, Validators.required),
-    quantity_bef_prep:  new FormControl(0, Validators.required),
+    names_base_ing: new FormArray([
+      new FormControl("")
+    ]),
+    quantity_bef_prep:  new FormArray([
+      new FormControl(0)
+    ]),
     quantity_after_prep:  new FormControl(0, Validators.required)
   })
   @ViewChild('taux')
   taux!: ElementRef;
 
+  @ViewChildren('ing_names_prep')
+  names_prep!:QueryList<ElementRef>;
+
+  @ViewChildren('quantity_bef_prep')
+  quantity_bef_prep!:QueryList<ElementRef>;
+
   private current_inputs:number;
   private readonly _mat_dialog_ref: MatDialogRef<AddIngComponent>;
  
-  constructor(public dialogRef: MatDialogRef<AddIngComponent>, public calcul_service: CalculService) { 
+  constructor(public dialogRef: MatDialogRef<AddIngComponent>,
+     public calcul_service: CalculService,@Inject(MAT_DIALOG_DATA) public data:{
+      restaurant: string,
+      prop: string
+     }, private service:IngredientsInteractionService) { 
     this._mat_dialog_ref = dialogRef;
     this.is_prepa = false;
     this.current_inputs = 1;
@@ -38,12 +55,67 @@ export class AddIngComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.taux.nativeElement);
-    
   }
 
 
   addIngredient(){
+    let new_ing = new CIngredient(this.calcul_service, this.service);
+    new_ing.date_reception = new Date();
+    new_ing.dlc = new Date();
+    
+    const name = this.add_ing_section.value["name"]?.split(' ').join('_');
+    const unity = this.add_ing_section.value["unity"]?.split(' ')[0]
+    /* On crée un ingrédient à ârtir des données récupéré depuis le formulaire puis on l'ajoute à la bdd */
+    if(name !== undefined){
+      new_ing.setNom(name);
+    }
+    if((this.add_ing_section.value["quantity_bef_prep"] !== undefined) && (this.quantity_bef_prep.length > 0)){
+      const total_quantity = this.quantity_bef_prep
+      .map((prep_dom) => prep_dom.nativeElement.value)
+      .reduce(((quantity, next_quantity) => Number(quantity) + Number(next_quantity)));
+      new_ing.setQuantityBefPrep(total_quantity as number);
+    }
+
+    if((this.add_ing_section.value !== undefined) && (this.names_prep.length > 0)){
+      const lst_name_bas_ing = this.names_prep.map((names_dom) => names_dom.nativeElement.value);
+      new_ing.setBaseIng(lst_name_bas_ing)
+    }
+    if((this.add_ing_section.value["quantity_after_prep"] !== undefined)){
+      new_ing.setQuantityAfterPrep(this.add_ing_section.value["quantity_after_prep"]);
+    }
+    if(this.add_ing_section.value["name_tva"] !== undefined){
+      new_ing.setCategorieTva(this.add_ing_section.value["name_tva"]);
+    }
+    if(this.add_ing_section.value["taux_tva"] !== undefined){
+      new_ing.setTauxTva(Number(this.taux.nativeElement.value));
+    }
+    
+    if(this.add_ing_section.value["quantity"] !== undefined){
+      new_ing.setQuantity(this.add_ing_section.value["quantity"]);
+    }
+
+    if(this.add_ing_section.value["quantity_unitary"] !== undefined){
+      new_ing.setQuantityUniy(this.add_ing_section.value["quantity_unitary"]);
+    }
+
+    if(unity !== undefined){
+      new_ing.setUnity(unity);
+    }
+
+    if(this.add_ing_section.value["unitary_cost"] !== undefined){
+      new_ing.setCost(this.add_ing_section.value["unitary_cost"]);
+    }
+    if((this.add_ing_section.value["dlc"] !== undefined) && (this.add_ing_section.value["dlc"] !== null)){
+
+      new_ing.getDlc().setHours(new_ing.dlc.getHours() + 24*this.add_ing_section.value["dlc"]);
+    }
+
+    console.log(this.data.prop);
+    console.log(this.data.restaurant);
+    
+    
+    this.service.setIngInBdd(new_ing, this.data.prop, this.data.restaurant)    
+    console.log(new_ing);
     
   }
 
@@ -57,11 +129,8 @@ export class AddIngComponent implements OnInit {
   }
 
   addTaux(event:Object):void{
-    console.log(event["value" as keyof typeof event].toString());
-    const taux = this.calcul_service.getTauxFromCat(event["value" as keyof typeof event].toString())
-    console.log(this.taux.nativeElement);
-    this.taux.nativeElement.value = taux
-    console.log(event);
+    const taux = this.calcul_service.getTauxFromCat(event["value" as keyof typeof event].toString());
+    this.taux.nativeElement.value = taux;
     
   }
 }

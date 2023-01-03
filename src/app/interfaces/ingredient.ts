@@ -110,6 +110,7 @@ export class CIngredient implements Ingredient {
     "is_similar":number;
 
     constructor(private service: CalculService, private db_service: IngredientsInteractionService) {
+        this.base_ing = [];
         this.nom = "";
         this.categorie_restaurant = "";
         this.categorie_tva = "";

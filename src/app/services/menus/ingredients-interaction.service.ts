@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
-import { child, Database, get, getDatabase, ref } from 'firebase/database';
+import { child, Database, get, getDatabase, ref, set, update } from 'firebase/database';
 import { collection, doc, Firestore, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
 import { CIngredient, Ingredient } from 'src/app/interfaces/ingredient';
 import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.service';
@@ -107,5 +107,26 @@ export class IngredientsInteractionService {
       ingredient.is_similar =  is_similar;
     })
     return ingredient;
+  }
+
+  async setIngInBdd(ingredient: CIngredient, prop:string, restaurant:string){
+    const ref_db = ref(this.db, `ingredients/${prop}/${restaurant}/`);
+
+    await update(ref_db, {
+      [ingredient.nom]: {
+      categorie_tva: ingredient.categorie_tva,
+      taux_tva: ingredient.taux_tva,
+      cost: ingredient.cost,
+      quantity: ingredient.quantity,
+      quantity_unitaire: ingredient.quantity_unity,
+      unity: ingredient.unity,
+      base_ing: ingredient.base_ing,
+      quantity_after_prep: ingredient.quantity_after_prep,
+      quantity_bef_prep: ingredient.quantity_bef_prep,
+      cost_ttc: ingredient.cost_ttc,
+      date_reception: ingredient.date_reception,
+      dlc: ingredient.dlc
+    }
+  })
   }
 }
