@@ -19,9 +19,11 @@ export interface Ingredient {
     "conditionnement": boolean;
     "refrigiree": boolean;
     "gelee": boolean;
+    "base_ing":Array<string>;
+
 
     getInfoDico(): void;
-    getValBouchFromNewQauntity(quantity_unity: number): CIngredient;
+/*     getValBouchFromNewQauntity(quantity_unity: number): CIngredient; */
     getCostTtcFromCat(): void;
 
     getNom(): string;
@@ -58,6 +60,8 @@ export interface Ingredient {
     setCondition(val: boolean | null): void;
     getGel(): boolean;
     setGel(val: boolean | null): void;
+    getBaseIng(): Array<string>;
+    setBaseIng(names: Array<string> | null): void;
 
 }
 
@@ -99,6 +103,7 @@ export class CIngredient implements Ingredient {
     "conditionnement": boolean;
     "refrigiree": boolean;
     "gelee": boolean;
+    "base_ing":Array<string>;
     "quantity_bef_prep": number;
     "quantity_after_prep": number;
     "val_bouch": number;
@@ -122,12 +127,10 @@ export class CIngredient implements Ingredient {
         this.quantity_bef_prep = 0;
         this.quantity_after_prep = 0;
     }
-    getValBouchFromNewQauntity() {
-        let ingredient = new CIngredient(this.service, this.db_service);
-        ingredient = this;
-        ingredient.val_bouch = this.service.getValBouchFromBasIng(this, this.quantity_after_prep);
-        return ingredient;
-    }
+  /*   getValBouchFromNewQauntity(quantity_unity: number): CIngredient {
+        throw new Error("Method not implemented.");
+    } */
+
 
     async getInfoDico(): Promise<CIngredient> {
         const Pingredient = await this.db_service.getInfoIngFromDico(this.nom);
@@ -271,7 +274,12 @@ export class CIngredient implements Ingredient {
         if (val !== null) this.gelee = val;
     }
 
-
+    getBaseIng(): Array<string> {
+        return this.base_ing;
+    }
+    setBaseIng(names: Array<string> | null): void {
+        if (names !== null) this.base_ing= names;
+    }
 }
 
 

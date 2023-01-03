@@ -1,48 +1,48 @@
 <div id="selectSection">
     <p>l'ingrédient a-t-il été préparé en salle ?</p>
     <mat-radio-group aria-label="SelectPrepa" id="is_cooked">
-        <mat-radio-button value="oui">Oui</mat-radio-button>
-        <mat-radio-button value="non">Non</mat-radio-button>
-        <mat-radio-button value="aucune">Ne pas préciser</mat-radio-button>
+        <mat-radio-button (change)="clickRadio(true)" value="oui">Oui</mat-radio-button>
+        <mat-radio-button (change)="clickRadio(false)" value="non">Non</mat-radio-button>
+        <mat-radio-button (change)="clickRadio(false)" value="aucune">Ne pas préciser</mat-radio-button>
     </mat-radio-group>
 </div>
 <form [formGroup]="add_ing_section" (ngSubmit)="addIngredient()">
-    <div id="section">
+    <div class="section">
         <p>Entrer le nom du nouveau ingrédient : </p>
         <mat-form-field appearance="fill">
             <mat-label>Entrer le nom du nouveau ingrédient</mat-label>
             <input matInput formControlName="name" placeholder="Ex. asperge">
         </mat-form-field>
     </div>
-    <div id="section">
+    <div class="section">
         <p>Entrer la catégorie ou le taux de tva : </p>
         <mat-form-field appearance="fill">
             <mat-label>Entrer la catégorie TVA</mat-label>
-            <mat-select formControlName="name_tva">
-                <mat-option> produit alimentaire conditionnée </mat-option>
-                <mat-option> produit alimentaire non conditionnée </mat-option>
-                <mat-option> boisson conditionnée non alcholisée </mat-option>
-                <mat-option> boisson non conditionnée non alcholisée </mat-option>
-                <mat-option> boisson alcholisée </mat-option>
-                <mat-option> pain </mat-option>
-                <mat-option> pâtisserie </mat-option>
-                <mat-option> fruit de mer coquillage fermé</mat-option>
-                <mat-option> fruit de mer coquillage ouvert</mat-option>
+            <mat-select formControlName="name_tva" (selectionChange)="addTaux($event)">
+                <mat-option value="produit alimentaire conditionnée"> produit alimentaire conditionnée </mat-option>
+                <mat-option value="produit alimentaire non conditionnée"> produit alimentaire non conditionnée </mat-option>
+                <mat-option value="boisson non alcholisée conditionnée"> boisson conditionnée non alcholisée </mat-option>
+                <mat-option value="boisson non alcholisée non conditionnée"> boisson non conditionnée non alcholisée </mat-option>
+                <mat-option value="boisson alcholisée"> boisson alcholisée </mat-option>
+                <mat-option value="pain"> pain </mat-option>
+                <mat-option value="pâtisserie"> pâtisserie </mat-option>
+                <mat-option value="fruit de mer coquillage fermés"> fruit de mer coquillage fermé</mat-option>
+                <mat-option value="fruit de mer coquillage ouvert"> fruit de mer coquillage ouvert</mat-option>
             </mat-select>
         </mat-form-field>
         <mat-form-field appearance="fill">
             <mat-label>Entrer la taux de TVA </mat-label>
-            <input type="number" matInput formControlName="taux_tva">
+            <input #taux type="number" matInput formControlName="taux_tva">
         </mat-form-field>
     </div>
-    <div id="section">
+    <div class="section">
         <p> Entrer la quantitée, si l'aliment est acheté en vrac mettre 1 : </p>
         <mat-form-field appearance="fill">
             <mat-label>Entrer la quantitée </mat-label>
             <input type="number" matInput formControlName="quantity">
         </mat-form-field>
     </div>
-    <div id="section">
+    <div class="section">
         <p> Entrer la quantitée par unitée et le coût de l'ingrédient : </p>
         <mat-form-field appearance="fill">
             <mat-label>Entrer la quantitée unitaire </mat-label>
@@ -51,13 +51,13 @@
         <mat-form-field appearance="fill">
             <mat-label>Entrer l'unitée </mat-label>
             <mat-select formControlName="unity">
-                <mat-option> kg (kilogramme) </mat-option>
-                <mat-option> g (grame) </mat-option>
-                <mat-option> L (litre)</mat-option>
-                <mat-option> ml (millilitre)</mat-option>
-                <mat-option> cl (centilitre)</mat-option>
-                <mat-option> dl (decilitre)</mat-option>
-                <mat-option> p (pièce) </mat-option>
+                <mat-option value="kg (kilogramme)"> kg (kilogramme) </mat-option>
+                <mat-option value="g (grame)"> g (grame) </mat-option>
+                <mat-option value="L (litre)"> L (litre)</mat-option>
+                <mat-option value="ml (millilitre)"> ml (millilitre)</mat-option>
+                <mat-option value="cl (centilitre)"> cl (centilitre)</mat-option>
+                <mat-option value="dl (decilitre)"> dl (decilitre)</mat-option>
+                <mat-option value="p (pièce)"> p (pièce) </mat-option>
             </mat-select>
         </mat-form-field>
         <mat-form-field appearance="fill">
@@ -65,23 +65,37 @@
             <input type="number" matInput formControlName="unitary_cost">
         </mat-form-field>
     </div>
-    <div id="section">
-        <p>Entrer la date limte de consomation : </p>
+    <div class="section">
+        <p>Entrer la date limte de consomation en jours : </p>
         <mat-form-field appearance="fill">
             <mat-label>date limite de consommation en jours </mat-label>
             <input type="number" matInput formControlName="dlc">
         </mat-form-field>
     </div>
-    <div id="section">
-        <p id="last">Entrer la quantitée de l'ingrédient de base utilisé pour la préparation <br> puis la quantitée obtenu pour cette ingrédient </p>
-        <mat-form-field appearance="fill">
-            <mat-label> quantitée total avant préparation </mat-label>
-            <input type="number" matInput formControlName="quantity_bef_prep">
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-            <mat-label> quantitée total après préparation </mat-label>
-            <input type="number" matInput formControlName="quantity_after_prep">
-        </mat-form-field>
+    <div id="prepa"  *ngIf="is_prepa">
+        <div class="section">
+            <p>Quelles sont les ingrédients de base, <br> entrer la  quantitée de l'ingrédient de base utilisé pour la préparation : </p>
+            <div id="old_ing" *ngFor="let index of index_inputs">
+                <mat-form-field appearance="fill">
+                    <mat-label>nom de l'ingrédient</mat-label>
+                    <input matInput placeholder="Ex. Pizza">
+                  </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label> quantitée total avant préparation </mat-label>
+                    <input type="number" matInput formControlName="quantity_bef_prep">
+                </mat-form-field>
+            </div>
+            <button mat-mini-fab id="add_input" color="white" matTooltip="ajout d'un ingrédient" aria-label="ajout d'un ingrédient" (click)="addInput()">
+                <i class="fa-regular fa-plus"></i>
+            </button>
+        </div>
+        <div class="section">
+            <p id="last">Entrer la quantitée obtenu pour cette ingrédient : </p>
+            <mat-form-field appearance="fill">
+                <mat-label> quantitée total après préparation </mat-label>
+                <input type="number" matInput formControlName="quantity_after_prep">
+            </mat-form-field>
+        </div>
     </div>
     <button mat-stroked-button type="submit"> Ajouter </button>
 </form>

@@ -65,6 +65,7 @@ export class IngredientsInteractionService {
         add_ingredient.setQuantity(ingredient.child("quantity").val());
         add_ingredient.setQuantityUniy(ingredient.child("quantity_unitaire").val());
         add_ingredient.setUnity(ingredient.child("unity").val());
+        add_ingredient.setBaseIng(ingredient.child("base_ing").val());
         add_ingredient.setQuantityAfterPrep(ingredient.child("quantity_after_prep").val());
         add_ingredient.setQuantityBefPrep(ingredient.child("quantity_bef_prep").val());
         add_ingredient.setCostTtc(ingredient.child("cost_ttc").val());

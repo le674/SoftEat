@@ -5,6 +5,7 @@ import { Router, UrlTree } from '@angular/router';
 import { CIngredient, Ingredient } from 'src/app/interfaces/ingredient';
 import { Restaurant } from 'src/app/interfaces/restaurant';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
+import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.component';
 
 @Component({
@@ -16,6 +17,22 @@ export class AppStockComponent implements OnInit {
 
   public displayedColumns: string[] = ['nom', 'categorie_tva', 'quantity', 'quantity_unity',
   'unity','cost', 'cost_ttc', 'date_reception', 'dlc', 'bef_prep', 'after_prep', 'val_bouch', 'cuisinee', 'actions'];
+  public dataSource: MatTableDataSource<{
+    nom:string;
+    categorie_tva:string;
+    cost:number;
+    cost_ttc:number;
+    val_bouch:number;
+    bef_prep:number;
+    after_prep:number;
+    quantity:number;
+    quantity_unity:number;
+    unity:string,
+    cuisinee:string;
+    date_reception: string;
+    dlc:string;
+  }>;
+
   private ingredients_displayed: Array<{
     nom:string;
     categorie_tva:string;
@@ -32,24 +49,9 @@ export class AppStockComponent implements OnInit {
     dlc:string;
   }>
   private router: Router;
-  private ingredient_table: Array<Ingredient>;
+  private ingredient_table: Array<CIngredient>;
   private url: UrlTree;
-  public dataSource: MatTableDataSource<{
-    nom:string;
-    categorie_tva:string;
-    cost:number;
-    cost_ttc:number;
-    val_bouch:number;
-    bef_prep:number;
-    after_prep:number;
-    quantity:number;
-    quantity_unity:number;
-    unity:string,
-    cuisinee:string;
-    date_reception: string;
-    dlc:string;
-  }>;
-  constructor(private service:IngredientsInteractionService, router: Router, public dialog: MatDialog) { 
+  constructor(private service:IngredientsInteractionService, private calc_service:CalculService,router: Router, public dialog: MatDialog) { 
     this.router = router;
     this.ingredient_table = [];
     this.ingredients_displayed = [];
@@ -103,27 +105,14 @@ ngOnInit(): void{
           console.log(this.ingredient_table);
           console.log( ingredients[i]);
           
-          let base_ing = this.ingredient_table.filter((ingredient) => ingredient.nom === ingredients[i].nom)[0]
-          console.log(base_ing);
-          
-          if((ingredients[i].categorie_dico === "") || (ingredients[i].categorie_dico === null)){
-            ingredients[i].categorie_dico = base_ing.categorie_dico;
-          }
-          if((ingredients[i].categorie_restaurant === "") || (ingredients[i].categorie_restaurant === null)){
-            ingredients[i].categorie_restaurant = base_ing.categorie_restaurant;
-          }
-          if((ingredients[i].categorie_tva === "") || (ingredients[i].categorie_tva === null)){
-            ingredients[i].categorie_tva = base_ing.categorie_tva;
-          }  
-          if((ingredients[i].dlc === null)){
-            ingredients[i].dlc = base_ing.dlc;
-          }
+          let lst_base_ing = this.ingredient_table.filter((ingredient) => ingredients[i].base_ing.includes(ingredient.nom))
+          console.log("liste ing base : ", lst_base_ing);
 
-          ingredients[i].cost = base_ing.cost;
-          ingredients[i].cost_ttc = base_ing.cost_ttc;
+          ingredients[i].cost = lst_base_ing.map((base) => base.cost).reduce((cost, next_cost) => cost + next_cost);
+          ingredients[i].cost_ttc = lst_base_ing.map((base) => base.cost_ttc).reduce((cost, next_cost) => cost + next_cost);;
 
 
-          ingredients[i].getValBouchFromNewQauntity();
+          ingredients[i].val_bouch  = this.calc_service.getValBouchFromBasIng(lst_base_ing, ingredients[i].quantity_unity);
     
           let row_ingredient = {
             nom: ingredients[i].nom.split('_').join('<br>'),
@@ -149,8 +138,8 @@ ngOnInit(): void{
 
   OpenAddIngForm(){
     const dialogRef = this.dialog.open(AddIngComponent, {
-      height: `${window.innerHeight - window.innerHeight/16}px`,
-      width:`${window.innerWidth - window.innerWidth/4}px`,
+      height: `${window.innerHeight - window.innerHeight/5}px`,
+      width:`${window.innerWidth - window.innerWidth/15}px`,
     });
   }
 }

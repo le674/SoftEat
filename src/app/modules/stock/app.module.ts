@@ -11,7 +11,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
-import {MatRadioModule} from '@angular/material/radio'; 
+import {MatRadioModule} from '@angular/material/radio';  
+import {MatTooltipModule} from '@angular/material/tooltip'; 
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import {MatRadioModule} from '@angular/material/radio';
     MatSelectModule,
     MatInputModule,
     MatRadioModule,
+    MatTooltipModule,
     MatTableModule
    ],
   exports: [

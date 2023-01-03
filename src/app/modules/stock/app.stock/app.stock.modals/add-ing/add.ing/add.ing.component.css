@@ -1,3 +1,14 @@
+i{
+    color: rgb(125, 181, 46);
+}
+
+.mat-mini-fab{
+    color: white;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+
 
 p{
     display: inline;
@@ -22,7 +33,14 @@ p{
 
 .section {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#old_ing{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 mat-form-field{
@@ -37,4 +55,24 @@ mat-form-field{
 }
 mat-radio-button{
   margin-right: 5px;
+}
+
+.mat-select {
+    width: fit-content !important;
+    min-width: 100%;
+}
+
+::ng-deep .mat-form-field-infix {
+    min-width: 120px !important;
+    width: fit-content !important;
+}
+
+::ng-deep .mat-select .mat-select-value {
+    width: fit-content;
+    min-width: 18ch;
+    max-width: 200ch;
+}
+::ng-deep .mat-select .mat-select-placeholder {
+    width: fit-content;
+    min-width: 32ch;
 }
