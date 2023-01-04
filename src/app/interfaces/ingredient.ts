@@ -19,7 +19,10 @@ export interface Ingredient {
     "conditionnement": boolean;
     "refrigiree": boolean;
     "gelee": boolean;
-    "base_ing":Array<string>;
+    "base_ing":Array<{
+        name:string,
+        quantity:number
+    }>;
 
 
     getInfoDico(): void;
@@ -60,8 +63,8 @@ export interface Ingredient {
     setCondition(val: boolean | null): void;
     getGel(): boolean;
     setGel(val: boolean | null): void;
-    getBaseIng(): Array<string>;
-    setBaseIng(names: Array<string> | null): void;
+    getBaseIng(): Array<{name:string, quantity:number}>;
+    setBaseIng(names: Array<{name:string, quantity:number}> | null): void;
 
 }
 
@@ -103,7 +106,10 @@ export class CIngredient implements Ingredient {
     "conditionnement": boolean;
     "refrigiree": boolean;
     "gelee": boolean;
-    "base_ing":Array<string>;
+    "base_ing":Array<{
+        name:string,
+        quantity:number
+    }>;
     "quantity_bef_prep": number;
     "quantity_after_prep": number;
     "val_bouch": number;
@@ -143,8 +149,17 @@ export class CIngredient implements Ingredient {
         } 
 
         console.log("dlc :", this.dlc);
-        
-        this.dlc.setHours(this.date_reception.getHours() + 24*Pingredient.dlc);
+        console.log(" type dlc :",typeof this.dlc);
+        if(typeof this.dlc !== "string"){
+            this.dlc.setHours(this.date_reception.getHours() + 24*Pingredient.dlc);
+        }
+        else{
+            this.dlc = new Date(this.dlc);
+        }
+
+        if(typeof this.date_reception === 'string'){
+            this.date_reception = new Date(this.date_reception);
+        }
         this.gelee = Pingredient.gelee;
         this.refrigiree = Pingredient.refrigiree;
 
@@ -154,7 +169,7 @@ export class CIngredient implements Ingredient {
 
     getCostTtcFromCat(): void {
         this.cost_ttc = this.service.getCostTtcFromCat(this.categorie_tva, this.cost);
-    }
+    } 
 
     getCostTtcFromTaux():void{
         this.cost_ttc = this.service.getCostTtcFromTaux(this.taux_tva, this.cost)
@@ -275,10 +290,16 @@ export class CIngredient implements Ingredient {
         if (val !== null) this.gelee = val;
     }
 
-    getBaseIng(): Array<string> {
+    getBaseIng(): Array<{
+        name:string,
+        quantity:number
+    }> {
         return this.base_ing;
     }
-    setBaseIng(names: Array<string> | null): void {
+    setBaseIng(names: Array<{
+        name:string,
+        quantity:number
+    }> | null): void {
         if (names !== null) this.base_ing= names;
     }
 }

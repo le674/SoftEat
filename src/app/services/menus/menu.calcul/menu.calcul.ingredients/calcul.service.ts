@@ -56,6 +56,9 @@ getCostTtcFromTaux(taux_tva:number, cost:number):number{
 }
 
 getValBouchFromBasIng(base: CIngredient[], quantity_unity_act:number):number{
+  if(base.length === 0){
+    return 0;
+  }
   const sum_all_cost = base.map(ing => ing.cost).reduce((cost, next_cost) => cost + next_cost)
   const moy_all_cost = sum_all_cost/base.length
   const cost = moy_all_cost * base.map(ing => ing.quantity_bef_prep).reduce((quantity, next_quantity) => quantity + next_quantity)
@@ -82,5 +85,23 @@ getTvaCategorieFromConditionnement(categorie_tva:string, conditionnemnt:boolean)
       return 'produit alimentaire non conditionnée'
     }
     return categorie_tva
+  }
+
+  convertUnity(unity: string, is_full: boolean):string {
+    if(is_full){
+      if(unity === 'g') return 'g (grame)';
+      if(unity === 'kg') return 'kg (kilogramme)';
+      if(unity === 'L') return 'L (litre)';
+      if(unity === 'ml') return 'ml (millilitre)';
+      if(unity === 'cl') return 'cl (centilitre)';
+    }
+    else{
+      if(unity === 'g (grame)') return 'g';
+      if(unity === 'kg (kilogramme)') return 'kg';
+      if(unity === 'L (litre)') return 'L';
+      if(unity === 'ml (millilitre)') return 'ml';
+      if(unity === 'cl (centilitre)') return 'cl';
+    }
+    return ''
   }
 }

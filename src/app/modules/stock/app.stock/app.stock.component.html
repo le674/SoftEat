@@ -125,8 +125,8 @@
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> actions </th>
                 <td id="validate" mat-cell *matCellDef="let element;let cell_index = index; ">
-                  <i class="fa-regular fa-trash action_table"></i>
-                  <i class="fa-regular fa-pen action_table"></i>
+                  <i class="fa-regular fa-trash action_table" (click)="suppIng(element)"></i>
+                  <i class="fa-regular fa-pen action_table" (click)="modifIng(element)"></i>
                 </td>
             </ng-container>
 

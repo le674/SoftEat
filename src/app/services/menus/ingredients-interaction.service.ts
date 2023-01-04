@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
-import { child, Database, get, getDatabase, ref, set, update } from 'firebase/database';
+import { child, Database, DatabaseReference, get, getDatabase, ref, set, update } from 'firebase/database';
 import { collection, doc, Firestore, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
 import { CIngredient, Ingredient } from 'src/app/interfaces/ingredient';
 import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.service';
@@ -42,7 +42,7 @@ export class IngredientsInteractionService {
           add_ingredient.setQuantityBefPrep(ingredient.child("quantity_bef_prep").val());
           add_ingredient.setCostTtc(ingredient.child("cost_ttc").val());
           add_ingredient.setDlc(ingredient.child("dlc").val());
-          add_ingredient.setDlc(ingredient.child("date_reception").val());
+          add_ingredient.setDateReception(ingredient.child("date_reception").val());
           this.ingredients.push(add_ingredient);
         }
       })
@@ -109,8 +109,14 @@ export class IngredientsInteractionService {
     return ingredient;
   }
 
-  async setIngInBdd(ingredient: CIngredient, prop:string, restaurant:string){
-    const ref_db = ref(this.db, `ingredients/${prop}/${restaurant}/`);
+  async setIngInBdd(ingredient: CIngredient, prop:string, restaurant:string, is_prep:boolean){
+    let ref_db: DatabaseReference;
+    if(is_prep){
+      ref_db = ref(this.db, `ingredients/${prop}/${restaurant}/preparation/`);
+    }
+    else{
+      ref_db = ref(this.db, `ingredients/${prop}/${restaurant}/`);
+    }
 
     await update(ref_db, {
       [ingredient.nom]: {
