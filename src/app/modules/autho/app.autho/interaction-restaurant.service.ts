@@ -55,16 +55,13 @@ export class InteractionRestaurantService{
 
   async getRestaurantFromUser(uid:string, prop_to_get:string){ 
     const ref_db = ref(this.db);
-    console.log(`Users/${prop_to_get}/${uid}/restaurant/`);
     await get(child(ref_db, `Users/${prop_to_get}/${uid}/restaurant/`)).then((user_restaurant) => {
       this.restaurant = []
       if(user_restaurant.exists()){ 
         if(user_restaurant.child('id').exists()){
-          console.log('il n y a qu un restaurant');
           let restau = new Restaurant()
           restau.id = user_restaurant.val().id
           restau.adresse = user_restaurant.val().adresse
-          console.log(`le restaurant de ${uid} est ${restau.id}`);
           this.restaurant.push(restau)
         }
         else{

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
-import { child, Database, DatabaseReference, get, getDatabase, ref, set, update } from 'firebase/database';
+import { child, Database, DatabaseReference, get, getDatabase, ref, remove, set, update } from 'firebase/database';
 import { collection, doc, Firestore, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
 import { CIngredient, Ingredient } from 'src/app/interfaces/ingredient';
 import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.service';
@@ -69,8 +69,8 @@ export class IngredientsInteractionService {
         add_ingredient.setQuantityAfterPrep(ingredient.child("quantity_after_prep").val());
         add_ingredient.setQuantityBefPrep(ingredient.child("quantity_bef_prep").val());
         add_ingredient.setCostTtc(ingredient.child("cost_ttc").val());
-        add_ingredient.setDlc(ingredient.child("dlc").val());
-        add_ingredient.setDlc(ingredient.child("date_reception").val());
+        add_ingredient.setDlc(new Date(ingredient.child("dlc").val()));
+        add_ingredient.setDateReception(new Date(ingredient.child("date_reception").val()));
         this.ingredients.push(add_ingredient);
       })
     })
@@ -109,30 +109,73 @@ export class IngredientsInteractionService {
     return ingredient;
   }
 
-  async setIngInBdd(ingredient: CIngredient, prop:string, restaurant:string, is_prep:boolean){
+  async setIngInBdd(ingredient: CIngredient, prop:string, restaurant:string, is_prep:boolean, new_ing_aft_prepa: CIngredient[] | null){
     let ref_db: DatabaseReference;
-    if(is_prep){
-      ref_db = ref(this.db, `ingredients/${prop}/${restaurant}/preparation/`);
-    }
-    else{
-      ref_db = ref(this.db, `ingredients/${prop}/${restaurant}/`);
+    ref_db = ref(this.db, `ingredients/${prop}/${restaurant}/`);
+
+    let ingredient_princ =  {
+      [ingredient.nom]: {
+        categorie_tva: ingredient.categorie_tva,
+        taux_tva: ingredient.taux_tva,
+        cost: ingredient.cost,
+        quantity: ingredient.quantity,
+        quantity_unitaire: ingredient.quantity_unity,
+        unity: ingredient.unity,
+        base_ing: ingredient.base_ing,
+        quantity_after_prep: ingredient.quantity_after_prep,
+        quantity_bef_prep: ingredient.quantity_bef_prep,
+        cost_ttc: ingredient.cost_ttc,
+        date_reception: ingredient.date_reception,
+        dlc: ingredient.dlc
+      }
     }
 
-    await update(ref_db, {
-      [ingredient.nom]: {
-      categorie_tva: ingredient.categorie_tva,
-      taux_tva: ingredient.taux_tva,
-      cost: ingredient.cost,
-      quantity: ingredient.quantity,
-      quantity_unitaire: ingredient.quantity_unity,
-      unity: ingredient.unity,
-      base_ing: ingredient.base_ing,
-      quantity_after_prep: ingredient.quantity_after_prep,
-      quantity_bef_prep: ingredient.quantity_bef_prep,
-      cost_ttc: ingredient.cost_ttc,
-      date_reception: ingredient.date_reception,
-      dlc: ingredient.dlc
+    if(is_prep){
+      let prep_path = `preparation/${ingredient.nom}`
+      let brut_path = new_ing_aft_prepa?.map((ing) => `${ingredient.nom}`)
+
+      let ingredient_princ =  {
+        [prep_path]: {
+          categorie_tva: ingredient.categorie_tva,
+          taux_tva: ingredient.taux_tva,
+          cost: ingredient.cost,
+          quantity: ingredient.quantity,
+          quantity_unitaire: ingredient.quantity_unity,
+          unity: ingredient.unity,
+          base_ing: ingredient.base_ing,
+          quantity_after_prep: ingredient.quantity_after_prep,
+          quantity_bef_prep: ingredient.quantity_bef_prep,
+          cost_ttc: ingredient.cost_ttc,
+          date_reception: ingredient.date_reception,
+          dlc: ingredient.dlc
+        }
+      }
+      // si on reçoit des ingrédients brut à modifier 
+      if(brut_path !== undefined && new_ing_aft_prepa !== null){
+        brut_path.forEach((path, index:number) => {
+          Object.assign(ingredient_princ, {
+            [path]: {
+              quantity: new_ing_aft_prepa[index].quantity,
+            }
+          })
+        })
+      }
     }
-  })
+    await update(ref_db, ingredient_princ)
   }
+
+  async removeIngInBdd(name_ing: string, prop:string, restaurant:string, is_prep:boolean){
+    let ref_db: DatabaseReference;
+    if(name_ing !== ""){
+      if(is_prep){
+        ref_db = ref(this.db, `ingredients/${prop}/${restaurant}/preparation/${name_ing}`);
+      }
+      else{
+        ref_db = ref(this.db, `ingredients/${prop}/${restaurant}/${name_ing}`);
+      }
+  
+      await remove(ref_db).then(() => console.log("ingrédient ", name_ing, "bien supprimée"))
+    }
+  }
+
 }

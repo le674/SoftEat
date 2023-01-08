@@ -42,7 +42,6 @@ export class ModifMdpComponent implements OnInit {
             this._snackBar.dismiss()
           })
         }).catch((error) => {
-          console.log(error);
           const msg = "le mot de passe n'est pas changé veuillez essayer de vous reconnecter avant de modifier le mot de passe " +
             "(si cela ne marche pas contactez SoftEat)"
           let snack_bar_ref =

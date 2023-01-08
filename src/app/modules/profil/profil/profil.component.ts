@@ -46,7 +46,6 @@ export class ProfilComponent implements OnInit {
 
   ngOnInit(): void{
     let user_info = this.url.queryParams;
-    console.log(Object.keys(user_info));
     this.enseigne = user_info["prop"]
     onAuthStateChanged(this.auth, (user) => {
       if(user){

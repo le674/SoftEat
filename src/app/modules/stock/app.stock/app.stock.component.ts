@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, UrlTree } from '@angular/router';
 import { CIngredient, Ingredient } from 'src/app/interfaces/ingredient';
@@ -33,7 +35,7 @@ export class AppStockComponent implements OnInit {
     dlc:string;
   }>;
 
-  private ingredients_displayed: Array<{
+  public ingredients_displayed: Array<{
     nom:string;
     categorie_tva:string;
     cost:number;
@@ -47,7 +49,8 @@ export class AppStockComponent implements OnInit {
     cuisinee:string;
     date_reception: string;
     dlc:string;
-  }>
+  }>;
+  private page_number: number;
   private router: Router;
   private ingredient_table: Array<CIngredient>;
   private ingredient_table_prep: Array<CIngredient>;
@@ -55,7 +58,9 @@ export class AppStockComponent implements OnInit {
   private prop:string;
   private restaurant:string;
 
-  constructor(private service:IngredientsInteractionService, private calc_service:CalculService,router: Router, public dialog: MatDialog) { 
+  constructor(private service:IngredientsInteractionService, private calc_service:CalculService,
+    router: Router, public dialog: MatDialog,  private _snackBar: MatSnackBar) { 
+    this.page_number = 1;
     this.prop = "";
     this.restaurant = "";
     this.router = router;
@@ -73,8 +78,6 @@ ngOnInit(): void{
 
     const first_step = this.service.getIngredientsBrFromRestaurants(this.prop, this.restaurant).then(async (ingredients) => {
        for(let i = 0; i < ingredients.length; i++){
-        console.log(i);
-        
         await ingredients[i].getInfoDico().then((ingredient) => {
           if((ingredients[i].getTauxTva() === 0) || (ingredients[i].getTauxTva === undefined)){
             ingredient.getCostTtcFromCat();
@@ -109,15 +112,15 @@ ngOnInit(): void{
     first_step.then(() => {
       this.service.getIngredientsPrepFromRestaurants(this.prop, this.restaurant).then((ingredients) => {
         this.ingredient_table_prep = ingredients;
-        for(let i = 0; i < ingredients.length; i++){
-          console.log(this.ingredient_table);
-          console.log( ingredients[i]);
+        for(let i = 0; i < ingredients.length; i++){   
+          console.log('table ingrédient ', this.ingredient_table);
+          console.log('ingrédient prep ', ingredients[i].base_ing);
           
+                
           let lst_base_ing = this.ingredient_table
                              .filter((ingredient) => ingredients[i].base_ing
                              .map((ing) => ing.name)
                              .includes(ingredient.nom))
-          console.log("liste ing base : ", lst_base_ing);
           if(lst_base_ing.length > 0){
             ingredients[i].cost = lst_base_ing
                                   .map((base) => base.cost)
@@ -126,19 +129,15 @@ ngOnInit(): void{
                                       .map((base) => base.cost_ttc)
                                       .reduce((cost, next_cost) => cost + next_cost);
           }
+          
+          ingredients[i].val_bouch  = this.calc_service.getValBouchFromBasIng(lst_base_ing, ingredients[i]);
+          console.log("val bouche",  ingredients[i].val_bouch);
 
-          ingredients[i].val_bouch  = this.calc_service.getValBouchFromBasIng(lst_base_ing, ingredients[i].quantity_unity);
           let val_bouch:any = ingredients[i].val_bouch;
           if((ingredients[i].quantity_bef_prep > 0) && (val_bouch === 0)){
             val_bouch = "veuillez entrer les ingrédients de bases"
           }
 
-          if(typeof ingredients[i].date_reception === 'string'){
-            ingredients[i].date_reception = new Date(ingredients[i].date_reception);
-          }
-          if(typeof ingredients[i].dlc === 'string'){
-            ingredients[i].dlc = new Date(ingredients[i].dlc);
-          }
           let row_ingredient = {
             nom: ingredients[i].nom.split('_').join('<br>'),
             categorie_tva: ingredients[i].categorie_tva.split(' ').join('<br>'),
@@ -156,7 +155,11 @@ ngOnInit(): void{
           };
           this.ingredients_displayed.push(row_ingredient);
         }
-        this.dataSource.data = this.ingredients_displayed;
+        const first_event = new PageEvent();
+                  first_event.length = this.ingredients_displayed.length
+                  first_event.pageSize = 6
+                  first_event.pageIndex = 0
+        this.pageChanged(first_event);
       })
     }) 
   }
@@ -168,6 +171,7 @@ ngOnInit(): void{
       data: {
         restaurant: this.restaurant,
         prop: this.prop,
+        is_modif: false,
         ingredient: {
           nom: "",
           categorie: "",
@@ -176,7 +180,10 @@ ngOnInit(): void{
           unity: "",
           unitary_cost: 0,
           dlc: 0,
-          base_ing: []
+          date_reception: new Date(),
+          base_ing: [],
+          base_ing_data: this.ingredient_table,
+          quantity_after_prep: 0
         }
       }
     });
@@ -199,12 +206,16 @@ ngOnInit(): void{
   }){
     let res_dlc = 0;
     let var_base_ing: Array<{name:string, quantity:number}> = [];
-    console.log("prep ingredient : ", this.ingredient_table_prep);
+    console.log("ele.dlc", ele.dlc);
+    const dlc = this.calc_service.stringToDate(ele.dlc);
+    console.log("dlc", dlc);
+    
+    const date_reception = this.calc_service.stringToDate(ele.date_reception);
+    console.log("data de reception : ", date_reception);
+
+
     ele.nom = ele.nom.split('<br>').join('_')
     ele.categorie_tva = ele.categorie_tva.split('<br>').join(' ') 
-    
-    const dlc = new Date(ele.dlc);
-    const date_reception = new Date(ele.date_reception);
     let ingredient = new CIngredient(this.calc_service, this.service)
     const base_ings = this.ingredient_table_prep.filter((ingredient) => ingredient.nom === ele.nom)
     // TO DO remplacer les window.alert
@@ -213,7 +224,6 @@ ngOnInit(): void{
       var_base_ing = base_ings[0].base_ing; 
     } 
 
-    console.log('base d ingrédients : ', var_base_ing);
     
     ingredient.nom = ele.nom;
     ingredient.categorie_tva = ele.categorie_tva;
@@ -221,12 +231,15 @@ ngOnInit(): void{
     ingredient.quantity = ele.quantity;
     ingredient.quantity_unity = ele.quantity_unity;
     res_dlc = (dlc.getTime() - date_reception.getTime()) / (1000 * 60 * 60 * 24)
+    console.log("dlc en jours : ", res_dlc);
+    
     const dialogRef = this.dialog.open(AddIngComponent, {
       height: `${window.innerHeight - window.innerHeight/5}px`,
       width:`${window.innerWidth - window.innerWidth/15}px`,
       data: {
         restaurant: this.restaurant,
         prop: this.prop,
+        is_modif: true,
         ingredient: {
           nom: ele.nom,
           categorie: ele.categorie_tva,
@@ -235,10 +248,14 @@ ngOnInit(): void{
           unity: ele.unity,
           unitary_cost: ele.cost,
           dlc: res_dlc,
-          base_ing: var_base_ing 
+          date_reception: ele.date_reception,
+          base_ing: var_base_ing,
+          base_ing_data: this.ingredient_table,
+          quantity_after_prep: ele.after_prep
         }
       }
     });
+   
   }
 
   suppIng(ele:{
@@ -256,6 +273,31 @@ ngOnInit(): void{
     date_reception: string;
     dlc:string;
   }){
+    let is_prep = false
+    if(ele.cuisinee === 'oui'){
+      is_prep = true
+    }
 
+    console.log(ele.nom);
+    this.service.removeIngInBdd(ele.nom.split('<br>').join('_'), this.prop, this.restaurant, is_prep).then(() => {
+      this._snackBar.open("l'ingrédient vient d'être supprimé de la base de donnée du restaurant", "fermer")
+    }).catch(() => {
+      this._snackBar.open("l'ingrédient n'a pas pu être supprimé de la base de donnée du restaurant", "fermer")
+    });
+
+    //on regénère la datasource 
+    this.ingredients_displayed = this.ingredients_displayed.filter((ingredient) => ingredient.nom !== ele.nom.split('<br>').join('_')); 
+    const supp_event = new PageEvent();
+                  supp_event.length = this.ingredients_displayed.length
+                  supp_event.pageSize = 6
+                  supp_event.pageIndex = this.page_number
+    this.pageChanged(supp_event);
+  }
+
+  pageChanged(event: PageEvent) {
+    event.length;
+    let datasource = [... this.ingredients_displayed];
+    this.page_number = event.pageIndex;    
+    this.dataSource.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
   }
 }

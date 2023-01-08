@@ -114,7 +114,6 @@ Inscription(email:string,password:string){
       } else {
         // User is signed out
         // ...
-        console.log("b");
       }
     });
     if(this.auth.currentUser){connecter=true;}

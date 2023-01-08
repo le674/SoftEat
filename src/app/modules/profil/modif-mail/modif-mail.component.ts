@@ -51,7 +51,6 @@ export class ModifMailComponent implements OnInit {
          }
       }).catch((error) => {
         //on considère le cas ou l'email n'a pas pu être modifié probable cause connexion trop vieille
-        console.log(error);
         const msg = "l'email n'est pas changé veuillez essayer de vous reconnecter avant de modifier l'email " +
           "(si cela ne marche pas contactez SoftEat)"
         let snack_bar_ref =

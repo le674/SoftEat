@@ -34,8 +34,6 @@ export class AppFormComponent implements OnInit {
   }
   on_no_click(): void {
     this._mat_dialog_ref.close();
-    console.log(this.proprietaire);
-    
   }
   on_validate(): void {
     

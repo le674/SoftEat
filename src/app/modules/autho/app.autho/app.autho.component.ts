@@ -46,7 +46,6 @@ export class AppAuthoComponent implements OnInit {
           my_prop.then((prop) => {
             this.proprietaire = prop
             this.user_services.getUserFromUid(user.uid, prop).then((user) => {
-              console.log(user.restaurants);
               this.restaurants_only = user.restaurants   
               if(user.roles.includes("gérant") || user.roles.includes("proprietaire")){
                 this.is_confique = "visible"

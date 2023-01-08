@@ -148,8 +148,7 @@ export class CIngredient implements Ingredient {
             this.categorie_tva = this.service.getTvaCategorieFromConditionnement(Pingredient.categorie_tva, Pingredient.conditionnement);
         } 
 
-        console.log("dlc :", this.dlc);
-        console.log(" type dlc :",typeof this.dlc);
+      
         if(typeof this.dlc !== "string"){
             this.dlc.setHours(this.date_reception.getHours() + 24*Pingredient.dlc);
         }

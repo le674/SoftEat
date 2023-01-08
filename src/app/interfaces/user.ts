@@ -43,7 +43,6 @@ export class User {
     let status = []
     let roles = ["proprietaire", "stock", "alertes", "analyse", "budget", "facture", "planning"];
     for(let key in this.statut){
-      console.log(key);
       if(key === "is_prop"){
         status.push('proprietaire')
       } 
@@ -58,7 +57,6 @@ export class User {
     }
 
   setStatus(status:string[], right:string){
-    console.log('statut', status);
     let roles = ["proprietaire", "stock", "alertes", "analyse", "budget", "facture", "planning"];
 
     roles.forEach((role) => {
@@ -98,7 +96,6 @@ export class User {
   }
 
   setStatusFromUser(user:User){
-    console.log(this.statut);
     for(let key in this.statut){
       this.statut[key as keyof typeof this.statut] = user.statut[key as keyof typeof this.statut]
     }

@@ -13,6 +13,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatRadioModule} from '@angular/material/radio';  
 import {MatTooltipModule} from '@angular/material/tooltip'; 
+import { MatPaginatorModule } from '@angular/material/paginator';
+import {MatSnackBarModule} from '@angular/material/snack-bar'; 
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatInputModule,
     MatRadioModule,
     MatTooltipModule,
-    MatTableModule
+    MatPaginatorModule,
+    MatTableModule,
+    MatSnackBarModule
    ],
   exports: [
     AppStockComponent,

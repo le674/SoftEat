@@ -134,6 +134,12 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
+        <mat-paginator [pageSizeOptions]="[6]"
+            (page)="pageChanged($event)"
+            [length]="ingredients_displayed.length"
+            showFirstLastButtons
+            aria-label="Selection page d'ingredients">
+        </mat-paginator>
     </main>
 
 </body>

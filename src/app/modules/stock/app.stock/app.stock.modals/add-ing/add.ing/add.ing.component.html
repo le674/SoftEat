@@ -6,7 +6,7 @@
         <mat-radio-button (change)="clickRadio(false)" value="aucune">Ne pas préciser</mat-radio-button>
     </mat-radio-group>
 </div>
-<form [formGroup]="add_ing_section" (ngSubmit)="addIngredient()">
+<form [formGroup]="add_ing_section" (ngSubmit)="changeIngredient(is_prepa)">
     <div class="section">
         <p>Entrer le nom du nouveau ingrédient : </p>
         <mat-form-field appearance="fill">
@@ -40,6 +40,9 @@
         <mat-form-field appearance="fill">
             <mat-label>Entrer la quantitée </mat-label>
             <input type="number" matInput formControlName="quantity">
+            <mat-error *ngIf="add_ing_section.controls['quantity']?.hasError('impossibleSize')">
+                pas assez d'ingrédient de base pour une telle quantitée de préparation    
+            </mat-error>
         </mat-form-field>
     </div>
     <div class="section">

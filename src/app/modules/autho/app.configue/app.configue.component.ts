@@ -228,7 +228,6 @@ export class AppConfigueComponent implements OnInit {
         let is_role = role_check.map((role) => {
           return data.roles.includes(role)
         })
-        console.log(is_role);
         return(is_role.reduce((previousValue,currentValue) => {
           return(currentValue || previousValue)
         }))
@@ -394,7 +393,6 @@ export class AppConfigueComponent implements OnInit {
     let user =this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
     const restaurant_ids = user?.restaurants.map((restaurant) => restaurant.id)
     const unique_restau = Array.from(new Set(restaurant_ids))
-    console.log(unique_restau);
     let filter_user = user?.restaurants.filter((restaurant) => {
       if(unique_restau.includes(restaurant.id)){
         unique_restau.shift();
@@ -406,7 +404,6 @@ export class AppConfigueComponent implements OnInit {
 
     if(user !== undefined){
       if(filter_user != undefined) user.restaurants = filter_user
-      console.log(user);
       this.user_services.setUser(this.proprietaire, user)
     }
     alert("vous avez bien modifier l'ultilisateur")

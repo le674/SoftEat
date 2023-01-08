@@ -55,14 +55,17 @@ getCostTtcFromTaux(taux_tva:number, cost:number):number{
   return cost + cost*(taux_tva/100)
 }
 
-getValBouchFromBasIng(base: CIngredient[], quantity_unity_act:number):number{
+getValBouchFromBasIng(base: CIngredient[], ingredient_act:CIngredient):number{
   if(base.length === 0){
     return 0;
   }
-  const sum_all_cost = base.map(ing => ing.cost).reduce((cost, next_cost) => cost + next_cost)
-  const moy_all_cost = sum_all_cost/base.length
-  const cost = moy_all_cost * base.map(ing => ing.quantity_bef_prep).reduce((quantity, next_quantity) => quantity + next_quantity)
-  const square_final_cost = quantity_unity_act * quantity_unity_act;
+  // on fait la somme des coûts et des quantitées des ingrédients de base utilisées pour la préparation
+  const sum_all_cost = base.map(ing => ing.cost).reduce((cost, next_cost) => cost + next_cost);
+  const sum_all_quantity = ingredient_act.base_ing.map(ing => ing.quantity).reduce((quantity, next_quantity) => quantity + next_quantity);
+
+
+  const cost = sum_all_cost * sum_all_quantity;
+  const square_final_cost = ingredient_act.quantity_unity * ingredient_act.quantity_unity;
   if(square_final_cost !== 0) {
     return cost/square_final_cost; 
   }
@@ -104,4 +107,78 @@ getTvaCategorieFromConditionnement(categorie_tva:string, conditionnemnt:boolean)
     }
     return ''
   }
+
+  stringToDate(date_time:string) : Date{
+    console.log(date_time);
+    let date_time_array = date_time.split(" ")
+    let time = date_time_array[1];
+    
+    let date = date_time_array[0];
+    
+    const date_array = date.split('/');
+    const time_array = time.split(':').map((time) => Number(time));
+    
+    const date_array_num = date_array.reverse().map((date) => Number(date));
+    const date_time_array_num = date_array_num.concat(time_array);
+
+    return new Date(date_time_array_num[0],date_time_array_num[1] - 1,
+       date_time_array_num[2], date_time_array_num[3], date_time_array_num[4], date_time_array_num[5]) 
+  }
+
+  removeQuantityAftPrepa(base_ing_data: CIngredient[],
+     base_ing: { name: string; quantity: number; }[],
+     quantity_aft_prep:number) {
+
+    let base_ing_name = base_ing.map((ing) => ing.name);
+    let ingredients = base_ing_data.filter((ingredient) => base_ing_name.includes(ingredient.nom));
+
+    // on trie les liste pour s'assurer d'avoir les même objet 
+    base_ing.sort((a,b) => {
+      const nameA = a.name.toLocaleUpperCase();
+      const nameB = b.name.toLocaleUpperCase();
+      if(nameA > nameB){
+        return -1
+      }
+      if (nameA < nameB) {
+        return 1;
+      }
+      return 0
+    })
+
+    ingredients.sort((a,b) => {
+      const nameA = a.nom.toLocaleUpperCase();
+      const nameB = b.nom.toLocaleUpperCase();
+      if(nameA > nameB){
+        return -1
+      }
+      if (nameA < nameB) {
+        return 1;
+      }
+      return 0
+    })
+
+    if(ingredients.length === base_ing.length){
+      ingredients.forEach((ingredient, index:number) => {
+        // on récupère le plus petit entier supérieur à la quantitée de l'ingrédient de base par unitée
+        // le choix de la partie entière supérieur est fait car il vaut mieux être large 
+        ingredient.quantity = ingredient.quantity - Math.ceil(base_ing[index].quantity/quantity_aft_prep); 
+      })
+      console.log(ingredients);
+      return ingredients;
+    }
+    else{
+      console.log("les ingrédient récupérés sur le formulaire ne coincide pas avec les ingrédient de base récupéré dans la bdd");
+    }
+    return null;
+  }
+
+
+/* 
+  stringToDate(date_time_bdd:string): Date{
+
+    return date_time_bdd
+  } */
+
+
+
 }
