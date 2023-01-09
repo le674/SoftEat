@@ -125,21 +125,19 @@ getTvaCategorieFromConditionnement(categorie_tva:string, conditionnemnt:boolean)
        date_time_array_num[2], date_time_array_num[3], date_time_array_num[4], date_time_array_num[5]) 
   }
 
-  removeQuantityAftPrepa(base_ing_data: CIngredient[],
-     base_ing: { name: string; quantity: number; }[],
+  removeQuantityAftPrepa(not_prep_ing: CIngredient[], base_ing: { name: string; quantity: number; }[],
      quantity_aft_prep:number) {
-
     let base_ing_name = base_ing.map((ing) => ing.name);
-    let ingredients = base_ing_data.filter((ingredient) => base_ing_name.includes(ingredient.nom));
+    let ingredients = not_prep_ing.filter((ingredient) => base_ing_name.includes(ingredient.nom));
 
     // on trie les liste pour s'assurer d'avoir les même objet 
-    base_ing.sort((a,b) => {
+    base_ing = base_ing.sort((a,b) => {
       const nameA = a.name.toLocaleUpperCase();
       const nameB = b.name.toLocaleUpperCase();
-      if(nameA > nameB){
+      if(nameA < nameB){
         return -1
       }
-      if (nameA < nameB) {
+      if (nameA > nameB) {
         return 1;
       }
       return 0
@@ -148,10 +146,10 @@ getTvaCategorieFromConditionnement(categorie_tva:string, conditionnemnt:boolean)
     ingredients.sort((a,b) => {
       const nameA = a.nom.toLocaleUpperCase();
       const nameB = b.nom.toLocaleUpperCase();
-      if(nameA > nameB){
+      if(nameA < nameB){
         return -1
       }
-      if (nameA < nameB) {
+      if (nameA > nameB) {
         return 1;
       }
       return 0
@@ -161,7 +159,15 @@ getTvaCategorieFromConditionnement(categorie_tva:string, conditionnemnt:boolean)
       ingredients.forEach((ingredient, index:number) => {
         // on récupère le plus petit entier supérieur à la quantitée de l'ingrédient de base par unitée
         // le choix de la partie entière supérieur est fait car il vaut mieux être large 
-        ingredient.quantity = ingredient.quantity - Math.ceil(base_ing[index].quantity/quantity_aft_prep); 
+
+        //cas 1 l'aliment est acheté en vrac du coup
+        if(ingredient.quantity === 0){
+          ingredient.quantity_unity = ingredient.quantity_unity - base_ing[index].quantity 
+        }
+        // cas 2 l'ingrédient n'est pas acheté en vrac
+        else{
+          ingredient.quantity = ingredient.quantity - base_ing[index].quantity/ingredient.quantity_unity
+        }
       })
       console.log(ingredients);
       return ingredients;

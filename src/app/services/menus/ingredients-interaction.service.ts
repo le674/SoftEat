@@ -113,27 +113,10 @@ export class IngredientsInteractionService {
     let ref_db: DatabaseReference;
     ref_db = ref(this.db, `ingredients/${prop}/${restaurant}/`);
 
-    let ingredient_princ =  {
-      [ingredient.nom]: {
-        categorie_tva: ingredient.categorie_tva,
-        taux_tva: ingredient.taux_tva,
-        cost: ingredient.cost,
-        quantity: ingredient.quantity,
-        quantity_unitaire: ingredient.quantity_unity,
-        unity: ingredient.unity,
-        base_ing: ingredient.base_ing,
-        quantity_after_prep: ingredient.quantity_after_prep,
-        quantity_bef_prep: ingredient.quantity_bef_prep,
-        cost_ttc: ingredient.cost_ttc,
-        date_reception: ingredient.date_reception,
-        dlc: ingredient.dlc
-      }
-    }
-
     if(is_prep){
+      // dans le cas d'ajout d'une préparation on modifie l'ingrédient préparé et les ingrédients de base
       let prep_path = `preparation/${ingredient.nom}`
-      let brut_path = new_ing_aft_prepa?.map((ing) => `${ingredient.nom}`)
-
+      let brut_path = new_ing_aft_prepa?.map((ing) => ing.nom)
       let ingredient_princ =  {
         [prep_path]: {
           categorie_tva: ingredient.categorie_tva,
@@ -155,13 +138,45 @@ export class IngredientsInteractionService {
         brut_path.forEach((path, index:number) => {
           Object.assign(ingredient_princ, {
             [path]: {
+              categorie_tva:  new_ing_aft_prepa[index].categorie_tva,
+              taux_tva:  new_ing_aft_prepa[index].taux_tva,
+              cost:  new_ing_aft_prepa[index].cost,
               quantity: new_ing_aft_prepa[index].quantity,
+              quantity_unitaire: new_ing_aft_prepa[index].quantity_unity,
+              unity: new_ing_aft_prepa[index].unity,
+              base_ing: new_ing_aft_prepa[index].base_ing,
+              quantity_after_prep: new_ing_aft_prepa[index].quantity_after_prep,
+              quantity_bef_prep: new_ing_aft_prepa[index].quantity_bef_prep,
+              cost_ttc: new_ing_aft_prepa[index].cost_ttc,
+              date_reception: new_ing_aft_prepa[index].date_reception,
+              dlc: new_ing_aft_prepa[index].dlc
             }
           })
         })
       }
+      await update(ref_db, ingredient_princ)
     }
-    await update(ref_db, ingredient_princ)
+    else{
+    // dans le cas d'ajout d'une non préparation  on modifie l'ingrédient préparé 
+    const ingredient_princ =  {
+        [ingredient.nom]: {
+          categorie_tva: ingredient.categorie_tva,
+          taux_tva: ingredient.taux_tva,
+          cost: ingredient.cost,
+          quantity: ingredient.quantity,
+          quantity_unitaire: ingredient.quantity_unity,
+          unity: ingredient.unity,
+          base_ing: ingredient.base_ing,
+          quantity_after_prep: ingredient.quantity_after_prep,
+          quantity_bef_prep: ingredient.quantity_bef_prep,
+          cost_ttc: ingredient.cost_ttc,
+          date_reception: ingredient.date_reception,
+          dlc: ingredient.dlc
+        }
+      }
+      console.log(ingredient_princ);
+      await update(ref_db, ingredient_princ)
+    }
   }
 
   async removeIngInBdd(name_ing: string, prop:string, restaurant:string, is_prep:boolean){

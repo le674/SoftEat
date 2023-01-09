@@ -182,7 +182,7 @@ ngOnInit(): void{
           dlc: 0,
           date_reception: new Date(),
           base_ing: [],
-          base_ing_data: this.ingredient_table,
+          not_prep: this.ingredient_table,
           quantity_after_prep: 0
         }
       }
@@ -250,7 +250,7 @@ ngOnInit(): void{
           dlc: res_dlc,
           date_reception: ele.date_reception,
           base_ing: var_base_ing,
-          base_ing_data: this.ingredient_table,
+          not_prep: this.ingredient_table,
           quantity_after_prep: ele.after_prep
         }
       }

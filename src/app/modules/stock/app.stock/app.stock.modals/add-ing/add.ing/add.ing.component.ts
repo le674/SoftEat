@@ -14,7 +14,7 @@ import { TitleStrategy } from '@angular/router';
 })
 export class AddIngComponent implements OnInit, AfterContentInit, AfterViewChecked, AfterViewInit {
 
-  public is_prepa: boolean;
+  public is_prep: boolean;
   public index_inputs: Array<number>
   public add_ing_section = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -61,12 +61,12 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         dlc: number,
         date_reception: string,
         base_ing: Array<{ name: string, quantity: number }>,
-        base_ing_data: Array<CIngredient>,
+        not_prep: Array<CIngredient>,
         quantity_after_prep: number
       }
     }, private service: IngredientsInteractionService, private changeDetector: ChangeDetectorRef, private _snackBar: MatSnackBar) {
     this._mat_dialog_ref = dialogRef;
-    this.is_prepa = false;
+    this.is_prep = false;
     this.current_inputs = 1;
     this.index_inputs = [this.current_inputs];
     this.is_modif = this.data.is_modif;
@@ -108,7 +108,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
   }
 
 
-  changeIngredient(is_prepa:boolean) {
+  changeIngredient(is_prep:boolean) {
     let new_ing_aft_prepa = null;
     let new_ing = new CIngredient(this.calcul_service, this.service);
     // on construit la date limite de consomation à partir de la date de récéption.
@@ -202,12 +202,19 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       new_ing.setDlc(this.calcul_service.stringToDate(this.data.ingredient.date_reception))
     }
     
-    if(this.is_prepa){
-      new_ing_aft_prepa = this.calcul_service.removeQuantityAftPrepa(this.data.ingredient.base_ing_data, this.data.ingredient.base_ing, this.data.ingredient.quantity_after_prep);
+    if(this.is_prep){
+      console.log("1. données contenant tout les ingrédient non préparé", this.data.ingredient.not_prep);
+      console.log("1. données contenant tout les ingrédient de base", this.data.ingredient.base_ing);
+      console.log("1.données contenant la quantitée après prépration", this.data.ingredient.quantity_after_prep);
+      
+      new_ing_aft_prepa = this.calcul_service.removeQuantityAftPrepa(this.data.ingredient.not_prep, this.data.ingredient.base_ing, this.data.ingredient.quantity_after_prep);
     } 
 
     if(this.add_ing_section.valid){
-      this.service.setIngInBdd(new_ing, this.data.prop, this.data.restaurant, is_prepa, new_ing_aft_prepa).then(() => {
+      
+      console.log("est préparé :", is_prep);
+      
+      this.service.setIngInBdd(new_ing, this.data.prop, this.data.restaurant, is_prep, new_ing_aft_prepa).then(() => {
         if(this.is_modif){
           this._snackBar.open("l'ingrédient vient d'être modifié dans la base de donnée du restaurant", "fermer")
         }
@@ -230,8 +237,8 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
   }
 
   clickRadio(state: boolean) {
-    this.is_prepa = state
-    if (this.is_prepa) {
+    this.is_prep = state
+    if (this.is_prep) {
       this.names_prep.changes.subscribe((notif) => {
         for (let index_input = 0; index_input < this.current_inputs; index_input++) {
           let currentElement = this.names_prep.get(index_input);
