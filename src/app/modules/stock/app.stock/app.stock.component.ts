@@ -206,12 +206,8 @@ ngOnInit(): void{
   }){
     let res_dlc = 0;
     let var_base_ing: Array<{name:string, quantity:number}> = [];
-    console.log("ele.dlc", ele.dlc);
     const dlc = this.calc_service.stringToDate(ele.dlc);
-    console.log("dlc", dlc);
-    
     const date_reception = this.calc_service.stringToDate(ele.date_reception);
-    console.log("data de reception : ", date_reception);
 
 
     ele.nom = ele.nom.split('<br>').join('_')

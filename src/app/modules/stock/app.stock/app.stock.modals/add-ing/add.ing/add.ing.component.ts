@@ -6,6 +6,7 @@ import { CIngredient } from 'src/app/interfaces/ingredient';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TitleStrategy } from '@angular/router';
+import { MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'app-add.ing',
@@ -31,6 +32,9 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     quantity_bef_prep: new FormArray([
       new FormControl(0)
     ]),
+    unity_base: new FormArray([
+      new FormControl(0)
+    ]),
     quantity_after_prep: new FormControl(0, Validators.required)
   })
   @ViewChild('taux')
@@ -42,7 +46,11 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
   @ViewChildren('quantity_bef_prep')
   quantity_bef_prep!: QueryList<ElementRef>;
 
+  @ViewChildren('unity_base')
+  unity_base!: QueryList<ElementRef>;
+
   private current_inputs: number;
+  private base_ing_full: Array<CIngredient | "">;
   private readonly _mat_dialog_ref: MatDialogRef<AddIngComponent>;
   private is_modif: boolean;
 
@@ -71,11 +79,19 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     this.current_inputs = 1;
     this.index_inputs = [this.current_inputs];
     this.is_modif = this.data.is_modif;
+    this.base_ing_full = this.data.ingredient.not_prep.filter((not_prep_ing) => {
+      return this.data.ingredient.base_ing.map((base) => base.name).includes(not_prep_ing.nom);
+    })
+    // on trie les deux liste pour qu'elle contienne les même éléments par example la fonction doit agir comme ceci
+    // 1.  this.data.ingredient.base_ing = [{name: "tomate", quantity: 12}, {name: "cerise", quantity: 5}]
+    // 2.  this.base_ing_full = [{nom: "cerise", ...}]
+    // -> ["", {nom: "cerise", ...}]
+    this.calcul_service.sortTwoListStringByName(this.base_ing_full, this.data.ingredient.base_ing);
+    this.base_ing_full = this.calcul_service.paralleleTwoList(this.base_ing_full, this.data.ingredient.base_ing)
   }
 
 
   ngOnInit(): void {
-
   }
 
 
@@ -87,6 +103,11 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     this.add_ing_section.get("quantity")?.setValue(this.data.ingredient.quantity);
     this.add_ing_section.get("quantity_unitary")?.setValue(this.data.ingredient.quantity_unity);
     this.add_ing_section.get("unity")?.setValue(unity);
+    // on calcul le cout unitaire en fonction des ingrédient de base pour un ingrédient préparé
+    // le calcul est pas long mais plus tard ajouter une condition pour ne pas recalculer se qui a été entré dans la bdd 
+    if(this.data.ingredient.cuisinee === 'oui'){
+      this.data.ingredient.unitary_cost = this.calcul_service.calcCostIngPrep(this.base_ing_full, this.data.ingredient) 
+    }
     this.add_ing_section.get("unitary_cost")?.setValue(this.data.ingredient.unitary_cost); 
     // Si on récupère une date de limite de consommatin négative on dépose 0 sinon on dépose la dlc
     if(this.data.ingredient.dlc > 0){
@@ -95,7 +116,10 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     else{
       this.add_ing_section.get("dlc")?.setValue(0);
     }
-    
+    // dans le cas d'une préparation on empêche l'utilisateur de modifier la champs correspondnt au coût
+    if(this.data.ingredient.cuisinee === 'oui'){
+      this.add_ing_section.get("unitary_cost")?.disable();
+    }
   }
 
   ngAfterViewInit(): void {
@@ -174,6 +198,8 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         new_ing.setBaseIng(base_ing)
       }
     }
+  
+
     if ((this.add_ing_section.value["quantity_after_prep"] !== undefined)) {
       new_ing.setQuantityAfterPrep(this.add_ing_section.value["quantity_after_prep"]);
     }
@@ -200,6 +226,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     if (this.add_ing_section.value["unitary_cost"] !== undefined) {
       new_ing.setCost(this.add_ing_section.value["unitary_cost"]);
     }
+
     if ((this.add_ing_section.value["dlc"] !== undefined) && (this.add_ing_section.value["dlc"] !== null)) {
       new_ing.dlc.setHours( new_ing.dlc.getHours() + 24*this.add_ing_section.value["dlc"])
       new_ing.setDlc(new_ing.dlc)
@@ -209,16 +236,10 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     }
     
     if(this.is_prep){
-      console.log("1. données contenant tout les ingrédient non préparé", this.data.ingredient.not_prep);
-      console.log("1. données contenant tout les ingrédient de base", this.data.ingredient.base_ing);
-      console.log("1.données contenant la quantitée après prépration", this.data.ingredient.quantity_after_prep);
-      
-      new_ing_aft_prepa = this.calcul_service.removeQuantityAftPrepa(this.data.ingredient.not_prep, this.data.ingredient.base_ing, this.data.ingredient.quantity_after_prep);
+      new_ing_aft_prepa = this.calcul_service.removeQuantityAftPrepa(this.base_ing_full, this.data.ingredient.base_ing, this.data.ingredient.quantity_after_prep);
     } 
 
     if(this.add_ing_section.valid){
-      
-      console.log("est préparé :", is_prep);
       
       this.service.setIngInBdd(new_ing, this.data.prop, this.data.restaurant, is_prep, new_ing_aft_prepa).then(() => {
         if(this.is_modif){
@@ -264,6 +285,19 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
           let currentElement = this.quantity_bef_prep.get(index_input);
           if (currentElement !== undefined) {
             currentElement.nativeElement.value = this.data.ingredient.base_ing[index_input].quantity;
+          }
+        }
+      })
+      this.unity_base.changes.subscribe((notif) => {
+        for (let index_input = 0; index_input < this.current_inputs; index_input++) {
+          let currentElement = this.unity_base.get(index_input);
+          if (currentElement !== undefined) {
+            if(this.base_ing_full[index_input] !== undefined){
+              currentElement.nativeElement.value = this.calcul_service.convertUnity(this.base_ing_full[index_input].unity, true);
+            }
+            else{
+              currentElement.nativeElement.value = "entrer l'ingrédient dans la base de donnée";
+            }
           }
         }
       })

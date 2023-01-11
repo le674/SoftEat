@@ -87,6 +87,10 @@
                     <mat-label> quantitée total avant préparation </mat-label>
                     <input #quantity_bef_prep type="number" matInput formArrayName="quantity_bef_prep">
                 </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label> unitée de l'ingrédient </mat-label>
+                    <input #unity_base matInput formControlName="unity_base">
+                </mat-form-field>
             </div>
             <button mat-mini-fab type="button" id="add_input" color="white" matTooltip="ajout d'un ingrédient" aria-label="ajout d'un ingrédient" (click)="addInput()">
                 <i class="fa-regular fa-plus"></i>
