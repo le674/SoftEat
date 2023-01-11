@@ -1,1 +1,88 @@
-<p>app.conso works!</p>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <header>
+        <h1> Consommable </h1>
+        <div id="action-buttons">
+            <button mat-stroked-button (click)="OpenAddConsoForm()">
+                <i class="fa-regular fa-plus"></i>
+                Ajouter un consommable
+            </button>
+        </div>
+    </header>
+    <main>
+        <h2>Données</h2>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+            <!-- Position Column -->
+            <ng-container matColumnDef="nom">
+                <th mat-header-cell *matHeaderCellDef> nom </th>
+                <td mat-cell *matCellDef="let element">
+                    <div [innerHTML]="element.nom"></div>
+                </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="quantity">
+                <th mat-header-cell *matHeaderCellDef> quantitée </th>
+                <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="unity">
+                <th mat-header-cell *matHeaderCellDef> unitée</th>
+                <td mat-cell *matCellDef="let element"> {{element.unity}} </td>
+            </ng-container>
+
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="cost">
+                <th mat-header-cell *matHeaderCellDef> cout <br> unitaire <br> HT </th>
+                <td mat-cell *matCellDef="let element"> {{element.cost}} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="cost_ttc">
+                <th mat-header-cell *matHeaderCellDef> cout <br> unitaire <br> TTC </th>
+                <td mat-cell *matCellDef="let element"> {{element.cost_ttc}} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="date_reception">
+                <th mat-header-cell *matHeaderCellDef> date <br> de <br> réception</th>
+                <td mat-cell *matCellDef="let element"> {{element.date_reception}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> actions </th>
+                <td id="validate" mat-cell *matCellDef="let element;let cell_index = index; ">
+                  <i class="fa-regular fa-trash action_table" (click)="suppConso(element)"></i>
+                  <i class="fa-regular fa-pen action_table" (click)="modifConso(element)"></i>
+                </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[6]"
+            (page)="pageChanged($event)"
+            [length]="consommable_displayed.length"
+            showFirstLastButtons
+            aria-label="Selection page d'ingredients">
+        </mat-paginator>
+    </main>
+
+</body>
+
+</html>

@@ -241,6 +241,7 @@ ngOnInit(): void{
         prop: this.prop,
         is_modif: true,
         ingredient: {
+          cuisinee: ele.cuisinee,
           nom: ele.nom,
           categorie: ele.categorie_tva,
           quantity: ele.quantity,

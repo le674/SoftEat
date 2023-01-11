@@ -72,19 +72,25 @@ export interface Consommable {
     "nom": string;
     "cost": number;
     "quantity": number;
-    "quantity_unity": number;
     "unity": string;
+    "taux_tva": number;
+    "cost_ttc": number;
+    "date_reception":Date;
 
     getNom(): string;
     setNom(nom: string | null): void;
     getCost(): number;
     setCost(cost: number | null): void;
+    getCostTTC(): number;
+    setCostTTC(cost: number | null): void;
+    getTauxTva(): number;
+    setTauxTva(taux: number | null): void;
     getQuantity(): number;
     setQuantity(quantity: number | null): void;
-    getQuantityUnity(): number;
-    setQuantityUniy(quantity: number | null): void;
     getUnity(): string;
     setUnity(unity: string | null): void;
+    getDateReception():Date;
+    setDateReception(val: Date | null):void;
 }
 
 @Injectable({
@@ -305,13 +311,17 @@ export class CIngredient implements Ingredient {
 
 
 export class Cconsommable implements Consommable {
-    "quantity_unity": number;
+    "quantity": number;
     "nom": string;
     "cost": number;
-    "quantity": number;
     "unity": string;
+    "taux_tva": number;
+    "cost_ttc": number;
+    "date_reception": Date;
+    
+    constructor() { 
+    }
 
-    constructor() { }
 
     getNom(): string {
         return this.nom
@@ -325,23 +335,39 @@ export class Cconsommable implements Consommable {
     setCost(cost: number | null): void {
         if (cost !== null) this.cost = cost
     }
+    
+    getCostTTC(): number {
+        return this.cost_ttc
+    }
+
+    setCostTTC(cost: number | null): void {
+        if (cost !== null) this.cost_ttc = cost
+    }
+
+    getTauxTva(): number {
+        return this.taux_tva;
+    }
+    setTauxTva(taux: number | null): void {
+        if (taux !== null) this.taux_tva = taux;
+    }
+
     getQuantity(): number {
         return this.quantity
     }
     setQuantity(quantity: number | null): void {
         if (quantity !== null) this.quantity = quantity
     }
-    getQuantityUnity(): number {
-        return this.quantity_unity
-    }
-    setQuantityUniy(quantity: number | null): void {
-        if (quantity !== null) this.quantity_unity = quantity
-    }
     getUnity(): string {
         return this.unity
     }
     setUnity(unity: string | null): void {
         if (unity !== null) this.unity = unity
+    }
+    getDateReception(): Date {
+        return this.date_reception;
+    }
+    setDateReception(val: Date | null): void {
+        if (val !== null) this.date_reception = val;
     }
 }
 

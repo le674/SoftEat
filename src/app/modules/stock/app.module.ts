@@ -15,12 +15,14 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatTooltipModule} from '@angular/material/tooltip'; 
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatSnackBarModule} from '@angular/material/snack-bar'; 
+import { AddConsoComponent } from './app.conso/app.conso.modals/add-ing/add.ing/add.conso.component';
 
 @NgModule({
   declarations: [
     AppStockComponent,
     AppConsoComponent,
-    AddIngComponent
+    AddIngComponent,
+    AddConsoComponent
   ],
   imports: [ 
     CommonModule,

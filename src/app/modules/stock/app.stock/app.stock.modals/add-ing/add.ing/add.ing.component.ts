@@ -52,6 +52,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       prop: string,
       is_modif: boolean,
       ingredient: {
+        cuisinee: string,
         nom: string,
         categorie: string
         quantity: number,
@@ -100,6 +101,10 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
   ngAfterViewInit(): void {
     // après initialisation de la vue on ajoute la tva selon la catégorie
     this.taux.nativeElement.value = this.calcul_service.getTauxFromCat(this.data.ingredient.categorie) 
+
+    if(this.is_modif && this.data.ingredient.cuisinee === "oui"){
+      this.clickRadio(true);
+    }
   }
 
   ngAfterViewChecked(): void {
@@ -159,10 +164,11 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       // fonctionne uniquement si es liste on même taille TO DO (Ajouter la validation) 
       const lst_name_bas_ing = this.names_prep.map((names_dom) => names_dom.nativeElement.value);
       if (lst_quantity_bas_ing.length === lst_name_bas_ing.length) {
-        lst_quantity_bas_ing.forEach((quanitty: any,index: number) => {
+
+        lst_quantity_bas_ing.forEach((quantity: any,index: number) => {
           base_ing.push({
             name: lst_name_bas_ing[index].split(' ').join('_'),
-            quantity: lst_quantity_bas_ing[index]
+            quantity: quantity
           })
         })
         new_ing.setBaseIng(base_ing)
@@ -239,6 +245,11 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
   clickRadio(state: boolean) {
     this.is_prep = state
     if (this.is_prep) {
+        if(this.data.ingredient.cuisinee === 'oui'){
+          this.index_inputs = Array(this.data.ingredient.base_ing.length).fill(0).map((value :any, index:number) => index + 1);
+          this.current_inputs = this.data.ingredient.base_ing.length;
+        }
+    
       this.names_prep.changes.subscribe((notif) => {
         for (let index_input = 0; index_input < this.current_inputs; index_input++) {
           let currentElement = this.names_prep.get(index_input);
@@ -257,6 +268,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         }
       })
       this.add_ing_section.get("quantity_after_prep")?.setValue(this.data.ingredient.quantity_after_prep);
+    
     }
   }
 

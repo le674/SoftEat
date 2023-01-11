@@ -97,6 +97,7 @@ getTvaCategorieFromConditionnement(categorie_tva:string, conditionnemnt:boolean)
       if(unity === 'L') return 'L (litre)';
       if(unity === 'ml') return 'ml (millilitre)';
       if(unity === 'cl') return 'cl (centilitre)';
+      if(unity === 'p') return 'p (pièce)';
     }
     else{
       if(unity === 'g (grame)') return 'g';
@@ -104,6 +105,7 @@ getTvaCategorieFromConditionnement(categorie_tva:string, conditionnemnt:boolean)
       if(unity === 'L (litre)') return 'L';
       if(unity === 'ml (millilitre)') return 'ml';
       if(unity === 'cl (centilitre)') return 'cl';
+      if(unity === 'p') return 'p (pièce)';
     }
     return ''
   }
