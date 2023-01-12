@@ -2,6 +2,14 @@ import { Injectable } from "@angular/core";
 import { IngredientsInteractionService } from "../services/menus/ingredients-interaction.service";
 import { CalculService } from "../services/menus/menu.calcul/menu.calcul.ingredients/calcul.service";
 
+export type TIngredientBase = { 
+    name: string, 
+    quantity: number, 
+    quantity_unity:number ,
+    unity:string, 
+    cost:number
+}
+
 export interface Ingredient {
     "nom": string;
     "categorie_restaurant": string;

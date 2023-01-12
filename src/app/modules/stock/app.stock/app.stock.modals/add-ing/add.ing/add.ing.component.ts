@@ -2,7 +2,7 @@ import { AfterContentInit, AfterViewChecked, AfterViewInit, ChangeDetectorRef, C
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
-import { CIngredient } from 'src/app/interfaces/ingredient';
+import { CIngredient, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TitleStrategy } from '@angular/router';
@@ -69,7 +69,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         unitary_cost: number,
         dlc: number,
         date_reception: string,
-        base_ing: Array<{ name: string, quantity: number, quantity_unity:number ,unity:string, cost:number}>,
+        base_ing: Array<TIngredientBase>,
         not_prep: Array<CIngredient>,
         quantity_after_prep: number
       }
@@ -133,6 +133,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
   changeIngredient(is_prep:boolean) {
     let new_ing_aft_prepa = null;
     let new_ing = new CIngredient(this.calcul_service, this.service);
+    let act_quant = 0;
     // on construit la date limite de consomation à partir de la date de récéption.
     if(this.is_modif){
       const date_reception_date = this.calcul_service.stringToDate(this.data.ingredient.date_reception); 
@@ -162,23 +163,9 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     }
 
     if ((this.add_ing_section.value !== undefined) && (this.names_prep.length > 0)) {
-      let base_ing: Array<{name: string, quantity: number, quantity_unity:number ,unity:string, cost:number}> = [];
+      let base_ing: Array<TIngredientBase> = [];
       const lst_quantity_bas_ing = this.quantity_bef_prep
                                    .map((prep_dom) => prep_dom.nativeElement.value)
-      if(this.add_ing_section.value.quantity !== null && this.add_ing_section.value.quantity_unitary !== null){
-        if(this.add_ing_section.value.quantity !== undefined && this.add_ing_section.value.quantity_unitary !== undefined){
-          const sum_quantity = lst_quantity_bas_ing.reduce((quantity:string, next_quantity:string) => Number(quantity) + Number(next_quantity));
-          const quantity_total = this.add_ing_section.value.quantity*this.add_ing_section.value.quantity_unitary;
-          // on regarde si la  quantitée pour l'ingrédient préparé est supérieur à la somme des quantitée pour les ingrédient de base 
-          // si c'est le cas alors on lève une erreur. 
-          if(sum_quantity < quantity_total){
-            this.add_ing_section.controls.quantity.setErrors({
-              impossibleSize: true
-            })
-          }
-        }
-      }
-      // fonctionne uniquement si es liste on même taille TO DO (Ajouter la validation) 
       const lst_name_bas_ing = this.names_prep.map((names_dom) => names_dom.nativeElement.value);
       if (lst_quantity_bas_ing.length === lst_name_bas_ing.length) {
 
@@ -196,6 +183,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         })
         new_ing.setBaseIng(base_ing)
       }
+      
     }
   
 
@@ -235,7 +223,10 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     }
     
     if(this.is_prep){
-      new_ing_aft_prepa = this.calcul_service.removeQuantityAftPrepa(this.base_ing_full, this.data.ingredient.base_ing, this.data.ingredient.quantity_after_prep);
+      if((this.add_ing_section.value["quantity"] !== undefined) && (this.add_ing_section.value["quantity"] !== null)) {
+        new_ing_aft_prepa = this.calcul_service.removeQuantityAftPrepa(this.base_ing_full,
+          this.data.ingredient.base_ing, this.data.ingredient.quantity, this.add_ing_section.value["quantity"]);
+      }
     } 
 
     if(this.add_ing_section.valid){
@@ -292,8 +283,8 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
           let currentElement = this.unity_base.get(index_input);
           if (currentElement !== undefined) {
             const base_ing = this.base_ing_full.map((ing) => ing.nom);
-            if(base_ing.includes(this.base_ing_full[index_input].nom)){
-              currentElement.nativeElement.value = this.calcul_service.convertUnity(this.base_ing_full[index_input].unity, true);
+            if(base_ing.includes(this.data.ingredient.base_ing[index_input].name)){
+              currentElement.nativeElement.value = this.calcul_service.convertUnity(this.data.ingredient.base_ing[index_input].unity, true);
             }
             else{
               currentElement.nativeElement.value = "entrer l'ingrédient dans la base de donnée";

@@ -91,7 +91,7 @@ getTvaCategorieFromConditionnement(categorie_tva:string, conditionnemnt:boolean)
   }
 
   removeQuantityAftPrepa(not_prep_ing: CIngredient[], base_ing: { name: string; quantity: number; }[],
-     quantity_aft_prep:number) {
+     quantity_bef_add:number, quantity_aft_add:number) {
 
     if(not_prep_ing.length === base_ing.length){
       not_prep_ing.forEach((ingredient, index:number) => {
@@ -101,7 +101,7 @@ getTvaCategorieFromConditionnement(categorie_tva:string, conditionnemnt:boolean)
         }
         // cas 2 l'ingrédient n'est pas acheté en vrac
         else{
-          ingredient.quantity = ingredient.quantity - base_ing[index].quantity/ingredient.quantity_unity
+          ingredient.quantity = ingredient.quantity - (base_ing[index].quantity/ingredient.quantity_unity) * (quantity_aft_add - quantity_bef_add);
         }
       })
       console.log(not_prep_ing);
