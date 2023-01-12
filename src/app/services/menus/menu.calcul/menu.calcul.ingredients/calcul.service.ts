@@ -175,37 +175,29 @@ getTvaCategorieFromConditionnement(categorie_tva:string, conditionnemnt:boolean)
     }
   }
 
-  calcCostIngPrep(not_prep: CIngredient[], ingredient: { 
-    cuisinee: string;
-    nom: string;
-    categorie: string;
-    quantity: number;
-    quantity_unity: number;
-    unity: string;
-    unitary_cost: number;
-    dlc: number;
-    date_reception: string;
-    base_ing: { name: string; quantity: number; }[];
-    not_prep: CIngredient[];
-    quantity_after_prep: number; 
-  }): number {
+  calcCostIngPrep(base_ing: { name: string; quantity_unity:number; quantity: number; unity:string; cost:number}[]): number {
 
     // comme les objet son passez par réferance on fait une "deep copy"
-    let tpm_ing_base = JSON.parse(JSON.stringify(ingredient.base_ing));
+    let tpm_ing_base = JSON.parse(JSON.stringify(base_ing));
 
-    // on trie les liste pour s'assurer d'avoir les même objet 
-    this.sortTwoListStringByName(not_prep, ingredient.base_ing);
 
-    let _cost_per_quantity = not_prep.map((prev_val: CIngredient, curr_index:number) => {
+    let _cost_per_quantity = base_ing.map((ing:{
+      name: string;
+      quantity: number;
+      unity: string;
+      quantity_unity:number;
+      cost: number;
+  }, curr_index:number) => {
       // on normalise les unitée 
-      let prev_quantity = this.convertQuantity(prev_val.quantity_unity, prev_val.unity);
-      let curr_quantity = this.convertQuantity(tpm_ing_base[curr_index].quantity, prev_val.unity)
-      return prev_val.cost*(curr_quantity/prev_quantity);
+      let prev_quantity = this.convertQuantity(ing.quantity_unity, ing.unity);
+      let curr_quantity = this.convertQuantity(ing.quantity, ing.unity)
+      return ing.cost*(curr_quantity/prev_quantity);
     })
+    base_ing = tpm_ing_base;
     return _cost_per_quantity.reduce((prev_cost:number, curr_cost) => prev_cost + curr_cost);
   }
 
-  sortTwoListStringByName(l1:Array<CIngredient>, l2:{ name: string; quantity: number; }[]){
+  sortTwoListStringByName(l1:Array<CIngredient>, l2:{ name: string; quantity: number;  unity: string;  quantity_unity:number;  cost: number}[]){
     l1 = l1.sort((a,b) => {
       const nameA = a.nom.toLocaleUpperCase();
       const nameB = b.nom.toLocaleUpperCase();

@@ -21,7 +21,10 @@ export interface Ingredient {
     "gelee": boolean;
     "base_ing":Array<{
         name:string,
-        quantity:number
+        quantity:number,
+        quantity_unity: number,
+        unity: string,
+        cost:number
     }>;
 
 
@@ -63,8 +66,8 @@ export interface Ingredient {
     setCondition(val: boolean | null): void;
     getGel(): boolean;
     setGel(val: boolean | null): void;
-    getBaseIng(): Array<{name:string, quantity:number}>;
-    setBaseIng(names: Array<{name:string, quantity:number}> | null): void;
+    getBaseIng(): Array<{name:string, quantity:number,  quantity_unity: number, unity:string, cost:number}>;
+    setBaseIng(names: Array<{name:string, quantity:number,  quantity_unity: number, unity:string, cost:number}> | null): void;
 
 }
 
@@ -114,7 +117,10 @@ export class CIngredient implements Ingredient {
     "gelee": boolean;
     "base_ing":Array<{
         name:string,
-        quantity:number
+        quantity:number,
+        quantity_unity: number,
+        unity:string,
+        cost:number
     }>;
     "quantity_bef_prep": number;
     "quantity_after_prep": number;
@@ -297,13 +303,19 @@ export class CIngredient implements Ingredient {
 
     getBaseIng(): Array<{
         name:string,
-        quantity:number
+        quantity:number,
+        quantity_unity: number,
+        unity:string,
+        cost:number
     }> {
         return this.base_ing;
     }
     setBaseIng(names: Array<{
         name:string,
-        quantity:number
+        quantity:number,
+        quantity_unity: number,
+        unity:string,
+        cost:number
     }> | null): void {
         if (names !== null) this.base_ing= names;
     }

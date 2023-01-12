@@ -50,7 +50,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
   unity_base!: QueryList<ElementRef>;
 
   private current_inputs: number;
-  private base_ing_full: Array<CIngredient | "">;
+  private base_ing_full: Array<CIngredient>;
   private readonly _mat_dialog_ref: MatDialogRef<AddIngComponent>;
   private is_modif: boolean;
 
@@ -69,25 +69,18 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         unitary_cost: number,
         dlc: number,
         date_reception: string,
-        base_ing: Array<{ name: string, quantity: number }>,
+        base_ing: Array<{ name: string, quantity: number, quantity_unity:number ,unity:string, cost:number}>,
         not_prep: Array<CIngredient>,
         quantity_after_prep: number
       }
     }, private service: IngredientsInteractionService, private changeDetector: ChangeDetectorRef, private _snackBar: MatSnackBar) {
+    this.base_ing_full = this.data.ingredient.not_prep.filter((ing) => this.data.ingredient.base_ing.map((ing) => ing.name).includes(ing.nom));
+    this.calcul_service.sortTwoListStringByName(this.base_ing_full, this.data.ingredient.base_ing);
     this._mat_dialog_ref = dialogRef;
     this.is_prep = false;
     this.current_inputs = 1;
     this.index_inputs = [this.current_inputs];
     this.is_modif = this.data.is_modif;
-    this.base_ing_full = this.data.ingredient.not_prep.filter((not_prep_ing) => {
-      return this.data.ingredient.base_ing.map((base) => base.name).includes(not_prep_ing.nom);
-    })
-    // on trie les deux liste pour qu'elle contienne les même éléments par example la fonction doit agir comme ceci
-    // 1.  this.data.ingredient.base_ing = [{name: "tomate", quantity: 12}, {name: "cerise", quantity: 5}]
-    // 2.  this.base_ing_full = [{nom: "cerise", ...}]
-    // -> ["", {nom: "cerise", ...}]
-    this.calcul_service.sortTwoListStringByName(this.base_ing_full, this.data.ingredient.base_ing);
-    this.base_ing_full = this.calcul_service.paralleleTwoList(this.base_ing_full, this.data.ingredient.base_ing)
   }
 
 
@@ -106,7 +99,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     // on calcul le cout unitaire en fonction des ingrédient de base pour un ingrédient préparé
     // le calcul est pas long mais plus tard ajouter une condition pour ne pas recalculer se qui a été entré dans la bdd 
     if(this.data.ingredient.cuisinee === 'oui'){
-      this.data.ingredient.unitary_cost = this.calcul_service.calcCostIngPrep(this.base_ing_full, this.data.ingredient) 
+      this.data.ingredient.unitary_cost = this.calcul_service.calcCostIngPrep(this.data.ingredient.base_ing) 
     }
     this.add_ing_section.get("unitary_cost")?.setValue(this.data.ingredient.unitary_cost); 
     // Si on récupère une date de limite de consommatin négative on dépose 0 sinon on dépose la dlc
@@ -169,7 +162,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     }
 
     if ((this.add_ing_section.value !== undefined) && (this.names_prep.length > 0)) {
-      let base_ing: Array<{ name: string, quantity: number }> = [];
+      let base_ing: Array<{name: string, quantity: number, quantity_unity:number ,unity:string, cost:number}> = [];
       const lst_quantity_bas_ing = this.quantity_bef_prep
                                    .map((prep_dom) => prep_dom.nativeElement.value)
       if(this.add_ing_section.value.quantity !== null && this.add_ing_section.value.quantity_unitary !== null){
@@ -190,9 +183,15 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       if (lst_quantity_bas_ing.length === lst_name_bas_ing.length) {
 
         lst_quantity_bas_ing.forEach((quantity: any,index: number) => {
+          const name = lst_name_bas_ing[index].split(' ').join('_')
+          const _base_ing = this.data.ingredient.not_prep.filter((ing) => (ing.nom === name))[0];
+
           base_ing.push({
-            name: lst_name_bas_ing[index].split(' ').join('_'),
-            quantity: quantity
+            name: name,
+            quantity: quantity,
+            unity: _base_ing.unity,
+            cost: _base_ing.cost,
+            quantity_unity: _base_ing.quantity_unity
           })
         })
         new_ing.setBaseIng(base_ing)
@@ -292,7 +291,8 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         for (let index_input = 0; index_input < this.current_inputs; index_input++) {
           let currentElement = this.unity_base.get(index_input);
           if (currentElement !== undefined) {
-            if(this.base_ing_full[index_input] !== undefined){
+            const base_ing = this.base_ing_full.map((ing) => ing.nom);
+            if(base_ing.includes(this.base_ing_full[index_input].nom)){
               currentElement.nativeElement.value = this.calcul_service.convertUnity(this.base_ing_full[index_input].unity, true);
             }
             else{

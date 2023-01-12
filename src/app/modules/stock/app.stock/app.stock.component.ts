@@ -121,6 +121,15 @@ ngOnInit(): void{
                              .filter((ingredient) => ingredients[i].base_ing
                              .map((ing) => ing.name)
                              .includes(ingredient.nom))
+          this.calc_service.sortTwoListStringByName(lst_base_ing, ingredients[i].base_ing);
+          let ings = ingredients[i].base_ing.filter((ing) => lst_base_ing.map((base) => base.nom).includes(ing.name));
+          ings.map((ing, index:number) => {
+
+            ing.unity = lst_base_ing[index].unity;
+            ing.cost = lst_base_ing[index].cost;
+            ing.quantity_unity = lst_base_ing[index].quantity_unity;
+          })
+
           if(lst_base_ing.length > 0){
             ingredients[i].cost = lst_base_ing
                                   .map((base) => base.cost)
@@ -205,7 +214,7 @@ ngOnInit(): void{
     dlc:string;
   }){
     let res_dlc = 0;
-    let var_base_ing: Array<{name:string, quantity:number}> = [];
+    let var_base_ing: Array<{name: string; quantity_unity:number; quantity: number; unity:string; cost:number}> = [];
     const dlc = this.calc_service.stringToDate(ele.dlc);
     const date_reception = this.calc_service.stringToDate(ele.date_reception);
 
