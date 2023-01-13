@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, updateProfile, User } from 'firebase/auth';
+import { AlertesStockService } from 'src/app/services/alertes/alertes.stock.service';
 import { AuthentificationService } from 'src/app/services/authentification.service';
 
 const firebaseConfig = {
@@ -30,9 +31,10 @@ let displayName: string | null = null;
 export class AppMainDashboardComponent implements OnInit {
   @Output() public numP = new EventEmitter();
   user = auth.currentUser;
+  public hidden = true;
+  public alert_num = 1;
 
-  constructor(public authService: AuthentificationService){
-
+  constructor(public authService: AuthentificationService, alerte_stock_service: AlertesStockService){
 
 
     onAuthStateChanged(auth, (user) => {
@@ -91,6 +93,17 @@ export class AppMainDashboardComponent implements OnInit {
       else item.classList.add("active");
     });
   });
+  const sidebar = document.querySelector(".sidebar");
+  if(sidebar!=null) sidebar.classList.toggle("close");
+  // on enlève le panel de gauche dans le cas d'un mobile si on à se comportement il aut s'assurer que 
+  //lorsque la navebar est toggle les component se mettent sur la gauche
+/*   if (window.screen.width < 1040) { // 768px portrait
+    const sidebar = document.querySelector(".sidebar");
+    if(sidebar!=null) sidebar.classList.toggle("close");
+  } */
+
+
+
   }
   
   clickAlertes(){
@@ -99,8 +112,70 @@ export class AppMainDashboardComponent implements OnInit {
     
   }
 
-  clickStock(){
+  clickProfil(){
+    
     this.numP.emit(2)
+  }
+
+  clickIngredients(){
+    this.numP.emit(3)
+  }
+
+  clickConso(){
+    this.numP.emit(4)
+  }
+
+  clickMenu(){
+    this.numP.emit(5)
+  }
+
+  clickPlats(){
+    this.numP.emit(6)
+  }
+
+  clickPreparation(){
+    this.numP.emit(7)
+  }
+
+  clickCAnalyseStock(){
+    this.numP.emit(8)
+  }
+  
+  clickAnalyseFreq(){
+    this.numP.emit(9)
+  }  
+
+  clickAnalyseTable(){
+    this.numP.emit(10)
+  }
+
+  clickAnalyseConso(){
+    this.numP.emit(11)
+  }
+
+  clickAnalyseCA(){
+    this.numP.emit(12)
+  }
+
+  clickAnalyseMenu(){
+    this.numP.emit(13)
+  }
+
+  clickCompta(){
+    this.numP.emit(14)
+  }
+  
+  clickScFactures(){
+    this.numP.emit(15)
+  }
+
+  clickArchi(){
+    this.numP.emit(16)
+  }
+
+
+  clickRH(){
+    this.numP.emit(17)
   }
 
   clickToggle(){
@@ -111,26 +186,9 @@ export class AppMainDashboardComponent implements OnInit {
     }
     
   clickLogo(){
-
     const sidebar = document.querySelector(".sidebar");
-
-  const logo = document.querySelector(".logo-box");
-    if(sidebar!=null)
-  sidebar.classList.toggle("close");
+    const logo = document.querySelector(".logo-box");
+    if(sidebar!=null) sidebar.classList.toggle("close");
   }
-  clickAnalyse(){
-    this.numP.emit(3)
-  }
-
-  clickFactures(){
-    this.numP.emit(4)
-  }
-
-  clickRH(){
-    this.numP.emit(5)
-  }
-  clickProfil(){
-    
-    this.numP.emit(6)
-  }
+ 
 }

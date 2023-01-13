@@ -25,9 +25,8 @@ const app = initializeApp(firebaseConfig);
 export class AuthentificationService {
   auth = getAuth(app);
   userData: any; // Save logged in user data
-  private connecter:boolean;
+
   constructor(public router: Router){
-    this.connecter=false;
     onAuthStateChanged(this.auth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
@@ -106,20 +105,18 @@ Inscription(email:string,password:string){
    let connecter = false;
     onAuthStateChanged(this.auth, (user) => {
       if (user) {
+        user.reload();
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
         const uid = user.uid;
         // ...
-        this.connecter = true;
+
       } else {
         // User is signed out
         // ...
-        
       }
     });
-    /*if(this.auth.currentUser){connecter=true;}*/
-    console.log("."+connecter);
-
+    if(this.auth.currentUser){connecter=true;}
     return connecter;
   }
 

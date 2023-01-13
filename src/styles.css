@@ -2,6 +2,9 @@
 /*            background-image: url("src/assets/Accueil_fondDroit.png") ;
 */
 
+
+@import "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";
+
 /* Référencement des fonts */
 /*----------------------------------------*/
 /* Référencement de la fonte inter */
@@ -14,4 +17,3 @@
     font-family: "ABeeZee";
     src: local("Inter"), url(./assets/fonts/ABeeZee/ABeeZee-Regular.ttf) format("truetype");
 }
-

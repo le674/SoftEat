@@ -1,11 +1,14 @@
-import { transition } from '@angular/animations';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import {Router} from '@angular/router';
-import { stringLength } from '@firebase/util';
+import { MatDialog} from '@angular/material/dialog';
+import {Router, UrlSerializer} from '@angular/router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { InteractionRestaurantService } from './interaction-restaurant.service';
-
+import {UserInteractionService} from 'src/app/services/user-interaction.service'
+import { Restaurant } from 'src/app/interfaces/restaurant';
+import { AppModalComponent } from '../app.modals/app.modal/app.modal/app.modal.component';
+import { AppFormComponent } from '../app.modals/app.form/app.form/app.form.component';
+import { Serializer } from '@angular/compiler';
 
 @Component({
   selector: 'app-app.autho',
@@ -15,38 +18,40 @@ import { InteractionRestaurantService } from './interaction-restaurant.service';
 export class AppAuthoComponent implements OnInit {
   @ViewChild('widgetsContent') public widgetsContent!: ElementRef;
 
+  private readonly screen_width: any;
   private uid: string;
-  private screen_width: any;
+  public is_confique: string;
   public proprietaire: string;
-  public restaurants: [{
-        adresse: string;
-        id: string;
-    }];
+  public restaurants_only: Array<Restaurant>;
+  public url:string;
 
-  constructor(private service : InteractionRestaurantService, private ofApp: FirebaseApp, private router: Router){   
+  constructor(private service : InteractionRestaurantService,private user_services : UserInteractionService, private ofApp: FirebaseApp,
+     private router: Router, public dialog: MatDialog, private tst_dialog:MatDialog, private serealizer: UrlSerializer){   
       this.uid = "";
       this.proprietaire = "";
       this.screen_width = window.innerWidth;
-      this.restaurants = [{
-        "adresse": "",
-        "id": ""
-      }];
+      this.restaurants_only = [
+        new Restaurant()
+      ];
+      this.url = "";
+      this.is_confique = "hidden";
   }
 
   ngOnInit(): void {
     const auth = getAuth(this.ofApp);
       onAuthStateChanged(auth, (user) => {
         if(user){
-          console.log("utilisateur inscrit");
           this.uid = user.uid;
-          this.service.getRestaurantsProprietaireFromUser(this.uid).then((restaurant) => {
-            this.proprietaire =  restaurant.proprietaire;
-            this.restaurants = restaurant.restaurant;
-            console.log(restaurant.restaurant.forEach((resto) => {
-              console.log(resto.adresse);  
-            }));
-            
-          });
+          const my_prop = this.user_services.getProprietaireFromUsers(this.uid)
+          my_prop.then((prop) => {
+            this.proprietaire = prop
+            this.user_services.getUserFromUid(user.uid, prop).then((user) => {
+              this.restaurants_only = user.restaurants   
+              if(user.roles.includes("gérant") || user.roles.includes("proprietaire")){
+                this.is_confique = "visible"
+              }
+            })
+          })
         }
         else{
           console.log("pas d'autentification");
@@ -62,21 +67,43 @@ export class AppAuthoComponent implements OnInit {
     window.location.reload();
   }
 
-  scrollRight(){
-    let nbr_restaurants = this.restaurants.length
-    console.log("nombre de resto " + nbr_restaurants);
-    console.log("taille de l'écran" + this.screen_width);
-    console.log("le padding est de " + this.screen_width/nbr_restaurants);
-    
-    
-    this.widgetsContent.nativeElement.scrollLeft += this.screen_width/nbr_restaurants;
-    
-    
+  clicAcceuil(){
+    this.router.navigate([''])
   }
 
-  scrollLeft(){
-    let nbr_restaurants = this.restaurants.length
-    this.widgetsContent.nativeElement.scrollLeft -= this.screen_width/nbr_restaurants;
+  openDialog(restaurant:{ adresse: string, id: string}, event:MouseEvent): void {
+    const target = new ElementRef(event.currentTarget)
+
+    const dialogRef = this.dialog.open(AppModalComponent, {
+      width: '250px',
+      data: {
+        adresse: restaurant.adresse,
+        id: restaurant.id,
+        trigger: target
+      }
+    });
+
+  }
+
+  openFormular(event:MouseEvent): void{
+    
+    const target= new ElementRef(event.currentTarget);
+    
+    this.dialog.open(AppFormComponent,{
+      width: '400px',
+      height: '290px',
+      data: {
+        prop: this.proprietaire,
+        uid: this.uid,
+        trigger: target
+      }
+    });
+  }
+  restaurantNavigate(restaurant:string, proprietaire:string){
+    
+    const dashboard = this.router.createUrlTree(["/dashboard"],{ queryParams: { restaurant: restaurant, prop: proprietaire}})
+    this.url =  this.serealizer.serialize(dashboard)
+    window.location.href = this.url
   }
 }
 

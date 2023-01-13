@@ -1,0 +1,14 @@
+<i class="fa-regular fa-xmark" (click)="onNoClick()"></i>
+<form (ngSubmit)="sendNewNumber()" [formGroup]="number_modification">
+    <div mat-dialog-content id="container">
+        <p>
+            <mat-form-field appearance="fill">
+              <mat-label>Entrer le nouveau numéro</mat-label>
+              <input matInput placeholder="Placeholder" formControlName="number">
+              <mat-hint>Entrer le nouveau numéro de téléphone</mat-hint>
+            </mat-form-field>
+          </p> 
+        <button type="submit" mat-stroked-button> Valider </button>
+    </div>
+</form>
+

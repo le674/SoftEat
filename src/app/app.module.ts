@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppAlertesModule } from './modules/alertes/app.module';
-import { AppAnalyseModule } from './modules/analyse/app.module';
 import { AppAuthenModule } from './modules/authen/app.module';
 import { AppAuthoModule } from './modules/autho/app.module';
 import { AppBudgetModule } from './modules/budget/app.module';
@@ -14,8 +13,10 @@ import { AppDashboardModule } from './modules/dashboard/app.module';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { environment } from 'src/environments/environment';
 import { AuthentificationService } from './services/authentification.service';
+import { HttpClientModule } from '@angular/common/http';
 import { getAuth } from 'firebase/auth';
 import { provideAuth } from '@angular/fire/auth';
+import { RecettesModule } from './modules/recettes/recettes.module';
 
 @NgModule({
   declarations: [
@@ -24,9 +25,9 @@ import { provideAuth } from '@angular/fire/auth';
   imports: [
     AppDashboardModule,
     BrowserModule,
+    HttpClientModule,
     //import des différent module propre à chacune des pages de l'application
     AppAlertesModule,
-    AppAnalyseModule,
     AppAuthenModule,
     AppAuthoModule,
     AppBudgetModule,
@@ -34,6 +35,7 @@ import { provideAuth } from '@angular/fire/auth';
     AppStockModule,
     AppAcceuilModule,
     AppAuthoModule,
+    RecettesModule,
     // permet d'initialiser les services firebase à utiliser une fois dans
     //le app.module les objet de classe FirebaseApp contiendrons alors la configuration pour l'api firebase présent dans l'environnement
     provideFirebaseApp(() => initializeApp(environment.firebase)),

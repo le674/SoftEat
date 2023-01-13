@@ -10,7 +10,7 @@
     gestion rh), cette page permet la gestion des accès aux différentes fonctionnalitées">
 
     <!--SEO 3 : balise meta viewport permet d'adapter le site au format mobile-->
-    <meta name="viewport" content="width=device-width, initial-scale=2.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!--SEO 4 : important on référence le code dupliqué pour bénéficier des bon points du code-->
     <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/dashboard/" />
@@ -18,34 +18,26 @@
 <!-- SEO : affichage du corp du site  -->
 <body>
     <app-main-dashboard (numP)="numP = $event" ></app-main-dashboard>
-    <main>
-        <div class = "panel">
-            <h1 *ngIf="numP==-2">Alertes</h1>
-            <h1 *ngIf="numP==1">Alertes</h1>
-            <h1 *ngIf="numP==2">Stock</h1>
-            <h1 *ngIf="numP==3">Analyse</h1>
-            <h1 *ngIf="numP==4">Factures</h1>
-            <h1 *ngIf="numP==5">Ressources humaines</h1>
-            <h1 *ngIf="numP==6">Profil</h1>
-            <app-alertes *ngIf="numP==1"></app-alertes>
-            <app-stock *ngIf="numP==2"></app-stock>
-            <app-analyse *ngIf="numP==3"></app-analyse>
-            <app-factures *ngIf="numP==4"></app-factures>
-            <app-rh *ngIf="numP==5"></app-rh>
-            <!--
-            <div class="btn-toolbar mb-2 mb-md-0" id="top-buttons">
-                <div class="btn-group me-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary">Partager</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary">Exporter</button>
-                </div>
-                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                    <span data-feather="calendar" class="align-text-bottom"></span>
-                    This week
-                </button>
-            </div>
-            -->
-        </div>
-       </main>
+    <div class = "panel">
+        <app-alertes *ngIf="numP==1"></app-alertes>
+        <app-profil *ngIf="numP==2"></app-profil>
+        <app-stock *ngIf="numP==3"></app-stock>
+        <app-conso *ngIf="numP==4"></app-conso>
+        <app-menu *ngIf="numP==5"></app-menu>
+        <app-plats *ngIf="numP==6"></app-plats>
+        <app-preparations *ngIf="numP==7"></app-preparations>
+        <app-analysestock *ngIf="numP==8"></app-analysestock>
+        <app-analysefreq *ngIf="numP==9"></app-analysefreq>
+        <app-analysetables *ngIf="numP==10"></app-analysetables>
+        <app-analyseconso *ngIf="numP==11"></app-analyseconso>
+        <app-analyseca *ngIf="numP==12"></app-analyseca>
+        <app-analysemenu *ngIf="numP==13"></app-analysemenu>
+        <app-budget *ngIf="numP==14"></app-budget>
+        <app-budget *ngIf="numP==14"></app-budget>
+        <app-factures *ngIf="numP==15"></app-factures>
+        <app-archi *ngIf="numP==16"></app-archi>
+        <app-rh *ngIf="numP==17"></app-rh>
+    </div>
 </body>
 
 </html>

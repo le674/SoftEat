@@ -1,0 +1,22 @@
+p{
+    margin-top: 20px;
+}
+
+i{
+    margin-left: 240px;
+    font-size: 23px;
+    cursor: pointer;
+}
+
+button{
+    color: rgb(125, 181, 46);
+}
+
+button:hover{
+    color: white;
+    background-color: rgb(125, 181, 46);
+}
+
+i:hover{
+    color: red;
+}

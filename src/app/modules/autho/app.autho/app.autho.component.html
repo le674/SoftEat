@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page d'entrée sur les restaurants du propriétaire le propriétaire
-        peut ajouter des restaurants et donnée des droits spécifique aux employées</title>
+        peut ajouiter des restaurant et donné des droits spcifique aux employées</title>
     <link rel="stylesheet" href="/assets/fontawesome/css/fontawesome.css">
     <link rel="stylesheet" href="/assets/fontawesome/css/solid.css">
     <link rel="stylesheet" href="/assets/fontawesome/css/regular.css">
@@ -14,21 +14,33 @@
 
 <body>
     <header>
-        <p id="marque" class="col-md-5 col-lg-2 px-3">SoftEat</p>
-        <button class="btn btn-outline-danger" (click)="clicdeConnexion()" id="boutonDeconnexion"
-            type="submit">déconnexion</button>
+        <img src="/assets/images/SoftEat_Quadrichromie.png" alt="">
+        <ul>
+            <li> 
+                <button class="btn btn-outline-success" id="acceuil" (click)="clicAcceuil()" type="submit">acceuil</button>
+            </li>
+            <li> 
+                <button class="btn btn-outline-danger" (click)="clicdeConnexion()" id="deco"
+                type="submit">deconnexion</button>
+            </li>
+        </ul>
     </header>
     <main>
         <div id="analyse-wrapper">
+            <a *ngIf="is_confique" href="autho/configuration?new='true'" id="link_configure">
+                <button class="btn btn-outline-success" id="configurer" [ngStyle]="{'visibility': is_confique}">
+                    configuration des restaurants
+                </button>
+            </a> 
             <button class="btn btn-outline-success" id="analyse" > Analyse des restaurants</button>
         </div>
         <div class="container-fluid" id="card_number">
-            <div #widgetsContent class="row card-deck-scrollable flex-nowrap" id="scroll-right">
-                <div class="tourcard" *ngFor="let restaurant of restaurants">
+            <div #widgetsContent class="row card-deck-scrollable flex-nowrap scroll-right">
+                <div class="tourcard" *ngFor="let restaurant of restaurants_only">
                     <figure>
                         <div class="tourpic">
                             <img width="300" height="200" src='/assets/images/autho.jpg'>
-                            <span class="tourday hot">rejoindre ce restaurant</span>
+                            <span class="tourday hot">rejoindre se restaurant</span>
                         </div>
                         <figcaption>
                             <h3 class="entry-title">
@@ -37,14 +49,11 @@
                             <span class="description">{{restaurant.adresse}}</span>
                         </figcaption>
                         <div class="tourbtn">
-                            <a class="btn btn-sm" target="_blank" rel="noreferrer">
-                                <i class="fa-solid fa-utensils"></i> <br> Accéder
+                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="restaurantNavigate(restaurant.id, proprietaire)">
+                              <br>  <i class="fa-solid fa-utensils"></i> <br> Accéder
                             </a>
-                            <a class="btn btn-sm" target="_blank" rel="noreferrer">
-                                <i class="fa-solid fa-trash"></i> <br> Supprimer
-                            </a>
-                            <a class="btn btn-sm" target="_blank" rel="noreferrer">
-                                <i class="fa-solid fa-gear"></i> Configurer
+                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="openDialog(restaurant, $event)">
+                                <br>  <i class="fa-solid fa-trash"> </i> <br> Supprimer
                             </a>
                         </div>
                     </figure>
@@ -52,7 +61,7 @@
                 <div class="tourcard" id="res_card" style="min-width: 300px">
                     <figure>
                         <div class="tourpic">
-                            <img width="300" height="200" src='/assets/images/autho.jpg'>
+                            <img width="300" height="200" src='/assets/images/street.jpg'>
                             <span class="tourday hot">Ajouter un restaurant</span>
                         </div>
                         <figcaption>
@@ -62,77 +71,12 @@
                             <span class="description">Cliquer pour ajouter un restaurant</span>
                         </figcaption>
                         <div class="tourbtn">
-                            <a class="btn btn-sm" target="_blank" rel="noreferrer">
+                            <a *ngIf="is_confique" class="btn btn-sm" target="_blank" rel="noreferrer" (click)="openFormular($event)">
                                 <i class="fa-solid fa-plus"></i> <br> Ajouter
                             </a>
                         </div>
                     </figure>
-                </div>
-                <div class="tourcard" id="res_card" style="min-width: 300px">
-                    <figure>
-                        <div class="tourpic">
-                            <img width="300" height="200" src='/assets/images/autho.jpg'>
-                            <span class="tourday hot">Ajouter un restaurant</span>
-                        </div>
-                        <figcaption>
-                            <h3 class="entry-title">
-                                <a>Nouveau restaurant</a>
-                            </h3>
-                            <span class="description">Cliquer pour ajouter un restaurant</span>
-                        </figcaption>
-                        <div class="tourbtn">
-                            <a class="btn btn-sm" target="_blank" rel="noreferrer">
-                                <i class="fa-solid fa-plus"></i> <br> Ajouter
-                            </a>
-                        </div>
-                    </figure>
-                </div>
-                <div class="tourcard" id="res_card" style="min-width: 300px">
-                    <figure>
-                        <div class="tourpic">
-                            <img width="300" height="200" src='/assets/images/autho.jpg'>
-                            <span class="tourday hot">Ajouter un restaurant</span>
-                        </div>
-                        <figcaption>
-                            <h3 class="entry-title">
-                                <a>Nouveau restaurant</a>
-                            </h3>
-                            <span class="description">Cliquer pour ajouter un restaurant</span>
-                        </figcaption>
-                        <div class="tourbtn">
-                            <a class="btn btn-sm" target="_blank" rel="noreferrer">
-                                <i class="fa-solid fa-plus"></i> <br> Ajouter
-                            </a>
-                        </div>
-                    </figure>
-                </div>
-                <div class="tourcard" id="res_card" style="min-width: 300px">
-                    <figure>
-                        <div class="tourpic">
-                            <img width="300" height="200" src='/assets/images/autho.jpg'>
-                            <span class="tourday hot">Ajouter un restaurant</span>
-                        </div>
-                        <figcaption>
-                            <h3 class="entry-title">
-                                <a>Nouveau restaurant</a>
-                            </h3>
-                            <span class="description">Cliquer pour ajouter un restaurant</span>
-                        </figcaption>
-                        <div class="tourbtn">
-                            <a class="btn btn-sm" target="_blank" rel="noreferrer">
-                                <i class="fa-solid fa-plus"></i> <br> Ajouter
-                            </a>
-                        </div>
-                    </figure>
-                </div>
-            </div>
-            <div id="navigation">
-                <button id="button-slide-left" (click)="scrollLeft()">
-                    <i class="fa-solid fa-angles-left" id="slideLeft"></i> 
-                </button>
-                <button id="button-slide-right" (click)="scrollRight()">
-                    <i class="fa-solid fa-angles-right" id="slideRight"></i> 
-                </button>
+                </div>               
             </div>
         </div>
     </main>

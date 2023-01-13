@@ -51,11 +51,6 @@ export class NavbarVitrineComponent implements OnInit {
    // this value to authenticate with your backend server, if
    // you have one. Use User.getToken() instead.
    const uid = user.uid;
-   console.log("Utilisateur - "+user.displayName+", "+authService.estConnecter);
-   console.log("Utilisateur - "+user.email);
-   console.log("Utilisateur - "+user.uid);
-   console.log("Utilisateur - "+user.providerData);
-   console.log("Utilisateur - "+user.providerId);
         // ...
       } else {
         // User is signed out
