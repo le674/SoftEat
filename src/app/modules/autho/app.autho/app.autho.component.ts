@@ -1,3 +1,4 @@
+import { transition } from '@angular/animations';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import {Router} from '@angular/router';
@@ -69,6 +70,7 @@ export class AppAuthoComponent implements OnInit {
     
     
     this.widgetsContent.nativeElement.scrollLeft += this.screen_width/nbr_restaurants;
+    
     
   }
 
