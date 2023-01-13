@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, updateProfile, User } from 'firebase/auth';
+import { AlertesStockService } from 'src/app/services/alertes/alertes.stock.service';
 import { AuthentificationService } from 'src/app/services/authentification.service';
 
 const firebaseConfig = {
@@ -30,9 +31,10 @@ let displayName: string | null = null;
 export class AppMainDashboardComponent implements OnInit {
   @Output() public numP = new EventEmitter();
   user = auth.currentUser;
+  public hidden = true;
+  public alert_num = 1;
 
-  constructor(public authService: AuthentificationService){
-
+  constructor(public authService: AuthentificationService, alerte_stock_service: AlertesStockService){
 
 
     onAuthStateChanged(auth, (user) => {
@@ -99,6 +101,8 @@ export class AppMainDashboardComponent implements OnInit {
     const sidebar = document.querySelector(".sidebar");
     if(sidebar!=null) sidebar.classList.toggle("close");
   } */
+
+
 
   }
   

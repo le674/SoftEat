@@ -34,6 +34,9 @@ img{
 
 
 /* =============== Sidebar =============== */
+i {
+    width: 2px;
+}
 .sidebar{
     position: fixed;
     top: 0;
@@ -80,6 +83,11 @@ img{
     font-size: 32px;
     padding-top: 11px;
     padding-bottom: 11px;
+}
+
+.mat-badge-content {
+    background: rgb(148, 30, 148);
+    color: white
 }
 
 /* ---------- Sidebar List ---------- */

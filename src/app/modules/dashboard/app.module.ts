@@ -11,6 +11,7 @@ import { AppDashboardComponent } from './app.dashboard/app.dashboard.component';
 import { AppMainDashboardComponent } from './app.dashboard/app.main-dashboard/app.main-dashboard.component';
 import { ProfilModule } from '../profil/profil.module';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatBadgeModule} from '@angular/material/badge'; 
 import { RecettesModule } from '../recettes/recettes.module';
 import { AppAnalyseModule } from '../analyse/app.module';
 
@@ -34,7 +35,8 @@ import { AppAnalyseModule } from '../analyse/app.module';
     AppAuthenModule,
     ProfilModule,
     RecettesModule,
-    MatMenuModule
+    MatMenuModule,
+    MatBadgeModule
   ],
   exports: [
     AppDashboardComponent

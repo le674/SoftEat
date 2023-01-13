@@ -12,6 +12,10 @@ export class AlertesStockService {
     this.db = getDatabase(ofApp);
   }
 
+  async getLastPAlertes(p:number){
+
+  }
+
   async setStockAlertes(message:string){
 
   }
