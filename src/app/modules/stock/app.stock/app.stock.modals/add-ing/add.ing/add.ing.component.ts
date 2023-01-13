@@ -7,6 +7,7 @@ import { IngredientsInteractionService } from 'src/app/services/menus/ingredient
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TitleStrategy } from '@angular/router';
 import { MatSelect } from '@angular/material/select';
+import { AlertesStockService } from 'src/app/services/alertes/alertes.stock.service';
 
 @Component({
   selector: 'app-add.ing',
@@ -26,6 +27,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     unity: new FormControl('', Validators.required),
     unitary_cost: new FormControl(0, Validators.required),
     dlc: new FormControl(0, Validators.required),
+    marge: new FormControl(0,Validators.required),
     names_base_ing: new FormArray([
       new FormControl("")
     ]),
@@ -71,9 +73,11 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         date_reception: string,
         base_ing: Array<TIngredientBase>,
         not_prep: Array<CIngredient>,
-        quantity_after_prep: number
+        quantity_after_prep: number,
+        marge: number
       }
-    }, private service: IngredientsInteractionService, private changeDetector: ChangeDetectorRef, private _snackBar: MatSnackBar) {
+    }, private service: IngredientsInteractionService, private changeDetector: ChangeDetectorRef,
+     private _snackBar: MatSnackBar, private alertes:AlertesStockService){
     this.base_ing_full = this.data.ingredient.not_prep.filter((ing) => this.data.ingredient.base_ing.map((ing) => ing.name).includes(ing.nom));
     this.calcul_service.sortTwoListStringByName(this.base_ing_full, this.data.ingredient.base_ing);
     this._mat_dialog_ref = dialogRef;
@@ -105,6 +109,10 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     // Si on récupère une date de limite de consommatin négative on dépose 0 sinon on dépose la dlc
     if(this.data.ingredient.dlc > 0){
       this.add_ing_section.get("dlc")?.setValue(this.data.ingredient.dlc);
+    }
+
+    if((this.data.ingredient.marge > 0) && (this.data.ingredient.marge !== undefined)){
+      this.add_ing_section.get("marge")?.setValue(this.data.ingredient.marge);
     }
     else{
       this.add_ing_section.get("dlc")?.setValue(0);
@@ -194,8 +202,9 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     if (this.add_ing_section.value["name_tva"] !== undefined) {
       new_ing.setCategorieTva(this.add_ing_section.value["name_tva"]);
     }
-    if (this.add_ing_section.value["taux_tva"] !== undefined) {
-      new_ing.setTauxTva(Number(this.taux.nativeElement.value));
+
+    if(this.add_ing_section.value["marge"] !== undefined){
+      new_ing.setMarge(Number(this.add_ing_section.value["marge"]));
     }
 
     if (this.add_ing_section.value["quantity"] !== undefined) {
@@ -206,13 +215,18 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       new_ing.setQuantityUniy(this.add_ing_section.value["quantity_unitary"]);
     }
 
+    if (this.add_ing_section.value["unitary_cost"] !== undefined) {
+      new_ing.setCost(this.add_ing_section.value["unitary_cost"]);
+    }
+
+    if (this.add_ing_section.value["taux_tva"] !== undefined) {
+      new_ing.setTauxTva(Number(this.taux.nativeElement.value));
+    }
+
     if (unity !== undefined) {
       new_ing.setUnity(unity);
     }
 
-    if (this.add_ing_section.value["unitary_cost"] !== undefined) {
-      new_ing.setCost(this.add_ing_section.value["unitary_cost"]);
-    }
 
     if ((this.add_ing_section.value["dlc"] !== undefined) && (this.add_ing_section.value["dlc"] !== null)) {
       new_ing.dlc.setHours( new_ing.dlc.getHours() + 24*this.add_ing_section.value["dlc"])
@@ -228,6 +242,12 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
           this.data.ingredient.base_ing, this.data.ingredient.quantity, this.add_ing_section.value["quantity"]);
       }
     } 
+
+    if(new_ing.getQuantity()*new_ing.getQuantity() < new_ing.getMarge()){
+      // alors on affiche une alerte
+      
+
+    }
 
     if(this.add_ing_section.valid){
       

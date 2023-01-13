@@ -43,6 +43,7 @@ export class IngredientsInteractionService {
           add_ingredient.setCostTtc(ingredient.child("cost_ttc").val());
           add_ingredient.setDlc(ingredient.child("dlc").val());
           add_ingredient.setDateReception(ingredient.child("date_reception").val());
+          add_ingredient.setMarge(ingredient.child("marge").val());
           this.ingredients.push(add_ingredient);
         }
       })
@@ -71,6 +72,7 @@ export class IngredientsInteractionService {
         add_ingredient.setCostTtc(ingredient.child("cost_ttc").val());
         add_ingredient.setDlc(new Date(ingredient.child("dlc").val()));
         add_ingredient.setDateReception(new Date(ingredient.child("date_reception").val()));
+        add_ingredient.setMarge(ingredient.child("marge").val());
         this.ingredients.push(add_ingredient);
       })
     })
@@ -130,7 +132,8 @@ export class IngredientsInteractionService {
           quantity_bef_prep: ingredient.quantity_bef_prep,
           cost_ttc: ingredient.cost_ttc,
           date_reception: ingredient.date_reception,
-          dlc: ingredient.dlc
+          dlc: ingredient.dlc,
+          marge: ingredient.marge
         }
       }
       // si on reçoit des ingrédients brut à modifier 
@@ -149,7 +152,8 @@ export class IngredientsInteractionService {
               quantity_bef_prep: new_ing_aft_prepa[index].quantity_bef_prep,
               cost_ttc: new_ing_aft_prepa[index].cost_ttc,
               date_reception: new_ing_aft_prepa[index].date_reception,
-              dlc: new_ing_aft_prepa[index].dlc
+              dlc: new_ing_aft_prepa[index].dlc,
+              marge: new_ing_aft_prepa[index].marge
             }
           })
         })
@@ -171,7 +175,8 @@ export class IngredientsInteractionService {
           quantity_bef_prep: ingredient.quantity_bef_prep,
           cost_ttc: ingredient.cost_ttc,
           date_reception: ingredient.date_reception,
-          dlc: ingredient.dlc
+          dlc: ingredient.dlc,
+          marge: ingredient.marge
         }
       }
       console.log(ingredient_princ);

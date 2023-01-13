@@ -98,7 +98,8 @@ ngOnInit(): void{
             unity: ingredient.unity,
             cuisinee: 'non',
             date_reception: ingredient.date_reception.toLocaleString(),
-            dlc: ingredient.dlc.toLocaleString()
+            dlc: ingredient.dlc.toLocaleString(),
+            marge:ingredient.marge
           };
           this.ingredients_displayed.push(row_ingredient);
           if(i === ingredients.length - 1){
@@ -113,10 +114,6 @@ ngOnInit(): void{
       this.service.getIngredientsPrepFromRestaurants(this.prop, this.restaurant).then((ingredients) => {
         this.ingredient_table_prep = ingredients;
         for(let i = 0; i < ingredients.length; i++){   
-          console.log('table ingrédient ', this.ingredient_table);
-          console.log('ingrédient prep ', ingredients[i].base_ing);
-          
-                
           let lst_base_ing = this.ingredient_table
                              .filter((ingredient) => ingredients[i].base_ing
                              .map((ing) => ing.name)
@@ -160,7 +157,8 @@ ngOnInit(): void{
             unity: ingredients[i].unity,
             cuisinee: 'oui',
             date_reception: ingredients[i].date_reception.toLocaleString(),
-            dlc: ingredients[i].dlc.toLocaleString()
+            dlc: ingredients[i].dlc.toLocaleString(),
+            marge: ingredients[i].marge
           };
           this.ingredients_displayed.push(row_ingredient);
         }
@@ -175,7 +173,7 @@ ngOnInit(): void{
 
   OpenAddIngForm(){
     const dialogRef = this.dialog.open(AddIngComponent, {
-      height: `${window.innerHeight - window.innerHeight/5}px`,
+      height: `${window.innerHeight}px`,
       width:`${window.innerWidth - window.innerWidth/15}px`,
       data: {
         restaurant: this.restaurant,
@@ -192,7 +190,8 @@ ngOnInit(): void{
           date_reception: new Date(),
           base_ing: [],
           not_prep: this.ingredient_table,
-          quantity_after_prep: 0
+          quantity_after_prep: 0,
+          marge: 0
         }
       }
     });
@@ -212,6 +211,7 @@ ngOnInit(): void{
     cuisinee:string;
     date_reception: string;
     dlc:string;
+    marge:number
   }){
     let res_dlc = 0;
     let var_base_ing: Array<{name: string; quantity_unity:number; quantity: number; unity:string; cost:number}> = [];
@@ -239,7 +239,7 @@ ngOnInit(): void{
     console.log("dlc en jours : ", res_dlc);
     
     const dialogRef = this.dialog.open(AddIngComponent, {
-      height: `${window.innerHeight - window.innerHeight/5}px`,
+      height: `${window.innerHeight}px`,
       width:`${window.innerWidth - window.innerWidth/15}px`,
       data: {
         restaurant: this.restaurant,
@@ -257,7 +257,8 @@ ngOnInit(): void{
           date_reception: ele.date_reception,
           base_ing: var_base_ing,
           not_prep: this.ingredient_table,
-          quantity_after_prep: ele.after_prep
+          quantity_after_prep: ele.after_prep,
+          marge: ele.marge
         }
       }
     });

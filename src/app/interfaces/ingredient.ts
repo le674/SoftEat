@@ -34,12 +34,12 @@ export interface Ingredient {
         unity: string,
         cost:number
     }>;
+    "marge": number;
 
 
     getInfoDico(): void;
 /*     getValBouchFromNewQauntity(quantity_unity: number): CIngredient; */
     getCostTtcFromCat(): void;
-
     getNom(): string;
     setNom(nom: string | null): void;
     getCategorieRestaurant(): string;
@@ -76,6 +76,8 @@ export interface Ingredient {
     setGel(val: boolean | null): void;
     getBaseIng(): Array<{name:string, quantity:number,  quantity_unity: number, unity:string, cost:number}>;
     setBaseIng(names: Array<{name:string, quantity:number,  quantity_unity: number, unity:string, cost:number}> | null): void;
+    getMarge():number;
+    setMarge(marge:number):void;
 
 }
 
@@ -134,6 +136,7 @@ export class CIngredient implements Ingredient {
     "quantity_after_prep": number;
     "val_bouch": number;
     "is_similar":number;
+    "marge": number;
 
     constructor(private service: CalculService, private db_service: IngredientsInteractionService) {
         this.base_ing = [];
@@ -326,6 +329,12 @@ export class CIngredient implements Ingredient {
         cost:number
     }> | null): void {
         if (names !== null) this.base_ing= names;
+    }
+    getMarge(): number {
+       return this.marge
+    }
+    setMarge(marge: number): void {
+        this.marge = marge;
     }
 }
 
