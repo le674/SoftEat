@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, UrlTree } from '@angular/router';
+import { CAlerte } from 'src/app/interfaces/alerte';
+import { AlertesService } from 'src/app/services/alertes/alertes.service';
 
 @Component({
   selector: 'app-alertes',
@@ -7,9 +10,32 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppAlertesComponent implements OnInit {
 
-  constructor() { }
+  public toasts_stock:Array<CAlerte>;
+  public toast_num:number;
+  public date_time:string;
+
+  private router: Router;
+  private url: UrlTree;
+  private prop:string;
+  private restaurant:string;
+
+  constructor(private bdd__service: AlertesService,  router: Router) { 
+    this.toasts_stock = [];
+    this.toast_num = 0;
+    this.router = router;
+    this.url = this.router.parseUrl(this.router.url);
+    this.prop = "";
+    this.restaurant = "";
+    this.date_time = "";
+  }
 
   ngOnInit(): void {
+    let user_info = this.url.queryParams;
+    this.prop = user_info["prop"];
+    this.restaurant = user_info["restaurant"];
+    this.bdd__service.getLastPAlertes(this.prop,this.restaurant).then((toasts) => {
+      this.toasts_stock = toasts;
+    })
   }
 
 }

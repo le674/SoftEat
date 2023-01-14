@@ -7,7 +7,7 @@ import { IngredientsInteractionService } from 'src/app/services/menus/ingredient
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TitleStrategy } from '@angular/router';
 import { MatSelect } from '@angular/material/select';
-import { AlertesStockService } from 'src/app/services/alertes/alertes.stock.service';
+import { AlertesService } from 'src/app/services/alertes/alertes.service';
 
 @Component({
   selector: 'app-add.ing',
@@ -77,7 +77,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         marge: number
       }
     }, private service: IngredientsInteractionService, private changeDetector: ChangeDetectorRef,
-     private _snackBar: MatSnackBar, private alertes:AlertesStockService){
+     private _snackBar: MatSnackBar, private alertes:AlertesService){
     this.base_ing_full = this.data.ingredient.not_prep.filter((ing) => this.data.ingredient.base_ing.map((ing) => ing.name).includes(ing.nom));
     this.calcul_service.sortTwoListStringByName(this.base_ing_full, this.data.ingredient.base_ing);
     this._mat_dialog_ref = dialogRef;

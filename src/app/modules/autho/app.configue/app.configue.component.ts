@@ -356,22 +356,22 @@ export class AppConfigueComponent implements OnInit {
     index = 6 * this.page_number + index
     const restaurants = event.value
     let user = this.curr_user["user" +  this.curr_categorie as keyof typeof this.curr_user].at(index);
-
+    
     if(user?.restaurants !== undefined){
       user.restaurants.forEach((restaurant:Restaurant, index:number) => {
-        if(restaurants.includes(restaurant.id)){
-          restaurants.filter((restaurant: {id: any;}) => (restaurant !== restaurant.id))
-        }
-        user?.restaurants.shift()
+        restaurants.filter((restaurant: {id: any;}) => (restaurant !== restaurant.id))
       })
       
+      user.restaurants = [];
+
       for(let restaurant of restaurants){
         let restau = new Restaurant()
         restau.id = restaurant 
         user.restaurants.push(restau)
       }
-    } 
-    
+      // on créer une liste de restaurants qui sont unique
+      user.restaurants = user.restaurants.filter((restaurant, index, self) => self.map((restau) => restau.id).indexOf(restaurant.id) === index) 
+    }
   }
 
   set_read_right(event:MatSelectChange, index:number,  categorie:number){

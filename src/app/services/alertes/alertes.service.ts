@@ -6,7 +6,7 @@ import { CAlerte } from 'src/app/interfaces/alerte';
 @Injectable({
   providedIn: 'root'
 })
-export class AlertesStockService {
+export class AlertesService {
   private db: Database;
   private alertes: Array<CAlerte>;
 
@@ -34,10 +34,7 @@ export class AlertesStockService {
         })
 
       })
-    })
-  
-    console.log(this.alertes);
-    
+    })    
     return this.alertes;
   }
 

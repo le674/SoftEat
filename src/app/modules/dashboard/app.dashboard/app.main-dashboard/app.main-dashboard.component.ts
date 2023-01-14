@@ -3,7 +3,7 @@ import { Router, UrlTree } from '@angular/router';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, updateProfile, User } from 'firebase/auth';
 import { CAlerte } from 'src/app/interfaces/alerte';
-import { AlertesStockService } from 'src/app/services/alertes/alertes.stock.service';
+import { AlertesService } from 'src/app/services/alertes/alertes.service';
 import { AuthentificationService } from 'src/app/services/authentification.service';
 
 const firebaseConfig = {
@@ -40,7 +40,7 @@ export class AppMainDashboardComponent implements OnInit {
   private prop:string;
   private restaurant:string;
   
-  constructor(public authService: AuthentificationService, public alerte_stock_service: AlertesStockService, router: Router,){
+  constructor(public authService: AuthentificationService, public alerte_stock_service: AlertesService, router: Router,){
 
 
     onAuthStateChanged(auth, (user) => {
