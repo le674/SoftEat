@@ -39,10 +39,11 @@ export class AppMainDashboardComponent implements OnInit {
   private router: Router;
   private prop:string;
   private restaurant:string;
+  private num:number;
   
   constructor(public authService: AuthentificationService, public alerte_stock_service: AlertesService, router: Router,){
 
-
+    this.num = 0;
     onAuthStateChanged(auth, (user) => {
       if (user) {
         
@@ -64,6 +65,8 @@ export class AppMainDashboardComponent implements OnInit {
         // ...
       }
     });
+
+    // on récupère dans le constructeur le paquet d'alertes 
     this.router = router;
     this.url = this.router.parseUrl(this.router.url);
     this.prop = "";
@@ -76,7 +79,6 @@ export class AppMainDashboardComponent implements OnInit {
   let user_info = this.url.queryParams;
   this.prop = user_info["prop"];
   this.restaurant = user_info["restaurant"];
-
   const listItems = document.querySelectorAll(".sidebar-list li");
 
   listItems.forEach((item) => {
@@ -99,17 +101,18 @@ export class AppMainDashboardComponent implements OnInit {
     const sidebar = document.querySelector(".sidebar");
     if(sidebar!=null) sidebar.classList.toggle("close");
   } */
-
-  this.alerte_stock_service.getLastPAlertes(this.prop, this.restaurant).then((alertes) => {
-    // on récupère le nombre d'alerte non lu et on envoie à la vue pour affichage d'une notifiation 
-    const is_read = alertes.map((alerte) => alerte.read);
-    const num_read = is_read.filter(is_true => !is_true).length;
-    this.alert_num = num_read
-    if(this.alert_num !== 0){
-      this.hidden = false; 
-    }
-  })
-
+    this.alerte_stock_service.getPPakageNumber(this.prop, this.restaurant).then((num) => {
+      this.alerte_stock_service.getLastPAlertesBDD(this.prop, this.restaurant, num);
+    })
+    this.alerte_stock_service.getLastPAlertes().subscribe((alertes) =>{
+      // on récupère le nombre d'alerte non lu et on envoie à la vue pour affichage d'une notifiation 
+      const is_read = alertes.map((alerte) => alerte.read);
+      const num_read = is_read.filter(is_true => !is_true).length;
+      this.alert_num = num_read
+      if(this.alert_num !== 0){
+        this.hidden = false; 
+      }
+    })
   }
   
   getNom():string{

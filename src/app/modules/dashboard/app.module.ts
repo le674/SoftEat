@@ -14,6 +14,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatBadgeModule} from '@angular/material/badge'; 
 import { RecettesModule } from '../recettes/recettes.module';
 import { AppAnalyseModule } from '../analyse/app.module';
+import { AlertesService } from 'src/app/services/alertes/alertes.service';
 
 
 
@@ -41,6 +42,8 @@ import { AppAnalyseModule } from '../analyse/app.module';
   exports: [
     AppDashboardComponent
   ],
-  providers: []
+  providers: [
+    AlertesService
+  ]
 })
 export class AppDashboardModule {}

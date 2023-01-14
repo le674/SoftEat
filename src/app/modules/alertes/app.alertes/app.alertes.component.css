@@ -20,7 +20,31 @@ ul{
     color: rgb(125, 181, 46);
 }
 
+.fa-envelope{
+    color: rgb(125, 181, 46);
+    margin-right: 7px;
+}
+
 .active.nav-link{
     background-color: rgb(125, 181, 46);
+    color: white;
+}
+
+.d-flex{
+    margin-top: 60px;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 60px;
+}
+
+#buttons_section{
+    display: flex;
+    justify-content: space-around;
+}
+
+.validation{
+    background-color:  rgb(125, 181, 46);
     color: white;
 }

@@ -16,18 +16,23 @@
         aria-labelledby="pills-ingredients-tab" tabindex="0">
 
         <!-- Flexbox container for aligning the toasts -->
-        <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+        <div aria-live="polite" aria-atomic="true" class="d-flex w-100">
 
           <!-- Then put toasts within -->
           <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" *ngFor="let toast of toasts_stock">
             <div class="toast-header">
-              <img src="..." class="rounded me-2" alt="...">
+              <i class="fa-solid fa-envelope"></i>
               <strong class="me-auto">{{toast.from}}</strong>
-              <small>{{date_time}}</small>
+              <small>{{toast.date}}</small>
               <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body">
               {{toast.label}}
+              <div class="mt-2 pt-2 border-top" id="buttons_section">
+                <button mat-stroked-button type="button" class="validation" (click)="markRead(toast)">marquer comme lu</button>
+                <button mat-stroked-button type="button" class="validation" (click)="displayAnswer(toast)">voir les réponses</button>
+              </div>
+          
             </div>
           </div>
         </div>

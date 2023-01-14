@@ -19,7 +19,7 @@ export class AppAlertesComponent implements OnInit {
   private prop:string;
   private restaurant:string;
 
-  constructor(private bdd__service: AlertesService,  router: Router) { 
+  constructor(private alerte_stock_service: AlertesService,  router: Router) { 
     this.toasts_stock = [];
     this.toast_num = 0;
     this.router = router;
@@ -33,9 +33,17 @@ export class AppAlertesComponent implements OnInit {
     let user_info = this.url.queryParams;
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];
-    this.bdd__service.getLastPAlertes(this.prop,this.restaurant).then((toasts) => {
-      this.toasts_stock = toasts;
+    this.alerte_stock_service.getLastPAlertes().subscribe((alertes) => {
+      this.toasts_stock = alertes;
     })
+  }
+
+  markRead(toast:CAlerte):void{
+
+  }
+
+  displayAnswer(toast:CAlerte):void{
+
   }
 
 }

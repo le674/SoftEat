@@ -9,6 +9,7 @@ export interface Alerte {
 }
 
 export class CAlerte implements Alerte{
+    date:string
     from: string
     to: string
     label: string
@@ -22,6 +23,7 @@ export class CAlerte implements Alerte{
         this.label = "";
         this.read = false;
         this.response = "";
+        this.date ="";
     }
     
 }
