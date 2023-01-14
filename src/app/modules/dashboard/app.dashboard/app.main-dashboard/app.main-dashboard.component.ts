@@ -1,7 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, updateProfile, User } from 'firebase/auth';
+import { Observable, Subscription } from 'rxjs';
 import { CAlerte } from 'src/app/interfaces/alerte';
 import { AlertesService } from 'src/app/services/alertes/alertes.service';
 import { AuthentificationService } from 'src/app/services/authentification.service';
@@ -30,7 +31,7 @@ let displayName: string | null = null;
 
 
 
-export class AppMainDashboardComponent implements OnInit {
+export class AppMainDashboardComponent implements OnInit, OnDestroy {
   @Output() public numP = new EventEmitter();
   user = auth.currentUser;
   public hidden = true;
@@ -40,6 +41,7 @@ export class AppMainDashboardComponent implements OnInit {
   private prop:string;
   private restaurant:string;
   private num:number;
+  private alerte_subscription: Subscription; 
   
   constructor(public authService: AuthentificationService, public alerte_stock_service: AlertesService, router: Router,){
 
@@ -71,7 +73,11 @@ export class AppMainDashboardComponent implements OnInit {
     this.url = this.router.parseUrl(this.router.url);
     this.prop = "";
     this.restaurant = "";
+    this.alerte_subscription = new Subscription();
 }
+  ngOnDestroy(): void {
+    this.alerte_subscription.unsubscribe();
+  }
       
 
  
@@ -104,7 +110,7 @@ export class AppMainDashboardComponent implements OnInit {
     this.alerte_stock_service.getPPakageNumber(this.prop, this.restaurant).then((num) => {
       this.alerte_stock_service.getLastPAlertesBDD(this.prop, this.restaurant, num);
     })
-    this.alerte_stock_service.getLastPAlertes().subscribe((alertes) =>{
+    this.alerte_subscription = this.alerte_stock_service.getLastPAlertes().subscribe((alertes) =>{
       // on récupère le nombre d'alerte non lu et on envoie à la vue pour affichage d'une notifiation 
       const is_read = alertes.map((alerte) => alerte.read);
       const num_read = is_read.filter(is_true => !is_true).length;

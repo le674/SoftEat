@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, UrlTree } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { CIngredient, Ingredient } from 'src/app/interfaces/ingredient';
 import { Restaurant } from 'src/app/interfaces/restaurant';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
@@ -15,7 +16,7 @@ import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.comp
   templateUrl: './app.stock.component.html',
   styleUrls: ['./app.stock.component.css']
 })
-export class AppStockComponent implements OnInit {
+export class AppStockComponent implements OnInit, OnDestroy {
 
   public displayedColumns: string[] = ['nom', 'categorie_tva', 'quantity', 'quantity_unity',
   'unity','cost', 'cost_ttc', 'date_reception', 'dlc', 'bef_prep', 'after_prep', 'val_bouch', 'cuisinee', 'actions'];
@@ -57,6 +58,7 @@ export class AppStockComponent implements OnInit {
   private url: UrlTree;
   private prop:string;
   private restaurant:string;
+  private ingredients_brt: Subscription;
 
   constructor(private service:IngredientsInteractionService, private calc_service:CalculService,
     router: Router, public dialog: MatDialog,  private _snackBar: MatSnackBar) { 
@@ -69,49 +71,55 @@ export class AppStockComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.ingredients_displayed);
     this.url = this.router.parseUrl(this.router.url);
     this.ingredient_table_prep = [];
+    this.ingredients_brt = new Subscription();
+  }
+  ngOnDestroy(): void {
+   this.ingredients_brt.unsubscribe();
   }
 
 ngOnInit(): void{
      let user_info = this.url.queryParams;
      this.prop = user_info["prop"];
      this.restaurant = user_info["restaurant"];
+     this.service.getIngredientsBrFromRestaurantsBDD(this.prop,this.restaurant);
+     this.service.getIngredientsPrepFromRestaurantsBDD(this.prop, this.restaurant);
+     
+      this.service.getIngredientsBrFromRestaurants().subscribe((ingredients) => {
+        for(let i = 0; i < ingredients.length; i++){
+            ingredients[i].getInfoDico().then((ingredient) => {
+            if((ingredients[i].getTauxTva() === 0) || (ingredients[i].getTauxTva === undefined)){
+              ingredient.getCostTtcFromCat();
+            }
+            else{
+              ingredient.getCostTtcFromTaux();
+            }
+            let row_ingredient = {
+              nom: ingredients[i].nom.split('_').join('<br>'),
+              categorie_tva: ingredient.categorie_tva.split(' ').join('<br>'),
+              cost: ingredient.cost,
+              cost_ttc: ingredient.cost_ttc,
+              val_bouch: 0,
+              bef_prep: 0,
+              after_prep: 0,
+              quantity: ingredient.quantity,
+              quantity_unity: ingredient.quantity_unity,
+              unity: ingredient.unity,
+              cuisinee: 'non',
+              date_reception: ingredient.date_reception.toLocaleString(),
+              dlc: ingredient.dlc.toLocaleString(),
+              marge:ingredient.marge
+            };
+            this.ingredients_displayed.push(row_ingredient);
+            if(i === ingredients.length - 1){
+              this.ingredient_table = ingredients;
+              this.dataSource.data = this.ingredients_displayed;
+            }
+          })
+         }
+      })
 
-    const first_step = this.service.getIngredientsBrFromRestaurants(this.prop, this.restaurant).then(async (ingredients) => {
-       for(let i = 0; i < ingredients.length; i++){
-        await ingredients[i].getInfoDico().then((ingredient) => {
-          if((ingredients[i].getTauxTva() === 0) || (ingredients[i].getTauxTva === undefined)){
-            ingredient.getCostTtcFromCat();
-          }
-          else{
-            ingredient.getCostTtcFromTaux();
-          }
-          let row_ingredient = {
-            nom: ingredients[i].nom.split('_').join('<br>'),
-            categorie_tva: ingredient.categorie_tva.split(' ').join('<br>'),
-            cost: ingredient.cost,
-            cost_ttc: ingredient.cost_ttc,
-            val_bouch: 0,
-            bef_prep: 0,
-            after_prep: 0,
-            quantity: ingredient.quantity,
-            quantity_unity: ingredient.quantity_unity,
-            unity: ingredient.unity,
-            cuisinee: 'non',
-            date_reception: ingredient.date_reception.toLocaleString(),
-            dlc: ingredient.dlc.toLocaleString(),
-            marge:ingredient.marge
-          };
-          this.ingredients_displayed.push(row_ingredient);
-          if(i === ingredients.length - 1){
-            this.ingredient_table = ingredients;
-            this.dataSource.data = this.ingredients_displayed;
-          }
-        })
-       }
-    })
-
-    first_step.then(() => {
-      this.service.getIngredientsPrepFromRestaurants(this.prop, this.restaurant).then((ingredients) => {
+ 
+      this.service.getIngredientsPrepFromRestaurants().subscribe((ingredients) => {
         this.ingredient_table_prep = ingredients;
         for(let i = 0; i < ingredients.length; i++){   
           let lst_base_ing = this.ingredient_table
@@ -168,7 +176,6 @@ ngOnInit(): void{
                   first_event.pageIndex = 0
         this.pageChanged(first_event);
       })
-    }) 
   }
 
   OpenAddIngForm(){

@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import { child, Database, get, getDatabase, onValue, ref } from 'firebase/database';
 import { CAlerte } from 'src/app/interfaces/alerte';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject, Subscription } from 'rxjs';
+import { Unsubscribe } from 'firebase/auth';
 
 
 @Injectable({
@@ -12,8 +13,8 @@ export class AlertesService {
   private db: Database;
   private alertes: Array<CAlerte>;
   private num_package: number;
-  private dataSubject = new Subject<Array<CAlerte>>();
-
+  private data_alertes = new Subject<Array<CAlerte>>();
+  private get_last_p_alertes!: Unsubscribe;
 
   constructor(private ofApp: FirebaseApp) {
     this.db = getDatabase(ofApp);
@@ -21,13 +22,10 @@ export class AlertesService {
     this.num_package = 0;
   }
 
-getLastPAlertesBDD(prop: string, restaurant: string, num_package:number):void {
+getLastPAlertesBDD(prop: string, restaurant: string, num_package:number):Unsubscribe {
     const ref_db = ref(this.db);
-    let first = true;
-    const path = `Alertes/${prop}/${restaurant}/stock/package_${num_package}`;
-    console.log(path);
-    
-    onValue(child(ref_db, path), (alertes) => {
+    const path = `Alertes/${prop}/${restaurant}/stock/package_${num_package}`;  
+    this.get_last_p_alertes =  onValue(child(ref_db, path), (alertes) => {
       // on rend vide la liste des alertes car on fait deux appel à getLastPAlertes (le premier dans dashboard )
       // le second dans app.alertes.ts comme this.alertes garde en cache les données il vaut mieux 
       // remettre la liste à vide sinon on doubles les alertes
@@ -42,8 +40,9 @@ getLastPAlertesBDD(prop: string, restaurant: string, num_package:number):void {
         new_alerte.date = alerte.child("date").val();
         this.alertes.push(new_alerte);
       })
-      this.dataSubject.next(this.alertes);
+      this.data_alertes.next(this.alertes);
     })
+    return this.get_last_p_alertes;
   }
 
   async getPPakageNumber(prop: string, restaurant: string){
@@ -63,7 +62,7 @@ getLastPAlertesBDD(prop: string, restaurant: string, num_package:number):void {
   }
 
   getLastPAlertes() {
-    return this.dataSubject.asObservable();
+    return this.data_alertes.asObservable();
   }
   
 }

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
-import { child, Database, DatabaseReference, get, getDatabase, ref, remove, set, update } from 'firebase/database';
+import { child, Database, DatabaseReference, get, getDatabase, onValue, ref, remove, set, update } from 'firebase/database';
 import { collection, doc, Firestore, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
+import { Subject } from 'rxjs';
 import { CIngredient, Ingredient } from 'src/app/interfaces/ingredient';
 import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.service';
 
@@ -14,6 +15,8 @@ export class IngredientsInteractionService {
   private db: Database;
   private firestore: Firestore;
   private ingredients: Array<CIngredient>;
+  private data_ingredient = new Subject<Array<CIngredient>>();
+  private data_ingredient_prep = new Subject<Array<CIngredient>>();
 
 
   constructor(private ofApp: FirebaseApp, private service: CalculService) {
@@ -22,10 +25,11 @@ export class IngredientsInteractionService {
     this.ingredients = [];
   }
 
-  async getIngredientsBrFromRestaurants(prop: string, restaurant: string) {
+ getIngredientsBrFromRestaurantsBDD(prop: string, restaurant: string):void {
     const ref_db = ref(this.db);
     this.ingredients = [];
-    await get(child(ref_db, `ingredients/${prop}/${restaurant}/`)).then((ingredients) => {
+    const path = `ingredients/${prop}/${restaurant}/`;
+    onValue(child(ref_db, `ingredients/${prop}/${restaurant}/`), (ingredients) => {
       ingredients.forEach((ingredient) => {
         if ((ingredient.key !== "preparation") && (ingredient.key !== "resto_auth")) {
           const add_ingredient = new CIngredient(this.service, this);
@@ -47,14 +51,14 @@ export class IngredientsInteractionService {
           this.ingredients.push(add_ingredient);
         }
       })
+      this.data_ingredient.next(this.ingredients)
     })
-    return this.ingredients
   }
 
-  async getIngredientsPrepFromRestaurants(prop: string, restaurant: string) {
+ getIngredientsPrepFromRestaurantsBDD(prop: string, restaurant: string):void {
     this.ingredients = [];
     const ref_db = ref(this.db);
-    await get(child(ref_db, `ingredients/${prop}/${restaurant}/preparation`)).then((ingredients) => {
+     onValue(child(ref_db, `ingredients/${prop}/${restaurant}/preparation`), (ingredients) => {
       ingredients.forEach((ingredient) => {
         const add_ingredient = new CIngredient(this.service, this);
         add_ingredient.setNom(ingredient.key);
@@ -75,8 +79,8 @@ export class IngredientsInteractionService {
         add_ingredient.setMarge(ingredient.child("marge").val());
         this.ingredients.push(add_ingredient);
       })
+      this.data_ingredient_prep.next(this.ingredients);
     })
-    return this.ingredients;
   }
 
 
@@ -198,4 +202,11 @@ export class IngredientsInteractionService {
     }
   }
 
+  getIngredientsBrFromRestaurants(){
+    return this.data_ingredient.asObservable();
+  }
+
+  getIngredientsPrepFromRestaurants(){
+    return this.data_ingredient_prep.asObservable();
+  }
 }
