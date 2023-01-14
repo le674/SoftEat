@@ -1,6 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Router, UrlTree } from '@angular/router';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, updateProfile, User } from 'firebase/auth';
+import { CAlerte } from 'src/app/interfaces/alerte';
 import { AlertesStockService } from 'src/app/services/alertes/alertes.stock.service';
 import { AuthentificationService } from 'src/app/services/authentification.service';
 
@@ -33,8 +35,12 @@ export class AppMainDashboardComponent implements OnInit {
   user = auth.currentUser;
   public hidden = true;
   public alert_num = 1;
-
-  constructor(public authService: AuthentificationService, alerte_stock_service: AlertesStockService){
+  private url: UrlTree;
+  private router: Router;
+  private prop:string;
+  private restaurant:string;
+  
+  constructor(public authService: AuthentificationService, public alerte_stock_service: AlertesStockService, router: Router,){
 
 
     onAuthStateChanged(auth, (user) => {
@@ -58,27 +64,19 @@ export class AppMainDashboardComponent implements OnInit {
         // ...
       }
     });
-   
-  
+    this.router = router;
+    this.url = this.router.parseUrl(this.router.url);
+    this.prop = "";
+    this.restaurant = "";
 }
       
 
-  getNom():string{
-    if(email!=null){
-    return email;
-    }else{
-      return "null"
-    }
-  }
-  getConnexion():boolean{
-    if(this.user == null){
-      return false;
-    }else{
-      return true;
-    }
-  }
+ 
   ngOnInit(): void {
-    
+  let user_info = this.url.queryParams;
+  this.prop = user_info["prop"];
+  this.restaurant = user_info["restaurant"];
+
   const listItems = document.querySelectorAll(".sidebar-list li");
 
   listItems.forEach((item) => {
@@ -102,12 +100,34 @@ export class AppMainDashboardComponent implements OnInit {
     if(sidebar!=null) sidebar.classList.toggle("close");
   } */
 
-
+  this.alerte_stock_service.getLastPAlertes(this.prop, this.restaurant).then((alertes) => {
+    // on récupère le nombre d'alerte non lu et on envoie à la vue pour affichage d'une notifiation 
+    const is_read = alertes.map((alerte) => alerte.read);
+    const num_read = is_read.filter(is_true => !is_true).length;
+    this.alert_num = num_read
+    if(this.alert_num !== 0){
+      this.hidden = false; 
+    }
+  })
 
   }
   
+  getNom():string{
+    if(email!=null){
+    return email;
+    }else{
+      return "null"
+    }
+  }
+  getConnexion():boolean{
+    if(this.user == null){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
   clickAlertes(){
-  
     this.numP.emit(1)
     
   }
