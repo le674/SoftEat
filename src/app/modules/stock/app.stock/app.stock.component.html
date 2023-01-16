@@ -136,7 +136,7 @@
         </table>
         <mat-paginator [pageSizeOptions]="[6]"
             (page)="pageChanged($event)"
-            [length]="ingredients_displayed.length"
+            [length]="ingredients_displayed_br.length + ingredients_displayed_prep.length"
             showFirstLastButtons
             aria-label="Selection page d'ingredients">
         </mat-paginator>
