@@ -47,7 +47,7 @@ mat-form-field{
     margin-left: 20px;
 }
 
-#selectSection{
+.selectSection{
     display: flex;
     justify-content: space-between;
     margin-top: 5px;

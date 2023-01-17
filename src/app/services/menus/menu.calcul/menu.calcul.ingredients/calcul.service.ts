@@ -91,12 +91,12 @@ getTvaCategorieFromConditionnement(categorie_tva:string, conditionnemnt:boolean)
   }
 
   removeQuantityAftPrepa(not_prep_ing: CIngredient[], base_ing: { name: string; quantity: number; }[],
-     quantity_bef_add:number, quantity_aft_add:number) {
+     quantity_bef_add:number, quantity_aft_add:number, is_vrac:boolean) {
 
     if(not_prep_ing.length === base_ing.length){
       not_prep_ing.forEach((ingredient, index:number) => {
         //cas 1 l'aliment est acheté en vrac du coup ingredient.quantity = 0
-        if(ingredient.quantity === 0){
+        if(is_vrac){
           ingredient.quantity_unity = ingredient.quantity_unity - base_ing[index].quantity 
         }
         // cas 2 l'ingrédient n'est pas acheté en vrac

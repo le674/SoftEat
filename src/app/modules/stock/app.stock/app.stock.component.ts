@@ -115,6 +115,9 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
       this.ingredient_table = ingBR;
       this.ingredient_table_prep = ingPREP;
       for (let i = 0; i < ingBR.length; i++) {
+        // on vérifie si le nombre d'ingrédient présent est inférieur à la marge si c'est le cas on lève une alerte
+       /*  if(ingBR[i].getQuantity() > 0)
+        if(ingBR[i].getQuantity() < ingBR[i].getMarge()) */
         ingBR[i].getInfoDico().then((ingredient:any) => {
           if ((ingBR[i].getTauxTva() === 0) || (ingBR[i].getTauxTva === undefined)) {
             ingredient.getCostTtcFromCat();
@@ -265,8 +268,6 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     ingredient.quantity = ele.quantity;
     ingredient.quantity_unity = ele.quantity_unity;
     res_dlc = (dlc.getTime() - date_reception.getTime()) / (1000 * 60 * 60 * 24)
-    console.log("dlc en jours : ", res_dlc);
-
     const dialogRef = this.dialog.open(AddIngComponent, {
       height: `${window.innerHeight}px`,
       width: `${window.innerWidth - window.innerWidth / 15}px`,

@@ -35,6 +35,7 @@ export interface Ingredient {
         cost:number
     }>;
     "marge": number;
+    "vrac":boolean;
 
 
     getInfoDico(): void;
@@ -78,6 +79,8 @@ export interface Ingredient {
     setBaseIng(names: Array<{name:string, quantity:number,  quantity_unity: number, unity:string, cost:number}> | null): void;
     getMarge():number;
     setMarge(marge:number):void;
+    getVrac():boolean;
+    setVrac(is_vrac:boolean):void;
 
 }
 
@@ -137,6 +140,7 @@ export class CIngredient implements Ingredient {
     "val_bouch": number;
     "is_similar":number;
     "marge": number;
+    "vrac": boolean;
 
     constructor(private service: CalculService, private db_service: IngredientsInteractionService) {
         this.base_ing = [];
@@ -335,6 +339,12 @@ export class CIngredient implements Ingredient {
     }
     setMarge(marge: number): void {
         this.marge = marge;
+    }
+    getVrac(): boolean {
+        return this.vrac;
+    }
+    setVrac(is_vrac: boolean): void {
+       this.vrac = is_vrac
     }
 }
 

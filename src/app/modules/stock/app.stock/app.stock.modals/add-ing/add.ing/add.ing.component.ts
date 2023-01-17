@@ -17,6 +17,7 @@ import { AlertesService } from 'src/app/services/alertes/alertes.service';
 export class AddIngComponent implements OnInit, AfterContentInit, AfterViewChecked, AfterViewInit {
 
   public is_prep: boolean;
+  public is_vrac: boolean;
   public index_inputs: Array<number>
   public add_ing_section = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -28,6 +29,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     unitary_cost: new FormControl(0, Validators.required),
     dlc: new FormControl(0, Validators.required),
     marge: new FormControl(0,Validators.required),
+    vrac: new FormControl(true, Validators.required),
     names_base_ing: new FormArray([
       new FormControl("")
     ]),
@@ -85,6 +87,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     this.current_inputs = 1;
     this.index_inputs = [this.current_inputs];
     this.is_modif = this.data.is_modif;
+    this.is_vrac = true;
   }
 
 
@@ -97,9 +100,9 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     const unity = this.calcul_service.convertUnity(this.data.ingredient.unity, true);
     this.add_ing_section.get("name")?.setValue(this.data.ingredient.nom);
     this.add_ing_section.get("name_tva")?.setValue(this.data.ingredient.categorie);
-    this.add_ing_section.get("quantity")?.setValue(this.data.ingredient.quantity);
     this.add_ing_section.get("quantity_unitary")?.setValue(this.data.ingredient.quantity_unity);
     this.add_ing_section.get("unity")?.setValue(unity);
+    this.add_ing_section.get("quantity")?.setValue(this.data.ingredient.quantity);
     // on calcul le cout unitaire en fonction des ingrédient de base pour un ingrédient préparé
     // le calcul est pas long mais plus tard ajouter une condition pour ne pas recalculer se qui a été entré dans la bdd 
     if(this.data.ingredient.cuisinee === 'oui'){
@@ -223,6 +226,10 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       new_ing.setTauxTva(Number(this.taux.nativeElement.value));
     }
 
+    if(this.add_ing_section.value["vrac"] !== undefined){
+      if(this.add_ing_section.value["vrac"] !== null) new_ing.setVrac(this.add_ing_section.value["vrac"]);
+    }
+
     if (unity !== undefined) {
       new_ing.setUnity(unity);
     }
@@ -239,7 +246,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     if(this.is_prep){
       if((this.add_ing_section.value["quantity"] !== undefined) && (this.add_ing_section.value["quantity"] !== null)) {
         new_ing_aft_prepa = this.calcul_service.removeQuantityAftPrepa(this.base_ing_full,
-          this.data.ingredient.base_ing, this.data.ingredient.quantity, this.add_ing_section.value["quantity"]);
+          this.data.ingredient.base_ing, this.data.ingredient.quantity, this.add_ing_section.value["quantity"], this.is_vrac);
       }
     } 
 
@@ -270,6 +277,18 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     }
     else{
       this._snackBar.open("veuillez valider l'ensemble des champs", "fermer")
+    }
+  }
+
+  clickRadioVrac(state:boolean){
+    this.is_vrac = state
+    // dans le cas ou on a clické sur le boutton pour spécifier l'ingrésient en vrac on remet l'input à 0 
+    // sinon on met l'input à la valeur de quantitée récupéré dans la base de donnée
+    if(state){
+      this.add_ing_section.get("quantity")?.setValue(0);
+    }
+    else{
+      this.add_ing_section.get("quantity")?.setValue(this.data.ingredient.quantity);
     }
   }
 
@@ -316,6 +335,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     
     }
   }
+
 
   addInput(): void {
     this.current_inputs = this.current_inputs + 1;

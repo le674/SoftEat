@@ -1,4 +1,4 @@
-<div id="selectSection">
+<div class="selectSection">
     <p>l'ingrédient a-t-il été préparé en salle ?</p>
     <mat-radio-group aria-label="SelectPrepa" id="is_cooked">
         <mat-radio-button (change)="clickRadio(true)" value="oui">Oui</mat-radio-button>
@@ -35,9 +35,15 @@
             <input #taux type="number" matInput formControlName="taux_tva">
         </mat-form-field>
     </div>
+    <div class="selectSection">
+        <p> Est-ce que l'ingrédient est acheté en vrac : </p>
+        <mat-radio-group aria-label="SelectPrepa" id="is_cooked"  formControlName="vrac">
+            <mat-radio-button (change)="clickRadioVrac(true)" value="oui">Oui</mat-radio-button>
+            <mat-radio-button (change)="clickRadioVrac(false)" value="non">Non</mat-radio-button>
+        </mat-radio-group>
+    </div>
     <div class="section">
-        <p> Entrer la quantitée, si l'aliment est acheté en vrac mettre 0 : </p>
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" *ngIf="!is_vrac">
             <mat-label>Entrer la quantitée </mat-label>
             <input type="number" matInput formControlName="quantity">
             <mat-error *ngIf="add_ing_section.controls['quantity']?.hasError('impossibleSize')">
