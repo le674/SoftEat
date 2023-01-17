@@ -118,7 +118,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       this.add_ing_section.get("marge")?.setValue(this.data.ingredient.marge);
     }
     else{
-      this.add_ing_section.get("dlc")?.setValue(0);
+      this.add_ing_section.get("marge")?.setValue(0);
     }
     // dans le cas d'une préparation on empêche l'utilisateur de modifier la champs correspondnt au coût
     if(this.data.ingredient.cuisinee === 'oui'){
