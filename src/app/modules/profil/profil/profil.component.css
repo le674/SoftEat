@@ -1,0 +1,284 @@
+
+
+img{
+    width: 185px;
+    height: 100px;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+}
+
+p{
+    color: white;
+}
+
+button{
+    font-size: larger;
+}
+
+.main_panel{
+    color: black;
+}
+#first_liste{
+    margin-left: 10%;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header{
+    margin-top: 50px;
+}
+
+.items_liste{
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   flex-wrap: wrap;
+   gap: 20px; 
+}
+.icon_soft_eat{
+    color:  white;
+    margin-left: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: start;
+}
+
+.pen_body{
+    border:1px solid;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.fa-pen:hover{
+    background-color: rgb(125, 181, 46);
+}
+
+/* on supprime la possibiliter de cliquer sur l'icon */
+.disable{
+    cursor: none;
+    pointer-events: none;
+    background-color: rgb(120,120,120);
+}
+
+#mail{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.fa-envelope .fa-phone{
+    margin-top: 4px;
+}
+.not_email{
+    margin-left: 102px;
+}
+#logo_section{
+    margin-left: 30px;
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
+
+}
+
+#a_propos_section{
+    display:flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+#contact_section{
+    display:flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    margin-right: 30px;
+    margin-top: 73px;
+}
+
+#submit{
+    margin-bottom: 10px;
+}
+
+footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(125, 181, 46);
+}
+
+a{
+    color: white;
+    text-decoration: none;
+}
+
+a:hover{
+    color: rgb(245, 245, 245);
+}
+
+ul{
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+h1, h2{
+    font-family: 'Inter', sans-serif;
+    color: white;
+}
+
+.title{
+    font-size: larger;
+    font-weight: normal;
+}
+
+.mat-stroked-button{
+    color: rgb(125, 181, 46);
+    background-color: white;
+    height: 40px;
+    min-width: 96px;
+    margin: 0;
+}
+
+.mat-stroked-button:hover{
+    background-color: rgb(125, 181, 46);
+    color: white;
+}
+
+
+/* Border */
+.mat-form-field-appearance-outline .mat-form-field-outline {
+    color: white;
+  }
+  /* Font color */
+input.mat-input-element {
+    color: white;
+}
+
+input{
+    color: white;
+}
+
+#first_filed{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+}
+
+.form-group{
+    margin-bottom: 20px;
+}
+
+footer .form-control {
+    background-color: white;
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    border: none;
+    resize: none;
+    color: rgb(125, 181, 46);
+    padding: 0.7em 1em;
+}
+
+#action-buttons{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+#gestion_compte{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#deco_button{
+    color: red;
+    background-color: white;
+    height: 40px;
+    min-width: 96px;
+    margin: 0;
+}
+
+#deco_button:hover{
+    background-color: red;
+    color: white;
+}
+
+#identitee{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+}
+ /* modification de la taille de l'input lorsque on passe sur un écran plus petit */
+@media (max-width: 1040px){
+    footer{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #a_propos_section{
+        margin-left: 45px;
+        justify-content: center;
+    }
+
+    #contact_section{
+        margin-left: 45px;
+        justify-content: center;
+    }
+
+    #first_liste{
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 800px){
+
+    .items_liste{
+        max-width: 200px;
+    }
+
+    #first_liste{
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    main{
+        padding-left: 0px;
+    }
+
+    #action-buttons{
+        display: block;
+    }
+
+    #gestion_compte{
+        display: block;
+    }
+
+}
+
+@media (min-width: 1040px){
+    .mat-select {
+        width: fit-content !important;
+        min-width: 100%;
+    }
+
+    ::ng-deep .mat-form-field-infix {
+        min-width: 120px !important;
+        width: fit-content !important;
+    }
+    
+    ::ng-deep .mat-select .mat-select-value {
+        width: fit-content;
+        min-width: 18ch;
+        max-width: 200ch;
+    }
+    ::ng-deep .mat-select .mat-select-placeholder {
+        width: fit-content;
+        min-width: 32ch;
+    }
+}

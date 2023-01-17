@@ -8,7 +8,7 @@ import { Component, OnInit, ViewEncapsulation} from '@angular/core';
 })
 export class AppDashboardComponent implements OnInit {
   
-  public numP = -2;
+  public numP = 1;
 
   constructor() {}
 

@@ -1,0 +1,22 @@
+<i class="fa-regular fa-xmark" (click)="onNoClick()"></i>
+<form (ngSubmit)="sendMailVerif()" [formGroup]="mdp_modification">
+    <div mat-dialog-content id="container">
+        <p>
+            <mat-form-field appearance="fill">
+              <mat-label>Entrer le nouveau mot de passe</mat-label>
+              <input matInput placeholder="Placeholder" formControlName="prev_mdp" type="password">
+              <mat-hint>Entrer le nouveau mot de passe</mat-hint>
+            </mat-form-field>
+          </p>
+        <p>
+            <mat-form-field appearance="fill">
+              <mat-label>Confirmer le mot de passe</mat-label>
+              <input matInput placeholder="Placeholder" formControlName="new_mdp" type="password">
+              <mat-hint>Retaper le mot de passe</mat-hint>
+            </mat-form-field>
+        </p>  
+        <button type="submit" mat-stroked-button> Valider </button>
+    </div>
+</form>
+
+

@@ -5,206 +5,478 @@ body{
     width: auto;
 }
 
-#marque{
-  font-family: 'ABeeZee', sans-serif;
-  font-style: italic;
-  overflow: hidden;
-  font-size: 32px;
-  padding-top: 11px;
-  padding-bottom: 11px;
-  color : rgb(30, 148, 30);
+header {
+  background-color: white;
+  height: 68px;
+  display: flex;
+  justify-content: space-between;
+
 }
 
-#add_card_icon{
-    font-size: 120px;
-    margin: 10px;
-    padding: 10px;
-    color:  rgb(30, 148, 30);
+
+img{
+  width: 168px;
+  height: 82px;
 }
 
-  header{
+ul{
+  list-style: none;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 15px;
+}
+
+
+#link_configure{
+  margin-top: 3%;
+  margin-bottom: 3%;
+}
+
+#deco{
+  color: red;
+  background-color: white;
+  width: 300px;
+  height: auto;
+  font-size: larger;
+}
+
+#deco:hover{
+  color: white;
+  background-color: red;
+}
+
+#analyse {
+  background: #fff;
+  color: rgb(125, 181, 46);
+  margin-top: 3%;
+  margin-bottom: 3%;
+  width: 300px;
+  height: auto;
+  font-size: larger;
+}
+
+#analyse:hover {
+  background: rgb(125, 181, 46);
+  color: #fff;
+}
+
+#acceuil{
+  color: rgb(125, 181, 46);
+  background-color: white;
+  width: 300px;
+  height: auto;
+  font-size: larger;
+}
+
+#acceuil:hover{
+  color: white;
+  background-color: rgb(125, 181, 46);
+}
+
+#configurer{
+  background: #fff;
+  color: rgb(125, 181, 46);
+  width: 300px;
+  height: auto;
+  font-size: larger;
+}
+
+#configurer:hover {
+  background: rgb(125, 181, 46);
+  color: #fff;
+}
+
+main {
+  height: 90%;
+  width: auto;
+  background: rgb(245, 245, 245);
+}
+
+
+#card_number {
+  height: 5%;
+  text-align: center;
+  /*comment align the inline(-block) elements horizontally */
+}
+
+#card_number::before {
+  content: ' ';
+  display: inline-block;
+  vertical-align: middle;
+/*   comment  vertical alignment of the inline element  */
+  height: 100%;
+}
+
+#res_card {
+  display: inline-block;
+  vertical-align: middle;
+/*   comment vertical alignment of the inline element */
+   font: 16px/1 Arial sans-serif;
+  /* comment <-- reset the font property  */
+}
+
+
+#add_card_icon {
+  font-size: 120px;
+  margin: 10px;
+  padding: 10px;
+  color: rgb(125, 181, 46);
+}
+
+
+
+@media screen and (max-width: 600px) {
+  #navbar_top {
     background-color: white;
-    height: 68px;
-    display: flex;
-    justify-content:space-between;
-
+    width: max-content;
+    margin-left: 0%;
   }
+}
 
 
-  @media screen and (max-width: 600px) { 
-    #navbar_top{
-      background-color: white;
-      width: max-content;
-      margin-left: 0%;
-    }
-  }
-
-*
-/* CSS */
+/* comment CSS
+ */
 .btn {
   background: transparent;
   margin: 3px;
   border: 1px solid #eaeaea;
   border-radius: 0px;
 }
+
 .btn:hover {
   background: #eaeaea;
   color: black;
 }
-.tours {
-display: flex;
-padding: 0;
-flex-flow: row wrap;
-align-content: center;
-align-items: stretch;
-justify-content: center;
+
+.tourcard {
+  -webkit-transition: all .3s ease-in-out;
+  -moz-transition: all .3s ease-in-out;
+  -o-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+  flex: 0 1 300px;
+  margin: 10px;
+  padding: 0;
+  min-width: 300px;
+  margin-inline: 5%;
 }
-.tours > .tourcard {
--webkit-transition: all .3s ease-in-out;
--moz-transition: all .3s ease-in-out;
--o-transition: all .3s ease-in-out;
-transition: all .3s ease-in-out;
-background: #fff;
-box-shadow: 0 1px 3px rgba(0,0,0,.1);
-flex: 0 1 300px;
-margin: 10px;
-padding: 0;
+
+.tourcard:hover {
+  background: #fff;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, .5);
+  cursor: pointer;
 }
-.tours > .tourcard:hover {
-background: #fff;
-box-shadow: 0 1px 5px rgba(0,0,0,.5);
-cursor: pointer;
-}
-.tours > .tourcard figure {
+
+.tourcard figure {
   margin: 0;
   padding: 0;
-position: relative;
-flex: 1;
-display: flex;
-flex-flow: column nowrap;
-justify-content: space-around;
-width: 100%;
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+  width: 100%;
 }
+
+/* Ajout de la scroll bar */
+.scroll-right {
+  overflow-x: scroll;
+}
+
+/* Scroll bar design */
+/* Firefox */
+body {
+  scrollbar-width: thin;          /* "auto" or "thin" */
+  scrollbar-color: rgb(125, 181, 46) white;   /* scroll thumb and track */
+}
+
+/*Other nav */
+.scroll-right::-webkit-scrollbar{
+  width: 5px;
+  height: 5px;
+}
+
+.scroll-right::-webkit-scrollbar-track{
+  background-color: white;
+}
+
+.scroll-right::-webkit-scrollbar-thumb {
+  background-color: rgb(125, 181, 46);
+  border-radius: 20px;
+}
+
+.scroll-right::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(114, 158, 53);
+}
+
+/* =============================================================== */
+#button-slide-right {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+#button-slide-left {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+#navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-inline: 5%;
+  margin-top: 5%;
+  font-size: 60px;
+  color: rgb(113, 121, 126);
+  opacity: 60%;
+}
+
 .tourpic {
-background: #444;
-position: relative;
+  background: #444;
+  position: relative;
 }
 
 #add_card {
-    width: 100%;
-    
+  width: 100%;
+
 }
 
 .tourbtn {
   margin: 0;
   padding: 0;
 }
+
 .tourbtn:after {
   clear: both;
 }
+
 .tourbtn span {
-  display: none;
+  height: fit-content;
 }
-.tours > .tourcard figure .tourpic img {
--webkit-transition: all .3s ease-in-out;
--moz-transition: all .3s ease-in-out;
--o-transition: all .3s ease-in-out;
-transition: all .3s ease-in-out;    
-width: 100%;
-height: auto;
-margin: 0;
-padding: 0;
-opacity: .50;
+
+.tourcard figure .tourpic img {
+  -webkit-transition: all .3s ease-in-out;
+  -moz-transition: all .3s ease-in-out;
+  -o-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  opacity: .50;
 }
-.tours > .tourcard:hover figure .tourpic img {
+
+
+.tourcard:hover figure .tourpic img {
   opacity: 0.9;
 }
-.tours > .tourcard figure .tourpic .tourcat {
-color: #fff;
-font-size: .8em;
-padding: 3px 5px;
-position: absolute;
-right: 15px;
-text-transform: uppercase;
-bottom: 15px;
+
+
+.tourcard figure .tourpic .tourcat {
+  color: #fff;
+  font-size: .8em;
+  padding: 3px 5px;
+  position: absolute;
+  right: 15px;
+  text-transform: uppercase;
+  bottom: 15px;
 }
-.tours>.tourcard figure .tourpic .tourday {
-text-transform: uppercase;
-color: #fff;
-font-size: .8em;
-position: absolute;
-left: 15px;
-bottom: 15px;
-padding: 3px 5px;
+
+.tourcard figure .tourpic .tourday {
+  text-transform: uppercase;
+  color: #fff;
+  font-size: .8em;
+  position: absolute;
+  left: 15px;
+  bottom: 15px;
+  padding: 3px 5px;
 }
-.tours > .tourcard figure .tourpic .tourday.hot {
-background: #000;
-background: red;
-background: -webkit-linear-gradient(0deg,red,orange);
-background: linear-gradient(90deg,red,orange);
-background-size: 200% 200%;
--webkit-animation: hot 10s ease infinite;
--moz-animation: hot 10s ease infinite;
--o-animation: hot 10s ease infinite;
-animation: hot 10s ease infinite;
+
+
+.tourcard figure .tourpic .tourday.hot {
+  background: #000;
+  background: red;
+  background: -webkit-linear-gradient(0deg, red, orange);
+  background: linear-gradient(90deg, red, orange);
+  background-size: 200% 200%;
+  -webkit-animation: hot 10s ease infinite;
+  -moz-animation: hot 10s ease infinite;
+  -o-animation: hot 10s ease infinite;
+  animation: hot 10s ease infinite;
 }
-.tours > .tourcard figure .tourbtn {
-background: transparent;
-display: flex;
-width: 100%;
-flex-flow: row wrap;
-align-content: center;
+
+.tourcard figure .tourbtn {
+  background: transparent;
+  display: flex;
+  width: 100%;
+  flex-flow: row wrap;
+  align-content: center;
 }
-.tours > .tourcard figure .tourbtn a {
-flex: 1;
+
+.tourcard figure .tourbtn a {
+  flex: 1;
 }
-.tours > .tourcard figure figcaption {
-position: absolute;
-left: 0;
-top: 0;
-bottom: 0;
-right: 0;
-padding: 15px;
-margin: 0 0 30px;
-display: flex;
-flex-flow: column nowrap;
-color: white;
+
+.tourcard figure figcaption {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  padding: 15px;
+  margin: 0 0 30px;
+  display: flex;
+  flex-flow: column nowrap;
+  color: white;
 }
+
 figcaption h3 a {
   text-decoration: none;
   color: white;
 }
+
 .description {
   opacity: 0;
   display: none;
 }
+
 .tourprice {
   opacity: 0;
   display: none;
   font-size: .8em;
 }
+
 .currency {
   font-weight: 300;
 }
+
 .price {
   font-size: 2em;
   font-weight: 300;
 }
+
 .tourcard:hover figure figcaption .description,
 .tourcard:hover figure figcaption .tourprice {
   display: block;
   opacity: 1;
 }
 
-#boutonDeconnexion{
-  margin-top: 15px;
-  height: 40px;
+@media screen and (max-width: 768px) {
+  #navbar_top {
+    background-color: white;
+    width: max-content;
+    margin-left: 0;
+  }
+  #analyse-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
 
+  #analyse-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
 }
-@media screen and (max-width: 600px) { 
-  #navbar_top{
+
+
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  #navbar_top {
     background-color: white;
     width: max-content;
     margin-left: 0%;
+  }
+
+  #analyse-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+
+  #button-slide-right:hover{
+    color: rgba(0, 0, 0, 0.87);
+  }
+
+}
+
+@media screen and (min-height: 660px) and (max-width: 768px) {
+  #navigation{
+    display: none;
+  }
+
+  #analyse {
+    background: #fff;
+    margin-top: 20%;
+    margin-bottom: 3%;
+    width: 300px;
+    height: auto;
+  }
+
+  #configurer{
+    background: #fff;
+    width: 300px;
+    height: auto;
+  }
+  #link_configure{
+    margin-top: 20%;
+    margin-bottom: 3%;
+  }
+  #analyse-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-right: 2%;
+    margin-left: 2%;
+  }
+}
+
+@media screen and (min-width: 992px) and (max-width: 1200px) {
+  #navbar_top {
+    background-color: white;
+    width: max-content;
+    margin-left: 0%;
+  }
+
+  #navigation {
+    margin-top: 0px;
+  }
+
+
+  #analyse-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-right: 2%;
+    margin-left: 2%;
+  }
+
+}
+
+@media screen and (min-width: 1200px) {
+  #navbar_top {
+    background-color: white;
+    width: max-content;
+    margin-left: 0%;
+  }
+
+  #analyse-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-right: 2%;
+    margin-left: 2%;
   }
 }

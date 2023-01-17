@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppAnalyseModule } from '../analyse/app.module';
 import { AppAlertesModule } from '../alertes/app.module';
 import { AppBudgetModule } from '../budget/app.module';
 import { AppAuthenModule } from '../authen/app.module';
@@ -10,6 +9,12 @@ import { RhModule } from '../rh/rh.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppDashboardComponent } from './app.dashboard/app.dashboard.component';
 import { AppMainDashboardComponent } from './app.dashboard/app.main-dashboard/app.main-dashboard.component';
+import { ProfilModule } from '../profil/profil.module';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatBadgeModule} from '@angular/material/badge'; 
+import { RecettesModule } from '../recettes/recettes.module';
+import { AppAnalyseModule } from '../analyse/app.module';
+import { AlertesService } from 'src/app/services/alertes/alertes.service';
 
 
 
@@ -29,10 +34,16 @@ import { AppMainDashboardComponent } from './app.dashboard/app.main-dashboard/ap
     AppFacturesModule,
     RhModule,
     AppAuthenModule,
+    ProfilModule,
+    RecettesModule,
+    MatMenuModule,
+    MatBadgeModule
   ],
   exports: [
     AppDashboardComponent
   ],
-  providers: []
+  providers: [
+    AlertesService
+  ]
 })
 export class AppDashboardModule {}
