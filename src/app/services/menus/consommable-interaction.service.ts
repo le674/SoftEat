@@ -19,7 +19,8 @@ export class ConsommableInteractionService {
   async getConsommablesFromRestaurants(prop: string, restaurant: string) {
     const ref_db = ref(this.db);
     this.consommable = [];
-    await get(child(ref_db, `consommables/${prop}/${restaurant}/`)).then((consommable) => {
+    const path = `consommables_${prop}_${restaurant}/${prop}/${restaurant}/`;
+    await get(child(ref_db, path)).then((consommable) => {
       consommable.forEach((conso) => {
         if ((conso.key !== "preparation") && (conso.key !== "resto_auth")) {
           const add_consommable = new Cconsommable();
@@ -40,7 +41,8 @@ export class ConsommableInteractionService {
 
   async setConsoInBdd(consommable: Cconsommable, prop:string, restaurant:string){
     let ref_db: DatabaseReference;
-    ref_db = ref(this.db, `consommables/${prop}/${restaurant}/`);
+    const path = `consommables_${prop}_${restaurant}/${prop}/${restaurant}/`;
+    ref_db = ref(this.db, path);
     // dans le cas d'ajout d'une non préparation  on modifie l'ingrédient préparé 
     const consommable_db =  {
         [consommable.nom]: {
@@ -59,7 +61,8 @@ export class ConsommableInteractionService {
   async removeConsoInBdd(name_conso: string, prop:string, restaurant:string){
     let ref_db: DatabaseReference;
     if(name_conso !== ""){
-        ref_db = ref(this.db, `consommables/${prop}/${restaurant}/${name_conso}`);
+        const path = `consommables_${prop}_${restaurant}/${prop}/${restaurant}/${name_conso}`;
+        ref_db = ref(this.db, path);
         await remove(ref_db).then(() => console.log("consommable ", name_conso, "bien supprimée"))
     }
   }

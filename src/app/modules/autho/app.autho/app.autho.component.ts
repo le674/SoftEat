@@ -20,7 +20,7 @@ export class AppAuthoComponent implements OnInit {
 
   private readonly screen_width: any;
   private uid: string;
-  public is_confique: string;
+  public is_confique: boolean;
   public proprietaire: string;
   public restaurants_only: Array<Restaurant>;
   public url:string;
@@ -34,7 +34,7 @@ export class AppAuthoComponent implements OnInit {
         new Restaurant()
       ];
       this.url = "";
-      this.is_confique = "hidden";
+      this.is_confique = false;
   }
 
   ngOnInit(): void {
@@ -48,7 +48,7 @@ export class AppAuthoComponent implements OnInit {
             this.user_services.getUserFromUid(user.uid, prop).then((user) => {
               this.restaurants_only = user.restaurants   
               if(user.roles.includes("gérant") || user.roles.includes("proprietaire")){
-                this.is_confique = "visible"
+                this.is_confique = true
               }
             })
           })

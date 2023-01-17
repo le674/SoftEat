@@ -31,7 +31,7 @@ export class UserInteractionService{
   }
   async getAllIdFromProp(prop:string){
     const ref_db = ref(this.db);
-    await get(child(ref_db, `Users/${prop}/`)).then((users) => {
+    await get(child(ref_db, `users/${prop}/`)).then((users) => {
       this.prop_list.proprietaire = prop
       users.forEach((user) => {
           let add_user = new User();
@@ -62,7 +62,7 @@ export class UserInteractionService{
   async getProprietaireFromUsers(uid:string){
       const ref_db = ref(this.db);
       
-      await get(child(ref_db, `Users/${uid}`)).then((user : any) => {
+      await get(child(ref_db, `users/${uid}`)).then((user : any) => {
         if(user.exists()){
           this.user.proprietaire = user.val().proprietaire;
         }
@@ -78,7 +78,7 @@ export class UserInteractionService{
 
   async getUserFromUid(uid:string, prop:string){
     this.user = new User()
-    const ref_db = ref(this.db, `Users/${prop}/${uid}`);
+    const ref_db = ref(this.db, `users/${prop}/${uid}`);
     await get(ref_db).then((user : any) => {
       if(user.exists()){
         this.user.id = uid;
@@ -109,14 +109,14 @@ export class UserInteractionService{
     return this.user
   }
   async setUser(prop:string, user:User){
-    const ref_db = ref(this.db, `Users/${prop}/${user.id}`);
+    const ref_db = ref(this.db, `users/${prop}/${user.id}`);
     await update(ref_db, {
       "/statut/": user.statut,
       "/restaurant/": user.restaurants
     })
   }
   async updateEmail(prop:string, user_uid:string, email:string){
-    const ref_db = ref(this.db, `Users`);
+    const ref_db = ref(this.db, `users`);
     await update(ref_db, {
       [`/${prop}/${user_uid}/email/`]: email,
       [`/${user_uid}/email/`]: email
@@ -124,7 +124,7 @@ export class UserInteractionService{
   }
 
   async updateNumber(prop:string, user_uid:string, new_number:string){
-    const ref_db = ref(this.db, `Users/${prop}/${user_uid}/number/`);
+    const ref_db = ref(this.db, `users/${prop}/${user_uid}/number/`);
     await set(ref_db, new_number)
   }
 

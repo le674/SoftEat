@@ -28,7 +28,7 @@
     <main>
         <div id="analyse-wrapper">
             <a *ngIf="is_confique" href="autho/configuration?new='true'" id="link_configure">
-                <button class="btn btn-outline-success" id="configurer" [ngStyle]="{'visibility': is_confique}">
+                <button class="btn btn-outline-success" id="configurer" *ngIf="is_confique">
                     configuration des restaurants
                 </button>
             </a> 

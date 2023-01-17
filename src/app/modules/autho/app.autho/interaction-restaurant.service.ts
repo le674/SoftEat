@@ -36,7 +36,7 @@ export class InteractionRestaurantService{
   
  async getRestaurantsProprietaireFromUser(uid:string, prop_to_get:string){
     const ref_db = ref(this.db);
-    await get(child(ref_db, `Users/foodandboost_prop/${uid}`)).then((user) => {
+    await get(child(ref_db, `users/foodandboost_prop/${uid}`)).then((user) => {
       this.restaurant = []
       if(user.exists()){          
         this.user_auth.proprietaire = user.child("proprietaire").val();
@@ -55,7 +55,7 @@ export class InteractionRestaurantService{
 
   async getRestaurantFromUser(uid:string, prop_to_get:string){ 
     const ref_db = ref(this.db);
-    await get(child(ref_db, `Users/${prop_to_get}/${uid}/restaurant/`)).then((user_restaurant) => {
+    await get(child(ref_db, `users/${prop_to_get}/${uid}/restaurant/`)).then((user_restaurant) => {
       this.restaurant = []
       if(user_restaurant.exists()){ 
         if(user_restaurant.child('id').exists()){
@@ -110,7 +110,7 @@ async setRestaurant(prop:string, restaurant:Restaurant){
   }
 
 async setRestaurantId(prop:string, user_id: string, str_restaurants:string[]){
-  const ref_db = ref(this.db, `Users/${prop}/${user_id}/restaurant/`);
+  const ref_db = ref(this.db, `users/${prop}/${user_id}/restaurant/`);
   for(let str_restaurant of str_restaurants){
     let restaurant = new Restaurant()
     restaurant.id = str_restaurant

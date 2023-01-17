@@ -8,14 +8,14 @@ import { authState, user } from '@angular/fire/auth';
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDGbo4CzfBKbtL-hUaAK8N-0k-O4tAuXc8",
-  authDomain: "project-firebase-44cfe.firebaseapp.com",
-  databaseURL: "https://project-firebase-44cfe-default-rtdb.firebaseio.com",
-  projectId: "project-firebase-44cfe",
-  storageBucket: "project-firebase-44cfe.appspot.com",
-  messagingSenderId: "673925066278",
-  appId: "1:673925066278:web:d4db735057922d05e1c0e7",
-  measurementId: "G-ZNLSYK4LNG"
+  apiKey: "AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo",
+  authDomain: "psofteat-65478545498421319564.firebaseapp.com",
+  databaseURL: "https://psofteat-65478545498421319564-default-rtdb.firebaseio.com",
+  projectId: "psofteat-65478545498421319564",
+  storageBucket: "psofteat-65478545498421319564.appspot.com",
+  messagingSenderId: "135059251548",
+  appId: "1:135059251548:web:fb05e45e1d1631953f6199",
+  measurementId: "G-5FBJE9WH0X"
 };
 const app = initializeApp(firebaseConfig);
 

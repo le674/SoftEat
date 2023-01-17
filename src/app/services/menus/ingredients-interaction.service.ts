@@ -30,8 +30,8 @@ export class IngredientsInteractionService {
 
  getIngredientsBrFromRestaurantsBDD(prop: string, restaurant: string):void {
     const ref_db = ref(this.db);
-    const path = `ingredients/${prop}/${restaurant}/`;
-    onValue(child(ref_db, `ingredients/${prop}/${restaurant}/`), (ingredients) => {
+    const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/`;
+    onValue(child(ref_db, path), (ingredients) => {
       this.ingredients = [];
       this.data_ingredient.next([]);
       ingredients.forEach((ingredient) => {
@@ -62,7 +62,8 @@ export class IngredientsInteractionService {
 
  getIngredientsPrepFromRestaurantsBDD(prop: string, restaurant: string):void {
     const ref_db = ref(this.db);
-     onValue(child(ref_db, `ingredients/${prop}/${restaurant}/preparation`), (ingredients) => {
+    const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation`;
+     onValue(child(ref_db, path), (ingredients) => {
       this.ingredients_prep = [];
       this.data_ingredient_prep.next([]);
       ingredients.forEach((ingredient) => {
@@ -124,7 +125,8 @@ export class IngredientsInteractionService {
 
   async setIngInBdd(ingredient: CIngredient, prop:string, restaurant:string, is_prep:boolean, new_ing_aft_prepa: CIngredient[] | null){
     let ref_db: DatabaseReference;
-    ref_db = ref(this.db, `ingredients/${prop}/${restaurant}/`);
+    const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/`;
+    ref_db = ref(this.db, path);
 
     if(is_prep){
       // dans le cas d'ajout d'une préparation on modifie l'ingrédient préparé et les ingrédients de base
@@ -202,10 +204,12 @@ export class IngredientsInteractionService {
     let ref_db: DatabaseReference;
     if(name_ing !== ""){
       if(is_prep){
-        ref_db = ref(this.db, `ingredients/${prop}/${restaurant}/preparation/${name_ing}`);
+        const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name_ing}`;
+        ref_db = ref(this.db,  path);
       }
       else{
-        ref_db = ref(this.db, `ingredients/${prop}/${restaurant}/${name_ing}`);
+        const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/${name_ing}`;
+        ref_db = ref(this.db, path);
       }
   
       await remove(ref_db).then(() => console.log("ingrédient ", name_ing, "bien supprimée"))

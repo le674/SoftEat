@@ -24,7 +24,7 @@ export class AlertesService {
 
 getLastPAlertesBDD(prop: string, restaurant: string, num_package:number):Unsubscribe {
     const ref_db = ref(this.db);
-    const path = `Alertes/${prop}/${restaurant}/stock/package_${num_package}`;  
+    const path = `alertes_${prop}_${restaurant}/${prop}/${restaurant}/stock/package_${num_package}`;  
     this.get_last_p_alertes =  onValue(child(ref_db, path), (alertes) => {
       // on rend vide la liste des alertes car on fait deux appel à getLastPAlertes (le premier dans dashboard )
       // le second dans app.alertes.ts comme this.alertes garde en cache les données il vaut mieux 
@@ -47,6 +47,7 @@ getLastPAlertesBDD(prop: string, restaurant: string, num_package:number):Unsubsc
 
   async getPPakageNumber(prop: string, restaurant: string){
     const ref_db = ref(this.db);
+    const path = `alertes_${prop}_${restaurant}/${prop}/${restaurant}/stock/nombre_package`;  
     await get(child(ref_db, `Alertes/${prop}/${restaurant}/stock/nombre_package`)).then((number) => {
       this.num_package = number.val();
     })
