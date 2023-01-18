@@ -47,13 +47,25 @@ export class ProfilComponent implements OnInit {
   ngOnInit(): void{
     let user_info = this.url.queryParams;
     this.enseigne = user_info["prop"]
+    this.restaurants = user_info["restaurant"];
     onAuthStateChanged(this.auth, (user) => {
       if(user){
-        this.service.getUserFromUid(user.uid, this.enseigne).then((user) => {
-          this.user_db = user
-          if(this.user_db.name == "") this.user_db.name = "pas de nom inscrit"
-          if(this.user_db.surname == "") this.user_db.surname = "pas de prénom inscrit"
-          if(this.user_db.numero == "") this.user_db.numero = "pas de numéro inscrit"
+        const private_data = this.service.getUserDataFromUid(user.uid, this.enseigne, this.restaurants).then((user) => {
+          this.user_db.restaurants = user.restaurants;
+          this.user_db.statut = user.statut;
+          this.user_db.email = user.email;
+          this.user_db.is_prop = user.is_prop
+          return user
+        })
+        private_data.then((user_db) => {
+          this.service.getUserDataFromUid(user.uid, this.enseigne, this.restaurants).then((user) => {
+            this.user_db.name = user_db.name;
+            this.user_db.numero = user_db.numero;
+            this.user_db.surname = user_db.surname;
+            if(this.user_db.name == "") this.user_db.name = "pas de nom inscrit"
+            if(this.user_db.surname == "") this.user_db.surname = "pas de prénom inscrit"
+            if(this.user_db.numero == "") this.user_db.numero = "pas de numéro inscrit"
+          })
         })
       }
     })
@@ -95,6 +107,7 @@ export class ProfilComponent implements OnInit {
       height: "250px",
       width: "300px",
       data: {
+        restaurant: this.restaurants,
         prop: this.enseigne,
         uid: this.user_db.id,
         auth: this.auth
@@ -107,6 +120,7 @@ export class ProfilComponent implements OnInit {
       height: "250px",
       width: "300px",
       data: {
+        restaurant: this.restaurants,
         prop: this.enseigne,
         uid: this.user_db.id
       }

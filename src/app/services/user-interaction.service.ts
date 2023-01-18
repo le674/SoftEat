@@ -35,11 +35,8 @@ export class UserInteractionService{
       this.prop_list.proprietaire = prop
       users.forEach((user) => {
           let add_user = new User();
-          add_user.surname = user.val().surname;
-          add_user.name = user.val().name;
           add_user.id = (user.key === null)? '' : user.key;
           add_user.email = user.val().email;
-          add_user.numero = user.val().number;
           user.child('restaurant').forEach((restaurant: any) => {
             let tmp_restaurant = new Restaurant();
             tmp_restaurant.id = restaurant.val().id;
@@ -76,9 +73,9 @@ export class UserInteractionService{
       return(this.user.proprietaire);
   }
 
-  async getUserFromUid(uid:string, prop:string){
+  async getUserDataFromUid(uid:string, prop:string, restaurant:string){
     this.user = new User()
-    const ref_db = ref(this.db, `users/${prop}/${uid}`);
+    const ref_db = ref(this.db, `users_${prop}_${restaurant}/${prop}/${restaurant}/${uid}`);
     await get(ref_db).then((user : any) => {
       if(user.exists()){
         this.user.id = uid;
@@ -86,6 +83,16 @@ export class UserInteractionService{
         this.user.numero = user.val().number;
         this.user.surname = user.val().surname;
         this.user.name = user.val().name;
+      }
+    })
+    return this.user
+  }
+
+  async getUserFromUid(uid:string, prop:string){
+    this.user = new User()
+    const ref_db = ref(this.db, `users/${prop}/${uid}`);
+    await get(ref_db).then((user : any) => {
+      if(user.exists()){
         user.child('restaurant').forEach((restaurant: any) => {
             let tmp_restaurant = new Restaurant()
             tmp_restaurant.id = restaurant.val().id
@@ -108,6 +115,7 @@ export class UserInteractionService{
     })
     return this.user
   }
+
   async setUser(prop:string, user:User){
     const ref_db = ref(this.db, `users/${prop}/${user.id}`);
     await update(ref_db, {
@@ -115,16 +123,17 @@ export class UserInteractionService{
       "/restaurant/": user.restaurants
     })
   }
-  async updateEmail(prop:string, user_uid:string, email:string){
-    const ref_db = ref(this.db, `users`);
+  async updateEmail(prop:string, restaurant:string, user_uid:string, email:string){
+    const ref_db = ref(this.db, '');
     await update(ref_db, {
-      [`/${prop}/${user_uid}/email/`]: email,
-      [`/${user_uid}/email/`]: email
+      [`users/${prop}/${user_uid}/email/`]: email,
+      [`users/${user_uid}/email/`]: email,
+      [`users_${prop}_${restaurant}/${prop}/${restaurant}/${user_uid}/email/`]: email
     })
   }
 
-  async updateNumber(prop:string, user_uid:string, new_number:string){
-    const ref_db = ref(this.db, `users/${prop}/${user_uid}/number/`);
+  async updateNumber(prop:string, restaurant:string ,user_uid:string, new_number:string){
+    const ref_db = ref(this.db, `users_${prop}_${restaurant}/${prop}/${restaurant}/${user_uid}/number/`);
     await set(ref_db, new_number)
   }
 

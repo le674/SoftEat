@@ -18,6 +18,7 @@ export class ModifMailComponent implements OnInit {
   })
 
   constructor(public dialogRef: MatDialogRef<ModifMailComponent>, @Inject(MAT_DIALOG_DATA) public data: {
+    restaurant:string,
     prop: string,
     uid: string,
     auth: Auth
@@ -40,7 +41,7 @@ export class ModifMailComponent implements OnInit {
       updated.then(() => {
          //on écrit dans la base de donnée le nouveau email
          if ((this.email_modification.value.email != null)) {
-          this.service.updateEmail(this.data.prop, this.data.uid, this.email_modification.value.email).then(() => {
+          this.service.updateEmail(this.data.prop, this.data.restaurant, this.data.uid, this.email_modification.value.email).then(() => {
             // Email updated!
            this._snackBar.open("l'email a bien été modifié", "fermer")
           }).catch((error) => {
