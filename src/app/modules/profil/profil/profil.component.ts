@@ -54,7 +54,6 @@ export class ProfilComponent implements OnInit {
         const private_data = this.service.getUserFromUid(user.uid, this.enseigne).then((user) => {
           this.user_db.restaurants = user.restaurants;
           this.user_db.statut = user.statut;
-          this.user_db.email = user.email;
           return user
         })
         private_data.then((user_db) => {
@@ -62,6 +61,7 @@ export class ProfilComponent implements OnInit {
             this.user_db.name = user.name;
             this.user_db.numero = user.numero;
             this.user_db.surname = user.surname;
+            this.user_db.email = user.email;
             if(this.user_db.name == "") this.user_db.name = "pas de nom inscrit"
             if(this.user_db.surname == "") this.user_db.surname = "pas de prénom inscrit"
             if(this.user_db.numero == "") this.user_db.numero = "pas de numéro inscrit"
