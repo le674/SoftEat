@@ -1,6 +1,7 @@
 import { ThisReceiver } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
+import { Unsubscribe } from 'firebase/auth';
 import { child, Database, DatabaseReference, get, getDatabase, onValue, ref, remove, set, update } from 'firebase/database';
 import { collection, doc, Firestore, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
 import { Subject } from 'rxjs';
@@ -19,6 +20,8 @@ export class IngredientsInteractionService {
   private ingredients: Array<CIngredient>;
   private data_ingredient = new Subject<Array<CIngredient>>();
   private data_ingredient_prep = new Subject<Array<CIngredient>>();
+  private sub_ingredients_br!:Unsubscribe;
+  private sub_ingredients_prep!:Unsubscribe;
 
 
   constructor(private ofApp: FirebaseApp, private service: CalculService) {
@@ -28,10 +31,10 @@ export class IngredientsInteractionService {
     this.ingredients_prep = [];
   }
 
- getIngredientsBrFromRestaurantsBDD(prop: string, restaurant: string):void {
+ getIngredientsBrFromRestaurantsBDD(prop: string, restaurant: string):Unsubscribe{
     const ref_db = ref(this.db);
     const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/`;
-    onValue(child(ref_db, path), (ingredients) => {
+    this.sub_ingredients_br = onValue(child(ref_db, path), (ingredients) => {
       this.ingredients = [];
       this.data_ingredient.next([]);
       ingredients.forEach((ingredient) => {
@@ -58,12 +61,13 @@ export class IngredientsInteractionService {
       })
       this.data_ingredient.next(this.ingredients)
     })
+    return this.sub_ingredients_br;
   }
 
- getIngredientsPrepFromRestaurantsBDD(prop: string, restaurant: string):void {
+ getIngredientsPrepFromRestaurantsBDD(prop: string, restaurant: string):Unsubscribe{
     const ref_db = ref(this.db);
     const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation`;
-     onValue(child(ref_db, path), (ingredients) => {
+     this.sub_ingredients_prep = onValue(child(ref_db, path), (ingredients) => {
       this.ingredients_prep = [];
       this.data_ingredient_prep.next([]);
       ingredients.forEach((ingredient) => {
@@ -89,6 +93,7 @@ export class IngredientsInteractionService {
       })
       this.data_ingredient_prep.next(this.ingredients_prep);
     })
+    return this.sub_ingredients_prep;
   }
 
 

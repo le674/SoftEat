@@ -4,9 +4,9 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, UrlTree } from '@angular/router';
-import { concat, map, Observable, Subscription, switchMap, withLatestFrom } from 'rxjs';
+import { Unsubscribe } from 'firebase/auth';
+import { concat, map, Observable, Subscription, withLatestFrom } from 'rxjs';
 import { CIngredient, Ingredient } from 'src/app/interfaces/ingredient';
-import { Restaurant } from 'src/app/interfaces/restaurant';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.component';
@@ -73,7 +73,9 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
   private url: UrlTree;
   private prop: string;
   private restaurant: string;
-  private ingredients_brt: Subscription;
+  private req_ingredients_brt!: Unsubscribe;
+  private req_ingredients_prep!: Unsubscribe;
+  private req_merge_obs!:Subscription
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
@@ -89,7 +91,6 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dataSource = new MatTableDataSource(this.ingredients_displayed_br);
     this.url = this.router.parseUrl(this.router.url);
     this.ingredient_table_prep = [];
-    this.ingredients_brt = new Subscription();
   }
   
   ngAfterViewInit(): void {
@@ -97,19 +98,21 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    this.ingredients_brt.unsubscribe();
+    this.req_ingredients_brt();
+    this.req_ingredients_prep();
+    this.req_merge_obs.unsubscribe();
   }
 
   ngOnInit(): void {
     let user_info = this.url.queryParams;
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];
-    this.service.getIngredientsBrFromRestaurantsBDD(this.prop, this.restaurant);
-    this.service.getIngredientsPrepFromRestaurantsBDD(this.prop, this.restaurant);
+    this.req_ingredients_brt = this.service.getIngredientsBrFromRestaurantsBDD(this.prop, this.restaurant);
+    this.req_ingredients_prep = this.service.getIngredientsPrepFromRestaurantsBDD(this.prop, this.restaurant);
     const merge_obs_ing = this.service.getIngredientsBrFromRestaurants().pipe(
       withLatestFrom(this.service.getIngredientsPrepFromRestaurants())
     )
-    merge_obs_ing.subscribe(([ingBR, ingPREP]) => {
+    this.req_merge_obs = merge_obs_ing.subscribe(([ingBR, ingPREP]) => {
       this.ingredients_displayed_br = [];
       this.ingredients_displayed_prep = [];
       this.ingredient_table = ingBR;
