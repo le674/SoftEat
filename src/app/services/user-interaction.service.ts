@@ -16,6 +16,7 @@ export class UserInteractionService{
   private prop_list: Proprietaire;
   private user: User;
   private count;
+  public is_prop
 
   constructor(private ofApp: FirebaseApp){
     this.prop_list = {
@@ -26,7 +27,8 @@ export class UserInteractionService{
     this.user = new User();
     this.count = 0;
     this.proprietary = "";
-    this.uid = ""
+    this.uid = "";
+    this.is_prop = false;
 
   }
   async getAllIdFromProp(prop:string){
@@ -114,6 +116,14 @@ export class UserInteractionService{
       }
     })
     return this.user
+  }
+
+  async checkIsProp(uid: string, proprietaire: string) {
+    const ref_db = ref(this.db, `users/${proprietaire}/${uid}/statut/is_prop/`);
+    await get(ref_db).then((is_prop) => {
+      this.is_prop = is_prop.val()
+    })
+    return this.is_prop
   }
 
   async setUser(prop:string, user:User){

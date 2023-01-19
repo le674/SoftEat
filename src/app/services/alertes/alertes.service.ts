@@ -48,7 +48,7 @@ getLastPAlertesBDD(prop: string, restaurant: string, num_package:number):Unsubsc
   async getPPakageNumber(prop: string, restaurant: string){
     const ref_db = ref(this.db);
     const path = `alertes_${prop}_${restaurant}/${prop}/${restaurant}/stock/nombre_package`;  
-    await get(child(ref_db, `Alertes/${prop}/${restaurant}/stock/nombre_package`)).then((number) => {
+    await get(child(ref_db, path)).then((number) => {
       this.num_package = number.val();
     })
     return this.num_package;

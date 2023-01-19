@@ -16,6 +16,7 @@ export class User {
     budget?:string,
     facture?:string,
     planning?:string
+    is_prop?:boolean
   };
   public "is_prop": boolean;
   public "roles": Array<string>;
@@ -90,15 +91,18 @@ export class User {
             }
           }
         }
-        this.statut[role as keyof typeof this.statut] = u_role
+        if(role === "stock" && typeof u_role != "boolean") this.statut.stock = u_role;
+        if(role === "alertes" && typeof u_role != "boolean") this.statut.alertes = u_role;
+        if(role === "analyse" && typeof u_role != "boolean") this.statut.analyse = u_role;
+        if(role === "budget" && typeof u_role != "boolean") this.statut.budget = u_role;
+        if(role === "facture" && typeof u_role != "boolean") this.statut.facture = u_role;
+        if(role === "planning" && typeof u_role != "boolean") this.statut.planning = u_role;
       }
     })   
   }
 
   setStatusFromUser(user:User){
-    for(let key in this.statut){
-      this.statut[key as keyof typeof this.statut] = user.statut[key as keyof typeof this.statut]
-    }
+    this.statut = Object.assign({}, user.statut)
   }
 
 

@@ -107,6 +107,7 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
     const sidebar = document.querySelector(".sidebar");
     if(sidebar!=null) sidebar.classList.toggle("close");
   } */
+  
     this.alerte_stock_service.getPPakageNumber(this.prop, this.restaurant).then((num) => {
       this.alerte_stock_service.getLastPAlertesBDD(this.prop, this.restaurant, num);
     })

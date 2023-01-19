@@ -55,7 +55,7 @@
                     <mat-form-field appearance="fill">
                       <mat-label>restaurants</mat-label>
                       <mat-select (selectionChange)="set_restaurants($event, cell_index, i)" (openedChange)="get_restaurant($event,cell_index, i)" multiple>
-                        <mat-option #options *ngFor="let restau of element.restaurants.split(',')"
+                        <mat-option [disabled]="!is_prop" #options *ngFor="let restau of element.restaurants.split(',')"
                           [value]="restau">{{restau}}</mat-option>
                       </mat-select>
                     </mat-form-field>

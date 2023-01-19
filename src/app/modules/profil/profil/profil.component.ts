@@ -50,6 +50,7 @@ export class ProfilComponent implements OnInit {
     this.restaurants = user_info["restaurant"];
     onAuthStateChanged(this.auth, (user) => {
       if(user){
+        
         const private_data = this.service.getUserDataFromUid(user.uid, this.enseigne, this.restaurants).then((user) => {
           this.user_db.restaurants = user.restaurants;
           this.user_db.statut = user.statut;

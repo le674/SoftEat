@@ -1,4 +1,4 @@
-import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { UserInteractionService } from 'src/app/services/user-interaction.servic
 import { Restaurant } from 'src/app/interfaces/restaurant';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSelectChange } from '@angular/material/select';
+import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
 import { Visibles } from './app.configue.index';
 
@@ -17,7 +17,7 @@ import { Visibles } from './app.configue.index';
   templateUrl: './app.configue.component.html',
   styleUrls: ['./app.configue.component.css']
 })
-export class AppConfigueComponent implements OnInit {
+export class AppConfigueComponent implements OnInit{
   private uid: string;
   private proprietaire: string;
 
@@ -72,6 +72,7 @@ export class AppConfigueComponent implements OnInit {
     index_6: true,
     index_7: true
   };
+  public is_prop:boolean;
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -90,7 +91,7 @@ export class AppConfigueComponent implements OnInit {
     this.prop_user = [];
     this.users = [];
     this.display_columns = ["id", "email", "restaurants", "read_right", "write_right", "validation"];
-    this.roles = ["proprietaire", "stock", "alertes", "analyse", "budget", "facture", "planning"];
+    this.roles = ["stock", "alertes", "analyse", "budget", "facture", "planning"];
     const first_user = new ShortUser();
     first_user.restaurants = "1,2";
     first_user.roles = "1,2";
@@ -132,6 +133,7 @@ export class AppConfigueComponent implements OnInit {
     this.page_number = 1;
     this.rest_max_length = 0;
     this.curr_categorie = 0;
+    this.is_prop = false;
   }
   ngOnInit(): void {
     const auth = getAuth(this.ofApp);
@@ -143,6 +145,11 @@ export class AppConfigueComponent implements OnInit {
         })
 
         const all_id = prop_user.then((name) => {
+          this.user_services.checkIsProp(user.uid, this.proprietaire).then((is_prop:boolean) => {
+            this.is_prop = is_prop;
+            console.log(this.is_prop);
+            
+          })
           const all_id = this.user_services.getAllIdFromProp(name).then((props) => {
             return (props)
           })
@@ -156,14 +163,13 @@ export class AppConfigueComponent implements OnInit {
             })
             const employees = users.employee
             for (let i = 0; i < employees.length; i++) {
-
-              let user = new User()
-              user.id = employees[i].id;
-              user.email = employees[i].email;
-              user.restaurants = (employees[i].restaurants === null) ? [] : employees[i].restaurants
-              user.setStatusFromUser(employees[i]) 
-              this.users.push(user)
-              rest_prom.then((restau_list) => {
+                let user = new User()
+                user.id = employees[i].id;
+                user.email = employees[i].email;
+                user.restaurants = (employees[i].restaurants === null) ? [] : employees[i].restaurants
+                user.setStatusFromUser(employees[i]) 
+                this.users.push(user)
+                rest_prom.then((restau_list) => {
 
                 let row_user = new ShortUser()
 
@@ -186,6 +192,9 @@ export class AppConfigueComponent implements OnInit {
                   this.pageChanged(first_event, 5);
                   this.pageChanged(first_event, 6);
                 }
+              }).catch((e) => {
+                console.log("erreur pour la fonction getAllRestaurant qui est", e);
+                
               })
             }
           }
@@ -196,9 +205,6 @@ export class AppConfigueComponent implements OnInit {
         });
       }
     })
-  }
-
-  ngAfterViewInit(): void {
   }
 
   pageChanged(event: PageEvent, i: number) {
