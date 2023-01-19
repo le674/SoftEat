@@ -20,10 +20,16 @@
                 supprimer le compte
             </button>
         </div>
-        <button id="deco_button" class="btn btn-outline-danger" (click)="clicdeConnexion()" mat-stroked-button>
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-            déconnexion
-        </button>
+        <div id="gestion_compte">
+            <button id="deco_button" class="btn btn-outline-danger" (click)="clicdeConnexion()" mat-stroked-button>
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                déconnexion
+            </button>
+            <button mat-stroked-button (click)="redirectAcceuil()">
+                <i class="fa-regular fa-door-open"></i>
+                acceuil
+            </button>
+        </div>
     </header>
     
     <main>

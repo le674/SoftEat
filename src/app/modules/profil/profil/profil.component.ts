@@ -51,18 +51,17 @@ export class ProfilComponent implements OnInit {
     onAuthStateChanged(this.auth, (user) => {
       if(user){
         
-        const private_data = this.service.getUserDataFromUid(user.uid, this.enseigne, this.restaurants).then((user) => {
+        const private_data = this.service.getUserFromUid(user.uid, this.enseigne).then((user) => {
           this.user_db.restaurants = user.restaurants;
           this.user_db.statut = user.statut;
           this.user_db.email = user.email;
-          this.user_db.is_prop = user.is_prop
           return user
         })
         private_data.then((user_db) => {
           this.service.getUserDataFromUid(user.uid, this.enseigne, this.restaurants).then((user) => {
-            this.user_db.name = user_db.name;
-            this.user_db.numero = user_db.numero;
-            this.user_db.surname = user_db.surname;
+            this.user_db.name = user.name;
+            this.user_db.numero = user.numero;
+            this.user_db.surname = user.surname;
             if(this.user_db.name == "") this.user_db.name = "pas de nom inscrit"
             if(this.user_db.surname == "") this.user_db.surname = "pas de prénom inscrit"
             if(this.user_db.numero == "") this.user_db.numero = "pas de numéro inscrit"
@@ -140,5 +139,7 @@ export class ProfilComponent implements OnInit {
     updateCurrentUser(auth, null);
     window.location.href = ""
   }
-
+  redirectAcceuil(){
+    window.location.href = "accueil"
+  }
 }
