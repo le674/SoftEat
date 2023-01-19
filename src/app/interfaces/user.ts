@@ -121,7 +121,7 @@ export class User {
 
   to_roles() {
     this.roles = []
-    if(this.is_prop) {
+    if(this.statut.is_prop) {
       this.roles.push("proprietaire");
       return null;
     }

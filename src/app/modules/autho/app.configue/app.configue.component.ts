@@ -11,6 +11,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
 import { Visibles } from './app.configue.index';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-app.configue',
@@ -87,11 +88,11 @@ export class AppConfigueComponent implements OnInit{
   options_write!: QueryList<MatOption>
 
   constructor(private service: InteractionRestaurantService, private user_services: UserInteractionService,
-    private ofApp: FirebaseApp, private router: Router) {
+    private ofApp: FirebaseApp, private router: Router,  private _snackBar: MatSnackBar) {
     this.prop_user = [];
     this.users = [];
     this.display_columns = ["id", "email", "restaurants", "read_right", "write_right", "validation"];
-    this.roles = ["stock", "alertes", "analyse", "budget", "facture", "planning"];
+    this.roles = ["alertes",  "stock", "analyse", "budget", "facture", "planning"];
     const first_user = new ShortUser();
     first_user.restaurants = "1,2";
     first_user.roles = "1,2";
@@ -294,9 +295,10 @@ export class AppConfigueComponent implements OnInit{
       let user = this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
       let i = 0;
       if (user) {
+        delete user.statut.is_prop
         let options = this.options_read.filter((option: MatOption, index_opt: number) => {
-          const min_length = 7 * (prev_index + cum_length_pages)
-          const max_length = 7 * (prev_index + cum_length_pages + 1)
+          const min_length = 6* (prev_index + cum_length_pages)
+          const max_length = 6* (prev_index + cum_length_pages + 1)
           return ((index_opt >= min_length) && (index_opt < max_length))
         })
         if(user.is_prop){
@@ -330,13 +332,13 @@ export class AppConfigueComponent implements OnInit{
         cum_length_pages = cum_length_pages + this.curr_user["user" + i as keyof typeof this.curr_user].length ;
       }
       let user = this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
-
       let i = 0;
       let options_list = []
       if (user) {
+        delete user.statut.is_prop
         let options = this.options_write.filter((option: MatOption, index_opt: number) => {
-          const min_length = 7 * (prev_index + cum_length_pages) 
-          const max_length = 7 * (prev_index + cum_length_pages + 1)
+          const min_length = 6 * (prev_index + cum_length_pages) 
+          const max_length = 6 * (prev_index + cum_length_pages + 1)
           return ((index_opt >= min_length) && (index_opt < max_length))
         })
         if(user.is_prop){
@@ -412,7 +414,7 @@ export class AppConfigueComponent implements OnInit{
       if(filter_user != undefined) user.restaurants = filter_user
       this.user_services.setUser(this.proprietaire, user)
     }
-    alert("vous avez bien modifier l'ultilisateur")
+    this._snackBar.open("vous avez bien modifier l'ultilisateur", "fermer")
   }
 
 

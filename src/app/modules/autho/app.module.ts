@@ -12,6 +12,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatTableModule} from '@angular/material/table';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
+import {MatSnackBarModule} from '@angular/material/snack-bar'; 
 import {MatFormFieldModule} from '@angular/material/form-field';
 
 @NgModule({
@@ -26,6 +27,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     MatDialogModule,
     ReactiveFormsModule,
     MatPaginatorModule,
+    MatSnackBarModule,
     MatTableModule,
     MatSelectModule,
     MatOptionModule,

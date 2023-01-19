@@ -111,7 +111,7 @@ export class UserInteractionService{
         this.user.statut.facture = user.child("statut/facture").val();
         this.user.statut.stock = user.child("statut/stock").val();
         this.user.statut.planning = user.child("statut/planning").val();
-        this.user.is_prop = user.child(`statut/is_prop`).val();
+        this.user.statut.is_prop = user.child(`statut/is_prop`).val();
         this.user.to_roles();
       }
     })
