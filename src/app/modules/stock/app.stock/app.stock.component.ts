@@ -7,6 +7,7 @@ import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/auth';
 import { concat, map, Observable, Subscription, withLatestFrom } from 'rxjs';
 import { CIngredient, Ingredient } from 'src/app/interfaces/ingredient';
+import { AlertesService } from 'src/app/services/alertes/alertes.service';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.component';
@@ -115,6 +116,7 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     this.req_merge_obs = merge_obs_ing.subscribe(([ingBR, ingPREP]) => {
       this.ingredients_displayed_br = [];
       this.ingredients_displayed_prep = [];
+      this.dataSource = new MatTableDataSource(this.ingredients_displayed_br);
       this.ingredient_table = ingBR;
       this.ingredient_table_prep = ingPREP;
       for (let i = 0; i < ingBR.length; i++) {
@@ -142,7 +144,8 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
             cuisinee: 'non',
             date_reception: ingredient.date_reception.toLocaleString(),
             dlc: ingredient.dlc.toLocaleString(),
-            marge: ingredient.marge
+            marge: ingredient.marge,
+            vrac: ingredient.vrac
           };
           this.ingredients_displayed_br.push(row_ingredient);
           if (i === ingBR.length - 1) {
@@ -198,7 +201,8 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
         cuisinee: 'oui',
         date_reception: ingPREP[i].date_reception.toLocaleString(),
         dlc: ingPREP[i].dlc.toLocaleString(),
-        marge: ingPREP[i].marge
+        marge: ingPREP[i].marge,
+        vrac: ingPREP[i].vrac
       };
         this.ingredients_displayed_prep.push(row_ingredient);
       }
@@ -226,7 +230,8 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
           base_ing: [],
           not_prep: this.ingredient_table,
           quantity_after_prep: 0,
-          marge: 0
+          marge: 0,
+          vrac:false
         }
       }
     });
@@ -246,7 +251,8 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     cuisinee: string;
     date_reception: string;
     dlc: string;
-    marge: number
+    marge: number;
+    vrac:boolean
   }) {
     let res_dlc = 0;
     let var_base_ing: Array<{ name: string; quantity_unity: number; quantity: number; unity: string; cost: number }> = [];
@@ -291,7 +297,8 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
           base_ing: var_base_ing,
           not_prep: this.ingredient_table,
           quantity_after_prep: ele.after_prep,
-          marge: ele.marge
+          marge: ele.marge,
+          vrac: ele.vrac
         }
       }
     });

@@ -76,10 +76,11 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         base_ing: Array<TIngredientBase>,
         not_prep: Array<CIngredient>,
         quantity_after_prep: number,
-        marge: number
+        marge: number,
+        vrac:boolean
       }
     }, private service: IngredientsInteractionService, private changeDetector: ChangeDetectorRef,
-     private _snackBar: MatSnackBar, private alertes:AlertesService){
+     private _snackBar: MatSnackBar, private service_alertes:AlertesService){
     this.base_ing_full = this.data.ingredient.not_prep.filter((ing) => this.data.ingredient.base_ing.map((ing) => ing.name).includes(ing.nom));
     this.calcul_service.sortTwoListStringByName(this.base_ing_full, this.data.ingredient.base_ing);
     this._mat_dialog_ref = dialogRef;
@@ -103,6 +104,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     this.add_ing_section.get("quantity_unitary")?.setValue(this.data.ingredient.quantity_unity);
     this.add_ing_section.get("unity")?.setValue(unity);
     this.add_ing_section.get("quantity")?.setValue(this.data.ingredient.quantity);
+    this.add_ing_section.get("vrac")?.setValue(this.data.ingredient.vrac);
     // on calcul le cout unitaire en fonction des ingrédient de base pour un ingrédient préparé
     // le calcul est pas long mais plus tard ajouter une condition pour ne pas recalculer se qui a été entré dans la bdd 
     if(this.data.ingredient.cuisinee === 'oui'){
@@ -189,7 +191,9 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
             quantity: quantity,
             unity: _base_ing.unity,
             cost: _base_ing.cost,
-            quantity_unity: _base_ing.quantity_unity
+            quantity_unity: _base_ing.quantity_unity,
+            marge: _base_ing.marge,
+            vrac: _base_ing.vrac
           })
         })
         new_ing.setBaseIng(base_ing)
@@ -250,11 +254,37 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       }
     } 
 
-    if(new_ing.getQuantity()*new_ing.getQuantity() < new_ing.getMarge()){
-      // alors on affiche une alerte
-      
-
+    if(new_ing.vrac){
+      if(new_ing.getQuantityUnity() < new_ing.getMarge()){
+        // alors on affiche une alerte
+        const msg = "l'ingredient : ".concat(new_ing.nom).concat(" ,arrive en rupture de stock.");
+        this.service_alertes.setStockAlertes(msg, this.data.restaurant, this.data.prop, "SoftEat", "")
+      }
     }
+    else{
+      if(new_ing.getQuantityUnity()*new_ing.getQuantity() < new_ing.getMarge()){
+        //alors on affiche une alerte 
+        const msg = "l'ingredient ".concat(new_ing.nom).concat(" arrive en rupture de stock.");
+        this.service_alertes.setStockAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "")
+      }
+    }
+
+    new_ing.base_ing.forEach((_base) => {
+      if(_base.vrac){
+        if(_base.quantity_unity < _base.marge){
+          // alors on affiche une alerte
+          const msg = "l'ingredient : ".concat(_base.name).concat(" ,arrive en rupture de stock.");
+          this.service_alertes.setStockAlertes(msg, this.data.restaurant, this.data.prop, "SoftEat", "")
+        }
+      }
+      else{
+        if(_base.quantity_unity*_base.quantity < _base.marge){
+          //alors on affiche une alerte 
+          const msg = "l'ingredient ".concat(_base.name).concat(" arrive en rupture de stock.");
+          this.service_alertes.setStockAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "")
+        }
+      }
+    }) 
 
     if(this.add_ing_section.valid){
       

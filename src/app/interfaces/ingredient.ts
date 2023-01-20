@@ -7,7 +7,9 @@ export type TIngredientBase = {
     quantity: number, 
     quantity_unity:number ,
     unity:string, 
-    cost:number
+    cost:number,
+    vrac:boolean,
+    marge:number
 }
 
 export interface Ingredient {
@@ -32,7 +34,8 @@ export interface Ingredient {
         quantity:number,
         quantity_unity: number,
         unity: string,
-        cost:number
+        cost:number,
+        vrac:boolean
     }>;
     "marge": number;
     "vrac":boolean;
@@ -133,7 +136,9 @@ export class CIngredient implements Ingredient {
         quantity:number,
         quantity_unity: number,
         unity:string,
-        cost:number
+        cost:number,
+        vrac:boolean,
+        marge:number
     }>;
     "quantity_bef_prep": number;
     "quantity_after_prep": number;
@@ -321,7 +326,9 @@ export class CIngredient implements Ingredient {
         quantity:number,
         quantity_unity: number,
         unity:string,
-        cost:number
+        cost:number,
+        vrac:boolean,
+        marge:number
     }> {
         return this.base_ing;
     }
@@ -330,7 +337,9 @@ export class CIngredient implements Ingredient {
         quantity:number,
         quantity_unity: number,
         unity:string,
-        cost:number
+        cost:number,
+        marge:number,
+        vrac:boolean
     }> | null): void {
         if (names !== null) this.base_ing= names;
     }

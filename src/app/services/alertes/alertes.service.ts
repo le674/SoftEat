@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { child, Database, get, getDatabase, onValue, ref } from 'firebase/database';
+import { child, Database, get, getDatabase, onValue, ref,set, update } from 'firebase/database';
 import { CAlerte } from 'src/app/interfaces/alerte';
 import { Subject, BehaviorSubject, Subscription } from 'rxjs';
 import { Unsubscribe } from 'firebase/auth';
@@ -13,6 +13,8 @@ export class AlertesService {
   private db: Database;
   private alertes: Array<CAlerte>;
   private num_package: number;
+  private size_package:number;
+  private current_size:number;
   private data_alertes = new Subject<Array<CAlerte>>();
   private get_last_p_alertes!: Unsubscribe;
 
@@ -20,6 +22,8 @@ export class AlertesService {
     this.db = getDatabase(ofApp);
     this.alertes = [];
     this.num_package = 0;
+    this.size_package = 0;
+    this.current_size = 0;
   }
 
 getLastPAlertesBDD(prop: string, restaurant: string, num_package:number):Unsubscribe {
@@ -54,16 +58,86 @@ getLastPAlertesBDD(prop: string, restaurant: string, num_package:number):Unsubsc
     return this.num_package;
   }
 
-  async setStockAlertes(message: string) {
 
+  async getPPakageSize(prop: string, restaurant: string){
+    const ref_db = ref(this.db);
+    const path = `alertes_${prop}_${restaurant}/${prop}/${restaurant}/stock/package_size`;  
+    await get(child(ref_db, path)).then((number) => {
+      this.size_package = number.val();
+    })
+    return this.size_package;
   }
 
-  async setResponseAlertes(message: string, id_alerte: string, from: string, to: string) {
-
+  async getCurrentSize(prop: string, restaurant: string){
+    const ref_db = ref(this.db);
+    const path = `alertes_${prop}_${restaurant}/${prop}/${restaurant}/stock/current_size`;  
+    await get(child(ref_db, path)).then((number) => {
+      this.size_package = number.val();
+    })
+    return this.size_package;
   }
 
   getLastPAlertes() {
     return this.data_alertes.asObservable();
   }
+
+  async setStockAlertes(message: string, restaurant:string, prop:string, from:string, to:string) {
+    this.getPPakageNumber(prop, restaurant).then((num_package) => {
+        this.getPPakageSize(prop, restaurant).then((size_package) => {
+            this.getCurrentSize(prop, restaurant).then((curr_size) => {
+              if(curr_size < size_package){
+                this.setInPackageAlertes(message, restaurant, prop, num_package, curr_size, from, to, false)
+              }
+              else{
+                this.setInPackageAlertes(message, restaurant, prop, num_package, curr_size, from, to, true)
+              }
+            })
+        })
+    })
+  }
+
+  async setInPackageAlertes(message:string, restaurant:string, prop:string,
+     num_package:number, curr_size:number, from:string, to:string, new_pack:boolean){
+    let  name_alerte = ''
+    let str_num_package = ''
+    const ref_db = ref(this.db, `alertes_${prop}_${restaurant}/${prop}/${restaurant}/stock/`);
+    let local_date = new Date().toLocaleString();
+    // important il faut ajouter from et to 
+    if(!new_pack){
+      
+      str_num_package = num_package.toString();
+      name_alerte = `package_${str_num_package}/alertes_${curr_size + 1}`;
+      await update(ref_db,{
+        [name_alerte]: {
+          date: local_date,
+          label: message,
+          from:from,
+          to:to,
+          read: false
+        },
+        "current_size": curr_size + 1
+      })
+    }
+    else{
+      str_num_package = (num_package + 1).toString();
+      name_alerte = `package_${str_num_package}/alertes_1`;
+      await update(ref_db,{
+        [name_alerte]: {
+          date: local_date,
+          label: message,
+          from:from,
+          to:to,
+          read: false
+        },
+        "current_size": 1,
+        "nombre_package": num_package + 1
+      })
+    }
+
+  }
+  async setResponseAlertes(message: string, id_alerte: string, from: string, to: string) {
+
+  }
+
   
 }
