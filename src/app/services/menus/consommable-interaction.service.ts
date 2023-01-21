@@ -31,6 +31,7 @@ export class ConsommableInteractionService {
           add_consommable.setUnity(conso.child("unity").val());
           add_consommable.setCostTTC(conso.child("cost_ttc").val());
           add_consommable.setDateReception(conso.child("date_reception").val());
+          add_consommable.setMarge(conso.child("marge").val());
           this.consommable.push(add_consommable);
         }
       })

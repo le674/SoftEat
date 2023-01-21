@@ -29,7 +29,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     unitary_cost: new FormControl(0, Validators.required),
     dlc: new FormControl(0, Validators.required),
     marge: new FormControl(0,Validators.required),
-    vrac: new FormControl(true, Validators.required),
+    vrac: new FormControl('', Validators.required),
     names_base_ing: new FormArray([
       new FormControl("")
     ]),
@@ -104,7 +104,12 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     this.add_ing_section.get("quantity_unitary")?.setValue(this.data.ingredient.quantity_unity);
     this.add_ing_section.get("unity")?.setValue(unity);
     this.add_ing_section.get("quantity")?.setValue(this.data.ingredient.quantity);
-    this.add_ing_section.get("vrac")?.setValue(this.data.ingredient.vrac);
+    if(this.data.ingredient.vrac){
+      this.add_ing_section.get("vrac")?.setValue('oui');
+    }
+    else{
+      this.add_ing_section.get("vrac")?.setValue('non');
+    }
     // on calcul le cout unitaire en fonction des ingrédient de base pour un ingrédient préparé
     // le calcul est pas long mais plus tard ajouter une condition pour ne pas recalculer se qui a été entré dans la bdd 
     if(this.data.ingredient.cuisinee === 'oui'){
@@ -231,7 +236,12 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     }
 
     if(this.add_ing_section.value["vrac"] !== undefined){
-      if(this.add_ing_section.value["vrac"] !== null) new_ing.setVrac(this.add_ing_section.value["vrac"]);
+      if(this.add_ing_section.value["vrac"] === 'oui'){
+        new_ing.setVrac(true)
+      }
+      else{
+        new_ing.setVrac(false)
+      }
     }
 
     if (unity !== undefined) {
@@ -257,15 +267,15 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     if(new_ing.vrac){
       if(new_ing.getQuantityUnity() < new_ing.getMarge()){
         // alors on affiche une alerte
-        const msg = "l'ingredient : ".concat(new_ing.nom).concat(" ,arrive en rupture de stock.");
-        this.service_alertes.setStockAlertes(msg, this.data.restaurant, this.data.prop, "SoftEat", "")
+        const msg = "l'ingredient : ".concat(new_ing.nom).concat(" arrive en rupture de stock.");
+        this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "SoftEat", "", "stock")
       }
     }
     else{
-      if(new_ing.getQuantityUnity()*new_ing.getQuantity() < new_ing.getMarge()){
+      if(new_ing.getQuantity() < new_ing.getMarge()){
         //alors on affiche une alerte 
         const msg = "l'ingredient ".concat(new_ing.nom).concat(" arrive en rupture de stock.");
-        this.service_alertes.setStockAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "")
+        this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "stock")
       }
     }
 
@@ -273,15 +283,15 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       if(_base.vrac){
         if(_base.quantity_unity < _base.marge){
           // alors on affiche une alerte
-          const msg = "l'ingredient : ".concat(_base.name).concat(" ,arrive en rupture de stock.");
-          this.service_alertes.setStockAlertes(msg, this.data.restaurant, this.data.prop, "SoftEat", "")
+          const msg = "l'ingredient : ".concat(_base.name).concat(" arrive en rupture de stock.");
+          this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "stock")
         }
       }
       else{
-        if(_base.quantity_unity*_base.quantity < _base.marge){
+        if(_base.quantity < _base.marge){
           //alors on affiche une alerte 
           const msg = "l'ingredient ".concat(_base.name).concat(" arrive en rupture de stock.");
-          this.service_alertes.setStockAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "")
+          this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "stock")
         }
       }
     }) 

@@ -26,9 +26,9 @@ export class AlertesService {
     this.current_size = 0;
   }
 
-getLastPAlertesBDD(prop: string, restaurant: string, num_package:number):Unsubscribe {
+getLastPAlertesBDD(prop: string, restaurant: string, num_package:number, categorie:string):Unsubscribe {
     const ref_db = ref(this.db);
-    const path = `alertes_${prop}_${restaurant}/${prop}/${restaurant}/stock/package_${num_package}`;  
+    const path = `alertes_${prop}_${restaurant}/${prop}/${restaurant}/${categorie}/package_${num_package}`;  
     this.get_last_p_alertes =  onValue(child(ref_db, path), (alertes) => {
       // on rend vide la liste des alertes car on fait deux appel à getLastPAlertes (le premier dans dashboard )
       // le second dans app.alertes.ts comme this.alertes garde en cache les données il vaut mieux 
@@ -49,9 +49,10 @@ getLastPAlertesBDD(prop: string, restaurant: string, num_package:number):Unsubsc
     return this.get_last_p_alertes;
   }
 
-  async getPPakageNumber(prop: string, restaurant: string){
+  async getPPakageNumber(prop: string, restaurant: string, categorie:string){
+    this.num_package = 0;
     const ref_db = ref(this.db);
-    const path = `alertes_${prop}_${restaurant}/${prop}/${restaurant}/stock/nombre_package`;  
+    const path = `alertes_${prop}_${restaurant}/${prop}/${restaurant}/${categorie}/nombre_package`;  
     await get(child(ref_db, path)).then((number) => {
       this.num_package = number.val();
     })
@@ -59,18 +60,20 @@ getLastPAlertesBDD(prop: string, restaurant: string, num_package:number):Unsubsc
   }
 
 
-  async getPPakageSize(prop: string, restaurant: string){
+  async getPPakageSize(prop: string, restaurant: string, categorie:string){
     const ref_db = ref(this.db);
-    const path = `alertes_${prop}_${restaurant}/${prop}/${restaurant}/stock/package_size`;  
+    const path = `alertes_${prop}_${restaurant}/${prop}/${restaurant}/${categorie}/package_size`;  
+    this.size_package = 0;
     await get(child(ref_db, path)).then((number) => {
       this.size_package = number.val();
     })
     return this.size_package;
   }
 
-  async getCurrentSize(prop: string, restaurant: string){
+  async getCurrentSize(prop: string, restaurant: string, categorie:string){
+    this.size_package = 0
     const ref_db = ref(this.db);
-    const path = `alertes_${prop}_${restaurant}/${prop}/${restaurant}/stock/current_size`;  
+    const path = `alertes_${prop}_${restaurant}/${prop}/${restaurant}/${categorie}/current_size`;  
     await get(child(ref_db, path)).then((number) => {
       this.size_package = number.val();
     })
@@ -81,15 +84,15 @@ getLastPAlertesBDD(prop: string, restaurant: string, num_package:number):Unsubsc
     return this.data_alertes.asObservable();
   }
 
-  async setStockAlertes(message: string, restaurant:string, prop:string, from:string, to:string) {
-    this.getPPakageNumber(prop, restaurant).then((num_package) => {
-        this.getPPakageSize(prop, restaurant).then((size_package) => {
-            this.getCurrentSize(prop, restaurant).then((curr_size) => {
+  async setAlertes(message: string, restaurant:string, prop:string, from:string, to:string, path:string) {
+    this.getPPakageNumber(prop, restaurant, path).then((num_package) => {
+        this.getPPakageSize(prop, restaurant, path).then((size_package) => {
+            this.getCurrentSize(prop, restaurant, path).then((curr_size) => {
               if(curr_size < size_package){
-                this.setInPackageAlertes(message, restaurant, prop, num_package, curr_size, from, to, false)
+                this.setInPackageAlertes(message, restaurant, prop, num_package, curr_size, from, to, false, path)
               }
               else{
-                this.setInPackageAlertes(message, restaurant, prop, num_package, curr_size, from, to, true)
+                this.setInPackageAlertes(message, restaurant, prop, num_package, curr_size, from, to, true, path)
               }
             })
         })
@@ -97,10 +100,10 @@ getLastPAlertesBDD(prop: string, restaurant: string, num_package:number):Unsubsc
   }
 
   async setInPackageAlertes(message:string, restaurant:string, prop:string,
-     num_package:number, curr_size:number, from:string, to:string, new_pack:boolean){
+     num_package:number, curr_size:number, from:string, to:string, new_pack:boolean, path:string){
     let  name_alerte = ''
     let str_num_package = ''
-    const ref_db = ref(this.db, `alertes_${prop}_${restaurant}/${prop}/${restaurant}/stock/`);
+    const ref_db = ref(this.db, `alertes_${prop}_${restaurant}/${prop}/${restaurant}/${path}/`);
     let local_date = new Date().toLocaleString();
     // important il faut ajouter from et to 
     if(!new_pack){

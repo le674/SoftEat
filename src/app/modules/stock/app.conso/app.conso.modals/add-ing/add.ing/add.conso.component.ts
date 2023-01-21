@@ -6,6 +6,7 @@ import { Cconsommable, CIngredient } from 'src/app/interfaces/ingredient';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TitleStrategy } from '@angular/router';
 import { ConsommableInteractionService } from 'src/app/services/menus/consommable-interaction.service';
+import { AlertesService } from 'src/app/services/alertes/alertes.service';
 
 @Component({
   selector: 'app-add.conso',
@@ -21,7 +22,8 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
     quantity: new FormControl(0, Validators.required),
     unity: new FormControl('', Validators.required),
     cost_ttc: new FormControl(0),
-    cost: new FormControl(0, Validators.required)
+    cost: new FormControl(0, Validators.required),
+    marge: new FormControl(0, Validators.required)
   })
   @ViewChild('taux')
   taux!: ElementRef;
@@ -42,7 +44,8 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
         unity: string,
         date_reception: string,
       }
-    }, private service: ConsommableInteractionService, private changeDetector: ChangeDetectorRef, private _snackBar: MatSnackBar) {
+    }, private service: ConsommableInteractionService,
+    private changeDetector: ChangeDetectorRef, private _snackBar: MatSnackBar, private service_alertes:AlertesService ) {
     this._mat_dialog_ref = dialogRef;
     this.is_modif = this.data.is_modif;
   }
@@ -109,7 +112,17 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
     if(this.add_cons_section.value["cost_ttc"] !== undefined){
       new_conso.setCostTTC(this.add_cons_section.value["cost_ttc"]);
     }
-  
+
+    if(this.add_cons_section.value["marge"] !== undefined){
+     if(this.add_cons_section.value["marge"] !== null) new_conso.setMarge(this.add_cons_section.value["marge"]);
+    }
+
+
+    if(new_conso.getQuantity() < new_conso.getMarge()){
+      //alors on affiche une alerte 
+      const msg = "le consommable ".concat(new_conso.nom).concat(" arrive en rupture de stock.");
+      this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "conso");
+    }
 
     if(this.add_cons_section.valid){
       

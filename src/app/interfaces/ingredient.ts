@@ -94,6 +94,7 @@ export interface Consommable {
     "unity": string;
     "taux_tva": number;
     "cost_ttc": number;
+    "marge": number;
     "date_reception":Date;
 
     getNom(): string;
@@ -110,6 +111,8 @@ export interface Consommable {
     setUnity(unity: string | null): void;
     getDateReception():Date;
     setDateReception(val: Date | null):void;
+    getMarge():number;
+    setMarge(marge:number):void;
 }
 
 @Injectable({
@@ -366,10 +369,10 @@ export class Cconsommable implements Consommable {
     "taux_tva": number;
     "cost_ttc": number;
     "date_reception": Date;
+    "marge": number;
     
     constructor() { 
     }
-
 
     getNom(): string {
         return this.nom
@@ -416,6 +419,12 @@ export class Cconsommable implements Consommable {
     }
     setDateReception(val: Date | null): void {
         if (val !== null) this.date_reception = val;
+    }
+    getMarge(): number {
+       return this.marge;
+    }
+    setMarge(marge: number): void {
+       this.marge = marge;
     }
 }
 

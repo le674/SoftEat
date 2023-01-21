@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { Router, UrlTree } from '@angular/router';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, updateProfile, User } from 'firebase/auth';
+import { Unsubscribe } from 'firebase/database';
 import { Observable, Subscription } from 'rxjs';
 import { CAlerte } from 'src/app/interfaces/alerte';
 import { AlertesService } from 'src/app/services/alertes/alertes.service';
@@ -35,15 +36,17 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
   @Output() public numP = new EventEmitter();
   user = auth.currentUser;
   public hidden = true;
-  public alert_num = 1;
+  public alert_num = 0;
   private url: UrlTree;
   private router: Router;
   private prop:string;
   private restaurant:string;
   private num:number;
   private alerte_subscription: Subscription; 
+  private stock_unsubscribe!: Unsubscribe;
+  private conso_unsubscribe!: Unsubscribe;
   
-  constructor(public authService: AuthentificationService, public alerte_stock_service: AlertesService, router: Router,){
+  constructor(public authService: AuthentificationService, public alerte_service: AlertesService, router: Router,){
 
     this.num = 0;
     onAuthStateChanged(auth, (user) => {
@@ -77,6 +80,8 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
 }
   ngOnDestroy(): void {
     this.alerte_subscription.unsubscribe();
+    this.stock_unsubscribe();
+    this.conso_unsubscribe();
   }
       
 
@@ -108,14 +113,19 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
     if(sidebar!=null) sidebar.classList.toggle("close");
   } */
   
-    this.alerte_stock_service.getPPakageNumber(this.prop, this.restaurant).then((num) => {
-      this.alerte_stock_service.getLastPAlertesBDD(this.prop, this.restaurant, num);
+    this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "stock").then((num) => {
+      this.stock_unsubscribe = this.alerte_service.getLastPAlertesBDD(this.prop, this.restaurant, num, "stock");
     })
-    this.alerte_subscription = this.alerte_stock_service.getLastPAlertes().subscribe((alertes) =>{
+
+    this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "conso").then((num) =>{
+      this.conso_unsubscribe = this.alerte_service.getLastPAlertesBDD(this.prop, this.restaurant, num, "conso");
+    })
+
+    this.alerte_subscription = this.alerte_service.getLastPAlertes().subscribe((alertes) =>{
       // on récupère le nombre d'alerte non lu et on envoie à la vue pour affichage d'une notifiation 
       const is_read = alertes.map((alerte) => alerte.read);
       const num_read = is_read.filter(is_true => !is_true).length;
-      this.alert_num = num_read
+      this.alert_num = this.alert_num + num_read;
       if(this.alert_num !== 0){
         this.hidden = false; 
       }

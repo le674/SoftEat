@@ -23,7 +23,7 @@ export class AppAlertesComponent implements OnInit, OnDestroy {
   private alerte_subscription:Subscription;
   private alerte_unsubscribe!: Unsubscribe;
 
-  constructor(private alerte_stock_service: AlertesService,  router: Router) { 
+  constructor(private alerte_service: AlertesService,  router: Router) { 
     this.toasts_stock = [];
     this.toast_num = 0;
     this.router = router;
@@ -43,10 +43,10 @@ export class AppAlertesComponent implements OnInit, OnDestroy {
     let user_info = this.url.queryParams;
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];
-    this.alerte_stock_service.getPPakageNumber(this.prop, this.restaurant).then((num) => {
-      this.alerte_unsubscribe = this.alerte_stock_service.getLastPAlertesBDD(this.prop, this.restaurant, num);
+    this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "stock").then((num) => {
+      this.alerte_unsubscribe = this.alerte_service.getLastPAlertesBDD(this.prop, this.restaurant, num, "stock");
     })
-    this.alerte_subscription = this.alerte_stock_service.getLastPAlertes().subscribe((alertes) => {
+    this.alerte_subscription = this.alerte_service.getLastPAlertes().subscribe((alertes) => {
       this.toasts_stock = alertes;
     })
   }

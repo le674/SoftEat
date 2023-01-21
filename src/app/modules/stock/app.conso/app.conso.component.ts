@@ -24,6 +24,7 @@ export class AppConsoComponent implements OnInit {
     quantity:number;
     unity:string;
     date_reception: string;
+    marge:number
   }>;
 
   public consommable_displayed: Array<{
@@ -33,6 +34,7 @@ export class AppConsoComponent implements OnInit {
     quantity:number;
     unity:string;
     date_reception: string;
+    marge: number;
   }>;
 
   private page_number: number;
@@ -78,7 +80,8 @@ ngOnInit(): void{
             cost_ttc: consommables[i].cost_ttc,
             quantity: consommables[i].quantity,
             unity: consommables[i].unity,
-            date_reception: consommables[i].date_reception.toLocaleString()
+            date_reception: consommables[i].date_reception.toLocaleString(),
+            marge: consommables[i].marge
           };
           this.consommable_displayed.push(row_consommable);
           if(i === consommables.length - 1){
@@ -98,7 +101,7 @@ ngOnInit(): void{
 
   OpenAddConsoForm(){
     const dialogRef = this.dialog.open(AddConsoComponent, {
-      height: `${window.innerHeight - window.innerHeight/2}px`,
+      height: `${window.innerHeight - window.innerHeight/3}px`,
       width:`${window.innerWidth - window.innerWidth/15}px`,
       data: {
         restaurant: this.restaurant,
@@ -124,6 +127,7 @@ ngOnInit(): void{
     cost_ttc: number,
     unity: string,
     date_reception: string,
+    marge:number
   }){
     
     const date_reception = this.calc_service.stringToDate(ele.date_reception);
@@ -132,7 +136,7 @@ ngOnInit(): void{
     // afin de récupérer le taux de tva comme celui-ci ne passe pas par le tableau affiché on eut le récupérer directment depuis la bdd 
     const conso = this.consommable_table.filter((conso) => conso.nom === ele.nom)[0];
     const dialogRef = this.dialog.open(AddConsoComponent, {
-      height: `${window.innerHeight - window.innerHeight/2}px`,
+      height: `${window.innerHeight - window.innerHeight/3}px`,
       width:`${window.innerWidth - window.innerWidth/15}px`,
       data: {
         restaurant: this.restaurant,
@@ -146,7 +150,7 @@ ngOnInit(): void{
           cost_ttc: ele.cost_ttc,
           taux_tva: conso.taux_tva,
           date_reception: ele.date_reception,
-
+          marge: ele.marge
         }
       }
     });
