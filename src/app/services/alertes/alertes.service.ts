@@ -42,6 +42,8 @@ getLastPAlertesBDD(prop: string, restaurant: string, num_package:number, categor
         new_alerte.to = alerte.child("to").val();
         new_alerte.response = alerte.child("response").val();
         new_alerte.date = alerte.child("date").val();
+        new_alerte.categorie = alerte.child("categorie").val();
+        new_alerte.current = alerte.child("current").val();
         this.alertes.push(new_alerte);
       })
       this.data_alertes.next(this.alertes);
@@ -81,6 +83,7 @@ getLastPAlertesBDD(prop: string, restaurant: string, num_package:number, categor
   }
 
   getLastPAlertes() {
+
     return this.data_alertes.asObservable();
   }
 
@@ -112,10 +115,12 @@ getLastPAlertesBDD(prop: string, restaurant: string, num_package:number, categor
       name_alerte = `package_${str_num_package}/alertes_${curr_size + 1}`;
       await update(ref_db,{
         [name_alerte]: {
+          current: curr_size + 1,
           date: local_date,
           label: message,
           from:from,
           to:to,
+          categorie:path,
           read: false
         },
         "current_size": curr_size + 1
@@ -126,10 +131,12 @@ getLastPAlertesBDD(prop: string, restaurant: string, num_package:number, categor
       name_alerte = `package_${str_num_package}/alertes_1`;
       await update(ref_db,{
         [name_alerte]: {
+          current: 1,
           date: local_date,
           label: message,
           from:from,
           to:to,
+          categorie:path,
           read: false
         },
         "current_size": 1,
@@ -142,5 +149,19 @@ getLastPAlertesBDD(prop: string, restaurant: string, num_package:number, categor
 
   }
 
-  
+  async updateAlerte(prop: string, restaurant: string, toast: CAlerte, categorie: string, package_number:number) {
+    const path = `alertes_${prop}_${restaurant}/${prop}/${restaurant}/${categorie}/package_${package_number}/`
+    const ref_db = ref(this.db, path);
+    const to_update = `alertes_${toast.current}`
+    await update(ref_db, {
+      [to_update]: {
+        current : toast.current,
+        label: toast.label,
+        read: toast.read,
+        from: toast.from,
+        to: toast.to,
+        categorie: toast.categorie,
+      }
+    })
+  }
 }

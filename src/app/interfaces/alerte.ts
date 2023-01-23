@@ -4,7 +4,8 @@ export interface Alerte {
     label:string
     read:boolean
     response:Alerte | "" 
-
+    categorie:string
+    current: number
 
 }
 
@@ -15,6 +16,8 @@ export class CAlerte implements Alerte{
     label: string
     read: boolean
     response: "" | Alerte
+    categorie: string;
+    current: number;
 
 
     constructor(){
@@ -24,6 +27,8 @@ export class CAlerte implements Alerte{
         this.read = false;
         this.response = "";
         this.date ="";
+        this.categorie = "";
+        this.current = 0;
     }
     
 }

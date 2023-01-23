@@ -3,7 +3,7 @@ import { Router, UrlTree } from '@angular/router';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, updateProfile, User } from 'firebase/auth';
 import { Unsubscribe } from 'firebase/database';
-import { Observable, Subscription } from 'rxjs';
+import { first, Observable, Subscription } from 'rxjs';
 import { CAlerte } from 'src/app/interfaces/alerte';
 import { AlertesService } from 'src/app/services/alertes/alertes.service';
 import { AuthentificationService } from 'src/app/services/authentification.service';
@@ -114,14 +114,18 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
   } */
   
     this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "stock").then((num) => {
+      
       this.stock_unsubscribe = this.alerte_service.getLastPAlertesBDD(this.prop, this.restaurant, num, "stock");
     })
 
     this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "conso").then((num) =>{
+
       this.conso_unsubscribe = this.alerte_service.getLastPAlertesBDD(this.prop, this.restaurant, num, "conso");
     })
 
-    this.alerte_subscription = this.alerte_service.getLastPAlertes().subscribe((alertes) =>{
+    // la récupération des stock est lancé deux fois car quand on s'abonne à getLastPAlertes() il faut donc utiliser 
+    // first pour s'abonner une fois   
+    this.alerte_subscription = this.alerte_service.getLastPAlertes().pipe(first()).subscribe((alertes) =>{
       // on récupère le nombre d'alerte non lu et on envoie à la vue pour affichage d'une notifiation 
       const is_read = alertes.map((alerte) => alerte.read);
       const num_read = is_read.filter(is_true => !is_true).length;

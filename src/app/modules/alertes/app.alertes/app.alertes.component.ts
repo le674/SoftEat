@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/auth';
-import { Subscription } from 'rxjs';
+import { first, Subscription } from 'rxjs';
 import { CAlerte } from 'src/app/interfaces/alerte';
 import { AlertesService } from 'src/app/services/alertes/alertes.service';
 
@@ -35,7 +35,6 @@ export class AppAlertesComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.alerte_subscription.unsubscribe();
-    this.alerte_unsubscribe();
   }
 
   ngOnInit(): void {
@@ -43,20 +42,21 @@ export class AppAlertesComponent implements OnInit, OnDestroy {
     let user_info = this.url.queryParams;
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];
-    this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "stock").then((num) => {
-      this.alerte_unsubscribe = this.alerte_service.getLastPAlertesBDD(this.prop, this.restaurant, num, "stock");
-    })
-    this.alerte_subscription = this.alerte_service.getLastPAlertes().subscribe((alertes) => {
-      this.toasts_stock = alertes;
+    // on subscribe au getLastPAlertesBDD de la dashboard attention au fuite mémoire 
+    this.alerte_subscription = this.alerte_service.getLastPAlertes().pipe(first()).subscribe((alertes) => {  
+      for(let alerte of alertes){
+        if(alerte.categorie === "stock"){
+          this.toasts_stock.push(alerte);
+        }
+      }
     })
   }
 
-  markRead(toast:CAlerte):void{
-
-  }
-
-  displayAnswer(toast:CAlerte):void{
-
+  markReadStock(toast:CAlerte):void{
+    toast.read = true;
+    this.alerte_service.getPPakageNumber(this.prop, this.restaurant, 'stock').then((p_number:number) => {
+      this.alerte_service.updateAlerte(this.prop, this.restaurant, toast,'stock', p_number);
+    })
   }
 
 }
