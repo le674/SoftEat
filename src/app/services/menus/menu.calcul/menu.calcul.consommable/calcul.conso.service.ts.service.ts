@@ -31,6 +31,7 @@ export class CalculConsoServiceTsService {
 
   convertUnity(unity: string, is_full: boolean):string {
     if(is_full){
+      if(unity === 'm') return 'm (mètre)';
       if(unity === 'g') return 'g (grame)';
       if(unity === 'kg') return 'kg (kilogramme)';
       if(unity === 'L') return 'L (litre)';
@@ -39,6 +40,7 @@ export class CalculConsoServiceTsService {
       if(unity === 'p') return 'p (pièce)';
     }
     else{
+      if(unity  === 'm (mètre)') return 'm';
       if(unity === 'g (grame)') return 'g';
       if(unity === 'kg (kilogramme)') return 'kg';
       if(unity === 'L (litre)') return 'L';

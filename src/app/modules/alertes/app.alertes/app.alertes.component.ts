@@ -22,6 +22,8 @@ export class AppAlertesComponent implements OnInit, OnDestroy {
   private restaurant:string;
   private alerte_subscription:Subscription;
   private alerte_unsubscribe!: Unsubscribe;
+  private stock_unsubscribe!: Unsubscribe;
+  private conso_unsubscribe!: Unsubscribe;
 
   constructor(private alerte_service: AlertesService,  router: Router) { 
     this.toasts_stock = [];
@@ -35,6 +37,8 @@ export class AppAlertesComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.alerte_subscription.unsubscribe();
+    this.stock_unsubscribe();
+    this.conso_unsubscribe();
   }
 
   ngOnInit(): void {
@@ -42,11 +46,23 @@ export class AppAlertesComponent implements OnInit, OnDestroy {
     let user_info = this.url.queryParams;
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];
+    this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "stock").then((num) => {
+      
+      this.stock_unsubscribe = this.alerte_service.getLastPAlertesBDD(this.prop, this.restaurant, num, "stock");
+    })
+
+    this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "conso").then((num) =>{
+
+      this.conso_unsubscribe = this.alerte_service.getLastPAlertesBDD(this.prop, this.restaurant, num, "conso");
+    })
+
     // on subscribe au getLastPAlertesBDD de la dashboard attention au fuite mémoire 
     this.alerte_subscription = this.alerte_service.getLastPAlertes().pipe(first()).subscribe((alertes) => {  
       for(let alerte of alertes){
         if(alerte.categorie === "stock"){
-          this.toasts_stock.push(alerte);
+          if(!alerte.read){
+            this.toasts_stock.push(alerte);
+          }
         }
       }
     })
@@ -55,6 +71,7 @@ export class AppAlertesComponent implements OnInit, OnDestroy {
   markReadStock(toast:CAlerte):void{
     toast.read = true;
     this.alerte_service.getPPakageNumber(this.prop, this.restaurant, 'stock').then((p_number:number) => {
+
       this.alerte_service.updateAlerte(this.prop, this.restaurant, toast,'stock', p_number);
     })
   }

@@ -45,7 +45,7 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
         date_reception: string,
       }
     }, private service: ConsommableInteractionService,
-    private changeDetector: ChangeDetectorRef, private _snackBar: MatSnackBar, private service_alertes:AlertesService ) {
+    private _snackBar: MatSnackBar, private service_alertes:AlertesService ) {
     this._mat_dialog_ref = dialogRef;
     this.is_modif = this.data.is_modif;
   }

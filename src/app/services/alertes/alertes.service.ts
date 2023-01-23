@@ -150,6 +150,7 @@ getLastPAlertesBDD(prop: string, restaurant: string, num_package:number, categor
   }
 
   async updateAlerte(prop: string, restaurant: string, toast: CAlerte, categorie: string, package_number:number) {
+    
     const path = `alertes_${prop}_${restaurant}/${prop}/${restaurant}/${categorie}/package_${package_number}/`
     const ref_db = ref(this.db, path);
     const to_update = `alertes_${toast.current}`
