@@ -2,10 +2,10 @@ import { ThisReceiver } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
 import { Unsubscribe } from 'firebase/auth';
-import { child, Database, DatabaseReference, get, getDatabase, onValue, ref, remove, set, update } from 'firebase/database';
-import { collection, doc, Firestore, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
+import { child, Database, DatabaseReference, get, getDatabase, onValue, ref, remove, update } from 'firebase/database';
+import { collection, Firestore, getDocs, getFirestore } from "firebase/firestore";
 import { Subject } from 'rxjs';
-import { CIngredient, Ingredient } from 'src/app/interfaces/ingredient';
+import { CIngredient } from 'src/app/interfaces/ingredient';
 import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.service';
 
 
@@ -38,7 +38,7 @@ export class IngredientsInteractionService {
       this.ingredients = [];
       this.data_ingredient.next([]);
       ingredients.forEach((ingredient) => {
-        if ((ingredient.key !== "preparation") && (ingredient.key !== "resto_auth")) {
+        if (ingredient.key !== "preparation") {
           const add_ingredient = new CIngredient(this.service, this);
           add_ingredient.setNom(ingredient.key);
           add_ingredient.setCategorieRestaurant(ingredient.child("categorie").val());
@@ -96,6 +96,38 @@ export class IngredientsInteractionService {
     return this.sub_ingredients_prep;
   }
 
+  async getIngredientsBrFromRestaurantsPROM(prop: string, restaurant: string, ingredients_ids: Array<string>){
+    this.ingredients = [];
+    const ref_db = ref(this.db);
+    const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/`
+    await get(child(ref_db, path)).then((ingredients) => {
+      ingredients.forEach((ingredient) => {
+        if (ingredient.key !== "preparation") {
+          if(ingredient.key !== null && ingredients_ids.includes(ingredient.key)){
+            const add_ingredient = new CIngredient(this.service, this);
+            add_ingredient.setNom(ingredient.key);
+            add_ingredient.setCategorieRestaurant(ingredient.child("categorie").val());
+            add_ingredient.setCategorieDico(ingredient.child("categorie_dico").val());
+            add_ingredient.setCategorieTva(ingredient.child("categorie_tva").val());
+            add_ingredient.setTauxTva(ingredient.child("taux_tva").val());
+            add_ingredient.setCost(ingredient.child("cost").val());
+            add_ingredient.setQuantity(ingredient.child("quantity").val());
+            add_ingredient.setQuantityUniy(ingredient.child("quantity_unitaire").val());
+            add_ingredient.setUnity(ingredient.child("unity").val());
+            add_ingredient.setQuantityAfterPrep(ingredient.child("quantity_after_prep").val());
+            add_ingredient.setQuantityBefPrep(ingredient.child("quantity_bef_prep").val());
+            add_ingredient.setCostTtc(ingredient.child("cost_ttc").val());
+            add_ingredient.setDlc(ingredient.child("dlc").val());
+            add_ingredient.setDateReception(ingredient.child("date_reception").val());
+            add_ingredient.setMarge(ingredient.child("marge").val());
+            add_ingredient.setVrac(ingredient.child("vrac").val());
+            this.ingredients.push(add_ingredient);
+          }
+        }
+      })
+    })
+    return this.ingredients;
+  }
 
   async getInfoIngFromDico(nom: string) {
     let ingredient ={

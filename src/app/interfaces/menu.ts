@@ -82,3 +82,31 @@ export class Cmenu implements Menu{
        return this.consommables
     }
 }
+
+// les classes TMP servent de classe tampon pour les classes principales  
+export class TMPmenu {
+    "ingredients": Array<{id:string, quantity:number, unity:string}>
+    "plats": Array<{id:string, quantity:number, unity:string}>
+    "etapes": Array<{id:string,commentaire:string, temps:number}>
+
+    setPlats(plats: Array<{id:string, quantity:number, unity:string}>){
+        this.plats = plats;
+    }
+    getPlats(){
+        return this.plats;
+    }
+
+    setIngredients(ingredients: Array<{id:string, quantity:number, unity:string}>){
+        this.ingredients = ingredients;
+    }
+    getIngredients(){
+        return this.ingredients;
+    }
+    setEtapes(etapes: Array<{id:string,commentaire:string, temps:number}>){
+        this.etapes = etapes;
+    }
+    getEtapes(){
+        return this.etapes
+    }
+
+}

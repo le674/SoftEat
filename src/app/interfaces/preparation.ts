@@ -7,6 +7,7 @@ export interface Preparation {
     "ingredients":Array<Ingredient>
     "consommables":Array<Consommable>
     "etapes":Array<Etape>
+    "time":number
 
     getNom():string;
     setNom(nom:string):void;
@@ -16,14 +17,18 @@ export interface Preparation {
     getIngredients():Array<Ingredient>;
     setConsommbale(consommables:Array<Consommable>):void;
     getConsommbale():Array<Consommable>;
+    getTime():number;
+    setTime(time:number):void;
 }
 
 export class Cpreparation implements Preparation {
+
     "nom": string;
     "portions": number;
     "ingredients": Ingredient[];
     "consommables": Consommable[];
     "etapes": Etape[];
+    "time":number
     getNom(): string {
         return this.nom
     }
@@ -48,5 +53,10 @@ export class Cpreparation implements Preparation {
     getConsommbale(): Consommable[] {
        return this.consommables
     }
-
+    getTime(): number {
+        return this.time;
+    }
+    setTime(time: number): void {
+        this.time = time;
+    }
 }
