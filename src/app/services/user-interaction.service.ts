@@ -77,7 +77,7 @@ export class UserInteractionService{
 
   async getUserDataFromUid(uid:string, prop:string, restaurant:string){
     this.user = new User()
-    const ref_db = ref(this.db, `users_${prop}_${restaurant}/${prop}/${restaurant}/${uid}`);
+    const ref_db = ref(this.db, `user_${prop}/${prop}/${restaurant}/${uid}`);
     await get(ref_db).then((user : any) => {
       if(user.exists()){
         this.user.id = uid;
@@ -138,12 +138,12 @@ export class UserInteractionService{
     await update(ref_db, {
       [`users/${prop}/${user_uid}/email/`]: email,
       [`users/${user_uid}/email/`]: email,
-      [`users_${prop}_${restaurant}/${prop}/${restaurant}/${user_uid}/email/`]: email
+      [`user_${prop}/${prop}/${restaurant}/${user_uid}/email/`]: email
     })
   }
 
   async updateNumber(prop:string, restaurant:string ,user_uid:string, new_number:string){
-    const ref_db = ref(this.db, `users_${prop}_${restaurant}/${prop}/${restaurant}/${user_uid}/number/`);
+    const ref_db = ref(this.db, `user_${prop}/${prop}/${restaurant}/${user_uid}/number/`);
     await set(ref_db, new_number)
   }
 

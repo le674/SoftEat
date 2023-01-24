@@ -1,1 +1,64 @@
-<p>app.recettes works!</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu du restaurant</title>
+</head>
+<body>
+    <h1> Menus </h1>
+    <div id="container">
+        <div class="container-fluid" id="card_number">
+            <div #widgetsContent class="row card-deck-scrollable flex-nowrap scroll-right">
+                <div class="tourcard">
+                    <figure>
+                        <div class="tourpic">
+                            <img width="300" height="200" src='/assets/images/autho.jpg'>
+                            <span class="tourday hot">rejoindre se restaurant</span>
+                        </div>
+                        <figcaption>
+                            <h3 class="entry-title">
+                                <a>Nom du menu</a>
+                            </h3>
+                            <span class="tourprice">
+                                <span class="currency">EUR. </span><span class="price">PRIX MENU</span>
+                              </span>
+                        </figcaption>
+                        <div class="tourbtn">
+                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer">
+                              <br>  <i class="fa-solid fa-eye"></i> <br> Consulter
+                            </a>
+                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer">
+                                <br> <i class="fa-solid fa-pen"> </i> <br> Modifier
+                            </a>
+                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer">
+                                <br> <i class="fa-solid fa-trash"> </i> <br> Supprimer
+                            </a>
+                        </div>
+                    </figure>
+                </div>
+                <div class="tourcard" id="res_card" style="min-width: 300px">
+                    <figure>
+                        <div class="tourpic">
+                            <img width="300" height="200" src='/assets/images/street.jpg'>
+                            <span class="tourday hot">Ajouter un menu</span>
+                        </div>
+                        <figcaption>
+                            <h3 class="entry-title">
+                                <a>Nouveau menu</a>
+                            </h3>
+                            <span class="description">Cliquer pour ajouter un menu</span>
+                        </figcaption>
+                        <div class="tourbtn">
+                            <a class="btn btn-sm" target="_blank" rel="noreferrer">
+                                <i class="fa-solid fa-plus"></i> <br> Ajouter
+                            </a>
+                        </div>
+                    </figure>
+                </div>               
+            </div>
+        </div>    
+    </div>
+</body>
+</html>
