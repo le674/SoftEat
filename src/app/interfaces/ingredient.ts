@@ -30,7 +30,7 @@ export interface Ingredient {
     "conditionnement": boolean;
     "refrigiree": boolean;
     "gelee": boolean;
-    "consommables": Array<Cconsommable>;
+    "consommables": Array<{name:string, quantity:number, unity:string}>;
     "etapes": Array<Cetape>
     "base_ing":Array<{
         name:string,
@@ -83,8 +83,8 @@ export interface Ingredient {
     setGel(val: boolean | null): void;
     getEtapes():Array<Cetape>;
     setEtapes(etapes: Array<Cetape> | null): void;
-    getConsommable():Array<Cconsommable>;
-    setConsommables(conso: Array<Cconsommable> | null): void;
+    getConsommable():Array<{name:string, quantity:number, unity:string}>;
+    setConsommables(conso: Array<{name:string, quantity:number, unity:string}> | null): void;
     getBaseIng(): Array<{name:string, quantity:number,  quantity_unity: number, unity:string, cost:number}>;
     setBaseIng(names: Array<{name:string, quantity:number,  quantity_unity: number, unity:string, cost:number}> | null): void;
     getMarge():number;
@@ -141,8 +141,8 @@ export class CIngredient implements Ingredient {
     "conditionnement": boolean;
     "refrigiree": boolean;
     "gelee": boolean;
-    "consommables": Array<Cconsommable>;
-    "etapes": Array<Cetape>
+    "consommables": Array<{name:string, quantity:number, unity:string}>;
+    "etapes": Array<Cetape>;
     "base_ing":Array<{
         name:string,
         quantity:number,
@@ -341,10 +341,10 @@ export class CIngredient implements Ingredient {
     setEtapes(etapes: Cetape[] | null): void {
         if (etapes !== null) this.etapes = etapes;
     }
-    getConsommable(): Cconsommable[] {
+    getConsommable(): {name:string, quantity:number, unity:string}[] {
         return this.consommables;
     }
-    setConsommables(conso: Cconsommable[] | null): void {
+    setConsommables(conso: {name:string, quantity:number, unity:string}[] | null): void {
         if (conso !== null) this.consommables = conso;
     }
     getBaseIng(): Array<{

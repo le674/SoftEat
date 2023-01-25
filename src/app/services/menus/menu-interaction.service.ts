@@ -7,6 +7,7 @@ import { Cmenu, TMPmenu } from 'src/app/interfaces/menu';
 import { Cplat } from 'src/app/interfaces/plat';
 import { ConsommableInteractionService } from './consommable-interaction.service';
 import { IngredientsInteractionService } from './ingredients-interaction.service';
+import { PlatsInteractionService } from './plats-interaction.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class MenuInteractionService {
   private menus: Array<Cmenu>
 
   constructor(private ofApp: FirebaseApp, private ingredient_service: IngredientsInteractionService,
-     private conso_service: ConsommableInteractionService) { 
+     private conso_service: ConsommableInteractionService, private plat_service: PlatsInteractionService ) { 
     this.db = getDatabase(ofApp);
     this.menus = [];
   }
@@ -96,22 +97,23 @@ export class MenuInteractionService {
                 return {ingredients: ingredients, consommables: menu_conso}
               })
 
-             const plats_prom = conso_prom.then((consos_ings) => {
-              const menu_plats = new Array<Cplat>;
-              return {ingredients: consos_ings.ingredients, consommables: consos_ings.consommables, plats: menu_plats}
+              conso_prom.then((consos_ings) => {
+              const plat_prom = this.plat_service.getPlatsFromRestaurantsFiltreIds(prop, restaurant, consos_ings.ingredients, consos_ings.consommables, tmp_plats).then((plats) => {
+                return {ingredients: consos_ings.ingredients, consommables: consos_ings.consommables, plats: plats}
+              })
+              plat_prom.then((ings_conso_plats) => {
+                    const curr_menu = new Cmenu();
+                    if(menu.key !== null){
+                      curr_menu.setNom(menu.key);
+                      curr_menu.setEtapes(res_etapes);
+                      curr_menu.setIngredients(ings_conso_plats.ingredients);
+                      curr_menu.setConsommbale(ings_conso_plats.consommables);
+                      curr_menu.setPlats(ings_conso_plats.plats);
+                    }
+                  this.menus.push(curr_menu);
+               })
              })
-             plats_prom.then((ings_conso_plats) => {
-              const curr_menu = new Cmenu();
-                if(menu.key !== null){
-                  curr_menu.setNom(menu.key);
-                  curr_menu.setEtapes(res_etapes);
-                  curr_menu.setIngredients(ings_conso_plats.ingredients);
-                  curr_menu.setConsommbale(ings_conso_plats.consommables);
-                  curr_menu.setPlats(ings_conso_plats.plats);
-                }
-              this.menus.push(curr_menu);
-             })
-            })
+          })
       })
     })
     return this.menus

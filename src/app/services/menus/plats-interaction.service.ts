@@ -26,15 +26,30 @@ export class PlatsInteractionService {
     this.preparation = [];
   }
 
-  async getPlatsFromRestaurantsFiltreIds(prop: string, restaurant: string, ids: Array<string>,
-    lst_ings: Array<CIngredient>, lst_conso: Array<Cconsommable>) {
+  async getPlatsFromRestaurantsFiltreIds(prop: string, restaurant: string,
+    lst_ings: Array<CIngredient>, lst_conso: Array<Cconsommable>,  plats_data:Array<{id:string, quantity:number, unity:string}>) {
     const ref_db = ref(this.db);
     this.plats = [];
     const path = `plats_${prop}_${restaurant}/${prop}/${restaurant}/`;
     await get(child(ref_db, path)).then((plats) => {
       this.ingredient_service.getIngredientsPrepFromRestaurantsPROMForMenu(prop, restaurant).then((lst_prepa: Array<CIngredient>) => {
         plats.forEach((plat) => {
-          if ((plat.key !== null) && (ids.includes(plat.key))) {
+          let curr_plat = {id:"", quantity:0, unity:'g'}; 
+          const ids = plats_data.map((plat) => plat.id);
+          let curr_plats = plats_data.filter((plat_data) => plat_data.id === plat.key)
+          if(curr_plats.length === 1){
+            curr_plat = curr_plats[0];
+          }
+          else{
+            if(curr_plats.length > 1){
+              console.log("[WARNING] plusieurs plats identiques sont présent sur le noeud plat");
+            }
+            else{
+              console.log("[WARNING] auncun de plats présents sur le chemin plats/ correspondent au plat présent sur le chemin menu/");
+            }
+          }
+
+          if((plat.key !== null) && (ids.includes(plat.key))) {
             const add_plat = new Cplat();
             let preparations = plat.child("preparations").val();
             let consommables = plat.child("consommables").val();
@@ -76,6 +91,7 @@ export class PlatsInteractionService {
               curr_etape.setTemps(etape_data.temps);
               this.etapes.push(curr_etape);
             }
+
             add_plat.setNom(plat.key);
             add_plat.setIngredients(this.ingredients);
             add_plat.setConsommbale(this.consommables);
@@ -85,6 +101,8 @@ export class PlatsInteractionService {
             add_plat.setCategorie(categorie);
             add_plat.setPrix(price);
             add_plat.setTauxTva(tva_taux);
+            add_plat.setQuantity(curr_plat.quantity);
+            add_plat.setUnity(curr_plat.unity);
             this.plats.push(add_plat);
           }
         })

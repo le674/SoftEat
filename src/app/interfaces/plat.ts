@@ -3,6 +3,8 @@ import { CIngredient, Consommable, Ingredient } from "./ingredient";
 import { Preparation } from "./preparation";
 
 export interface Plat{
+    "quantity":number;
+    "unity":string;
     /* dessert, entrée, plat */
     "type":string
     /* categorie associé à la tva
@@ -41,9 +43,15 @@ export interface Plat{
     getPrix():number;
     setTauxTva(tva:number):void;
     getTauxTva():number;
+    getQuantity():number;
+    setQuantity(quantity:number):void;
+    getUnity():string;
+    setUnity(unity:string):void;
 }
 
 export class Cplat implements Plat{
+    "quantity": number;
+    "unity": string;
     "type": string;
     "categorie": string;
     "nom": string;
@@ -115,5 +123,16 @@ export class Cplat implements Plat{
     getTauxTva(): number {
         return this.taux_tva;
     }
-
+    getQuantity(): number {
+        return this.quantity;
+    }
+    setQuantity(quantity: number): void {
+        this.quantity = quantity;
+    }
+    getUnity(): string {
+        return this.unity;
+    }
+    setUnity(unity: string): void {
+       this.unity = unity;
+    }
 }
