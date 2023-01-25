@@ -5,6 +5,8 @@ import { RecettesRoutingModule } from './recettes-routing.module';
 import { AppMenuComponent } from './app.menu/app.menu.component';
 import { AppPlatsComponent } from './app.plats/app.plats.component';
 import { AppPreparationsComponent } from './app.preparations/app.preparations.component';
+import {MatDialogModule } from '@angular/material/dialog';
+import { AddMenuComponent } from './app.menu/add.menu/add.menu.component';
 
 
 
@@ -12,11 +14,13 @@ import { AppPreparationsComponent } from './app.preparations/app.preparations.co
   declarations: [
    AppMenuComponent,
    AppPlatsComponent,
-   AppPreparationsComponent
+   AppPreparationsComponent,
+   AddMenuComponent
   ],
   imports: [
     CommonModule,
-    RecettesRoutingModule
+    RecettesRoutingModule,
+    MatDialogModule
   ],
   exports: [
     AppMenuComponent,

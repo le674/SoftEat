@@ -23,11 +23,16 @@ export class MenuInteractionService {
   }
 
   async getMenusFromRestaurants(prop: string, restaurant: string) {
+    this.menus = [];
     const ref_db = ref(this.db);
     const path = `menu_${prop}_${restaurant}/${prop}/${restaurant}/`;
     await get(child(ref_db, path)).then((menus) => {
       menus.forEach((menu) => {
           const add_menu = new Cmenu();
+          let iter_ing:[string, {quantity:number, unity:string}][] = [["", {quantity:0, unity:""}]];
+          let iter_plats:[string, {quantity:number, unity:string}][] = [["", {quantity:0, unity:""}]];
+          let iter_consommbales:[string, {quantity:number, unity:string}][] = [["", {quantity:0, unity:""}]];
+          let iter_etapes:[string, {commentaire:string, temps:number}][] = [["", {commentaire:"", temps:0}]];
           let tmp_ings:Array<{id:string, quantity:number, unity:string}> = [];
           let tmp_conso:Array<{id:string, quantity:number, unity:string}> = [];
           let tmp_plats:Array<{id:string, quantity:number, unity:string}> = [];
@@ -36,10 +41,10 @@ export class MenuInteractionService {
           let ingredients = menu.child("ingredients").val();
           let plats = menu.child("plat").val();
           let etapes = menu.child("etapes").val();
-          const iter_ing:[string, {quantity:number, unity:string}][] = Object.entries(ingredients);
-          const iter_plats:[string, {quantity:number, unity:string}][] = Object.entries(plats);
-          const iter_consommbales:[string, {quantity:number, unity:string}][] = Object.entries(consommables);
-          const iter_etapes:[string, {commentaire:string, temps:number}][] = Object.entries(etapes);
+          if(ingredients !== null) iter_ing = Object.entries(ingredients);
+          if(plats !== null) iter_plats = Object.entries(plats);
+          if(consommables !== null) iter_consommbales = Object.entries(consommables);
+          if(etapes !== null) iter_etapes = Object.entries(etapes);
           
           for(let [id_ing, ing_data] of iter_ing){
             const curr_ing = {id: id_ing, quantity:ing_data.quantity, unity: ing_data.unity};
@@ -104,7 +109,7 @@ export class MenuInteractionService {
               plat_prom.then((ings_conso_plats) => {
                     const curr_menu = new Cmenu();
                     if(menu.key !== null){
-                      curr_menu.setNom(menu.key);
+                      curr_menu.setNom(menu.key.split('_').join(' '));
                       curr_menu.setEtapes(res_etapes);
                       curr_menu.setIngredients(ings_conso_plats.ingredients);
                       curr_menu.setConsommbale(ings_conso_plats.consommables);

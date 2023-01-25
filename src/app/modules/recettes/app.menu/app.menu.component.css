@@ -12,6 +12,20 @@ h1{
     color: rgb(125, 181, 46);
 }
 
+/* comment CSS
+ */
+ .btn {
+  background: transparent;
+  margin: 3px;
+  border: 1px solid #eaeaea;
+  border-radius: 0px;
+}
+
+.btn:hover {
+  background: #eaeaea;
+  color: black;
+}
+
 #container{
     display: flex;
     justify-content: flex-start;
@@ -210,7 +224,7 @@ h1{
     bottom: 0;
     right: 0;
     padding: 15px;
-    margin: 0 0 30px;
+    margin: 0 0 90px;
     display: flex;
     flex-flow: column nowrap;
     color: white;
