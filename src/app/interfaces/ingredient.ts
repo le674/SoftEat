@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { IngredientsInteractionService } from "../services/menus/ingredients-interaction.service";
 import { CalculService } from "../services/menus/menu.calcul/menu.calcul.ingredients/calcul.service";
+import { Cetape } from "./etape";
 
 export type TIngredientBase = { 
     name: string, 
@@ -29,6 +30,8 @@ export interface Ingredient {
     "conditionnement": boolean;
     "refrigiree": boolean;
     "gelee": boolean;
+    "consommables": Array<Cconsommable>;
+    "etapes": Array<Cetape>
     "base_ing":Array<{
         name:string,
         quantity:number,
@@ -78,6 +81,10 @@ export interface Ingredient {
     setCondition(val: boolean | null): void;
     getGel(): boolean;
     setGel(val: boolean | null): void;
+    getEtapes():Array<Cetape>;
+    setEtapes(etapes: Array<Cetape> | null): void;
+    getConsommable():Array<Cconsommable>;
+    setConsommables(conso: Array<Cconsommable> | null): void;
     getBaseIng(): Array<{name:string, quantity:number,  quantity_unity: number, unity:string, cost:number}>;
     setBaseIng(names: Array<{name:string, quantity:number,  quantity_unity: number, unity:string, cost:number}> | null): void;
     getMarge():number;
@@ -134,6 +141,8 @@ export class CIngredient implements Ingredient {
     "conditionnement": boolean;
     "refrigiree": boolean;
     "gelee": boolean;
+    "consommables": Array<Cconsommable>;
+    "etapes": Array<Cetape>
     "base_ing":Array<{
         name:string,
         quantity:number,
@@ -151,6 +160,8 @@ export class CIngredient implements Ingredient {
     "vrac": boolean;
 
     constructor(private service: CalculService, private db_service: IngredientsInteractionService) {
+        this.consommables = [];
+        this.etapes = []
         this.base_ing = [];
         this.nom = "";
         this.categorie_restaurant = "";
@@ -169,6 +180,7 @@ export class CIngredient implements Ingredient {
         this.quantity_bef_prep = 0;
         this.quantity_after_prep = 0;
     }
+
   /*   getValBouchFromNewQauntity(quantity_unity: number): CIngredient {
         throw new Error("Method not implemented.");
     } */
@@ -323,7 +335,18 @@ export class CIngredient implements Ingredient {
     setGel(val: boolean | null): void {
         if (val !== null) this.gelee = val;
     }
-
+    getEtapes(): Cetape[] {
+       return this.etapes;
+    }
+    setEtapes(etapes: Cetape[] | null): void {
+        if (etapes !== null) this.etapes = etapes;
+    }
+    getConsommable(): Cconsommable[] {
+        return this.consommables;
+    }
+    setConsommables(conso: Cconsommable[] | null): void {
+        if (conso !== null) this.consommables = conso;
+    }
     getBaseIng(): Array<{
         name:string,
         quantity:number,

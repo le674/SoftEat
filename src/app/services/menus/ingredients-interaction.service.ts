@@ -89,6 +89,8 @@ export class IngredientsInteractionService {
         add_ingredient.setDateReception(new Date(ingredient.child("date_reception").val()));
         add_ingredient.setMarge(ingredient.child("marge").val());
         add_ingredient.setVrac(ingredient.child("vrac").val());
+        add_ingredient.setConsommables(ingredient.child('consommables').val());
+        add_ingredient.setEtapes(ingredient.child("etapes").val());
         this.ingredients_prep.push(add_ingredient);
       })
       this.data_ingredient_prep.next(this.ingredients_prep);
@@ -127,6 +129,32 @@ export class IngredientsInteractionService {
       })
     })
     return this.ingredients;
+  }
+
+  async getIngredientsPrepFromRestaurantsPROMForMenu(prop: string, restaurant: string){
+    this.ingredients_prep = [];
+    const ref_db = ref(this.db);
+    const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/`
+    await get(child(ref_db, path)).then((preparations) => {
+      preparations.forEach((preparation) => {
+            const add_preparation = new CIngredient(this.service, this);
+            add_preparation.setNom(preparation.key);
+            add_preparation.setCategorieRestaurant(preparation.child("categorie").val());
+            add_preparation.setCategorieDico(preparation.child("categorie_dico").val());
+            add_preparation.setCategorieTva(preparation.child("categorie_tva").val());
+            add_preparation.setTauxTva(preparation.child("taux_tva").val());
+            add_preparation.setCost(preparation.child("cost").val());
+            add_preparation.setQuantity(preparation.child("quantity").val());
+            add_preparation.setQuantityUniy(preparation.child("quantity_unitaire").val());
+            add_preparation.setUnity(preparation.child("unity").val());
+            add_preparation.setCostTtc(preparation.child("cost_ttc").val());
+            add_preparation.setEtapes(preparation.child("etapes").val());
+            add_preparation.setConsommables(preparation.child("consommables").val())
+            add_preparation.setVrac(preparation.child("vrac").val());
+            this.ingredients_prep.push(add_preparation);
+      })
+    })
+    return this.ingredients_prep;
   }
 
   async getInfoIngFromDico(nom: string) {
