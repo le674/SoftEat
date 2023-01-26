@@ -39,14 +39,14 @@ export class ConsommableInteractionService {
     return this.consommable
   }
 
-  async getConsommablesFromRestaurantsFiltreIds(prop: string, restaurant: string, ids: Array<string>) {
+  async getConsommablesFromRestaurantsFiltreIds(prop: string, restaurant: string) {
     const ref_db = ref(this.db);
     this.consommable = [];
     const path = `consommables_${prop}_${restaurant}/${prop}/${restaurant}/`;
     await get(child(ref_db, path)).then((consommable) => {
       consommable.forEach((conso) => {
         if ((conso.key !== "preparation")) {
-          if((conso.key !== null) && (ids.includes(conso.key))){
+          if((conso.key !== null)){
             const add_consommable = new Cconsommable();
             add_consommable.setNom(conso.key);
             add_consommable.setTauxTva(conso.child("taux_tva").val());

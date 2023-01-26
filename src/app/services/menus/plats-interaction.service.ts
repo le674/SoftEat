@@ -27,7 +27,7 @@ export class PlatsInteractionService {
   }
 
   async getPlatsFromRestaurantsFiltreIds(prop: string, restaurant: string,
-    lst_ings: Array<CIngredient>, lst_conso: Array<Cconsommable>,  plats_data:Array<{id:string, quantity:number, unity:string}>) {
+    lst_ings: Array<CIngredient>, lst_conso: Array<Cconsommable>) {
     const ref_db = ref(this.db);
     this.plats = [];
     const path = `plats_${prop}_${restaurant}/${prop}/${restaurant}/`;
@@ -35,21 +35,7 @@ export class PlatsInteractionService {
       this.ingredient_service.getIngredientsPrepFromRestaurantsPROMForMenu(prop, restaurant).then((lst_prepa: Array<CIngredient>) => {
         plats.forEach((plat) => {
           let curr_plat = {id:"", quantity:0, unity:'g'}; 
-          const ids = plats_data.map((plat) => plat.id);
-          let curr_plats = plats_data.filter((plat_data) => plat_data.id === plat.key)
-          if(curr_plats.length === 1){
-            curr_plat = curr_plats[0];
-          }
-          else{
-            if(curr_plats.length > 1){
-              console.log("[WARNING] plusieurs plats identiques sont présent sur le noeud plat");
-            }
-            else{
-              console.log("[WARNING] auncun de plats présents sur le chemin plats/ correspondent au plat présent sur le chemin menu/");
-            }
-          }
-
-          if((plat.key !== null) && (ids.includes(plat.key))) {
+          if((plat.key !== null)) {
             const add_plat = new Cplat();
             let preparations = plat.child("preparations").val();
             let consommables = plat.child("consommables").val();

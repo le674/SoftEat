@@ -7,6 +7,7 @@ import { AppPlatsComponent } from './app.plats/app.plats.component';
 import { AppPreparationsComponent } from './app.preparations/app.preparations.component';
 import {MatDialogModule } from '@angular/material/dialog';
 import { AddMenuComponent } from './app.menu/add.menu/add.menu.component';
+import { MatButtonModule } from '@angular/material/button';
 
 
 
@@ -20,7 +21,8 @@ import { AddMenuComponent } from './app.menu/add.menu/add.menu.component';
   imports: [
     CommonModule,
     RecettesRoutingModule,
-    MatDialogModule
+    MatDialogModule,
+    MatButtonModule
   ],
   exports: [
     AppMenuComponent,

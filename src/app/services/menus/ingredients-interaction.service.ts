@@ -98,14 +98,14 @@ export class IngredientsInteractionService {
     return this.sub_ingredients_prep;
   }
 
-  async getIngredientsBrFromRestaurantsPROM(prop: string, restaurant: string, ingredients_ids: Array<string>){
+  async getIngredientsBrFromRestaurantsPROM(prop: string, restaurant: string){
     this.ingredients = [];
     const ref_db = ref(this.db);
     const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/`
     await get(child(ref_db, path)).then((ingredients) => {
       ingredients.forEach((ingredient) => {
         if (ingredient.key !== "preparation") {
-          if(ingredient.key !== null && ingredients_ids.includes(ingredient.key)){
+          if(ingredient.key !== null){
             const add_ingredient = new CIngredient(this.service, this);
             add_ingredient.setNom(ingredient.key);
             add_ingredient.setCategorieRestaurant(ingredient.child("categorie").val());

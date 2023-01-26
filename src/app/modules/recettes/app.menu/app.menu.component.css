@@ -6,10 +6,20 @@ body{
 
 }
 
+header{
+  margin-bottom: 5%;
+}
+
 h1{
     margin-top: 50px;
+    margin-bottom: 50px;
     font-weight: normal;
     color: rgb(125, 181, 46);
+}
+
+#action-buttons{
+  display: flex;
+  justify-content: flex-end;
 }
 
 /* comment CSS
@@ -260,3 +270,16 @@ h1{
     display: block;
     opacity: 1;
   }
+
+  .mat-stroked-button{
+    color: rgb(125, 181, 46);
+    background-color: white;
+    height: 40px;
+    min-width: 96px;
+    margin: 0;
+}
+
+.mat-stroked-button:hover{
+    background-color: rgb(125, 181, 46);
+    color: white;
+}
