@@ -1,6 +1,6 @@
 import { Etape } from "./etape";
 import { CIngredient, Consommable, Ingredient } from "./ingredient";
-import { Preparation } from "./preparation";
+import { Cpreparation, Preparation } from "./preparation";
 
 export interface Plat{
     "quantity":number;
@@ -18,7 +18,7 @@ export interface Plat{
     "ingredients":Array<Ingredient>;
     "consommables":Array<Consommable>;
     "etapes":Array<Etape>;
-    "preparations":Array<CIngredient>;
+    "preparations":Array<Cpreparation>;
     "prix":number;
     /* dépend de la catégorie appliquée*/
     "taux_tva":number;
@@ -37,8 +37,8 @@ export interface Plat{
     getConsommbale():Array<Consommable>;
     getEtapes():Array<Etape>;
     setEtapes(etapes:Array<Etape>):void;
-    getPreparations():Array<CIngredient>;
-    setPreparations(preparations:Array<CIngredient>):void;
+    getPreparations():Array<Cpreparation>;
+    setPreparations(preparations:Array<Cpreparation>):void;
     setPrix(prix:number):void;
     getPrix():number;
     setTauxTva(tva:number):void;
@@ -59,7 +59,7 @@ export class Cplat implements Plat{
     "ingredients": Ingredient[];
     "consommables": Consommable[];
     "etapes": Etape[];
-    "preparations": CIngredient[];
+    "preparations": Cpreparation[];
     "prix": number;
     "taux_tva": number;
     getNom(): string {
@@ -105,10 +105,10 @@ export class Cplat implements Plat{
     setEtapes(etapes: Etape[]): void {
         this.etapes = etapes;
     }
-    getPreparations(): CIngredient[] {
+    getPreparations(): Cpreparation[] {
         return this.preparations;
     }
-    setPreparations(preparations: CIngredient[]): void {
+    setPreparations(preparations: Cpreparation[]): void {
         this.preparations = preparations;
     }
     setPrix(prix: number): void {

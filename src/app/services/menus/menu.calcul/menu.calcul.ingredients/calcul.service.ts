@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CIngredient } from 'src/app/interfaces/ingredient';
+import { Cpreparation } from 'src/app/interfaces/preparation';
 
 @Injectable({
   providedIn: 'root'
@@ -144,7 +145,7 @@ export class CalculService {
   }
 
 
-  getValBouchFromBasIng(base: CIngredient[], ingredient_act: CIngredient): number {
+  getValBouchFromBasIng(base: CIngredient[], ingredient_act: Cpreparation): number {
 
     if (base.length === 0) {
       return 0;

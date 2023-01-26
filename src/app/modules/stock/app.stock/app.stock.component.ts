@@ -7,6 +7,7 @@ import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/auth';
 import { concat, map, Observable, Subscription, withLatestFrom } from 'rxjs';
 import { CIngredient, Ingredient } from 'src/app/interfaces/ingredient';
+import { Cpreparation } from 'src/app/interfaces/preparation';
 import { AlertesService } from 'src/app/services/alertes/alertes.service';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
@@ -70,7 +71,7 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
   private page_number: number;
   private router: Router;
   private ingredient_table: Array<CIngredient>;
-  private ingredient_table_prep: Array<CIngredient>;
+  private ingredient_table_prep: Array<Cpreparation>;
   private url: UrlTree;
   private prop: string;
   private restaurant: string;
@@ -158,6 +159,7 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     if(ingBR.length > 0){
       for (let i = 0; i < ingPREP.length; i++) {
+        const nom = (ingPREP[i].nom === null) ? "" : ingPREP[i].nom as string;
         let lst_base_ing = this.ingredient_table
         .filter((ingredient) => ingPREP[i].base_ing
           .map((ing) => ing.name)
@@ -188,7 +190,7 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
       }
 
       let row_ingredient = {
-        nom: ingPREP[i].nom.split('_').join('<br>'),
+        nom: nom.split('_').join('<br>'),
         categorie_tva: ingPREP[i].categorie_tva.split(' ').join('<br>'),
         cost: ingPREP[i].cost,
         cost_ttc: ingPREP[i].cost_ttc,
@@ -249,15 +251,18 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     quantity_unity: number;
     unity: string;
     cuisinee: string;
-    date_reception: string;
     dlc: string;
     marge: number;
-    vrac:boolean
+    vrac:boolean;
+    date_reception: string;
   }) {
     let res_dlc = 0;
     let var_base_ing: Array<{ name: string; quantity_unity: number; quantity: number; unity: string; cost: number }> = [];
     const dlc = this.calc_service.stringToDate(ele.dlc);
-    const date_reception = this.calc_service.stringToDate(ele.date_reception);
+    if(ele.date_reception !== undefined){
+      const date_reception = this.calc_service.stringToDate(ele.date_reception);
+      res_dlc = (dlc.getTime() - date_reception.getTime()) / (1000 * 60 * 60 * 24)
+    }
 
 
     ele.nom = ele.nom.split('<br>').join('_')
@@ -276,7 +281,7 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     ingredient.cost = ele.cost;
     ingredient.quantity = ele.quantity;
     ingredient.quantity_unity = ele.quantity_unity;
-    res_dlc = (dlc.getTime() - date_reception.getTime()) / (1000 * 60 * 60 * 24)
+    
     const dialogRef = this.dialog.open(AddIngComponent, {
       height: `${window.innerHeight}px`,
       width: `${window.innerWidth - window.innerWidth / 15}px`,

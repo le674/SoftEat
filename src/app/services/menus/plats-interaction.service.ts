@@ -4,7 +4,7 @@ import { child, Database, get, getDatabase, ref } from 'firebase/database';
 import { Cetape } from 'src/app/interfaces/etape';
 import { Cconsommable, CIngredient, Ingredient } from 'src/app/interfaces/ingredient';
 import { Cplat } from 'src/app/interfaces/plat';
-import { Preparation } from 'src/app/interfaces/preparation';
+import { Cpreparation, Preparation } from 'src/app/interfaces/preparation';
 import { IngredientsInteractionService } from './ingredients-interaction.service';
 
 @Injectable({
@@ -15,7 +15,7 @@ export class PlatsInteractionService {
   private plats: Array<Cplat>;
   private consommables: Array<Cconsommable>;
   private ingredients: Array<CIngredient>;
-  private preparation: Array<CIngredient>;
+  private preparation: Array<Cpreparation>;
   private etapes: Array<Cetape>
   constructor(private ofApp: FirebaseApp, private ingredient_service: IngredientsInteractionService) {
     this.plats = [];
@@ -32,7 +32,7 @@ export class PlatsInteractionService {
     this.plats = [];
     const path = `plats_${prop}_${restaurant}/${prop}/${restaurant}/`;
     await get(child(ref_db, path)).then((plats) => {
-      this.ingredient_service.getIngredientsPrepFromRestaurantsPROMForMenu(prop, restaurant).then((lst_prepa: Array<CIngredient>) => {
+      this.ingredient_service.getIngredientsPrepFromRestaurantsPROMForMenu(prop, restaurant).then((lst_prepa: Array<Cpreparation>) => {
         plats.forEach((plat) => {
           let curr_plat = {id:"", quantity:0, unity:'g'}; 
           if((plat.key !== null)) {

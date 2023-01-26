@@ -26,20 +26,9 @@ export interface Ingredient {
     "date_reception":Date;
     "dlc": Date;
     "cost_ttc": number;
-    "val_bouch": number;
     "conditionnement": boolean;
     "refrigiree": boolean;
     "gelee": boolean;
-    "consommables": Array<{name:string, quantity:number, unity:string}>;
-    "etapes": Array<Cetape>
-    "base_ing":Array<{
-        name:string,
-        quantity:number,
-        quantity_unity: number,
-        unity: string,
-        cost:number,
-        vrac:boolean
-    }>;
     "marge": number;
     "vrac":boolean;
 
@@ -63,10 +52,6 @@ export interface Ingredient {
     setQuantity(quantity: number | null): void;
     getQuantityUnity(): number;
     setQuantityUniy(quantity: number | null): void;
-    setQuantityAfterPrep(quantity: number | null): void;
-    getQuantityAfterPrep(): number;
-    setQuantityBefPrep(quantity: number | null): void;
-    getQuantityBefPrep(): number;
     getUnity(): string;
     setUnity(unity: string | null): void;
     getDlc(): Date;
@@ -81,12 +66,6 @@ export interface Ingredient {
     setCondition(val: boolean | null): void;
     getGel(): boolean;
     setGel(val: boolean | null): void;
-    getEtapes():Array<Cetape>;
-    setEtapes(etapes: Array<Cetape> | null): void;
-    getConsommable():Array<{name:string, quantity:number, unity:string}>;
-    setConsommables(conso: Array<{name:string, quantity:number, unity:string}> | null): void;
-    getBaseIng(): Array<{name:string, quantity:number,  quantity_unity: number, unity:string, cost:number}>;
-    setBaseIng(names: Array<{name:string, quantity:number,  quantity_unity: number, unity:string, cost:number}> | null): void;
     getMarge():number;
     setMarge(marge:number):void;
     getVrac():boolean;
@@ -141,28 +120,11 @@ export class CIngredient implements Ingredient {
     "conditionnement": boolean;
     "refrigiree": boolean;
     "gelee": boolean;
-    "consommables": Array<{name:string, quantity:number, unity:string}>;
-    "etapes": Array<Cetape>;
-    "base_ing":Array<{
-        name:string,
-        quantity:number,
-        quantity_unity: number,
-        unity:string,
-        cost:number,
-        vrac:boolean,
-        marge:number
-    }>;
-    "quantity_bef_prep": number;
-    "quantity_after_prep": number;
-    "val_bouch": number;
     "is_similar":number;
     "marge": number;
     "vrac": boolean;
 
     constructor(private service: CalculService, private db_service: IngredientsInteractionService) {
-        this.consommables = [];
-        this.etapes = []
-        this.base_ing = [];
         this.nom = "";
         this.categorie_restaurant = "";
         this.categorie_tva = "";
@@ -176,9 +138,6 @@ export class CIngredient implements Ingredient {
         this.dlc = new Date();
         this.date_reception = new Date()
         this.cost_ttc = 0;
-        this.val_bouch = 0;
-        this.quantity_bef_prep = 0;
-        this.quantity_after_prep = 0;
     }
 
   /*   getValBouchFromNewQauntity(quantity_unity: number): CIngredient {
@@ -291,19 +250,6 @@ export class CIngredient implements Ingredient {
         if (coeff !== null) this.is_similar = coeff
     }
 
-    setQuantityAfterPrep(quantity: number | null): void {
-        if (quantity !== null) this.quantity_after_prep = quantity;
-    }
-    getQuantityAfterPrep(): number {
-        return this.quantity_after_prep;
-    }
-    setQuantityBefPrep(quantity: number | null): void {
-        if (quantity !== null) this.quantity_bef_prep = quantity;
-    }
-    getQuantityBefPrep(): number {
-        return this.quantity_bef_prep;
-    }
-
     getQuantityUnity(): number {
         return this.quantity_unity
     }
@@ -335,40 +281,8 @@ export class CIngredient implements Ingredient {
     setGel(val: boolean | null): void {
         if (val !== null) this.gelee = val;
     }
-    getEtapes(): Cetape[] {
-       return this.etapes;
-    }
-    setEtapes(etapes: Cetape[] | null): void {
-        if (etapes !== null) this.etapes = etapes;
-    }
-    getConsommable(): {name:string, quantity:number, unity:string}[] {
-        return this.consommables;
-    }
-    setConsommables(conso: {name:string, quantity:number, unity:string}[] | null): void {
-        if (conso !== null) this.consommables = conso;
-    }
-    getBaseIng(): Array<{
-        name:string,
-        quantity:number,
-        quantity_unity: number,
-        unity:string,
-        cost:number,
-        vrac:boolean,
-        marge:number
-    }> {
-        return this.base_ing;
-    }
-    setBaseIng(names: Array<{
-        name:string,
-        quantity:number,
-        quantity_unity: number,
-        unity:string,
-        cost:number,
-        marge:number,
-        vrac:boolean
-    }> | null): void {
-        if (names !== null) this.base_ing= names;
-    }
+
+    
     getMarge(): number {
        return this.marge
     }
