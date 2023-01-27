@@ -77,7 +77,7 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
   private restaurant: string;
   private req_ingredients_brt!: Unsubscribe;
   private req_ingredients_prep!: Unsubscribe;
-  private req_merge_obs!:Subscription
+  private req_merge_obs!: Subscription
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
@@ -94,7 +94,7 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     this.url = this.router.parseUrl(this.router.url);
     this.ingredient_table_prep = [];
   }
-  
+
   ngAfterViewInit(): void {
 
   }
@@ -115,6 +115,7 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
       withLatestFrom(this.service.getIngredientsPrepFromRestaurants())
     )
     this.req_merge_obs = merge_obs_ing.subscribe(([ingBR, ingPREP]) => {
+      let val_bouch: any = "veuillez entre les ingrédients de bases"
       this.ingredients_displayed_br = [];
       this.ingredients_displayed_prep = [];
       this.dataSource = new MatTableDataSource(this.ingredients_displayed_br);
@@ -122,9 +123,9 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
       this.ingredient_table_prep = ingPREP;
       for (let i = 0; i < ingBR.length; i++) {
         // on vérifie si le nombre d'ingrédient présent est inférieur à la marge si c'est le cas on lève une alerte
-       /*  if(ingBR[i].getQuantity() > 0)
-        if(ingBR[i].getQuantity() < ingBR[i].getMarge()) */
-        ingBR[i].getInfoDico().then((ingredient:any) => {
+        /*  if(ingBR[i].getQuantity() > 0)
+         if(ingBR[i].getQuantity() < ingBR[i].getMarge()) */
+        ingBR[i].getInfoDico().then((ingredient: any) => {
           if ((ingBR[i].getTauxTva() === 0) || (ingBR[i].getTauxTva === undefined)) {
             ingredient.getCostTtcFromCat();
           }
@@ -156,60 +157,63 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
             this.pageChangedFirst(first_event);
           }
         })
-    }
-    if(ingBR.length > 0){
-      for (let i = 0; i < ingPREP.length; i++) {
-        const nom = (ingPREP[i].nom === null) ? "" : ingPREP[i].nom as string;
-        let lst_base_ing = this.ingredient_table
-        .filter((ingredient) => ingPREP[i].base_ing
-          .map((ing) => ing.name)
-          .includes(ingredient.nom))
-        this.calc_service.sortTwoListStringByName(lst_base_ing, ingPREP[i].base_ing);
-        let ings = ingPREP[i].base_ing.filter((ing) => lst_base_ing.map((base) => base.nom).includes(ing.name));
-        ings.map((ing, index: number) => {
-
-        ing.unity = lst_base_ing[index].unity;
-        ing.cost = lst_base_ing[index].cost;
-        ing.quantity_unity = lst_base_ing[index].quantity_unity;
-      })
-
-      if (lst_base_ing.length > 0) {
-          ingPREP[i].cost = lst_base_ing
-            .map((base) => base.cost)
-            .reduce((cost, next_cost) => cost + next_cost);
-          ingPREP[i].cost_ttc = lst_base_ing
-            .map((base) => base.cost_ttc)
-            .reduce((cost, next_cost) => cost + next_cost);
       }
+      if (ingBR.length > 0) {
+        for (let i = 0; i < ingPREP.length; i++) {
+          const nom = (ingPREP[i].nom === null) ? "" : ingPREP[i].nom as string;
+          if ((ingPREP[i].base_ing !== null) && (ingPREP[i].base_ing !== undefined)) {
+            let lst_base_ing = this.ingredient_table
+              .filter((ingredient) => ingPREP[i].base_ing
+                .map((ing) => ing.name)
+                .includes(ingredient.nom))
+            this.calc_service.sortTwoListStringByName(lst_base_ing, ingPREP[i].base_ing);
+            let ings = ingPREP[i].base_ing.filter((ing) => lst_base_ing.map((base) => base.nom).includes(ing.name));
+            ings.map((ing, index: number) => {
 
-      ingPREP[i].val_bouch = this.calc_service.getValBouchFromBasIng(lst_base_ing, ingPREP[i]);
+              ing.unity = lst_base_ing[index].unity;
+              ing.cost = lst_base_ing[index].cost;
+              ing.quantity_unity = lst_base_ing[index].quantity_unity;
+            })
 
-      let val_bouch: any = ingPREP[i].val_bouch;
-      if ((ingPREP[i].quantity_bef_prep > 0) && (val_bouch === 0)) {
-        val_bouch = "veuillez entrer les ingrédients de bases"
+            if (lst_base_ing.length > 0) {
+              ingPREP[i].cost = lst_base_ing
+                .map((base) => base.cost)
+                .reduce((cost, next_cost) => cost + next_cost);
+              ingPREP[i].cost_ttc = lst_base_ing
+                .map((base) => base.cost_ttc)
+                .reduce((cost, next_cost) => cost + next_cost);
+            }
+
+            ingPREP[i].val_bouch = this.calc_service.getValBouchFromBasIng(lst_base_ing, ingPREP[i]);
+
+            let val_bouch: any = ingPREP[i].val_bouch;
+            if ((ingPREP[i].quantity_bef_prep > 0) && (val_bouch === 0)) {
+              val_bouch = "veuillez entrer les ingrédients de bases"
+            }
+
+          }
+
+          let row_ingredient = {
+            nom: nom.split('_').join('<br>'),
+            categorie_tva: ingPREP[i].categorie_tva.split(' ').join('<br>'),
+            cost: ingPREP[i].cost,
+            cost_ttc: ingPREP[i].cost_ttc,
+            val_bouch: val_bouch,
+            bef_prep: ingPREP[i].quantity_bef_prep,
+            after_prep: ingPREP[i].quantity_after_prep,
+            quantity: ingPREP[i].quantity,
+            quantity_unity: ingPREP[i].quantity_unity,
+            unity: ingPREP[i].unity,
+            cuisinee: 'oui',
+            date_reception: ingPREP[i].date_reception.toLocaleString(),
+            dlc: ingPREP[i].dlc.toLocaleString(),
+            marge: ingPREP[i].marge,
+            vrac: ingPREP[i].vrac
+          };
+          this.ingredients_displayed_prep.push(row_ingredient);
+        }
       }
-
-      let row_ingredient = {
-        nom: nom.split('_').join('<br>'),
-        categorie_tva: ingPREP[i].categorie_tva.split(' ').join('<br>'),
-        cost: ingPREP[i].cost,
-        cost_ttc: ingPREP[i].cost_ttc,
-        val_bouch: val_bouch,
-        bef_prep: ingPREP[i].quantity_bef_prep,
-        after_prep: ingPREP[i].quantity_after_prep,
-        quantity: ingPREP[i].quantity,
-        quantity_unity: ingPREP[i].quantity_unity,
-        unity: ingPREP[i].unity,
-        cuisinee: 'oui',
-        date_reception: ingPREP[i].date_reception.toLocaleString(),
-        dlc: ingPREP[i].dlc.toLocaleString(),
-        marge: ingPREP[i].marge,
-        vrac: ingPREP[i].vrac
-      };
-        this.ingredients_displayed_prep.push(row_ingredient);
-      }
-    }
-  })
+    })
   }
 
   OpenAddIngForm() {
@@ -233,7 +237,7 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
           not_prep: this.ingredient_table,
           quantity_after_prep: 0,
           marge: 0,
-          vrac:false
+          vrac: false
         }
       }
     });
@@ -253,13 +257,13 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     cuisinee: string;
     dlc: string;
     marge: number;
-    vrac:boolean;
+    vrac: boolean;
     date_reception: string;
   }) {
     let res_dlc = 0;
     let var_base_ing: Array<{ name: string; quantity_unity: number; quantity: number; unity: string; cost: number }> = [];
     const dlc = this.calc_service.stringToDate(ele.dlc);
-    if(ele.date_reception !== undefined){
+    if (ele.date_reception !== undefined) {
       const date_reception = this.calc_service.stringToDate(ele.date_reception);
       res_dlc = (dlc.getTime() - date_reception.getTime()) / (1000 * 60 * 60 * 24)
     }
@@ -281,7 +285,7 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     ingredient.cost = ele.cost;
     ingredient.quantity = ele.quantity;
     ingredient.quantity_unity = ele.quantity_unity;
-    
+
     const dialogRef = this.dialog.open(AddIngComponent, {
       height: `${window.innerHeight}px`,
       width: `${window.innerWidth - window.innerWidth / 15}px`,
@@ -353,7 +357,7 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dataSource.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
   }
 
-  pageChangedFirst(event: PageEvent){
+  pageChangedFirst(event: PageEvent) {
     let datasource = [... this.ingredients_displayed_br.concat(this.ingredients_displayed_prep)];
     this.page_number = 0;
     this.dataSource.data = datasource.splice(0, event.pageSize);

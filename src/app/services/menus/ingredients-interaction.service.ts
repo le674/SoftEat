@@ -89,6 +89,7 @@ export class IngredientsInteractionService {
         add_preparation.vrac = preparation.child("vrac").val();
         add_preparation.consommables = preparation.child('consommables').val();
         add_preparation.etapes = preparation.child("etapes").val();
+        add_preparation.is_stock =  preparation.child("is_stock").val();
         this.preparation.push(add_preparation);
       })
       this.data_ingredient_prep.next(this.preparation);
@@ -151,6 +152,7 @@ export class IngredientsInteractionService {
             add_preparation.base_ing = preparation.child("base_ing").val();
             add_preparation.quantity_bef_prep = preparation.child("quantity_after_prep").val();
             add_preparation.quantity_after_prep = preparation.child("quantity_after_prep").val();
+            add_preparation.is_stock = preparation.child("is_stock").val();
             this.preparation.push(add_preparation);
       })
     })
@@ -210,7 +212,8 @@ export class IngredientsInteractionService {
              date_reception: preparation.date_reception,
              dlc: preparation.dlc,
              marge: preparation.marge,
-             vrac: preparation.vrac
+             vrac: preparation.vrac,
+             is_stock:preparation.is_stock
            }
          }
          // si on reçoit des ingrédients brut à modifier 

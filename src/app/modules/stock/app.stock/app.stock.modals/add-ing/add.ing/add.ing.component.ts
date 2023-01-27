@@ -83,9 +83,11 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     }, private service: IngredientsInteractionService, private changeDetector: ChangeDetectorRef,
     private _snackBar: MatSnackBar, private service_alertes: AlertesService) {
     this.base_ing_full = [];
-    if (this.data.ingredient.base_ing.length > 0) {
-      this.base_ing_full = this.data.ingredient.not_prep.filter((ing) => this.data.ingredient.base_ing.map((ing) => ing.name).includes(ing.nom));
-      this.calcul_service.sortTwoListStringByName(this.base_ing_full, this.data.ingredient.base_ing);
+    if(this.data.ingredient.base_ing !== null){
+      if (this.data.ingredient.base_ing.length > 0) {
+        this.base_ing_full = this.data.ingredient.not_prep.filter((ing) => this.data.ingredient.base_ing.map((ing) => ing.name).includes(ing.nom));
+        this.calcul_service.sortTwoListStringByName(this.base_ing_full, this.data.ingredient.base_ing);
+      }
     }
     this._mat_dialog_ref = dialogRef;
     this.is_prep = false;
@@ -101,6 +103,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
 
 
   ngAfterContentInit(): void {
+
     //après initialisatin du contenu ont ajoute les éléments dans le formulaire
     const unity = this.calcul_service.convertUnity(this.data.ingredient.unity, true);
     this.add_ing_section.get("name")?.setValue(this.data.ingredient.nom);
@@ -110,8 +113,10 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     this.add_ing_section.get("quantity")?.setValue(this.data.ingredient.quantity);
     // on calcul le cout unitaire en fonction des ingrédient de base pour un ingrédient préparé
     // le calcul est pas long mais plus tard ajouter une condition pour ne pas recalculer se qui a été entré dans la bdd 
-    if (this.data.ingredient.cuisinee === 'oui') {
-      this.data.ingredient.unitary_cost = this.calcul_service.calcCostIngPrep(this.data.ingredient.base_ing)
+    if(this.data.ingredient.base_ing !== null){
+      if (this.data.ingredient.cuisinee === 'oui') {
+        this.data.ingredient.unitary_cost = this.calcul_service.calcCostIngPrep(this.data.ingredient.base_ing)
+      }
     }
     this.add_ing_section.get("unitary_cost")?.setValue(this.data.ingredient.unitary_cost);
     // Si on récupère une date de limite de consommatin négative on dépose 0 sinon on dépose la dlc
@@ -150,13 +155,16 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
 
 
   changeIngredient(is_prep: boolean) {
+
     let new_ing_aft_prepa = null;
     let new_ing: CIngredient | Cpreparation;
-    if (is_prep) {
+    
+    if (!is_prep) {
       new_ing = new CIngredient(this.calcul_service, this.service);
     }
     else {
       new_ing = new Cpreparation(this.calcul_service);
+      new_ing.is_stock = true;
     }
     let act_quant = 0;
     // on construit la date limite de consomation à partir de la date de récéption.
@@ -195,16 +203,30 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         if (lst_quantity_bas_ing.length === lst_name_bas_ing.length) {
           lst_quantity_bas_ing.forEach((quantity: any, index: number) => {
             const name = lst_name_bas_ing[index].split(' ').join('_')
-            const _base_ing = this.data.ingredient.not_prep.filter((ing) => (ing.nom === name))[0];
-            base_ing.push({
-              name: name,
-              quantity: quantity,
-              unity: _base_ing.unity,
-              cost: _base_ing.cost,
-              quantity_unity: _base_ing.quantity_unity,
-              marge: _base_ing.marge,
-              vrac: _base_ing.vrac
-            })
+            let _base_ings = this.data.ingredient.not_prep.filter((ing) => (ing.nom === name));
+            if(_base_ings.length > 0){
+              const _base_ing = _base_ings[0];
+              base_ing.push({
+                name: name,
+                quantity: quantity,
+                unity: _base_ing.unity,
+                cost: _base_ing.cost,
+                quantity_unity: _base_ing.quantity_unity,
+                marge: _base_ing.marge,
+                vrac: _base_ing.vrac
+              })
+            }
+            else{
+              base_ing.push({
+                name: name,
+                quantity: quantity,
+                quantity_unity: 0,
+                unity: '',
+                cost: 0,
+                vrac: false,
+                marge: 0
+              })
+            }
           })
           console.log('ok');
           (new_ing as Cpreparation).base_ing = base_ing;
