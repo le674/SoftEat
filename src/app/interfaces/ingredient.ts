@@ -13,6 +13,13 @@ export type TIngredientBase = {
     marge:number
 }
 
+export type TConsoBase = {
+    name:string,
+    quantity:number,
+    unity:string
+}
+
+
 export interface Ingredient {
     "nom": string;
     "categorie_restaurant": string;

@@ -3,6 +3,7 @@ import { CalculService } from "../services/menus/menu.calcul/menu.calcul.ingredi
 import { Etape } from "./etape";
 import { Consommable, Ingredient } from "./ingredient";
 
+
 export interface Preparation {    
     "nom":string | null;
     "categorie_restaurant": string;
@@ -130,6 +131,6 @@ export class Cpreparation implements Preparation {
 
     getCostTtcFromTaux():void{
         this.cost_ttc = this.service.getCostTtcFromTaux(this.taux_tva, this.cost)
-    }
+    }   
 
 }

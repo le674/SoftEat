@@ -8,6 +8,13 @@ import { AppPreparationsComponent } from './app.preparations/app.preparations.co
 import {MatDialogModule } from '@angular/material/dialog';
 import { AddMenuComponent } from './app.menu/add.menu/add.menu.component';
 import { MatButtonModule } from '@angular/material/button';
+import { AddPreparationsComponent } from './app.preparations/add.preparations/add.preparations.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
@@ -16,13 +23,20 @@ import { MatButtonModule } from '@angular/material/button';
    AppMenuComponent,
    AppPlatsComponent,
    AppPreparationsComponent,
-   AddMenuComponent
+   AddMenuComponent,
+   AddPreparationsComponent
   ],
   imports: [
     CommonModule,
     RecettesRoutingModule,
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatTooltipModule,
+    ReactiveFormsModule,
+    MatOptionModule
   ],
   exports: [
     AppMenuComponent,

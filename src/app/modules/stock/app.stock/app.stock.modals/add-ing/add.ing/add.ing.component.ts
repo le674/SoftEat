@@ -19,7 +19,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
 
   public is_prep: boolean;
   public is_vrac: boolean;
-  public index_inputs: Array<number>
+  public index_inputs: Array<number>;
   public add_ing_section = new FormGroup({
     name: new FormControl('', Validators.required),
     name_tva: new FormControl(''),
@@ -202,7 +202,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         const lst_name_bas_ing = this.names_prep.map((names_dom) => names_dom.nativeElement.value);
         if (lst_quantity_bas_ing.length === lst_name_bas_ing.length) {
           lst_quantity_bas_ing.forEach((quantity: any, index: number) => {
-            const name = lst_name_bas_ing[index].split(' ').join('_')
+            const name = lst_name_bas_ing[index].split(' ').join('_');
             let _base_ings = this.data.ingredient.not_prep.filter((ing) => (ing.nom === name));
             if(_base_ings.length > 0){
               const _base_ing = _base_ings[0];
@@ -214,7 +214,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
                 quantity_unity: _base_ing.quantity_unity,
                 marge: _base_ing.marge,
                 vrac: _base_ing.vrac
-              })
+              });
             }
             else{
               base_ing.push({
@@ -227,8 +227,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
                 marge: 0
               })
             }
-          })
-          console.log('ok');
+          });
           (new_ing as Cpreparation).base_ing = base_ing;
         }
       }
@@ -265,10 +264,10 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
 
     if (this.add_ing_section.value["vrac"] !== undefined) {
       if (this.add_ing_section.value["vrac"] === 'oui') {
-        new_ing.vrac = true
+        new_ing.vrac = true;
       }
       else {
-        new_ing.vrac = false
+        new_ing.vrac = false;
       }
     }
 
@@ -282,7 +281,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       new_ing.dlc = new_ing.dlc;
     }
     else {
-      new_ing.dlc = this.calcul_service.stringToDate(this.data.ingredient.date_reception)
+      new_ing.dlc = this.calcul_service.stringToDate(this.data.ingredient.date_reception);
     }
 
     if (this.is_prep) {
@@ -297,7 +296,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         // alors on affiche une alerte
         const nom = (new_ing.nom === null) ? "" : new_ing.nom;
         const msg = "l'ingredient : ".concat(nom).concat(" arrive en rupture de stock.");
-        this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "SoftEat", "", "stock")
+        this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "SoftEat", "", "stock");
       }
     }
     else {
@@ -305,7 +304,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         //alors on affiche une alerte 
         const nom = (new_ing.nom === null) ? "" : new_ing.nom;
         const msg = "l'ingredient ".concat(nom).concat(" arrive en rupture de stock.");
-        this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "stock")
+        this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "stock");
       }
     }
 
@@ -315,14 +314,14 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
           if (_base.quantity_unity < _base.marge) {
             // alors on affiche une alerte
             const msg = "l'ingredient : ".concat(_base.name).concat(" arrive en rupture de stock.");
-            this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "stock")
+            this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "stock");
           }
         }
         else {
           if (_base.quantity < _base.marge) {
             //alors on affiche une alerte 
             const msg = "l'ingredient ".concat(_base.name).concat(" arrive en rupture de stock.");
-            this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "stock")
+            this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "stock");
           }
         }
       })
@@ -332,17 +331,17 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       if (is_prep) {
         this.service.setPreparationInBdd(new_ing as Cpreparation, this.data.prop, this.data.restaurant, is_prep, new_ing_aft_prepa).then(() => {
           if (this.is_modif) {
-            this._snackBar.open("l'ingrédient vient d'être modifié dans la base de donnée du restaurant", "fermer")
+            this._snackBar.open("l'ingrédient vient d'être modifié dans la base de donnée du restaurant", "fermer");
           }
           else {
-            this._snackBar.open("l'ingrédient vient d'être ajouté à la base de donnée du restaurant", "fermer")
+            this._snackBar.open("l'ingrédient vient d'être ajouté à la base de donnée du restaurant", "fermer");
           }
         }).catch((e) => {
           if (this.is_modif) {
-            this._snackBar.open("nous n'avons pas réussit à modifier l'ingrédient dans la base de donnée", "fermer")
+            this._snackBar.open("nous n'avons pas réussit à modifier l'ingrédient dans la base de donnée", "fermer");
           }
           else {
-            this._snackBar.open("nous n'avons pas réussit à envoyer l'ingrédient dans la base de donnée", "fermer")
+            this._snackBar.open("nous n'avons pas réussit à envoyer l'ingrédient dans la base de donnée", "fermer");
           }
         })
         this.dialogRef.close()
@@ -350,24 +349,24 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       else{
         this.service.setIngInBdd(new_ing as CIngredient, this.data.prop, this.data.restaurant, is_prep).then(() => {
           if (this.is_modif) {
-            this._snackBar.open("l'ingrédient vient d'être modifié dans la base de donnée du restaurant", "fermer")
+            this._snackBar.open("l'ingrédient vient d'être modifié dans la base de donnée du restaurant", "fermer");
           }
           else {
-            this._snackBar.open("l'ingrédient vient d'être ajouté à la base de donnée du restaurant", "fermer")
+            this._snackBar.open("l'ingrédient vient d'être ajouté à la base de donnée du restaurant", "fermer");
           }
         }).catch((e) => {
           if (this.is_modif) {
-            this._snackBar.open("nous n'avons pas réussit à modifier l'ingrédient dans la base de donnée", "fermer")
+            this._snackBar.open("nous n'avons pas réussit à modifier l'ingrédient dans la base de donnée", "fermer");
           }
           else {
-            this._snackBar.open("nous n'avons pas réussit à envoyer l'ingrédient dans la base de donnée", "fermer")
+            this._snackBar.open("nous n'avons pas réussit à envoyer l'ingrédient dans la base de donnée", "fermer");
           }
         })
         this.dialogRef.close()
       }
     }
     else {
-      this._snackBar.open("veuillez valider l'ensemble des champs", "fermer")
+      this._snackBar.open("veuillez valider l'ensemble des champs", "fermer");
     }
   }
 
