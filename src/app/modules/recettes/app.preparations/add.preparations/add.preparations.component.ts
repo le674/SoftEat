@@ -2,8 +2,7 @@ import { Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildr
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Cetape } from 'src/app/interfaces/etape';
-import { CIngredient, TConsoBase, TIngredientBase } from 'src/app/interfaces/ingredient';
-import { Cpreparation} from 'src/app/interfaces/preparation';
+import {TConsoBase, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
 

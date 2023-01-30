@@ -18,7 +18,7 @@ export class PreparationInteractionService {
     const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name}/`
     const ref_db = ref(this.db, path);
     Object.assign(updates, {"consommables": conso});
-    Object.assign(updates, {"ingredients": ings});
+    Object.assign(updates, {"base_ings": ings});
     Object.assign(updates, {"etapes": etapes});
     await update(ref_db, updates);
   }

@@ -1,12 +1,12 @@
-<div class="selectSection">
+<!-- <div class="selectSection">
     <p>l'ingrédient a-t-il été préparé en salle ?</p>
     <mat-radio-group aria-label="SelectPrepa" id="is_cooked">
         <mat-radio-button (change)="clickRadio(true)" value="oui">Oui</mat-radio-button>
         <mat-radio-button (change)="clickRadio(false)" value="non">Non</mat-radio-button>
         <mat-radio-button (change)="clickRadio(false)" value="aucune">Ne pas préciser</mat-radio-button>
     </mat-radio-group>
-</div>
-<form [formGroup]="add_ing_section" (ngSubmit)="changeIngredient(is_prep)">
+</div> -->
+<form [formGroup]="add_ing_section" (ngSubmit)="changeIngredient()">
     <div class="section">
         <p>Entrer le nom du nouveau ingrédient : </p>
         <mat-form-field appearance="fill">
@@ -88,7 +88,7 @@
             <input type="number" matInput formControlName="marge">
         </mat-form-field>
     </div>
-    <div id="prepa"  *ngIf="is_prep">
+   <!--  <div id="prepa"  *ngIf="is_prep">
         <div class="section">
             <p>Quelles sont les ingrédients de base, <br> entrer la  quantitée de l'ingrédient de base utilisé pour la préparation : </p>
             <div  id="old_ing" *ngFor="let index of index_inputs">
@@ -116,6 +116,6 @@
                 <input type="number" matInput formControlName="quantity_after_prep">
             </mat-form-field>
         </div>
-    </div>
+    </div> -->
     <button mat-stroked-button type="submit"> Ajouter </button>
 </form>

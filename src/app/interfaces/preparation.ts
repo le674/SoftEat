@@ -1,6 +1,6 @@
 import { IngredientsInteractionService } from "../services/menus/ingredients-interaction.service";
 import { CalculService } from "../services/menus/menu.calcul/menu.calcul.ingredients/calcul.service";
-import { Etape } from "./etape";
+import { Cetape, Etape } from "./etape";
 import { Consommable, Ingredient } from "./ingredient";
 
 
@@ -94,6 +94,24 @@ export class Cpreparation implements Preparation {
         this.quantity_after_prep = 0;
     }
 
+
+    // permet d'initialiser certain attributs pour l'objet préparation lorsque celui-ci a des attributs null
+    setDefautPrep() {
+        this.categorie_restaurant = (this.categorie_restaurant === null) ? "" : this.categorie_restaurant;
+        this.cost = (this.cost === null) ? 0 : this.cost;
+        this.categorie_tva = (this.categorie_tva === null) ? "" : this.categorie_tva;
+        this.consommables = (this.consommables === null) ? [] : this.consommables;
+        this.cost_ttc = (this.cost_ttc === null) ? 0 : this.cost_ttc;
+        this.date_reception = (this.date_reception === null) ? new Date() : this.date_reception;
+        this.etapes = (this.etapes === null) ? [] : this.etapes;
+        this.quantity = (this.quantity === null) ? 0 : this.quantity;
+        this.quantity_after_prep = (this.quantity_after_prep === null) ? 0 : this.quantity_after_prep;
+        this.quantity_bef_prep = (this.quantity_bef_prep === null) ? 0 : this.quantity_bef_prep;
+        this.cost_ttc = (this.cost_ttc === null) ? 0 : this.cost_ttc;
+        this.taux_tva = (this.taux_tva === null) ? 0 : this.taux_tva;
+        this.unity = (this.unity === null) ? "" : this.unity;
+        this.vrac = (this.vrac === null) ? false : this.vrac;
+    }
 
     getNom(): string | null {
         return this.nom

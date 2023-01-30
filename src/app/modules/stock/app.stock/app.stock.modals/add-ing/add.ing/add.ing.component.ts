@@ -17,7 +17,7 @@ import { Cpreparation } from 'src/app/interfaces/preparation';
 })
 export class AddIngComponent implements OnInit, AfterContentInit, AfterViewChecked, AfterViewInit {
 
-  public is_prep: boolean;
+  /* public is_prep: boolean; */
   public is_vrac: boolean;
   public index_inputs: Array<number>;
   public add_ing_section = new FormGroup({
@@ -31,7 +31,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     dlc: new FormControl(0, Validators.required),
     marge: new FormControl(0, Validators.required),
     vrac: new FormControl('', Validators.required),
-    names_base_ing: new FormArray([
+   /*  names_base_ing: new FormArray([
       new FormControl("")
     ]),
     quantity_bef_prep: new FormArray([
@@ -40,22 +40,13 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     unity_base: new FormArray([
       new FormControl(0)
     ]),
-    quantity_after_prep: new FormControl(0, Validators.required)
+    quantity_after_prep: new FormControl(0, Validators.required) */
   })
   @ViewChild('taux')
   taux!: ElementRef;
 
-  @ViewChildren('ing_names_prep')
-  names_prep!: QueryList<ElementRef>;
-
-  @ViewChildren('quantity_bef_prep')
-  quantity_bef_prep!: QueryList<ElementRef>;
-
-  @ViewChildren('unity_base')
-  unity_base!: QueryList<ElementRef>;
-
   private current_inputs: number;
-  private base_ing_full: Array<CIngredient>;
+/*   private base_ing_full: Array<CIngredient>; */
   private readonly _mat_dialog_ref: MatDialogRef<AddIngComponent>;
   private is_modif: boolean;
 
@@ -65,7 +56,6 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       prop: string,
       is_modif: boolean,
       ingredient: {
-        cuisinee: string,
         nom: string,
         categorie: string
         quantity: number,
@@ -74,23 +64,23 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         unitary_cost: number,
         dlc: number,
         date_reception: string,
-        base_ing: Array<TIngredientBase>,
-        not_prep: Array<CIngredient>,
-        quantity_after_prep: number,
+/*         base_ing: Array<TIngredientBase>,
+        not_prep: Array<CIngredient>, */
+        /* quantity_after_prep: number, */
         marge: number,
         vrac: boolean
       }
     }, private service: IngredientsInteractionService, private changeDetector: ChangeDetectorRef,
     private _snackBar: MatSnackBar, private service_alertes: AlertesService) {
-    this.base_ing_full = [];
+   /*  this.base_ing_full = [];
     if(this.data.ingredient.base_ing !== null){
       if (this.data.ingredient.base_ing.length > 0) {
         this.base_ing_full = this.data.ingredient.not_prep.filter((ing) => this.data.ingredient.base_ing.map((ing) => ing.name).includes(ing.nom));
         this.calcul_service.sortTwoListStringByName(this.base_ing_full, this.data.ingredient.base_ing);
       }
-    }
+    } */
     this._mat_dialog_ref = dialogRef;
-    this.is_prep = false;
+   /*  this.is_prep = false; */
     this.current_inputs = 1;
     this.index_inputs = [this.current_inputs];
     this.is_modif = this.data.is_modif;
@@ -113,11 +103,11 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     this.add_ing_section.get("quantity")?.setValue(this.data.ingredient.quantity);
     // on calcul le cout unitaire en fonction des ingrédient de base pour un ingrédient préparé
     // le calcul est pas long mais plus tard ajouter une condition pour ne pas recalculer se qui a été entré dans la bdd 
-    if(this.data.ingredient.base_ing !== null){
+   /*  if(this.data.ingredient.base_ing !== null){
       if (this.data.ingredient.cuisinee === 'oui') {
         this.data.ingredient.unitary_cost = this.calcul_service.calcCostIngPrep(this.data.ingredient.base_ing)
       }
-    }
+    } */
     this.add_ing_section.get("unitary_cost")?.setValue(this.data.ingredient.unitary_cost);
     // Si on récupère une date de limite de consommatin négative on dépose 0 sinon on dépose la dlc
     if (this.data.ingredient.dlc > 0) {
@@ -131,18 +121,18 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       this.add_ing_section.get("marge")?.setValue(0);
     }
     // dans le cas d'une préparation on empêche l'utilisateur de modifier la champs correspondnt au coût
-    if (this.data.ingredient.cuisinee === 'oui') {
+/*     if (this.data.ingredient.cuisinee === 'oui') {
       this.add_ing_section.get("unitary_cost")?.disable();
-    }
+    } */
   }
 
   ngAfterViewInit(): void {
     // après initialisation de la vue on ajoute la tva selon la catégorie
     this.taux.nativeElement.value = this.calcul_service.getTauxFromCat(this.data.ingredient.categorie)
 
-    if (this.is_modif && this.data.ingredient.cuisinee === "oui") {
+/*     if (this.is_modif && this.data.ingredient.cuisinee === "oui") {
       this.clickRadio(true);
-    }
+    } */
     if (this.data.ingredient.vrac) {
       this.clickRadioVrac(true)
     }
@@ -154,18 +144,18 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
   }
 
 
-  changeIngredient(is_prep: boolean) {
+  changeIngredient() {
 
     let new_ing_aft_prepa = null;
-    let new_ing: CIngredient | Cpreparation;
-    
-    if (!is_prep) {
+    let new_ing: CIngredient;
+    new_ing = new CIngredient(this.calcul_service, this.service);
+/*     if (!is_prep) {
       new_ing = new CIngredient(this.calcul_service, this.service);
-    }
-    else {
+    } */
+    /* else {
       new_ing = new Cpreparation(this.calcul_service);
       new_ing.is_stock = true;
-    }
+    } */
     let act_quant = 0;
     // on construit la date limite de consomation à partir de la date de récéption.
     if (this.is_modif) {
@@ -188,7 +178,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     if (name !== undefined) {
       new_ing.setNom(name);
     }
-    if (is_prep) {
+    /* if (is_prep) {
       if ((this.add_ing_section.value["quantity_bef_prep"] !== undefined) && (this.quantity_bef_prep.length > 0)) {
         const total_quantity = this.quantity_bef_prep
           .map((prep_dom) => prep_dom.nativeElement.value)
@@ -231,12 +221,12 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
           (new_ing as Cpreparation).base_ing = base_ing;
         }
       }
-    }
-    if (is_prep) {
+    } */
+/*     if (is_prep) {
       if ((this.add_ing_section.value["quantity_after_prep"] !== undefined) && (this.add_ing_section.value["quantity_after_prep"] !== null)) {
         (new_ing as Cpreparation).quantity_after_prep = this.add_ing_section.value["quantity_after_prep"];
       }
-    }
+    } */
 
     if ((this.add_ing_section.value["name_tva"] !== undefined) && (this.add_ing_section.value["name_tva"] !== null)) {
       new_ing.categorie_tva = this.add_ing_section.value["name_tva"];
@@ -284,12 +274,12 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       new_ing.dlc = this.calcul_service.stringToDate(this.data.ingredient.date_reception);
     }
 
-    if (this.is_prep) {
+/*     if (this.is_prep) {
       if ((this.add_ing_section.value["quantity"] !== undefined) && (this.add_ing_section.value["quantity"] !== null)) {
         new_ing_aft_prepa = this.calcul_service.removeQuantityAftPrepa(this.base_ing_full,
           this.data.ingredient.base_ing, this.data.ingredient.quantity, this.add_ing_section.value["quantity"], this.is_vrac);
       }
-    }
+    } */
 
     if (new_ing.vrac) {
       if (new_ing.quantity_unity < new_ing.marge) {
@@ -308,7 +298,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       }
     }
 
-    if (is_prep) {
+   /*  if (is_prep) {
       (new_ing as Cpreparation).base_ing.forEach((_base) => {
         if (_base.vrac) {
           if (_base.quantity_unity < _base.marge) {
@@ -325,10 +315,10 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
           }
         }
       })
-    }
+    } */
 
     if (this.add_ing_section.valid) {
-      if (is_prep) {
+   /*    if (is_prep) {
         this.service.setPreparationInBdd(new_ing as Cpreparation, this.data.prop, this.data.restaurant, is_prep, new_ing_aft_prepa).then(() => {
           if (this.is_modif) {
             this._snackBar.open("l'ingrédient vient d'être modifié dans la base de donnée du restaurant", "fermer");
@@ -346,8 +336,8 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         })
         this.dialogRef.close()
       }
-      else{
-        this.service.setIngInBdd(new_ing as CIngredient, this.data.prop, this.data.restaurant, is_prep).then(() => {
+      else{ */
+        this.service.setIngInBdd(new_ing as CIngredient, this.data.prop, this.data.restaurant, false).then(() => {
           if (this.is_modif) {
             this._snackBar.open("l'ingrédient vient d'être modifié dans la base de donnée du restaurant", "fermer");
           }
@@ -364,7 +354,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         })
         this.dialogRef.close()
       }
-    }
+/*     } */
     else {
       this._snackBar.open("veuillez valider l'ensemble des champs", "fermer");
     }
@@ -381,7 +371,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       this.add_ing_section.get("quantity")?.setValue(this.data.ingredient.quantity);
     }
   }
-
+/* 
   clickRadio(state: boolean) {
     this.is_prep = state
     if (this.is_prep) {
@@ -424,17 +414,17 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       this.add_ing_section.get("quantity_after_prep")?.setValue(this.data.ingredient.quantity_after_prep);
 
     }
-  }
+  } */
 
 
-  addInput(): void {
+/*   addInput(): void {
     this.current_inputs = this.current_inputs + 1;
     this.index_inputs.push(this.current_inputs);
 
-    /*     //on notifie la liste des element ref des ingrédient de base que l'on vient d'ajouter un input
+       //on notifie la liste des element ref des ingrédient de base que l'on vient d'ajouter un input
         this.names_prep.notifyOnChanges();
-        this.quantity_bef_prep.notifyOnChanges();  */
-  }
+        this.quantity_bef_prep.notifyOnChanges();  
+  } */
 
   addTaux(event: Object): void {
     const taux = this.calcul_service.getTauxFromCat(event["value" as keyof typeof event].toString());

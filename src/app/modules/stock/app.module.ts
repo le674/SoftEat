@@ -16,13 +16,17 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatSnackBarModule} from '@angular/material/snack-bar'; 
 import { AddConsoComponent } from './app.conso/app.conso.modals/add-ing/add.ing/add.conso.component';
+import { AppPreparationComponent } from './app.preparation/app.preparation.component';
+import { AppAddPreparationComponent } from './app.preparation/app.preparation.modals/app.add.preparation/app.add.preparation.component';
 
 @NgModule({
   declarations: [
     AppStockComponent,
     AppConsoComponent,
     AddIngComponent,
-    AddConsoComponent
+    AddConsoComponent,
+    AppPreparationComponent,
+    AppAddPreparationComponent
   ],
   imports: [ 
     CommonModule,
@@ -40,6 +44,7 @@ import { AddConsoComponent } from './app.conso/app.conso.modals/add-ing/add.ing/
    ],
   exports: [
     AppStockComponent,
+    AppPreparationComponent,
     AppConsoComponent
   ],
   providers: [

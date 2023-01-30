@@ -190,7 +190,7 @@ export class IngredientsInteractionService {
     return ingredient;
   }
 
-  async setPreparationInBdd(preparation: Cpreparation, prop:string, restaurant:string, is_prep:boolean, new_ing_aft_prepa: CIngredient[] | null){
+  async setPreparationInBdd(preparation: Cpreparation, prop:string, restaurant:string, new_ing_aft_prepa: CIngredient[] | null){
     let ref_db: DatabaseReference;
     const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/`;
     ref_db = ref(this.db, path);

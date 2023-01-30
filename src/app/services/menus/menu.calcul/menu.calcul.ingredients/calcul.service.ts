@@ -119,6 +119,7 @@ export class CalculService {
 
   convertQuantity(quantity: number, unity: string): number {
     if (unity === 'g') quantity = quantity * 0.001;
+    if(unity === 'mg') quantity = quantity * 0.0001;
     if (unity === 'ml') quantity = quantity * 0.001;
     if (unity === 'cl') quantity = quantity * 0.01;
     return quantity;

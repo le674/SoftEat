@@ -168,58 +168,61 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
   clickConso(){
     this.numP.emit(4)
   }
-
-  clickMenu(){
+  clickPrepa(){
     this.numP.emit(5)
   }
 
-  clickPlats(){
+  clickMenu(){
     this.numP.emit(6)
   }
 
-  clickPreparation(){
+  clickPlats(){
     this.numP.emit(7)
   }
 
-  clickCAnalyseStock(){
+  clickPreparation(){
     this.numP.emit(8)
+  }
+
+  clickCAnalyseStock(){
+    this.numP.emit(9)
   }
   
   clickAnalyseFreq(){
-    this.numP.emit(9)
+    this.numP.emit(10)
   }  
 
   clickAnalyseTable(){
-    this.numP.emit(10)
-  }
-
-  clickAnalyseConso(){
     this.numP.emit(11)
   }
 
-  clickAnalyseCA(){
+  clickAnalyseConso(){
     this.numP.emit(12)
   }
 
-  clickAnalyseMenu(){
+  clickAnalyseCA(){
     this.numP.emit(13)
   }
 
-  clickCompta(){
+  clickAnalyseMenu(){
     this.numP.emit(14)
+  }
+
+  clickCompta(){
+    this.numP.emit(15)
   }
   
   clickScFactures(){
-    this.numP.emit(15)
+    this.numP.emit(16)
   }
 
   clickArchi(){
-    this.numP.emit(16)
+    this.numP.emit(17)
   }
 
 
   clickRH(){
-    this.numP.emit(17)
+    this.numP.emit(18)
   }
 
   clickToggle(){

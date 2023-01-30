@@ -9,11 +9,11 @@
 
 <body>
     <header>
-        <h1> Ingrédients </h1>
+        <h1> Préparations </h1>
         <div id="action-buttons">
-            <button mat-stroked-button (click)="OpenAddIngForm()">
+            <button mat-stroked-button (click)="OpenAddPrepaForm()">
                 <i class="fa-regular fa-plus"></i>
-                Ajouter un ingrédient
+                Ajouter une préparation
             </button>
         </div>
     </header>
@@ -87,8 +87,8 @@
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> actions </th>
                 <td id="validate" mat-cell *matCellDef="let element;let cell_index = index; ">
-                  <i class="fa-regular fa-trash action_table" (click)="suppIng(element)"></i>
-                  <i class="fa-regular fa-pen action_table" (click)="modifIng(element)"></i>
+                  <i class="fa-regular fa-trash action_table" (click)="suppPrepa(element)"></i>
+                  <i class="fa-regular fa-pen action_table" (click)="modifPrepa(element)"></i>
                 </td>
             </ng-container>
 
@@ -98,12 +98,10 @@
         </table>
         <mat-paginator [pageSizeOptions]="[6]"
             (page)="pageChanged($event)"
-            [length]="ingredients_displayed_br.length + ingredients_displayed_prep.length"
+            [length]="displayed_prep.length"
             showFirstLastButtons
-            aria-label="Selection page d'ingredients">
+            aria-label="Selection page d'une preparation">
         </mat-paginator>
     </main>
 
 </body>
-
-</html>

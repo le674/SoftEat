@@ -1,0 +1,100 @@
+<!-- <div class="selectSection">
+    <p>l'ingrédient a-t-il été préparé en salle ?</p>
+    <mat-radio-group aria-label="SelectPrepa" id="is_cooked">
+        <mat-radio-button (change)="clickRadio(true)" value="oui">Oui</mat-radio-button>
+        <mat-radio-button (change)="clickRadio(false)" value="non">Non</mat-radio-button>
+        <mat-radio-button (change)="clickRadio(false)" value="aucune">Ne pas préciser</mat-radio-button>
+    </mat-radio-group>
+</div> -->
+<form [formGroup]="add_preparation" (ngSubmit)="changePreparation()">
+    <div class="section">
+        <p>Entrer le nom de la nouvelle préparation : </p>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer le nom de la nouvelle préparation</mat-label>
+            <input matInput formControlName="name" placeholder="Ex. filet de boeuf émincé">
+        </mat-form-field>
+    </div>
+    <div class="selectSection">
+        <p> Est-ce que la préparation est réalisé en vrac : </p>
+        <mat-radio-group aria-label="SelectPrepa" id="is_cooked" formControlName="vrac">
+            <mat-radio-button (change)="clickRadioVrac(true)" value="oui">Oui</mat-radio-button>
+            <mat-radio-button (change)="clickRadioVrac(false)" value="non">Non</mat-radio-button>
+        </mat-radio-group>
+    </div>
+    <div class="section">
+        <mat-form-field appearance="fill" *ngIf="!is_vrac">
+            <mat-label>Entrer la quantitée </mat-label>
+            <input type="number" matInput formControlName="quantity">
+            <mat-error *ngIf="add_preparation.controls['quantity']?.hasError('impossibleSize')">
+                pas assez d'ingrédient de base pour une telle quantitée de préparation
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p> Entrer la quantitée par unitée de la préparation : </p>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer la quantitée unitaire </mat-label>
+            <input type="number" matInput formControlName="quantity_unitary">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer l'unitée </mat-label>
+            <mat-select formControlName="unity">
+                <mat-option value="kg (kilogramme)"> kg (kilogramme) </mat-option>
+                <mat-option value="g (grame)"> g (grame) </mat-option>
+                <mat-option value="L (litre)"> L (litre)</mat-option>
+                <mat-option value="ml (millilitre)"> ml (millilitre)</mat-option>
+                <mat-option value="cl (centilitre)"> cl (centilitre)</mat-option>
+                <mat-option value="dl (decilitre)"> dl (decilitre)</mat-option>
+                <mat-option value="p (pièce)"> p (pièce) </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p>Entrer la date limite de consomation en jours : </p>
+        <mat-form-field appearance="fill">
+            <mat-label>date limite de consommation en jours </mat-label>
+            <input type="number" matInput formControlName="dlc">
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p>Entrer une marge avant signalisation d'un réapprovisionnement: </p>
+        <mat-form-field appearance="fill">
+            <mat-label>marge </mat-label>
+            <input type="number" matInput formControlName="marge">
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p>Quelles sont les ingrédients de base, <br> entrer la quantitée de l'ingrédient de base utilisé pour la
+            préparation : </p>
+        <ng-container formArrayName="preparations">
+            <div id="old_ing" *ngFor="let item of add_preparation.controls.preparations.controls;let i=index">
+                <ng-container [formGroupName]="i">
+                    <mat-form-field appearance="fill">
+                        <mat-label>nom de l'ingrédient</mat-label>
+                        <input matInput formControlName="name" placeholder="Ex. Pizza">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label> quantitée total avant préparation </mat-label>
+                        <input matInput type="number" formControlName="quantity">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label> unitée de l'ingrédient </mat-label>
+                        <input matInput formControlName="unity">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+        </ng-container>
+        <button mat-mini-fab type="button" id="add_input" color="white" matTooltip="ajout d'un ingrédient"
+            aria-label="ajout d'un ingrédient" (click)="addInput()">
+            <i class="fa-regular fa-plus"></i>
+        </button>
+    </div>
+    <div class="section" *ngIf="is_vrac">
+        <p id="last">Entrer la quantitée obtenu pour cette ingrédient : </p>
+        <mat-form-field appearance="fill">
+            <mat-label> quantitée total après préparation </mat-label>
+            <input type="number" matInput formControlName="quantity_after_prep">
+        </mat-form-field>
+    </div>
+    <button mat-stroked-button type="submit"> Ajouter </button>
+</form>
