@@ -49,6 +49,8 @@ export class AppPreparationsComponent implements OnInit {
       height: `${window.innerHeight}px`,
       width: `${window.innerWidth - window.innerWidth/5}px`,
       data: {
+        prop: this.prop,
+        restaurant: this.restaurant,
         names: this.prepa_names,       
       }
     });

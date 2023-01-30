@@ -105,8 +105,7 @@ async setRestaurant(prop:string, restaurant:Restaurant){
   await update(ref_db, {
     [first_path]: {
         adress: restaurant.adresse
-      },
-    
+      }
     })
   }
 

@@ -5,6 +5,7 @@ import { Cetape } from 'src/app/interfaces/etape';
 import { CIngredient, TConsoBase, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cpreparation} from 'src/app/interfaces/preparation';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
 
 @Component({
   selector: 'app-add.preparations',
@@ -64,8 +65,10 @@ export class AddPreparationsComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<AddPreparationsComponent>,
     public calcul_service: CalculService, private formBuilder: FormBuilder, @Inject(MAT_DIALOG_DATA) public data:{
-    prepa_name: Array<string | null>
-    }) { 
+    prop:string,
+    restaurant:string,
+    names: Array<string | null>
+    }, private preparation_service: PreparationInteractionService) { 
     this.base_ings = [];
     this.base_conso = [];
     this.etapes = [];
@@ -90,7 +93,8 @@ export class AddPreparationsComponent implements OnInit {
 
     const name_prepa = this.add_prepa_section.value.name
     if(name_prepa !== undefined){
-      if(!this.data.prepa_name.includes(name_prepa)){
+
+      if(!this.data.names.includes(name_prepa)){
         if(name_prepa !== null){
           to_add_preparation_name = name_prepa;
           
@@ -101,6 +105,7 @@ export class AddPreparationsComponent implements OnInit {
           base_ings.value.forEach((ing:Partial<{name:string | null, quantity:number | null, unity:string | null}>) => {
             let full_ing:TIngredientBase = {name:"", quantity:0,quantity_unity:0,unity:"",cost:0,vrac:false,marge:0};
             if((ing.name !== undefined) || (ing.name !== null)){
+              full_ing.name = ing.name as string;
               if((ing.quantity !== undefined) || (ing.quantity !== null)){
                 full_ing.quantity = ing.quantity as number;
               } 
@@ -112,6 +117,7 @@ export class AddPreparationsComponent implements OnInit {
           })
           base_conso.value.forEach((conso:Partial<{name:string | null, quantity:number | null, unity:string | null}>) => {
             if(conso.name !== undefined || (conso.name !== null)){
+              
               if((conso.quantity === undefined) || (conso.quantity === null)) conso.quantity = 0;
               if((conso.unity === undefined) || (conso.unity === null)) conso.unity = "";
               this.base_conso.push(conso as {name:string, quantity:number, unity:string})
@@ -129,6 +135,8 @@ export class AddPreparationsComponent implements OnInit {
               }
             } 
           });
+          this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop,
+             name_prepa.split(" ").join('_'), this.etapes, this.base_ings, this.base_conso);
         }
       }
     }    
