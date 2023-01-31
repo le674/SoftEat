@@ -8,7 +8,12 @@ i{
     margin-bottom: 20px;
 }
 
-
+.selectSection{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
 
 p{
     display: inline;

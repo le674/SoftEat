@@ -1,4 +1,11 @@
 <form [formGroup]="add_prepa_section" (ngSubmit)="changePreparation()">
+    <div class="selectSection">
+        <p>Voulez-vous stocker la nouvelle préparation</p>
+        <mat-radio-group aria-label="Selectionner une option">
+            <mat-radio-button value="true" (click)="setTrue()">oui</mat-radio-button>
+            <mat-radio-button value="false" (click)="setFalse()">non</mat-radio-button>
+        </mat-radio-group>
+    </div>
     <div class="section">
         <p>Entrer le nom de la nouvelle préparation : </p>
         <mat-form-field appearance="fill">

@@ -4,6 +4,8 @@ import { Router, UrlTree } from '@angular/router';
 import { Cpreparation } from 'src/app/interfaces/preparation';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { AddPreparationsComponent } from './add.preparations/add.preparations.component';
+import { DisplayPreparationsComponent } from './display.preparation/display.preparations/display.preparations.component';
+import { ModifPreparationsComponent } from './modif.preparations/modif.preparations/modif.preparations.component';
 
 @Component({
   selector: 'app-preparations',
@@ -51,9 +53,36 @@ export class AppPreparationsComponent implements OnInit {
       data: {
         prop: this.prop,
         restaurant: this.restaurant,
-        names: this.prepa_names,       
+        names: this.prepa_names,
+        name:"",
+        ingredients: [],
+        consommables: [],
+        etapes: []
       }
     });
+  }
+
+  modifPreparation(preparation:Cpreparation):void {
+    this.dialog.open(AddPreparationsComponent, {
+      height: `${window.innerHeight}px`,
+      width: `${window.innerWidth - window.innerWidth/5}px`,
+      data: {
+        prop: this.prop,
+        restaurant: this.restaurant,
+        names: this.prepa_names,   
+        name:preparation.nom,
+        ingredients:preparation.base_ing,
+        consommables: preparation.consommables,
+        etapes: preparation.etapes
+      } 
+    })
+  }
+  
+  seePreparation(preparation:Cpreparation):void{
+    this.dialog.open(DisplayPreparationsComponent, {
+      height: `${window.innerHeight}px`,
+      width: `${window.innerWidth - window.innerWidth/5}px`
+    })
   }
 
 }

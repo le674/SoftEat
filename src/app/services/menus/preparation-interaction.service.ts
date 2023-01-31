@@ -13,13 +13,15 @@ export class PreparationInteractionService {
     this.db = getDatabase(ofApp);
   }
 
-  async setNewPreparation(restaurant:string,prop:string, name:string,etapes: Array<Cetape>, ings: Array<TIngredientBase>, conso:Array<TConsoBase>){
+  async setNewPreparation(restaurant:string,prop:string, name:string,etapes: Array<Cetape>,
+     ings: Array<TIngredientBase>, conso:Array<TConsoBase>, is_stock:boolean){
     const updates = {}
     const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name}/`
     const ref_db = ref(this.db, path);
     Object.assign(updates, {"consommables": conso});
     Object.assign(updates, {"base_ings": ings});
     Object.assign(updates, {"etapes": etapes});
+    Object.assign(updates, {"is_stock":is_stock});
     await update(ref_db, updates);
   }
 }

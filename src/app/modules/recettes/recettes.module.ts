@@ -12,9 +12,12 @@ import { AddPreparationsComponent } from './app.preparations/add.preparations/ad
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatRadioModule } from '@angular/material/radio';
+import { ModifPreparationsComponent } from './app.preparations/modif.preparations/modif.preparations/modif.preparations.component';
+import { DisplayPreparationsComponent } from './app.preparations/display.preparation/display.preparations/display.preparations.component';
 
 
 
@@ -24,7 +27,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
    AppPlatsComponent,
    AppPreparationsComponent,
    AddMenuComponent,
-   AddPreparationsComponent
+   AddPreparationsComponent,
+   ModifPreparationsComponent,
+   DisplayPreparationsComponent
   ],
   imports: [
     CommonModule,
@@ -36,6 +41,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatSelectModule,
     MatTooltipModule,
     ReactiveFormsModule,
+    MatRadioModule,
     MatOptionModule
   ],
   exports: [

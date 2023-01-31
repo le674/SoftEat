@@ -1,8 +1,8 @@
-import { Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Cetape } from 'src/app/interfaces/etape';
-import {TConsoBase, TIngredientBase } from 'src/app/interfaces/ingredient';
+import {Consommable, TConsoBase, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
 
@@ -11,48 +11,31 @@ import { PreparationInteractionService } from 'src/app/services/menus/preparatio
   templateUrl: './add.preparations.component.html',
   styleUrls: ['./add.preparations.component.css']
 })
-export class AddPreparationsComponent implements OnInit {
-  public index_ings_inputs: Array<number>;
-  public index_consos_inputs: Array<number>;
-  public index_etapes_inputs: Array<number>;
+export class AddPreparationsComponent implements OnInit{
+  private is_stock:boolean;
   private current_inputs_ing: number;
   private current_inputs_conso: number;
   private current_inputs_etapes: number;
+  public index_ings_inputs: Array<number>;
+  public index_consos_inputs: Array<number>;
+  public index_etapes_inputs: Array<number>;
   public add_prepa_section = new FormGroup({
     name: new FormControl('', Validators.required),
     base_ing: new FormArray<FormGroup<{
       name:FormControl<string | null>,
       quantity:FormControl<number | null>,
       unity:FormControl<string | null>
-    }>>([
-      new FormGroup({
-      name: new FormControl(""),
-      quantity: new FormControl(0),
-      unity: new FormControl("")
-      })
-    ]),
+    }>>([]),
     base_conso: new FormArray<FormGroup<{
       name:FormControl<string | null>,
       quantity:FormControl<number | null>,
       unity:FormControl<string | null>
-    }>>([
-      new FormGroup({
-        name: new FormControl(""),
-        quantity: new FormControl(0),
-        unity: new FormControl("")
-        })
-    ]),
+    }>>([]),
     etapes: new FormArray<FormGroup<{
       name:FormControl<string | null>,
       comm:FormControl<string | null>,
       tmps:FormControl<number | null>
-    }>>([
-      new FormGroup({
-        name: new FormControl(""),
-        comm: new FormControl(""),
-        tmps: new FormControl(0),
-      })
-    ])
+    }>>([])
   });
   private base_ings: Array<TIngredientBase>;
   private base_conso: Array<TConsoBase>;
@@ -66,8 +49,13 @@ export class AddPreparationsComponent implements OnInit {
     public calcul_service: CalculService, private formBuilder: FormBuilder, @Inject(MAT_DIALOG_DATA) public data:{
     prop:string,
     restaurant:string,
-    names: Array<string | null>
+    names: Array<string | null>,
+    name:string,
+    ingredients: Array<TIngredientBase>,
+    consommables: Array<Consommable>,
+    etapes: Array<Cetape>
     }, private preparation_service: PreparationInteractionService) { 
+    this.is_stock = false;  
     this.base_ings = [];
     this.base_conso = [];
     this.etapes = [];
@@ -80,16 +68,58 @@ export class AddPreparationsComponent implements OnInit {
 
   }
 
-  ngOnInit(): void {
-    this.index_consos_inputs.push(1);
-    this.index_ings_inputs.push(1);
-    this.index_etapes_inputs.push(1);
-  }
 
+  ngOnInit(): void {
+    this.add_prepa_section.controls.name.setValue(this.data.name);
+    let tmp_data:Array<{name:string | null, quantity: number | null, unity: string | null}> = [];
+    if((this.data.ingredients !== null) && (this.data.ingredients !== undefined)){
+      this.current_inputs_ing = this.data.ingredients.length;
+      tmp_data = this.data.ingredients.map((ing) => {
+        return {name: ing.name, quantity: ing.quantity, unity: ing.unity};
+      })
+      for (let index = 0; index < this.current_inputs_ing; index++) {
+        this.index_ings_inputs.push(index);
+        const new_ing = this.formBuilder.group({
+          name: new FormControl(tmp_data[index].name),
+          quantity: new FormControl(tmp_data[index].quantity),
+          unity: new FormControl(tmp_data[index].unity)
+        });
+        this.getBaseIng().push(new_ing);
+      }
+    }
+
+    if((this.data.consommables !== null) && (this.data.consommables !== undefined)){
+      this.current_inputs_conso = this.data.consommables.length;
+      tmp_data =  this.data.consommables.map((conso) => {
+        return {name: conso.nom, quantity: conso.quantity, unity: conso.unity};
+      })
+      for (let index = 0; index < this.current_inputs_conso ; index++) {
+        const new_conso = this.formBuilder.group({
+          name: new FormControl(tmp_data[index].name),
+          quantity: new FormControl(tmp_data[index].quantity),
+          unity: new FormControl(tmp_data[index].unity)
+        });
+        this.getBaseConso().push(new_conso);
+      }
+    }
+    
+    if((this.data.etapes !== null) && (this.data.etapes !== undefined)){
+      this.current_inputs_etapes = this.data.etapes.length;
+      for (let index = 0; index < this.current_inputs_etapes; index++) {
+        const new_etape = this.formBuilder.group({
+          name: new FormControl(this.data.etapes[index].nom),
+          comm: new FormControl(this.data.etapes[index].commentaire),
+          tmps: new FormControl(this.data.etapes[index].temps),
+        })
+      }
+    }
+
+  }
 
   changePreparation(){
     let to_add_preparation_name:string = "";
-
+    
+    
     const name_prepa = this.add_prepa_section.value.name
     if(name_prepa !== undefined){
 
@@ -135,11 +165,19 @@ export class AddPreparationsComponent implements OnInit {
             } 
           });
           this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop,
-             name_prepa.split(" ").join('_'), this.etapes, this.base_ings, this.base_conso);
+             name_prepa.split(" ").join('_'), this.etapes, this.base_ings, this.base_conso, this.is_stock);
         }
       }
     }    
   }
+
+  setTrue(){
+   this.is_stock = true;
+  }
+  setFalse(){
+    this.is_stock = false;
+  }
+
 
   addTaux(event: Object): void {
     const taux = this.calcul_service.getTauxFromCat(event["value" as keyof typeof event].toString());

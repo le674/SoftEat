@@ -141,7 +141,9 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
           marge: ingPREP[i].marge,
           vrac: ingPREP[i].vrac
         };
-        this.displayed_prep.push(row_ingredient);
+        if(ingPREP[i].is_stock){
+          this.displayed_prep.push(row_ingredient);
+        }
         if (i === ingPREP.length - 1) {
           const first_event = new PageEvent();
           first_event.length = ingBR.length;
