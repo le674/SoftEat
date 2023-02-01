@@ -1,0 +1,20 @@
+body {
+    display: flex;
+    flex-direction: column;
+}
+.section {
+    margin-top: 20px;
+}
+p{
+    padding-top: 16px;
+    margin-left: 10px;
+}
+.indication{
+    color: rgb(125, 181, 46);
+}
+
+h2 {
+    font-size: larger;
+    color: rgb(125, 181, 46);
+    margin-bottom: 35px;
+}

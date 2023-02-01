@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Cetape } from 'src/app/interfaces/etape';
 import {Consommable, TConsoBase, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
@@ -54,7 +55,7 @@ export class AddPreparationsComponent implements OnInit{
     ingredients: Array<TIngredientBase>,
     consommables: Array<Consommable>,
     etapes: Array<Cetape>
-    }, private preparation_service: PreparationInteractionService) { 
+    }, private preparation_service: PreparationInteractionService, private _snackBar: MatSnackBar) { 
     this.is_stock = false;  
     this.base_ings = [];
     this.base_conso = [];
@@ -165,7 +166,12 @@ export class AddPreparationsComponent implements OnInit{
             } 
           });
           this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop,
-             name_prepa.split(" ").join('_'), this.etapes, this.base_ings, this.base_conso, this.is_stock);
+             name_prepa.split(" ").join('_'), this.etapes, this.base_ings, this.base_conso, this.is_stock).catch((e) => {
+              console.log(e);
+              this._snackBar.open("nous ne somme pas parvenu à modifier la préparation veuillez contacter SoftEat");
+             }).finally(() => {
+              this._snackBar.open("la préparation vient d'être modifier", "fermer");
+             });
         }
       }
     }    

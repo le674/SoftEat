@@ -5,7 +5,7 @@ import { Unsubscribe } from 'firebase/auth';
 import { child, Database, DatabaseReference, get, getDatabase, onValue, ref, remove, update } from 'firebase/database';
 import { collection, Firestore, getDocs, getFirestore } from "firebase/firestore";
 import { Subject } from 'rxjs';
-import { CIngredient } from 'src/app/interfaces/ingredient';
+import { CIngredient, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cpreparation } from 'src/app/interfaces/preparation';
 import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.service';
 
@@ -17,6 +17,7 @@ export class IngredientsInteractionService {
 
   private db: Database;
   private firestore: Firestore;
+  private ingredients_minimal: Array<TIngredientBase>
   private preparation: Array<Cpreparation>;
   private ingredients: Array<CIngredient>;
   private data_ingredient = new Subject<Array<CIngredient>>();
@@ -30,6 +31,7 @@ export class IngredientsInteractionService {
     this.firestore = getFirestore(ofApp);
     this.ingredients = [];
     this.preparation = [];
+    this.ingredients_minimal = [];
   }
 
  getIngredientsBrFromRestaurantsBDD(prop: string, restaurant: string):Unsubscribe{
@@ -157,6 +159,32 @@ export class IngredientsInteractionService {
       })
     })
     return this.preparation;
+  }
+
+
+  async getIngredientsQuantityUnityFromBaseIngs(base_ings: Array<{nom:string, quantity:number}>, prop:string, restaurant:string){
+    let ref_db: DatabaseReference;
+    ref_db = ref(this.db)
+    for (let index = 0; index < base_ings.length; index++) {
+      const ingredient_name = base_ings[index].nom;
+      const ingredient_quantity = base_ings[index].quantity;
+      const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/${ingredient_name}`
+      await get(child(ref_db, path)).then((ingredient_bdd) => {
+        if(ingredient_bdd.key !== null){
+          let ingredient:TIngredientBase = {
+            name: ingredient_name,
+            quantity: ingredient_quantity,
+            quantity_unity: 0,
+            unity: ingredient_bdd.child("unity").val(),
+            cost: ingredient_bdd.child("cost").val(),
+            vrac: false,
+            marge: 0
+          };
+          this.ingredients_minimal.push(ingredient);
+        }
+      })
+    }
+    return this.ingredients_minimal;
   }
 
   async getInfoIngFromDico(nom: string) {

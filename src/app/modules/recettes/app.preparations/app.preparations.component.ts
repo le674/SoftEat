@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
 import { Cpreparation } from 'src/app/interfaces/preparation';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { AddPreparationsComponent } from './add.preparations/add.preparations.component';
 import { DisplayPreparationsComponent } from './display.preparation/display.preparations/display.preparations.component';
-import { ModifPreparationsComponent } from './modif.preparations/modif.preparations/modif.preparations.component';
 
 @Component({
   selector: 'app-preparations',
@@ -20,7 +20,7 @@ export class AppPreparationsComponent implements OnInit {
   private prop:string;
   private restaurant:string;
 
-  constructor(public dialog: MatDialog, private ingredient_service: IngredientsInteractionService, router: Router) { 
+  constructor(public dialog: MatDialog, private ingredient_service: IngredientsInteractionService, router: Router, private _snackBar: MatSnackBar) { 
     this.preparations = [];
     this.prepa_names = [];
     this.router = router;
@@ -81,8 +81,25 @@ export class AppPreparationsComponent implements OnInit {
   seePreparation(preparation:Cpreparation):void{
     this.dialog.open(DisplayPreparationsComponent, {
       height: `${window.innerHeight}px`,
-      width: `${window.innerWidth - window.innerWidth/5}px`
+      width: `${window.innerWidth - window.innerWidth/5}px`,
+      data: {
+        prop: this.prop,
+        restaurant: this.restaurant,
+        name:preparation.nom,
+        ingredients: preparation.base_ing,
+        consommables: preparation.consommables,
+        etapes: preparation.etapes
+      }
     })
   }
-
+  suppressPreparation(preparation: Cpreparation):void{
+    if(preparation.nom !== null){
+      this.ingredient_service.removeIngInBdd(preparation.nom.split(" ").join('_'), this.prop, this.restaurant, true).catch((e) => {
+        console.log(e);
+        this._snackBar.open(`nous ne somme pas parvenu à supprimer le ${preparation.nom}`)
+      }).finally(() => {
+        this._snackBar.open(`la préparation ${preparation.nom} vient d'être suprrimé de la base de donnée`, "fermer")
+      });
+    }
+  }
 }
