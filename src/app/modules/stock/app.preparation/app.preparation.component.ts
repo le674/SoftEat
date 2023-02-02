@@ -229,7 +229,7 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
           dlc: 0,
           date_reception: new Date(),
           marge: 0,
-          vrac: false
+          vrac: 'non'
         }
       }
     });
@@ -246,7 +246,7 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     unity: string;
     dlc: string;
     marge: number;
-    vrac: boolean;
+    vrac: string;
     date_reception: string;
   }) {
     let res_dlc = 0;

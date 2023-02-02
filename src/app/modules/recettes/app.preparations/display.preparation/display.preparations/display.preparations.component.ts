@@ -4,7 +4,9 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Cetape } from 'src/app/interfaces/etape';
 import { Consommable, TIngredientBase } from 'src/app/interfaces/ingredient';
+import { ConsommableInteractionService } from 'src/app/services/menus/consommable-interaction.service';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
+import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 
 @Component({
   selector: 'app-display.preparations',
@@ -12,6 +14,8 @@ import { IngredientsInteractionService } from 'src/app/services/menus/ingredient
   styleUrls: ['./display.preparations.component.css']
 })
 export class DisplayPreparationsComponent implements OnInit {
+  public ing_tile:{col:number, row:number} = {col:3, row:1};
+  public none_tile:{col:number, row:number} = {col:1, row:1};
   public displayedColumnsIng: string[] = ['nom', 'quantity', 'unity', 'cost', 'cost_matiere'];
   public displayedColumnsConso: string[] = ['nom', 'quantity', 'unity', 'cost'];
   public displayedColumnsEtape: string[] = ['nom', 'temps', 'commentaire'];
@@ -32,7 +36,7 @@ export class DisplayPreparationsComponent implements OnInit {
 
   public dataSource_etape: MatTableDataSource<{
     nom: string;
-    temps: Date;
+    temps: number;
     commentaire: string;
   }>;
 
@@ -53,7 +57,7 @@ export class DisplayPreparationsComponent implements OnInit {
 
   public displayed_etape: Array<{
     nom: string;
-    temps: Date;
+    temps: number;
     commentaire: string;
   }>;
   @ViewChild('paginatoring') paginatoring!: MatPaginator;
@@ -67,7 +71,8 @@ export class DisplayPreparationsComponent implements OnInit {
     ingredients: Array<TIngredientBase>,
     consommables: Array<Consommable>,
     etapes: Array<Cetape>
-  }, private ingredient_service: IngredientsInteractionService) { 
+  }, private ingredient_service: IngredientsInteractionService,private conso_service:ConsommableInteractionService,
+   private prepa_service:CalculPrepaService) { 
     this.displayed_ing = [];
     this.displayed_conso = [];
     this.displayed_etape = [];
@@ -77,6 +82,31 @@ export class DisplayPreparationsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    if(this.data.ingredients !== null){
+      if(this.data.ingredients.length > 0){
+        const f_prom = this.ingredient_service.getIngredientsQuantityUnityFromBaseIngs(this.data.ingredients, this.data.prop, this.data.restaurant).then((ings) => {
+          this.displayed_ing = this.prepa_service.getCostMaterial(ings).filter((ing) => !(ing.nom === ""));
+        }).then(() => {
+          this.dataSource_ing.data = this.displayed_ing;
+        })
+      }
+    }
+    if(this.data.consommables !== null){
+      if(this.data.consommables.length > 0){
+         this.conso_service.getConsosmmablesFromBaseConso(this.data.consommables, this.data.prop, this.data.restaurant).then((consos) => {
+          this.displayed_conso = consos.map((conso) => {
+              return {nom: conso.nom, cost: conso.cost, quantity: conso.quantity, unity: conso.unity}
+          }).filter((conso) => !(conso.nom === ""))
+        }).then(() => {
+          this.dataSource_conso.data = this.displayed_conso; 
+        })
+      }
+    }
+    if(this.data.etapes !== null){
+      this.displayed_etape = this.data.etapes.map((etape) => {return {nom: etape.nom, temps: etape.temps, commentaire: etape.commentaire}})
+      this.dataSource_etape.data = this.displayed_etape;
+    }  
   }
   
   pageChangedEtape(event:PageEvent){

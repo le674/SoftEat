@@ -26,13 +26,13 @@ export interface Preparation {
         quantity_unity: number,
         unity: string,
         cost:number,
-        vrac:boolean
+        vrac:string
     }>;
     "quantity_bef_prep": number;
     "quantity_after_prep": number;
     "is_similar":number;
     "marge": number;
-    "vrac":boolean;
+    "vrac":string;
     "is_stock":boolean;
     "dlc":Date;
     "date_reception":Date;
@@ -60,9 +60,9 @@ export class Cpreparation implements Preparation {
     "unity": string;
     "cost_ttc": number;
     "val_bouch": number;
-    "base_ing": { name: string; quantity: number; quantity_unity: number; unity: string; cost: number; vrac: boolean; marge:number; }[];
+    "base_ing": { name: string; quantity: number; quantity_unity: number; unity: string; cost: number; vrac: string; marge:number; }[];
     "marge": number;
-    "vrac": boolean;
+    "vrac": string;
     "portions": number;
     "dlc": Date;
     "date_reception":Date;
@@ -110,7 +110,7 @@ export class Cpreparation implements Preparation {
         this.cost_ttc = (this.cost_ttc === null) ? 0 : this.cost_ttc;
         this.taux_tva = (this.taux_tva === null) ? 0 : this.taux_tva;
         this.unity = (this.unity === null) ? "" : this.unity;
-        this.vrac = (this.vrac === null) ? false : this.vrac;
+        this.vrac = (this.vrac === null) ? 'non' : this.vrac;
     }
 
     getNom(): string | null {

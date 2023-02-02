@@ -20,7 +20,7 @@
         <p> <span class="indication">Valeur bouchère :</span> xxxxxxxxxxxxxx </p>
     </div>
     <mat-grid-list cols="2" rowHeight="2:1">
-        <mat-grid-tile>
+        <mat-grid-tile  [colspan]="ing_tile.col" [rowspan]="ing_tile.row">
             <div>
                 <h2>Ingrédients</h2>
                 <table mat-table [dataSource]="dataSource_ing" class="mat-elevation-z8">
@@ -44,7 +44,7 @@
                     </ng-container>
                     <ng-container matColumnDef="cost_matiere">
                         <th mat-header-cell *matHeaderCellDef> cout <br> matière </th>
-                        <td mat-cell *matCellDef="let element"> {{element.cost_ttc}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.cost_matiere}} </td>
                     </ng-container>
                     <tr mat-header-row *matHeaderRowDef="displayedColumnsIng"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumnsIng;"></tr>
@@ -57,7 +57,7 @@
                 </mat-paginator>
             </div>
         </mat-grid-tile>
-        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile [colspan]="none_tile.col" [rowspan]="none_tile.row"></mat-grid-tile>
         <mat-grid-tile>
             <div>
                 <h2>Consommables</h2>

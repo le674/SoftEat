@@ -20,6 +20,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import { DisplayPreparationsComponent } from './app.preparations/display.preparation/display.preparations/display.preparations.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 
 
 

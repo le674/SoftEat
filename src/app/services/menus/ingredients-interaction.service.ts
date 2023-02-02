@@ -162,11 +162,12 @@ export class IngredientsInteractionService {
   }
 
 
-  async getIngredientsQuantityUnityFromBaseIngs(base_ings: Array<{nom:string, quantity:number}>, prop:string, restaurant:string){
+  async getIngredientsQuantityUnityFromBaseIngs(base_ings: Array<TIngredientBase>, prop:string, restaurant:string){
     let ref_db: DatabaseReference;
     ref_db = ref(this.db)
     for (let index = 0; index < base_ings.length; index++) {
-      const ingredient_name = base_ings[index].nom;
+      
+      const ingredient_name = base_ings[index].name;
       const ingredient_quantity = base_ings[index].quantity;
       const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/${ingredient_name}`
       await get(child(ref_db, path)).then((ingredient_bdd) => {
@@ -174,10 +175,10 @@ export class IngredientsInteractionService {
           let ingredient:TIngredientBase = {
             name: ingredient_name,
             quantity: ingredient_quantity,
-            quantity_unity: 0,
+            quantity_unity: ingredient_bdd.child("quantity_unitaire").val(),
             unity: ingredient_bdd.child("unity").val(),
             cost: ingredient_bdd.child("cost").val(),
-            vrac: false,
+            vrac: ingredient_bdd.child("vrac").val(),
             marge: 0
           };
           this.ingredients_minimal.push(ingredient);

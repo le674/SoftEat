@@ -18,3 +18,7 @@ h2 {
     color: rgb(125, 181, 46);
     margin-bottom: 35px;
 }
+
+.mat-grid-tile-content{
+    justify-content: flex-start;
+}

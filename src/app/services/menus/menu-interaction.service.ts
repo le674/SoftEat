@@ -82,7 +82,7 @@ export class MenuInteractionService {
           if (curr_ings.length > 0) {
             curr_ing = curr_ings[0];
           }
-          if (ingredient.vrac) {
+          if (ingredient.vrac === 'oui') {
             ingredient.quantity_unity = curr_ing.quantity;
           }
           else {

@@ -179,7 +179,7 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit {
             quantity_unity: 0,
             unity: '',
             cost: 0,
-            vrac: false,
+            vrac: 'non',
             marge: 0
           });
         }
@@ -203,15 +203,6 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit {
 
     if ((this.add_preparation.value["quantity_unitary"] !== undefined) && (this.add_preparation.value["quantity_unitary"] !== null)) {
       new_prepa.quantity_unity = this.add_preparation.value["quantity_unitary"];
-    }
-
-    if (this.add_preparation.value["vrac"] !== undefined) {
-      if (this.add_preparation.value["vrac"] === 'oui') {
-        new_prepa.vrac = true;
-      }
-      else {
-        new_prepa.vrac = false;
-      }
     }
 
     if (unity !== undefined) {
@@ -251,7 +242,7 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit {
     }
 
        new_prepa.base_ing.forEach((_base) => {
-         if (_base.vrac) {
+         if (_base.vrac === 'oui') {
            if (_base.quantity_unity < _base.marge) {
              // alors on affiche une alerte
              const msg = "l'ingredient : ".concat(_base.name).concat(" arrive en rupture de stock.");
@@ -304,7 +295,7 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit {
       if (this.data.preparation.base_ing[this.current_inputs - 1] !== undefined) {
         const name = this.data.preparation.base_ing[this.current_inputs - 1].name;
         let quantity = this.data.preparation.base_ing[this.current_inputs - 1].quantity_unity * this.data.preparation.base_ing[this.current_inputs - 1].quantity;
-        if (this.data.preparation.base_ing[this.current_inputs - 1].vrac) {
+        if (this.data.preparation.base_ing[this.current_inputs - 1].vrac === 'oui') {
           quantity = this.data.preparation.base_ing[this.current_inputs - 1].quantity_unity;
         }
         const unity = this.data.preparation.base_ing[this.current_inputs - 1].unity;

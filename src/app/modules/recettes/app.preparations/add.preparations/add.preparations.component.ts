@@ -133,7 +133,7 @@ export class AddPreparationsComponent implements OnInit{
           const etapes_prepa = this.getEtapes();
           
           base_ings.value.forEach((ing:Partial<{name:string | null, quantity:number | null, unity:string | null}>) => {
-            let full_ing:TIngredientBase = {name:"", quantity:0,quantity_unity:0,unity:"",cost:0,vrac:false,marge:0};
+            let full_ing:TIngredientBase = {name:"", quantity:0,quantity_unity:0,unity:"",cost:0,vrac:'non',marge:0};
             if((ing.name !== undefined) || (ing.name !== null)){
               full_ing.name = ing.name as string;
               if((ing.quantity !== undefined) || (ing.quantity !== null)){

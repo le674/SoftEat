@@ -9,7 +9,7 @@ export type TIngredientBase = {
     quantity_unity:number ,
     unity:string, 
     cost:number,
-    vrac:boolean,
+    vrac:string,
     marge:number
 }
 
@@ -37,7 +37,7 @@ export interface Ingredient {
     "refrigiree": boolean;
     "gelee": boolean;
     "marge": number;
-    "vrac":boolean;
+    "vrac":string;
 
 
     getInfoDico(): void;
@@ -75,8 +75,8 @@ export interface Ingredient {
     setGel(val: boolean | null): void;
     getMarge():number;
     setMarge(marge:number):void;
-    getVrac():boolean;
-    setVrac(is_vrac:boolean):void;
+    getVrac():string;
+    setVrac(is_vrac:string):void;
 
 }
 
@@ -129,7 +129,7 @@ export class CIngredient implements Ingredient {
     "gelee": boolean;
     "is_similar":number;
     "marge": number;
-    "vrac": boolean;
+    "vrac": string;
 
     constructor(private service: CalculService, private db_service: IngredientsInteractionService) {
         this.nom = "";
@@ -296,10 +296,10 @@ export class CIngredient implements Ingredient {
     setMarge(marge: number): void {
         this.marge = marge;
     }
-    getVrac(): boolean {
+    getVrac(): string {
         return this.vrac;
     }
-    setVrac(is_vrac: boolean): void {
+    setVrac(is_vrac: string): void {
        this.vrac = is_vrac
     }
 }

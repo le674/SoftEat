@@ -79,6 +79,10 @@ export class AppPreparationsComponent implements OnInit {
   }
   
   seePreparation(preparation:Cpreparation):void{
+    console.log(preparation);
+    
+
+    console.log(preparation);
     this.dialog.open(DisplayPreparationsComponent, {
       height: `${window.innerHeight}px`,
       width: `${window.innerWidth - window.innerWidth/5}px`,

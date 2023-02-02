@@ -68,7 +68,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         not_prep: Array<CIngredient>, */
         /* quantity_after_prep: number, */
         marge: number,
-        vrac: boolean
+        vrac: string
       }
     }, private service: IngredientsInteractionService, private changeDetector: ChangeDetectorRef,
     private _snackBar: MatSnackBar, private service_alertes: AlertesService) {
@@ -133,7 +133,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
 /*     if (this.is_modif && this.data.ingredient.cuisinee === "oui") {
       this.clickRadio(true);
     } */
-    if (this.data.ingredient.vrac) {
+    if (this.data.ingredient.vrac === 'oui') {
       this.clickRadioVrac(true)
     }
   }
@@ -252,13 +252,8 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       new_ing.taux_tva = Number(this.taux.nativeElement.value);
     }
 
-    if (this.add_ing_section.value["vrac"] !== undefined) {
-      if (this.add_ing_section.value["vrac"] === 'oui') {
-        new_ing.vrac = true;
-      }
-      else {
-        new_ing.vrac = false;
-      }
+    if ((this.add_ing_section.value["vrac"] !== undefined) && (this.add_ing_section.value["vrac"] !== null)) {
+        new_ing.vrac = this.add_ing_section.value["vrac"]
     }
 
     if (unity !== undefined) {
@@ -281,7 +276,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       }
     } */
 
-    if (new_ing.vrac) {
+    if (new_ing.vrac === 'oui') {
       if (new_ing.quantity_unity < new_ing.marge) {
         // alors on affiche une alerte
         const nom = (new_ing.nom === null) ? "" : new_ing.nom;
