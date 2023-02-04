@@ -1,10 +1,13 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Cetape } from 'src/app/interfaces/etape';
 import {Consommable, TConsoBase, TIngredientBase } from 'src/app/interfaces/ingredient';
+import { ConsommableInteractionService } from 'src/app/services/menus/consommable-interaction.service';
+import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
 
 @Component({
@@ -41,6 +44,10 @@ export class AddPreparationsComponent implements OnInit{
   private base_ings: Array<TIngredientBase>;
   private base_conso: Array<TConsoBase>;
   private etapes: Array<Cetape>;
+
+  private bdd_conso: Array<TIngredientBase>;
+  private bdd_etapes: Array<TIngredientBase>;
+  private to_add:string;
   
   @ViewChild('taux')
   taux!: ElementRef;
@@ -55,17 +62,21 @@ export class AddPreparationsComponent implements OnInit{
     ingredients: Array<TIngredientBase>,
     consommables: Array<Consommable>,
     etapes: Array<Cetape>
-    }, private preparation_service: PreparationInteractionService, private _snackBar: MatSnackBar) { 
+    }, private preparation_service: PreparationInteractionService, private ingredient_service: IngredientsInteractionService,
+    private prepa_service:CalculPrepaService, private conso_service:ConsommableInteractionService, private _snackBar: MatSnackBar) { 
     this.is_stock = false;  
     this.base_ings = [];
     this.base_conso = [];
     this.etapes = [];
+    this.bdd_conso = [];
+    this.bdd_etapes = [];
     this.index_consos_inputs = [];
     this.index_ings_inputs = [];
     this.index_etapes_inputs = [];
     this.current_inputs_ing = 1;
     this.current_inputs_conso = 1;
     this.current_inputs_etapes = 1;
+    this.to_add = "";
 
   }
 
@@ -133,7 +144,7 @@ export class AddPreparationsComponent implements OnInit{
           const etapes_prepa = this.getEtapes();
           
           base_ings.value.forEach((ing:Partial<{name:string | null, quantity:number | null, unity:string | null}>) => {
-            let full_ing:TIngredientBase = {name:"", quantity:0,quantity_unity:0,unity:"",cost:0,vrac:'non',marge:0};
+            let full_ing:TIngredientBase = {name:"", quantity:0,quantity_unity:0,unity:"",cost:0,material_cost: 0, vrac:'non',marge:0};
             if((ing.name !== undefined) || (ing.name !== null)){
               full_ing.name = ing.name as string;
               if((ing.quantity !== undefined) || (ing.quantity !== null)){
@@ -147,10 +158,15 @@ export class AddPreparationsComponent implements OnInit{
           })
           base_conso.value.forEach((conso:Partial<{name:string | null, quantity:number | null, unity:string | null}>) => {
             if(conso.name !== undefined || (conso.name !== null)){
-              
               if((conso.quantity === undefined) || (conso.quantity === null)) conso.quantity = 0;
               if((conso.unity === undefined) || (conso.unity === null)) conso.unity = "";
-              this.base_conso.push(conso as {name:string, quantity:number, unity:string})
+              const act_conso:TConsoBase = {
+                name: conso.name as string,
+                quantity: conso.quantity,
+                unity: conso.unity,
+                cost: 0
+              };
+              this.base_conso.push(act_conso);
             } 
           })
           etapes_prepa.value.forEach((etape:Partial<{name:string | null, comm:string | null, tmps:number | null}>) => {
@@ -165,13 +181,54 @@ export class AddPreparationsComponent implements OnInit{
               }
             } 
           });
-          this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop,
-             name_prepa.split(" ").join('_'), this.etapes, this.base_ings, this.base_conso, this.is_stock).catch((e) => {
-              console.log(e);
-              this._snackBar.open("nous ne somme pas parvenu à modifier la préparation veuillez contacter SoftEat");
-             }).finally(() => {
-              this._snackBar.open("la préparation vient d'être modifier", "fermer");
-             });
+
+          let ing_prop = this.ingredient_service.getIngredientsQuantityUnityFromBaseIngs(this.base_ings, this.data.prop, this.data.restaurant).then((ings) => {
+            this.getBaseIng().setErrors(this.notSameLengthValidator(ings, this.base_ings, "ingredients", false));
+            this.base_ings = [];
+            let result = this.prepa_service.getCostMaterial(ings).filter((ing) => !(ing.nom === ""));
+            for (let index = 0; index < result.length; index++) {
+              const ing: TIngredientBase = {
+                name: result[index].nom,
+                quantity: result[index].quantity,
+                quantity_unity: 0,
+                unity: result[index].unity,
+                cost: result[index].cost,
+                material_cost: result[index].cost_matiere,
+                vrac:"non",
+                marge: 0
+              }
+              this.base_ings.push(ing);
+            }
+          })
+
+          ing_prop.then(() => {
+            this.conso_service.getConsosmmablesFromBaseConso(this.base_conso, this.data.prop, this.data.restaurant).then((consos) => {
+              this.getBaseConso().setErrors(this.notSameLengthValidator(consos, this.base_conso, "consommables", true));
+              this.base_conso = [];
+              let displayed_conso = consos.map((conso) => {
+                  return {nom: conso.nom, cost: conso.cost, quantity: conso.quantity, unity: conso.unity}
+              }).filter((conso) => !(conso.nom === ""))
+              for (let index = 0; index < consos.length; index++) {
+                const conso: TConsoBase = {
+                  name: consos[index].nom,
+                  quantity: consos[index].quantity,
+                  unity: consos[index].unity,
+                  cost: consos[index].cost
+                }
+                 this.base_conso.push(conso)            
+              }
+            })
+          })
+
+          if(this.getBaseConso().getError("notSameSize") && this.getBaseIng().getError("notSameSize")){
+            this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop,
+              name_prepa.split(" ").join('_'), this.etapes, this.base_ings, this.base_conso, this.is_stock).catch((e) => {
+               console.log(e);
+               this._snackBar.open("nous ne somme pas parvenu à modifier la préparation veuillez contacter SoftEat");
+              }).finally(() => {
+               this._snackBar.open("la préparation vient d'être modifier", "fermer");
+              });
+          }
         }
       }
     }    
@@ -222,6 +279,17 @@ export class AddPreparationsComponent implements OnInit{
       tmps: new FormControl(0),
     });
     this.getEtapes().push(new_etape);
+  }
+
+  notSameLengthValidator(l1: Array<any>, l2: Array<any>, name:string, last:boolean):ValidationErrors{
+    this.to_add = name + ', ' + this.to_add ;
+    if(l1.length !== l2.length){
+      if(last) this._snackBar.open(`Veuillez entrer les ${this.to_add} dans la section stock de  l'application`, "fermer")
+      return {notSameSize: true}
+    }
+    else{
+      return {notSameSize: false}
+    }
   }
 
   getBaseIng(){

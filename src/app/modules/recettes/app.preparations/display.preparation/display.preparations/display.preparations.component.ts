@@ -85,22 +85,16 @@ export class DisplayPreparationsComponent implements OnInit {
 
     if(this.data.ingredients !== null){
       if(this.data.ingredients.length > 0){
-        const f_prom = this.ingredient_service.getIngredientsQuantityUnityFromBaseIngs(this.data.ingredients, this.data.prop, this.data.restaurant).then((ings) => {
-          this.displayed_ing = this.prepa_service.getCostMaterial(ings).filter((ing) => !(ing.nom === ""));
-        }).then(() => {
-          this.dataSource_ing.data = this.displayed_ing;
+        this.displayed_ing = this.data.ingredients.map((ing) => {
+          return {nom: ing.name, quantity: ing.quantity, unity: ing.unity, cost:ing.cost, cost_matiere: ing.material_cost}
         })
+        this.dataSource_ing.data = this.displayed_ing;
       }
     }
     if(this.data.consommables !== null){
       if(this.data.consommables.length > 0){
-         this.conso_service.getConsosmmablesFromBaseConso(this.data.consommables, this.data.prop, this.data.restaurant).then((consos) => {
-          this.displayed_conso = consos.map((conso) => {
-              return {nom: conso.nom, cost: conso.cost, quantity: conso.quantity, unity: conso.unity}
-          }).filter((conso) => !(conso.nom === ""))
-        }).then(() => {
-          this.dataSource_conso.data = this.displayed_conso; 
-        })
+        this.displayed_conso = this.data.consommables;
+        this.dataSource_conso.data = this.displayed_conso; 
       }
     }
     if(this.data.etapes !== null){

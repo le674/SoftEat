@@ -168,8 +168,10 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit {
             unity: _base_ing.unity,
             cost: _base_ing.cost,
             quantity_unity: _base_ing.quantity_unity,
-            marge: _base_ing.marge,
-            vrac: _base_ing.vrac
+            material_cost: 0,
+            vrac: _base_ing.vrac,
+            marge: _base_ing.marge
+            
           });
         }
         else {
@@ -177,6 +179,7 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit {
             name: name,
             quantity: quantity,
             quantity_unity: 0,
+            material_cost: 0,
             unity: '',
             cost: 0,
             vrac: 'non',

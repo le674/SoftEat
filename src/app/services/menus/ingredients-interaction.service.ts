@@ -171,7 +171,8 @@ export class IngredientsInteractionService {
       const ingredient_quantity = base_ings[index].quantity;
       const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/${ingredient_name}`
       await get(child(ref_db, path)).then((ingredient_bdd) => {
-        if(ingredient_bdd.key !== null){
+        
+        if((ingredient_bdd.key !== null) && (ingredient_bdd.key !== undefined)){
           let ingredient:TIngredientBase = {
             name: ingredient_name,
             quantity: ingredient_quantity,
@@ -179,6 +180,7 @@ export class IngredientsInteractionService {
             unity: ingredient_bdd.child("unity").val(),
             cost: ingredient_bdd.child("cost").val(),
             vrac: ingredient_bdd.child("vrac").val(),
+            material_cost: ingredient_bdd.child("material_cost").val(),
             marge: 0
           };
           this.ingredients_minimal.push(ingredient);

@@ -9,6 +9,7 @@ export type TIngredientBase = {
     quantity_unity:number ,
     unity:string, 
     cost:number,
+    material_cost:number,
     vrac:string,
     marge:number
 }
@@ -16,7 +17,8 @@ export type TIngredientBase = {
 export type TConsoBase = {
     name:string,
     quantity:number,
-    unity:string
+    unity:string,
+    cost:number
 }
 
 

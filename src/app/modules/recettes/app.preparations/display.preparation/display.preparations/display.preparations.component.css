@@ -22,3 +22,16 @@ h2 {
 .mat-grid-tile-content{
     justify-content: flex-start;
 }
+
+table{
+    min-width: auto;
+}
+.name{
+    min-width: 150px;
+}
+.comm-cells{
+    min-width: 150px;
+}
+.other-cells{
+    min-width: 70px;
+}

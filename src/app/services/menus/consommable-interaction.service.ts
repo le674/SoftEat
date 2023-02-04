@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import { child, Database, DatabaseReference, get, getDatabase, ref, remove, update } from 'firebase/database';
-import { Cconsommable } from 'src/app/interfaces/ingredient';
+import { Cconsommable, TConsoBase } from 'src/app/interfaces/ingredient';
 
 @Injectable({
   providedIn: 'root'
@@ -64,16 +64,16 @@ export class ConsommableInteractionService {
     return this.consommable
   }
 
-  async getConsosmmablesFromBaseConso(base_conso: Array<Cconsommable>, prop:string, restaurant:string){
+  async getConsosmmablesFromBaseConso(base_conso: Array<TConsoBase>, prop:string, restaurant:string){
     this.consommable = [];
     let ref_db: DatabaseReference;
     ref_db = ref(this.db)
     for (let index = 0; index < base_conso.length; index++) {
-      const conso_name = base_conso[index].nom;
+      const conso_name = base_conso[index].name;
       const conso_quantity = base_conso[index].quantity;
       const path = `consommables_${prop}_${restaurant}/${prop}/${restaurant}/${conso_name}`
       await get(child(ref_db, path)).then((conso_bdd) => {
-        if(conso_bdd.key !== null){
+        if((conso_bdd.key !== null) && (conso_bdd.key !== undefined)){
           let conso:Cconsommable = new Cconsommable();
           conso.nom = conso_name
           conso.quantity = conso_quantity
