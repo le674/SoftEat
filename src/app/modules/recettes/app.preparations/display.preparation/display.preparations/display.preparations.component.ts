@@ -14,13 +14,16 @@ import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calc
   styleUrls: ['./display.preparations.component.css']
 })
 export class DisplayPreparationsComponent implements OnInit {
-  public ing_tile:{col:number, row:number} = {col:3, row:1};
-  public none_tile:{col:number, row:number} = {col:1, row:1};
+  public name_prepa: string;
+  public tmps_prepa: string;
+  public prime_cost: number;
+  public val_bouch:number; 
+
   public displayedColumnsIng: string[] = ['nom', 'quantity', 'unity', 'cost', 'cost_matiere'];
   public displayedColumnsConso: string[] = ['nom', 'quantity', 'unity', 'cost'];
   public displayedColumnsEtape: string[] = ['nom', 'temps', 'commentaire'];
   public dataSource_ing: MatTableDataSource<{
-    nom: string;
+    name: string;
     quantity: number;
     unity: string,
     cost: number;
@@ -28,7 +31,7 @@ export class DisplayPreparationsComponent implements OnInit {
   }>;
 
   public dataSource_conso: MatTableDataSource<{
-    nom: string;
+    name: string;
     cost: number;
     quantity: number;
     unity: string,
@@ -41,7 +44,7 @@ export class DisplayPreparationsComponent implements OnInit {
   }>;
 
   public displayed_ing: Array<{
-    nom: string;
+    name: string;
     quantity: number;
     unity: string,
     cost: number;
@@ -49,7 +52,7 @@ export class DisplayPreparationsComponent implements OnInit {
   }>;
 
   public displayed_conso: Array<{
-    nom: string;
+    name: string;
     cost: number;
     quantity: number;
     unity: string;
@@ -73,6 +76,10 @@ export class DisplayPreparationsComponent implements OnInit {
     etapes: Array<Cetape>
   }, private ingredient_service: IngredientsInteractionService,private conso_service:ConsommableInteractionService,
    private prepa_service:CalculPrepaService) { 
+    this.tmps_prepa = "";
+    this.val_bouch = 0;
+    this.prime_cost = 0;
+    this.name_prepa = "";
     this.displayed_ing = [];
     this.displayed_conso = [];
     this.displayed_etape = [];
@@ -83,10 +90,14 @@ export class DisplayPreparationsComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.name_prepa = this.data.name;
+    this.tmps_prepa =  this.prepa_service.getFullTheoTimeFromSec(this.data.etapes);
+    
     if(this.data.ingredients !== null){
       if(this.data.ingredients.length > 0){
+
         this.displayed_ing = this.data.ingredients.map((ing) => {
-          return {nom: ing.name, quantity: ing.quantity, unity: ing.unity, cost:ing.cost, cost_matiere: ing.material_cost}
+          return {name: ing.name, quantity: ing.quantity, unity: ing.unity, cost:ing.cost, cost_matiere: ing.material_cost}
         })
         this.dataSource_ing.data = this.displayed_ing;
       }

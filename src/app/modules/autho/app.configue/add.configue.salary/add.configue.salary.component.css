@@ -1,0 +1,32 @@
+
+form{
+    display: flex;
+    flex-direction: column;
+}
+
+h1{
+    margin-top: 50px;
+    margin-bottom: 50px;
+    font-weight: normal;
+    font-size: larger;
+    color: rgb(125, 181, 46);
+}
+
+p{
+    color: rgb(125, 181, 46);
+}
+
+.mat-stroked-button{
+    margin-top: 10px;
+    color: rgb(125, 181, 46);
+    background-color: white;
+    height: 40px;
+    min-width: 96px;
+    margin: 0;
+  }
+  
+  .mat-stroked-button:hover{
+    background-color: rgb(125, 181, 46);
+    color: white;
+  }
+  

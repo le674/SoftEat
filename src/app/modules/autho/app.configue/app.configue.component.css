@@ -13,6 +13,12 @@ body {
     margin-bottom: 3%;
   }
 
+  footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 3%;
+    margin-right: 2%;
+  }
   ul{
     list-style: none;
     display: inline-flex;
@@ -73,4 +79,17 @@ body {
 .accordion-body{
   display: flex;
   justify-content: center;
+}
+
+.mat-stroked-button{
+  color: rgb(125, 181, 46);
+  background-color: white;
+  height: 40px;
+  min-width: 96px;
+  margin: 0;
+}
+
+.mat-stroked-button:hover{
+  background-color: rgb(125, 181, 46);
+  color: white;
 }

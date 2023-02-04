@@ -12,6 +12,8 @@ import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
 import { Visibles } from './app.configue.index';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { AddConfigueSalaryComponent } from './add.configue.salary/add.configue.salary.component';
 
 @Component({
   selector: 'app-app.configue',
@@ -87,7 +89,7 @@ export class AppConfigueComponent implements OnInit{
   @ViewChildren("options_write")
   options_write!: QueryList<MatOption>
 
-  constructor(private service: InteractionRestaurantService, private user_services: UserInteractionService,
+  constructor(public dialog: MatDialog, private service: InteractionRestaurantService, private user_services: UserInteractionService,
     private ofApp: FirebaseApp, private router: Router,  private _snackBar: MatSnackBar) {
     this.prop_user = [];
     this.users = [];
@@ -160,6 +162,7 @@ export class AppConfigueComponent implements OnInit{
        all_id.then((users) => {
           if (users.employee !== null) {
             const rest_prom = this.service.getAllRestaurants(this.proprietaire).then((restau_list) => {
+              this.restau_list = restau_list;
               return (restau_list)
             })
             const employees = users.employee
@@ -417,6 +420,16 @@ export class AppConfigueComponent implements OnInit{
     this._snackBar.open("vous avez bien modifier l'ultilisateur", "fermer")
   }
 
+
+  addSalaryRestaurant(){
+    this.dialog.open(AddConfigueSalaryComponent, {
+      height: "500px",
+      width: "400px",
+      data: {
+        restaurants: this.restau_list.map((restau) => restau.id)
+      }
+    });
+  }
 
   clicdeConnexion() {
     const auth = getAuth(this.ofApp);

@@ -83,7 +83,8 @@ export interface Ingredient {
 }
 
 export interface Consommable {
-    "nom": string;
+    [x: string]: any;
+    "name": string;
     "cost": number;
     "quantity": number;
     "unity": string;
@@ -309,7 +310,7 @@ export class CIngredient implements Ingredient {
 
 export class Cconsommable implements Consommable {
     "quantity": number;
-    "nom": string;
+    "name": string;
     "cost": number;
     "unity": string;
     "taux_tva": number;
@@ -321,10 +322,10 @@ export class Cconsommable implements Consommable {
     }
 
     getNom(): string {
-        return this.nom
+        return this.name
     }
     setNom(nom: string | null): void {
-        if (nom !== null) this.nom = nom;
+        if (nom !== null) this.name = nom;
     }
     getCost(): number {
         return this.cost

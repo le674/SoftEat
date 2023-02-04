@@ -14,11 +14,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
 import {MatSnackBarModule} from '@angular/material/snack-bar'; 
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { AddConfigueSalaryComponent } from './app.configue/add.configue.salary/add.configue.salary.component';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
     AppAuthoComponent,
-    AppConfigueComponent
+    AppConfigueComponent,
+    AddConfigueSalaryComponent
   ],
   imports: [ 
     CommonModule,
@@ -26,9 +30,12 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     BrowserAnimationsModule,
     MatDialogModule,
     ReactiveFormsModule,
+    MatDialogModule,
+    MatButtonModule,
     MatPaginatorModule,
     MatSnackBarModule,
     MatTableModule,
+    MatInputModule,
     MatSelectModule,
     MatOptionModule,
     AppModalModule

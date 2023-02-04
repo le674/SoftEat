@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page d'ajout d'un salaire moyen</title>
+</head>
+
+<body>
+    <form [formGroup]="add_salary" (ngSubmit)="addSalary()">
+        <h1>Ajout d'un salaire moyen des cuisiniés</h1>
+        <p>Sélectionner un restaurant</p>
+        <mat-form-field appearance="fill">
+            <mat-label>Sélectionner un restaurant</mat-label>
+            <mat-select formControlName="restaurant">
+                <mat-option *ngFor="let restaurant of restaurants" value="restaurant">
+                    {{restaurant}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    
+        <p>Ajouter un salaire net moyen des cuisiniés</p>
+        <mat-form-field class="example-full-width">
+            <mat-label>Salaire</mat-label>
+            <input formControlName="salary" matInput type="number" placeholder="Ex. 1700" value="1300">
+        </mat-form-field>
+        <button mat-stroked-button type="submit"> Ajouter </button>
+    </form>
+</body>
+
+</html>

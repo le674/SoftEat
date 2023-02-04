@@ -75,7 +75,7 @@ ngOnInit(): void{
             }
           }
           let row_consommable = {
-            nom: consommables[i].nom.split('_').join('<br>'),
+            nom: consommables[i].name.split('_').join('<br>'),
             cost: consommables[i].cost,
             cost_ttc: consommables[i].cost_ttc,
             quantity: consommables[i].quantity,
@@ -134,7 +134,7 @@ ngOnInit(): void{
     ele.nom = ele.nom.split('<br>').join('_');
     console.log(ele.unity);
     // afin de récupérer le taux de tva comme celui-ci ne passe pas par le tableau affiché on eut le récupérer directment depuis la bdd 
-    const conso = this.consommable_table.filter((conso) => conso.nom === ele.nom)[0];
+    const conso = this.consommable_table.filter((conso) => conso.name === ele.nom)[0];
     const dialogRef = this.dialog.open(AddConsoComponent, {
       height: `${window.innerHeight - window.innerHeight/3}px`,
       width:`${window.innerWidth - window.innerWidth/15}px`,

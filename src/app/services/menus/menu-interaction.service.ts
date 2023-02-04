@@ -72,7 +72,7 @@ export class MenuInteractionService {
         const conso_lst = tmp_conso.map((conso) => conso.id);
         const plat_lst = tmp_plats.map((plat) => plat.id)
         all_ingredients = all_ingredients.filter((ingredient) => ing_lst.includes(ingredient.nom));
-        all_consommables = all_consommables.filter((consommable) => conso_lst.includes(consommable.nom));
+        all_consommables = all_consommables.filter((consommable) => conso_lst.includes(consommable.name));
         all_plats = all_plats.filter((plat) => plat_lst.includes(plat.nom));
 
         // pour chacun des ings/conso/plat on modifie la quanitée présente dans le stock par celle nécessaire à la réalisation du menu
@@ -93,7 +93,7 @@ export class MenuInteractionService {
 
         for (let conso of all_consommables) {
           let curr_conso = { id: "", quantity: 0, unity: "p" };
-          let curr_consos = tmp_conso.filter((fconso) => fconso.id === conso.nom);
+          let curr_consos = tmp_conso.filter((fconso) => fconso.id === conso.name);
           if (curr_consos.length > 0) {
             curr_conso = curr_consos[0];
           }

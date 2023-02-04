@@ -82,6 +82,7 @@ export class AddPreparationsComponent implements OnInit{
 
 
   ngOnInit(): void {
+
     this.add_prepa_section.controls.name.setValue(this.data.name);
     let tmp_data:Array<{name:string | null, quantity: number | null, unity: string | null}> = [];
     if((this.data.ingredients !== null) && (this.data.ingredients !== undefined)){
@@ -103,7 +104,7 @@ export class AddPreparationsComponent implements OnInit{
     if((this.data.consommables !== null) && (this.data.consommables !== undefined)){
       this.current_inputs_conso = this.data.consommables.length;
       tmp_data =  this.data.consommables.map((conso) => {
-        return {name: conso.nom, quantity: conso.quantity, unity: conso.unity};
+        return {name: conso.name, quantity: conso.quantity, unity: conso.unity};
       })
       for (let index = 0; index < this.current_inputs_conso ; index++) {
         const new_conso = this.formBuilder.group({
@@ -123,6 +124,7 @@ export class AddPreparationsComponent implements OnInit{
           comm: new FormControl(this.data.etapes[index].commentaire),
           tmps: new FormControl(this.data.etapes[index].temps),
         })
+        this.getEtapes().push(new_etape);
       }
     }
 
@@ -183,7 +185,9 @@ export class AddPreparationsComponent implements OnInit{
           });
 
           let ing_prop = this.ingredient_service.getIngredientsQuantityUnityFromBaseIngs(this.base_ings, this.data.prop, this.data.restaurant).then((ings) => {
-            this.getBaseIng().setErrors(this.notSameLengthValidator(ings, this.base_ings, "ingredients", false));
+           
+            this.getBaseIng().setErrors(this.notSameStringValidator(ings, this.base_ings,
+             "ingredients", false));
             this.base_ings = [];
             let result = this.prepa_service.getCostMaterial(ings).filter((ing) => !(ing.nom === ""));
             for (let index = 0; index < result.length; index++) {
@@ -201,16 +205,16 @@ export class AddPreparationsComponent implements OnInit{
             }
           })
 
-          ing_prop.then(() => {
+          const conso_prop = ing_prop.then(() => {
             this.conso_service.getConsosmmablesFromBaseConso(this.base_conso, this.data.prop, this.data.restaurant).then((consos) => {
-              this.getBaseConso().setErrors(this.notSameLengthValidator(consos, this.base_conso, "consommables", true));
+              this.getBaseConso().setErrors(this.notSameStringValidator(consos, this.base_conso, "consommables", true));
               this.base_conso = [];
               let displayed_conso = consos.map((conso) => {
-                  return {nom: conso.nom, cost: conso.cost, quantity: conso.quantity, unity: conso.unity}
+                  return {nom: conso.name, cost: conso.cost, quantity: conso.quantity, unity: conso.unity}
               }).filter((conso) => !(conso.nom === ""))
               for (let index = 0; index < consos.length; index++) {
                 const conso: TConsoBase = {
-                  name: consos[index].nom,
+                  name: consos[index].name,
                   quantity: consos[index].quantity,
                   unity: consos[index].unity,
                   cost: consos[index].cost
@@ -220,18 +224,44 @@ export class AddPreparationsComponent implements OnInit{
             })
           })
 
-          if(this.getBaseConso().getError("notSameSize") && this.getBaseIng().getError("notSameSize")){
-            this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop,
-              name_prepa.split(" ").join('_'), this.etapes, this.base_ings, this.base_conso, this.is_stock).catch((e) => {
-               console.log(e);
-               this._snackBar.open("nous ne somme pas parvenu à modifier la préparation veuillez contacter SoftEat");
-              }).finally(() => {
-               this._snackBar.open("la préparation vient d'être modifier", "fermer");
-              });
-          }
+          conso_prop.then(() => {
+            if(this.getBaseConso().getError("notSameSize") || this.getBaseIng().getError("notSameSize")){
+              if(this.getBaseConso().getError("notSameSize")){
+                if(this.getBaseIng().getError("notSameSize")){
+                  this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop,
+                    name_prepa.split(" ").join('_'), this.etapes, this.base_ings, this.base_conso, this.is_stock).catch((e) => {
+                     this._snackBar.open("nous ne somme pas parvenu à modifier la préparation veuillez contacter SoftEat");
+                    }).finally(() => {
+                     this._snackBar.open("la préparation vient d'être ajouté", "fermer");
+                    });
+                }
+                else{
+                  // en cas d'erreur ont remet les listes à vides
+                  this.etapes = [];
+                  this.base_conso = [];
+                  this.base_ings = [];
+                  this._snackBar.open(`Veuillez entrer les ingrédients dans la section stock de  l'application`, "fermer")
+                }
+              }
+              else{
+                // en cas d'erreur ont remet les listes à vides
+                this.etapes = [];
+                this.base_conso = [];
+                this.base_ings = [];
+                this._snackBar.open(`Veuillez entrer les consomables dans la section stock de  l'application`, "fermer")
+              }
+            }
+            else{
+              // en cas d'erreur ont remet les listes à vides
+              this.etapes = [];
+              this.base_conso = [];
+              this.base_ings = [];
+              this._snackBar.open(`Veuillez entrer les consomables et ingrédients dans la section stock de  l'application`, "fermer")
+            } 
+          })
         }
       }
-    }    
+    }  
   }
 
   setTrue(){
@@ -271,6 +301,7 @@ export class AddPreparationsComponent implements OnInit{
   }
 
   addInputEtape(){
+
     this.current_inputs_etapes = this.current_inputs_etapes + 1;
     this.index_etapes_inputs.push(this.current_inputs_etapes);
     const new_etape = this.formBuilder.group({
@@ -281,14 +312,12 @@ export class AddPreparationsComponent implements OnInit{
     this.getEtapes().push(new_etape);
   }
 
-  notSameLengthValidator(l1: Array<any>, l2: Array<any>, name:string, last:boolean):ValidationErrors{
-    this.to_add = name + ', ' + this.to_add ;
+  notSameStringValidator(l1: Array<any>, l2: Array<any>, name:string, last:boolean):ValidationErrors{
     if(l1.length !== l2.length){
-      if(last) this._snackBar.open(`Veuillez entrer les ${this.to_add} dans la section stock de  l'application`, "fermer")
-      return {notSameSize: true}
+      return {notSameSize: false}
     }
     else{
-      return {notSameSize: false}
+      return {notSameSize: true}
     }
   }
 

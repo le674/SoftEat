@@ -69,13 +69,14 @@ export class ConsommableInteractionService {
     let ref_db: DatabaseReference;
     ref_db = ref(this.db)
     for (let index = 0; index < base_conso.length; index++) {
-      const conso_name = base_conso[index].name;
+
+      const conso_name = base_conso[index].name.split(' ').join('_');
       const conso_quantity = base_conso[index].quantity;
       const path = `consommables_${prop}_${restaurant}/${prop}/${restaurant}/${conso_name}`
       await get(child(ref_db, path)).then((conso_bdd) => {
-        if((conso_bdd.key !== null) && (conso_bdd.key !== undefined)){
+        if((conso_bdd.child("cost").val() !== null)){
           let conso:Cconsommable = new Cconsommable();
-          conso.nom = conso_name
+          conso.name = conso_name.split('_').join(' ')
           conso.quantity = conso_quantity
           conso.cost = conso_bdd.child("cost").val()
           this.consommable.push(conso);
@@ -91,7 +92,7 @@ export class ConsommableInteractionService {
     ref_db = ref(this.db, path);
     // dans le cas d'ajout d'une non préparation  on modifie l'ingrédient préparé 
     const consommable_db =  {
-        [consommable.nom]: {
+        [consommable.name]: {
           taux_tva: consommable.taux_tva,
           cost: consommable.cost,
           quantity: consommable.quantity,

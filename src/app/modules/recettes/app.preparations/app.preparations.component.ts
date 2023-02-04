@@ -34,6 +34,7 @@ export class AppPreparationsComponent implements OnInit {
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];
     this.ingredient_service.getIngredientsPrepFromRestaurantsPROMForMenu(this.prop,this.restaurant).then((preparations) => {
+
       let nom_prep = "";
       for (let index = 0; index < preparations.length; index++) {
         if(preparations[index].nom !== null){
@@ -79,10 +80,6 @@ export class AppPreparationsComponent implements OnInit {
   }
   
   seePreparation(preparation:Cpreparation):void{
-    console.log(preparation);
-    
-
-    console.log(preparation);
     this.dialog.open(DisplayPreparationsComponent, {
       height: `${window.innerHeight}px`,
       width: `${window.innerWidth - window.innerWidth/5}px`,

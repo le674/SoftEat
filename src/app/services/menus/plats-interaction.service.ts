@@ -50,7 +50,7 @@ export class PlatsInteractionService {
             const iter_consommbales: [string, { quantity: number, unity: string }][] = Object.entries(consommables);
             let etapes: [string, { commentaire: string, temps: number }][] = Object.entries(etapes_bdd);
             for (let conso of iter_consommbales) {
-              const consommables = lst_conso.filter((consomable) => conso[0] === consomable.nom);
+              const consommables = lst_conso.filter((consomable) => conso[0] === consomable.name);
               if (consommables.length > 0) {
                 const consomable = consommables[0];
                 this.consommables.push(consomable);

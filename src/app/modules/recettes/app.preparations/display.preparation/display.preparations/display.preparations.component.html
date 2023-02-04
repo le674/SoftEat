@@ -62,7 +62,7 @@
                 <table mat-table [dataSource]="dataSource_conso" class="mat-elevation-z8">
                     <ng-container matColumnDef="nom">
                         <th class="name" mat-header-cell *matHeaderCellDef> nom </th>
-                        <td class="name" mat-cell *matCellDef="let element"> {{element.nom}} </td>
+                        <td class="name" mat-cell *matCellDef="let element"> {{element.name}} </td>
                     </ng-container>
                     <ng-container matColumnDef="cost">
                         <th class="other-cells" mat-header-cell *matHeaderCellDef> cout </th>
@@ -95,7 +95,7 @@
                     </ng-container>
                     <ng-container matColumnDef="temps">
                         <th class="other-cells" mat-header-cell *matHeaderCellDef> temps </th>
-                        <td class="other-cells" mat-cell *matCellDef="let element"> {{element.tmps}} </td>
+                        <td class="other-cells" mat-cell *matCellDef="let element"> {{element.temps}} </td>
                     </ng-container>
                     <ng-container matColumnDef="commentaire">
                         <th class="comm-cells" mat-header-cell *matHeaderCellDef> commentaire</th>
