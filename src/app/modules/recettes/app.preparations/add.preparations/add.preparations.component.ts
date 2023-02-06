@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Cetape } from 'src/app/interfaces/etape';
 import {Consommable, TConsoBase, TIngredientBase } from 'src/app/interfaces/ingredient';
+import { AfterPreparation } from 'src/app/interfaces/preparation';
 import { ConsommableInteractionService } from 'src/app/services/menus/consommable-interaction.service';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
@@ -39,15 +40,18 @@ export class AddPreparationsComponent implements OnInit{
       name:FormControl<string | null>,
       comm:FormControl<string | null>,
       tmps:FormControl<number | null>
-    }>>([])
+    }>>([]),
+    quantity_aft_prep: new FormControl(0),
+    unity: new FormControl("")
   });
   private base_ings: Array<TIngredientBase>;
   private base_conso: Array<TConsoBase>;
   private etapes: Array<Cetape>;
-
+  private after_prep:AfterPreparation = {quantity: 0, unity:""}; 
   private bdd_conso: Array<TIngredientBase>;
   private bdd_etapes: Array<TIngredientBase>;
   private to_add:string;
+  private unity:string;
   
   @ViewChild('taux')
   taux!: ElementRef;
@@ -77,7 +81,7 @@ export class AddPreparationsComponent implements OnInit{
     this.current_inputs_conso = 1;
     this.current_inputs_etapes = 1;
     this.to_add = "";
-
+    this.unity = "";
   }
 
 
@@ -224,12 +228,21 @@ export class AddPreparationsComponent implements OnInit{
             })
           })
 
+          
+          const unity_aft_prep = this.add_prepa_section.controls.unity.value;
+          const quantity_aft_prep = this.add_prepa_section.controls.quantity_aft_prep.value;
+          if((unity_aft_prep !== null) && (quantity_aft_prep !== null)){
+            this.after_prep.quantity = quantity_aft_prep;
+            this.after_prep.unity = unity_aft_prep;
+          }
+
           conso_prop.then(() => {
             if(this.getBaseConso().getError("notSameSize") || this.getBaseIng().getError("notSameSize")){
+              
               if(this.getBaseConso().getError("notSameSize")){
                 if(this.getBaseIng().getError("notSameSize")){
                   this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop,
-                    name_prepa.split(" ").join('_'), this.etapes, this.base_ings, this.base_conso, this.is_stock).catch((e) => {
+                    name_prepa.split(" ").join('_'), this.etapes, this.base_ings, this.base_conso, this.after_prep ,this.is_stock).catch((e) => {
                      this._snackBar.open("nous ne somme pas parvenu à modifier la préparation veuillez contacter SoftEat");
                     }).finally(() => {
                      this._snackBar.open("la préparation vient d'être ajouté", "fermer");
@@ -330,6 +343,7 @@ export class AddPreparationsComponent implements OnInit{
   }
 
   getBaseConso(){
+
     return this.add_prepa_section.get("base_conso") as FormArray<FormGroup<{
       name:FormControl<string | null>,
       quantity:FormControl<number | null>,

@@ -426,7 +426,8 @@ export class AppConfigueComponent implements OnInit{
       height: "500px",
       width: "400px",
       data: {
-        restaurants: this.restau_list.map((restau) => restau.id)
+        restaurants: this.restau_list.map((restau) => restau.id),
+        prop: this.proprietaire
       }
     });
   }

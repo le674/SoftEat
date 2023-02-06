@@ -4,6 +4,11 @@ import { Cetape, Etape } from "./etape";
 import { Consommable, Ingredient } from "./ingredient";
 
 
+export interface AfterPreparation {
+    "quantity":number;
+    "unity":string
+}
+
 export interface Preparation {    
     "nom":string | null;
     "categorie_restaurant": string;

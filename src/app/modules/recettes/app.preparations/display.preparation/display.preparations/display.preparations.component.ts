@@ -7,6 +7,7 @@ import { Consommable, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { ConsommableInteractionService } from 'src/app/services/menus/consommable-interaction.service';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
+import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
 
 @Component({
   selector: 'app-display.preparations',
@@ -74,8 +75,8 @@ export class DisplayPreparationsComponent implements OnInit {
     ingredients: Array<TIngredientBase>,
     consommables: Array<Consommable>,
     etapes: Array<Cetape>
-  }, private ingredient_service: IngredientsInteractionService,private conso_service:ConsommableInteractionService,
-   private prepa_service:CalculPrepaService) { 
+  }, private ingredient_service: IngredientsInteractionService,
+   private prepa_service:CalculPrepaService, private restau_service:RestaurantService) { 
     this.tmps_prepa = "";
     this.val_bouch = 0;
     this.prime_cost = 0;
@@ -92,7 +93,11 @@ export class DisplayPreparationsComponent implements OnInit {
 
     this.name_prepa = this.data.name;
     this.tmps_prepa =  this.prepa_service.getFullTheoTimeFromSec(this.data.etapes);
-    
+    this.restau_service.getSalaryCuisiniee(this.data.prop, this.data.restaurant).then((salary) => {
+      this.prime_cost = this.prepa_service.getPrimCost(this.data.etapes, this.data.ingredients, this.data.consommables, salary);
+    });
+
+
     if(this.data.ingredients !== null){
       if(this.data.ingredients.length > 0){
 

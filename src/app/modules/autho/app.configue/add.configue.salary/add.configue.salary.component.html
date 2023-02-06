@@ -15,7 +15,7 @@
         <mat-form-field appearance="fill">
             <mat-label>Sélectionner un restaurant</mat-label>
             <mat-select formControlName="restaurant">
-                <mat-option *ngFor="let restaurant of restaurants" value="restaurant">
+                <mat-option *ngFor="let restaurant of restaurants" [value]="restaurant">
                     {{restaurant}}
                 </mat-option>
             </mat-select>
@@ -24,7 +24,7 @@
         <p>Ajouter un salaire net moyen des cuisiniés</p>
         <mat-form-field class="example-full-width">
             <mat-label>Salaire</mat-label>
-            <input formControlName="salary" matInput type="number" placeholder="Ex. 1700" value="1300">
+            <input formControlName="salary" matInput type="number" placeholder="Ex. 1700">
         </mat-form-field>
         <button mat-stroked-button type="submit"> Ajouter </button>
     </form>

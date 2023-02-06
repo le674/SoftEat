@@ -29,8 +29,24 @@ export class CalculPrepaService {
     return ingredients
   }
 
-  getPrimCost(etapes: Array<Cetape>, ingredients: Array<CIngredient>, consommables: Array<Cconsommable>){
-    
+  getPrimCost(etapes: Array<Cetape>, ingredients: Array<TIngredientBase>, consommables: Array<Cconsommable>, salary:number){
+    let cost:number;
+    const full_time = etapes.map((etape) => etape.temps).
+                                                        reduce((curr_tmps, next_tmps) => curr_tmps + next_tmps);
+    const full_conso_cost = consommables.map((consommable) => consommable.cost).
+                                                        reduce((curr_cost, next_cost) => curr_cost + next_cost);
+    const full_conso_quantity = consommables.map((consommable) => this.calcul_service.convertQuantity(consommable.quantity, consommable.unity)).
+                                                        reduce((curr_quant, next_quant) => curr_quant + next_quant);
+    const full_ing_cost = ingredients.map((ing) => ing.cost).
+                                                        reduce((curr_cost, next_cost) => curr_cost + next_cost);
+    const full_ing_quant = ingredients.map((ing) => this.calcul_service.convertQuantity(ing.quantity, ing.unity)).
+                                                        reduce((curr_quant, next_quant) => curr_quant + next_quant);
+    // 35 nombr d'heur travaillé par semaine en fonction du nombre de semaine dans un mois
+    const mensuel_work_hour = 4.34524*35;
+    const second_salary = salary/(mensuel_work_hour * 3600);
+
+    return second_salary*full_time + full_conso_cost*full_conso_quantity + full_ing_cost*full_ing_quant;
+
   }
 
   getFullTheoTimeFromSec(etapes: Array<Cetape>):string{
@@ -46,16 +62,17 @@ export class CalculPrepaService {
     return `${heure}h ${min}min ${sec}sec`
   }
 
-  getValBouchFromBasIng(base: CIngredient[], ingredient_act: Cpreparation): number {
+  getValBouchFromBasIng(base: TIngredientBase[], ingredient_act: Cpreparation): number {
 
+  
     if (base.length === 0) {
       return 0;
     }
     // comme les objet son passez par réferance on fait une "deep copy"
     let tmp_base_ing = JSON.parse(JSON.stringify(ingredient_act.base_ing));
     const quantity_unity_act = this.calcul_service.convertQuantity(ingredient_act.quantity_unity, ingredient_act.unity);
-    base.forEach((ingredient: CIngredient, index: number) => {
-      const obj_ele = ingredient_act.base_ing.filter((ing) => ing.name === ingredient.nom)[0];
+    base.forEach((ingredient: TIngredientBase, index: number) => {
+      const obj_ele = ingredient_act.base_ing.filter((ing) => ing.name === ingredient.name)[0];
       obj_ele.quantity = this.calcul_service.convertQuantity(obj_ele.quantity, ingredient.unity);
     })
     // on renvoie 0 pour signifier que des ingrédient de base pour la préparation n'on pas été ajouté en base de donnée
