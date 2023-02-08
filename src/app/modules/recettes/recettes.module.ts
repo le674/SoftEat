@@ -40,6 +40,7 @@ import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calc
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
+    MatOptionModule,
     MatSelectModule,
     MatTooltipModule,
     MatGridListModule,

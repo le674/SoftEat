@@ -16,7 +16,7 @@ export class CalculPrepaService {
     ings.forEach((ing) => {
       let cost_matiere = ing.cost
       if(!(ing.vrac === 'oui')){
-        cost_matiere = this.calcul_service.convertQuantity(ing.quantity, ing.unity)*ing.cost;
+        cost_matiere = this.calcul_service.convertQuantity(ing.quantity, ing.unity)*(ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity));
       }
       ingredients.push({
         nom: ing.name,
@@ -30,22 +30,29 @@ export class CalculPrepaService {
   }
 
   getPrimCost(etapes: Array<Cetape>, ingredients: Array<TIngredientBase>, consommables: Array<Cconsommable>, salary:number){
-    let cost:number;
+    
+    const full_cost_quant_ing = ingredients.map((ing) => {
+      let cost = ing.cost*this.calcul_service.convertQuantity(ing.quantity, ing.unity);
+      if(!(ing.vrac === 'oui')){
+        // on normalise le cout par la quantitée unitaire
+        cost = cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity);
+      }
+      return cost
+    })
+    const full_cost_quant_conso = consommables.map((conso) => {
+      let cost = conso.cost*this.calcul_service.convertQuantity(conso.quantity, conso.unity);
+      return cost
+    })
+
+    const sum_cost_ing = full_cost_quant_ing.reduce((curr_cost, next_cost) => curr_cost + next_cost);
+    const sum_cost_conso = full_cost_quant_conso.reduce((curr_cost, next_cost) => curr_cost + next_cost);
     const full_time = etapes.map((etape) => etape.temps).
                                                         reduce((curr_tmps, next_tmps) => curr_tmps + next_tmps);
-    const full_conso_cost = consommables.map((consommable) => consommable.cost).
-                                                        reduce((curr_cost, next_cost) => curr_cost + next_cost);
-    const full_conso_quantity = consommables.map((consommable) => this.calcul_service.convertQuantity(consommable.quantity, consommable.unity)).
-                                                        reduce((curr_quant, next_quant) => curr_quant + next_quant);
-    const full_ing_cost = ingredients.map((ing) => ing.cost).
-                                                        reduce((curr_cost, next_cost) => curr_cost + next_cost);
-    const full_ing_quant = ingredients.map((ing) => this.calcul_service.convertQuantity(ing.quantity, ing.unity)).
-                                                        reduce((curr_quant, next_quant) => curr_quant + next_quant);
     // 35 nombr d'heur travaillé par semaine en fonction du nombre de semaine dans un mois
     const mensuel_work_hour = 4.34524*35;
     const second_salary = salary/(mensuel_work_hour * 3600);
-
-    return second_salary*full_time + full_conso_cost*full_conso_quantity + full_ing_cost*full_ing_quant;
+  
+    return second_salary*full_time + sum_cost_conso + sum_cost_ing;
 
   }
 
@@ -63,19 +70,25 @@ export class CalculPrepaService {
   }
 
   getValBouchFromBasIng(base: TIngredientBase[], quantity_aft_prep: number, unity_aft_prep:string): number {
+    let ingredient_quantity:Array<number> = [];
 
-  
     if (base.length === 0) {
       return 0;
     }
     const quantity_unity_act = this.calcul_service.convertQuantity(quantity_aft_prep, unity_aft_prep);
     base.forEach((ingredient: TIngredientBase) => {
-     ingredient.quantity = this.calcul_service.convertQuantity(ingredient.quantity, ingredient.unity);
+     ingredient_quantity.push(this.calcul_service.convertQuantity(ingredient.quantity, ingredient.unity));
     })
     // on fait la somme des coûts et des quantitées des ingrédients de base utilisées pour la préparation
-    const moy_cost = base.map(ing => ing.cost).reduce((cost, next_cost) => cost + next_cost) / base.length;
-    const moy_quantity = base
-      .map(ing => ing.quantity)
+    const moy_cost = base.map(ing => {
+      let cost =  ing.cost
+      if(!(ing.vrac === 'oui')){
+         // on normalise le cout par la quantitée unitaire
+         cost = cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity);
+      }
+      return cost
+    }).reduce((cost, next_cost) => cost + next_cost) / base.length;
+    const moy_quantity = ingredient_quantity
       .reduce((quantity, next_quantity) => Number(quantity) + Number(next_quantity)) / base.length;
     const moy_total_cost = moy_cost * moy_quantity;
     const square_final_cost = quantity_unity_act * quantity_unity_act;

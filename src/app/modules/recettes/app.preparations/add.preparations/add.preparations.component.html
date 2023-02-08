@@ -14,7 +14,7 @@
         </mat-form-field>
     </div>
     <div class="section_fileds">
-        <p>Quelles sont les ingrédients de base ? <br> entrer la quantitée de l'ingrédient de base <br>  utilisé pour la
+        <p>Quelles sont les ingrédients de base ? <br> entrer la quantitée de l'ingrédient de base <br> utilisé pour la
             préparation : </p>
         <ng-container formArrayName="base_ing">
             <div class="old" *ngFor="let item of add_prepa_section.controls.base_ing.controls;let i=index">
@@ -28,19 +28,28 @@
                         <input matInput type="number" formControlName="quantity">
                     </mat-form-field>
                     <mat-form-field appearance="fill">
-                        <mat-label> unitée</mat-label>
-                        <input matInput formControlName="unity">
+                        <mat-label>unitée</mat-label>
+                        <mat-select formControlName="unity">
+                            <mat-option value="kg"> kg (kilogramme) </mat-option>
+                            <mat-option value="g"> g (grame) </mat-option>
+                            <mat-option value="L"> L (litre)</mat-option>
+                            <mat-option value="ml"> ml (millilitre)</mat-option>
+                            <mat-option value="cl"> cl (centilitre)</mat-option>
+                            <mat-option value="dl"> dl (decilitre)</mat-option>
+                            <mat-option value="p"> p (pièce) </mat-option>
+                        </mat-select>
                     </mat-form-field>
                 </ng-container>
             </div>
-        </ng-container>    
+        </ng-container>
         <button mat-mini-fab type="button" id="add_input_ing" color="white" matTooltip="ajout d'un ingrédient"
             aria-label="ajout d'un ingrédient" (click)="addInputIng()">
             <i class="fa-regular fa-plus"></i>
         </button>
     </div>
     <div class="section_fileds">
-        <p>Quelles sont les consommables ? <br> entrer la quantitée, le nom et l'unitée <br> de consommables utilisés pour la préparation : </p>
+        <p>Quelles sont les consommables ? <br> entrer la quantitée, le nom et l'unitée <br> de consommables utilisés
+            pour la préparation : </p>
         <ng-container formArrayName="base_conso">
             <div class="old" *ngFor="let item of add_prepa_section.controls.base_conso.controls;let i=index">
                 <ng-container [formGroupName]="i">
@@ -53,26 +62,31 @@
                         <input matInput type="number" formControlName="quantity">
                     </mat-form-field>
                     <mat-form-field appearance="fill">
-                        <mat-label> unitée</mat-label>
-                        <input matInput formControlName="unity">
+                        <mat-label>unitée</mat-label>
+                        <mat-select formControlName="unity">
+                            <mat-option value="kg"> kg (kilogramme) </mat-option>
+                            <mat-option value="mètre"> m (mètre) </mat-option>
+                            <mat-option value="p"> p (pièce) </mat-option>
+                            <mat-option value="L"> L (litre)</mat-option>
+                        </mat-select>
                     </mat-form-field>
                 </ng-container>
             </div>
         </ng-container>
         <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'un consommable"
-                aria-label="ajout d'un consommable" (click)="addInputConso()">
-                <i class="fa-regular fa-plus"></i>
+            aria-label="ajout d'un consommable" (click)="addInputConso()">
+            <i class="fa-regular fa-plus"></i>
         </button>
     </div>
     <div class="section_fileds">
-        <p>Quelles sont les étapes ? <br> entrer le nom, un commentaire et le temps de réalisation  <br> des différentes étapes pour réaliser la préparation : </p>
+        <p>Quelles sont les étapes ? <br> entrer le nom, un commentaire et le temps de réalisation <br> des différentes
+            étapes pour réaliser la préparation : </p>
         <ng-container formArrayName="etapes">
             <div class="old" *ngFor="let item of add_prepa_section.controls.etapes.controls; let i = index">
                 <ng-container [formGroupName]="i">
                     <mat-form-field appearance="fill">
                         <mat-label>nom des étapes</mat-label>
-                        <input matInput formControlName="name"
-                            placeholder="Ex. création de la sauce salade">
+                        <input matInput formControlName="name" placeholder="Ex. création de la sauce salade">
                     </mat-form-field>
                     <mat-form-field appearance="fill">
                         <mat-label> commentaire pour l'étape </mat-label>
@@ -102,13 +116,13 @@
         <mat-form-field appearance="fill">
             <mat-label>Entrer l'unitée de la préparation</mat-label>
             <mat-select formControlName="unity">
-              <mat-option value="L">litre</mat-option>
-              <mat-option value="cl">centilitre</mat-option>
-              <mat-option value="g">gramme</mat-option>
-              <mat-option value="kg">kilogramme</mat-option>
-              <mat-option value="p">pièce</mat-option>
+                <mat-option value="L">litre</mat-option>
+                <mat-option value="cl">centilitre</mat-option>
+                <mat-option value="g">gramme</mat-option>
+                <mat-option value="kg">kilogramme</mat-option>
+                <mat-option value="p">pièce</mat-option>
             </mat-select>
-          </mat-form-field>
+        </mat-form-field>
     </div>
     <button mat-stroked-button type="submit"> Ajouter </button>
 </form>

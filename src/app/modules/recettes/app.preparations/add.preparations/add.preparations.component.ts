@@ -193,16 +193,16 @@ export class AddPreparationsComponent implements OnInit{
           });
 
           let ing_prop = this.ingredient_service.getIngredientsQuantityUnityFromBaseIngs(this.base_ings, this.data.prop, this.data.restaurant).then((ings) => {
-           
             this.getBaseIng().setErrors(this.notSameStringValidator(ings, this.base_ings,
              "ingredients", false));
             this.base_ings = [];
+            //on 
             let result = this.prepa_service.getCostMaterial(ings).filter((ing) => !(ing.nom === ""));
             for (let index = 0; index < result.length; index++) {
               const ing: TIngredientBase = {
                 name: result[index].nom,
                 quantity: result[index].quantity,
-                quantity_unity: 0,
+                quantity_unity: ings[index].quantity_unity,
                 unity: result[index].unity,
                 cost: result[index].cost,
                 material_cost: result[index].cost_matiere,
