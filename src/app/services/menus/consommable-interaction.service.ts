@@ -89,20 +89,25 @@ export class ConsommableInteractionService {
 
   async setConsoInBdd(consommable: Cconsommable, prop:string, restaurant:string){
     let ref_db: DatabaseReference;
-    const path = `consommables_${prop}_${restaurant}/${prop}/${restaurant}/`;
-    ref_db = ref(this.db, path);
+    const path_conso = `consommables_${prop}_${restaurant}/${prop}/${restaurant}/${consommable.name}`;
+    const path_lst_conso = `inventaire_${prop}_${restaurant}/${prop}/${restaurant}/consommables/${consommable.name}`;
+    ref_db = ref(this.db);
     // dans le cas d'ajout d'une non préparation  on modifie l'ingrédient préparé 
     const consommable_db =  {
-        [consommable.name]: {
+        [path_conso]: {
           taux_tva: consommable.taux_tva,
           cost: consommable.cost,
           quantity: consommable.quantity,
           unity: consommable.unity,
           cost_ttc: consommable.cost_ttc,
           date_reception: consommable.date_reception,
+        },
+        [path_lst_conso]:{
+          taux_tva: consommable.taux_tva,
+          cost: consommable.cost,
+          unity: consommable.unity
         }
       }
-      console.log(consommable_db);
       await update(ref_db, consommable_db)
   }
 
@@ -110,7 +115,10 @@ export class ConsommableInteractionService {
     let ref_db: DatabaseReference;
     if(name_conso !== ""){
         const path = `consommables_${prop}_${restaurant}/${prop}/${restaurant}/${name_conso}`;
+        const path_lst_conso = `inventaire_${prop}_${restaurant}/${prop}/${restaurant}/consommables/${name_conso}`;
         ref_db = ref(this.db, path);
+        await remove(ref_db).then(() => console.log("consommable ", name_conso, "bien supprimée"))
+        ref_db = ref(this.db, path_lst_conso);
         await remove(ref_db).then(() => console.log("consommable ", name_conso, "bien supprimée"))
     }
   }

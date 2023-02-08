@@ -170,8 +170,8 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit {
             quantity_unity: _base_ing.quantity_unity,
             material_cost: 0,
             vrac: _base_ing.vrac,
+            taux_tva: _base_ing.taux_tva,
             marge: _base_ing.marge
-            
           });
         }
         else {
@@ -183,6 +183,7 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit {
             unity: '',
             cost: 0,
             vrac: 'non',
+            taux_tva: 0,
             marge: 0
           });
         }

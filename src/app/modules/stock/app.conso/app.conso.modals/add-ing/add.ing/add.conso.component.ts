@@ -57,7 +57,7 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
 
   ngAfterContentInit(): void {
     //après initialisatin du contenu ont ajoute les éléments dans le formulaire
-    const unity = this.calcul_service.convertUnity(this.data.consommable.unity, true);
+    const unity = this.data.consommable.unity
     this.add_cons_section.get("name")?.setValue(this.data.consommable.nom);
     this.add_cons_section.get("quantity")?.setValue(this.data.consommable.quantity);
     this.add_cons_section.get("unity")?.setValue(unity);

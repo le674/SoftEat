@@ -21,6 +21,7 @@ import { DisplayPreparationsComponent } from './app.preparations/display.prepara
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
+import { AddPlatsComponent } from './app.plats/add.plats/add.plats.component';
 
 
 
@@ -31,7 +32,8 @@ import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calc
    AppPreparationsComponent,
    AddMenuComponent,
    AddPreparationsComponent,
-   DisplayPreparationsComponent
+   DisplayPreparationsComponent,
+   AddPlatsComponent
   ],
   imports: [
     CommonModule,

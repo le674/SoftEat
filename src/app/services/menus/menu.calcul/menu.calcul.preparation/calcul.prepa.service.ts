@@ -11,8 +11,8 @@ export class CalculPrepaService {
 
   constructor(private calcul_service: CalculService) { }
 
-  getCostMaterial(ings:Array<TIngredientBase>):Array<{nom:string, quantity:number, unity:string, cost:number, cost_matiere:number}>{
-    let ingredients:Array<{nom:string, quantity:number, unity:string, cost:number, cost_matiere:number}> = [];
+  getCostMaterial(ings:Array<TIngredientBase>):Array<{nom:string, quantity:number, unity:string, cost:number,taux_tva:number, cost_matiere:number}>{
+    let ingredients:Array<{nom:string, quantity:number, unity:string, cost:number, taux_tva:number, cost_matiere:number}> = [];
     ings.forEach((ing) => {
       let cost_matiere = ing.cost
       if(!(ing.vrac === 'oui')){
@@ -23,6 +23,7 @@ export class CalculPrepaService {
         quantity: ing.quantity,
         unity: ing.unity,
         cost: ing.cost,
+        taux_tva: ing.taux_tva,
         cost_matiere: cost_matiere
       })
     })

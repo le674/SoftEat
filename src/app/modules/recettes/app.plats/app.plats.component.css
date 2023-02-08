@@ -1,0 +1,285 @@
+body{
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+}
+
+header{
+  margin-bottom: 5%;
+}
+
+h1{
+    margin-top: 50px;
+    margin-bottom: 50px;
+    font-weight: normal;
+    color: rgb(125, 181, 46);
+}
+
+#action-buttons{
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* comment CSS
+ */
+ .btn {
+  background: transparent;
+  margin: 3px;
+  border: 1px solid #eaeaea;
+  border-radius: 0px;
+}
+
+.btn:hover {
+  background: #eaeaea;
+  color: black;
+}
+
+#container{
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 15%;
+}
+
+#card_number {
+
+    height: 5%;
+    text-align: center;
+    /*comment align the inline(-block) elements horizontally */
+  }
+  
+  #card_number::before {
+    content: ' ';
+    display: inline-block;
+    vertical-align: middle;
+  /*   comment  vertical alignment of the inline element  */
+    height: 100%;
+  }
+  
+  #res_card {
+    display: inline-block;
+    vertical-align: middle;
+  /*   comment vertical alignment of the inline element */
+     font: 16px/1 Arial sans-serif;
+    /* comment <-- reset the font property  */
+  }
+  
+  
+  #add_card_icon {
+    font-size: 120px;
+    margin: 10px;
+    padding: 10px;
+    color: rgb(125, 181, 46);
+  }
+
+  .container-fluid{
+    width: max-content;
+    display: flex;
+    align-items: center;   
+  }
+  
+  .tourcard {
+    -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+    flex: 0 1 300px;
+    margin: 10px;
+    padding: 0;
+    min-width: 300px;
+    margin-inline: 5%;
+  }
+  
+  .tourcard:hover {
+    background: #fff;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, .5);
+    cursor: pointer;
+  }
+  
+  .tourcard figure {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-around;
+    width: 100%;
+  }
+  
+  /* Ajout de la scroll bar */
+  .scroll-right {
+    overflow-x: scroll;
+  }
+  
+  /* Scroll bar design */
+  /* Firefox */
+  body {
+    scrollbar-width: thin;          /* "auto" or "thin" */
+    scrollbar-color: rgb(125, 181, 46) white;   /* scroll thumb and track */
+  }
+  
+  /*Other nav */
+  .scroll-right::-webkit-scrollbar{
+    width: 5px;
+    height: 5px;
+  }
+  
+  .scroll-right::-webkit-scrollbar-track{
+    background-color: white;
+  }
+  
+  .scroll-right::-webkit-scrollbar-thumb {
+    background-color: rgb(125, 181, 46);
+    border-radius: 20px;
+  }
+  
+  .scroll-right::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(114, 158, 53);
+  }
+  
+  .tourpic {
+    background: #444;
+    position: relative;
+  }
+  
+  #add_card {
+    width: 100%;
+  
+  }
+  
+  .tourbtn {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .tourbtn:after {
+    clear: both;
+  }
+  
+  .tourbtn span {
+    height: fit-content;
+  }
+  
+  .tourcard figure .tourpic img {
+    -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    opacity: .50;
+  }
+  
+  
+  .tourcard:hover figure .tourpic img {
+    opacity: 0.9;
+  }
+  
+  
+  .tourcard figure .tourpic .tourcat {
+    color: #fff;
+    font-size: .8em;
+    padding: 3px 5px;
+    position: absolute;
+    right: 15px;
+    text-transform: uppercase;
+    bottom: 15px;
+  }
+  
+  .tourcard figure .tourpic .tourday {
+    text-transform: uppercase;
+    color: #fff;
+    font-size: .8em;
+    position: absolute;
+    left: 15px;
+    bottom: 15px;
+    padding: 3px 5px;
+  }
+  
+  
+  .tourcard figure .tourpic .tourday.hot {
+    background: #000;
+    background: red;
+    background: -webkit-linear-gradient(0deg, red, orange);
+    background: linear-gradient(90deg, red, orange);
+    background-size: 200% 200%;
+    -webkit-animation: hot 10s ease infinite;
+    -moz-animation: hot 10s ease infinite;
+    -o-animation: hot 10s ease infinite;
+    animation: hot 10s ease infinite;
+  }
+  
+  .tourcard figure .tourbtn {
+    background: transparent;
+    display: flex;
+    width: 100%;
+    flex-flow: row wrap;
+    align-content: center;
+  }
+  
+  .tourcard figure .tourbtn a {
+    flex: 1;
+  }
+  
+  .tourcard figure figcaption {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    padding: 15px;
+    margin: 0 0 90px;
+    display: flex;
+    flex-flow: column nowrap;
+    color: white;
+  }
+  
+  figcaption h3 a {
+    text-decoration: none;
+    color: white;
+  }
+  
+  .description {
+    opacity: 0;
+    display: none;
+  }
+  
+  .tourprice {
+    opacity: 0;
+    display: none;
+    font-size: .8em;
+  }
+  
+  .currency {
+    font-weight: 300;
+  }
+  
+  .price {
+    font-size: 2em;
+    font-weight: 300;
+  }
+  
+  .tourcard:hover figure figcaption .description,
+  .tourcard:hover figure figcaption .tourprice {
+    display: block;
+    opacity: 1;
+  }
+
+  .mat-stroked-button{
+    color: rgb(125, 181, 46);
+    background-color: white;
+    height: 40px;
+    min-width: 96px;
+    margin: 0;
+}
+
+.mat-stroked-button:hover{
+    background-color: rgb(125, 181, 46);
+    color: white;
+}

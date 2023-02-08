@@ -134,7 +134,7 @@ export class UserInteractionService{
     })
   }
   async updateEmail(prop:string, restaurant:string, user_uid:string, email:string){
-    const ref_db = ref(this.db, '');
+    const ref_db = ref(this.db);
     await update(ref_db, {
       [`users/${prop}/${user_uid}/email/`]: email,
       [`users/${user_uid}/email/`]: email,

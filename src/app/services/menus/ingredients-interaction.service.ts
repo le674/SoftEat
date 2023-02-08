@@ -183,6 +183,7 @@ export class IngredientsInteractionService {
             cost: ingredient_bdd.child("cost").val(),
             vrac: ingredient_bdd.child("vrac").val(),
             material_cost: ingredient_bdd.child("material_cost").val(),
+            taux_tva: this.service.getTauxFromCat(ingredient_bdd.child("categorie_tva").val()),
             marge: 0
           };
           this.ingredients_minimal.push(ingredient);
@@ -274,11 +275,12 @@ export class IngredientsInteractionService {
 
   async setIngInBdd(ingredient: CIngredient, prop:string, restaurant:string, is_prep:boolean){
     let ref_db: DatabaseReference;
-    const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/`;
-    ref_db = ref(this.db, path);
+    const path_ings = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/${ingredient.nom}/`;
+    const path_lst_ings = `inventaire_${prop}_${restaurant}/${prop}/${restaurant}/ingredients/${ingredient.nom}/`;
+    ref_db = ref(this.db);
     // dans le cas d'ajout d'une non préparation  on modifie l'ingrédient préparé 
     const ingredient_princ =  {
-        [ingredient.nom]: {
+        [path_ings]: {
           categorie_tva: ingredient.categorie_tva,
           taux_tva: ingredient.taux_tva,
           cost: ingredient.cost,
@@ -289,6 +291,13 @@ export class IngredientsInteractionService {
           date_reception: ingredient.date_reception,
           dlc: ingredient.dlc,
           marge: ingredient.marge,
+          vrac: ingredient.vrac
+        },
+        [path_lst_ings]:{
+          taux_tva: ingredient.taux_tva,
+          cost: ingredient.cost,
+          quantity_unitaire: ingredient.quantity_unity,
+          unity: ingredient.unity,
           vrac: ingredient.vrac
         }
       }
@@ -308,6 +317,11 @@ export class IngredientsInteractionService {
       }
   
       await remove(ref_db).then(() => console.log("ingrédient ", name_ing, "bien supprimée"))
+
+      if(!is_prep){
+        ref_db = ref(this.db,  `inventaire_${prop}_${restaurant}/${prop}/${restaurant}/ingredients/${name_ing}`);
+        await remove(ref_db).then(() => console.log("ingrédient ", name_ing, "bien supprimée"))
+      }
     }
   }
 

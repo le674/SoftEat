@@ -3,7 +3,7 @@ import { IngredientsInteractionService } from "../services/menus/ingredients-int
 import { CalculService } from "../services/menus/menu.calcul/menu.calcul.ingredients/calcul.service";
 import { Cetape } from "./etape";
 
-export type TIngredientBase = { 
+export type TIngredientBase = {
     name: string, 
     quantity: number, 
     quantity_unity:number ,
@@ -11,6 +11,7 @@ export type TIngredientBase = {
     cost:number,
     material_cost:number,
     vrac:string,
+    taux_tva:number, 
     marge:number
 }
 
