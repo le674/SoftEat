@@ -67,6 +67,9 @@ export class DisplayPreparationsComponent implements OnInit {
   @ViewChild('paginatoring') paginatoring!: MatPaginator;
   @ViewChild('paginatorconso') paginatorconso!: MatPaginator;
   @ViewChild('paginatoretape') paginatoretape!: MatPaginator;
+  page_number_etapes: number;
+  page_number_conso: number;
+  page_number_ings: number;
 
   constructor(public dialogRef: MatDialogRef<DisplayPreparationsComponent>, @Inject(MAT_DIALOG_DATA) public data: {
     prop: string,
@@ -74,9 +77,14 @@ export class DisplayPreparationsComponent implements OnInit {
     name: string,
     ingredients: Array<TIngredientBase>,
     consommables: Array<Consommable>,
-    etapes: Array<Cetape>
+    etapes: Array<Cetape>,
+    unity:string,
+    quantity_after_prep: number
   }, private ingredient_service: IngredientsInteractionService,
    private prepa_service:CalculPrepaService, private restau_service:RestaurantService) { 
+    this.page_number_conso = 0;
+    this.page_number_etapes = 0;
+    this.page_number_ings = 0;
     this.tmps_prepa = "";
     this.val_bouch = 0;
     this.prime_cost = 0;
@@ -96,7 +104,7 @@ export class DisplayPreparationsComponent implements OnInit {
     this.restau_service.getSalaryCuisiniee(this.data.prop, this.data.restaurant).then((salary) => {
       this.prime_cost = this.prepa_service.getPrimCost(this.data.etapes, this.data.ingredients, this.data.consommables, salary);
     });
-
+    this.val_bouch = this.prepa_service.getValBouchFromBasIng(this.data.ingredients, this.data.quantity_after_prep, this.data.unity);
 
     if(this.data.ingredients !== null){
       if(this.data.ingredients.length > 0){
@@ -116,21 +124,50 @@ export class DisplayPreparationsComponent implements OnInit {
     if(this.data.etapes !== null){
       this.displayed_etape = this.data.etapes.map((etape) => {return {nom: etape.nom, temps: etape.temps, commentaire: etape.commentaire}})
       this.dataSource_etape.data = this.displayed_etape;
-    }  
+    }
+    
+    // ont initialise la pagination pour le tableau, ingrédient, consommables, étapes
+    const ing_data = new PageEvent();
+    ing_data.length = this.displayed_ing.length
+    ing_data.pageSize = 1
+    ing_data.pageIndex = this.page_number_ings
+    this.pageChangedInv(ing_data);
+
+    const conso_data = new PageEvent();
+    conso_data.length = this.displayed_conso.length
+    conso_data.pageSize = 1
+    conso_data.pageIndex = this.page_number_conso
+    this.pageChangedConso(conso_data);
+
+
+    const etapes_data = new PageEvent();
+    etapes_data.length = this.displayed_etape.length
+    etapes_data.pageSize = 1
+    etapes_data.pageIndex = this.page_number_etapes
+    this.pageChangedEtape(etapes_data);
   }
   
   pageChangedEtape(event:PageEvent){
-    console.log(event);
+    event.length;
+    let datasource = [... this.displayed_etape];
+    this.page_number_etapes = event.pageIndex;    
+    this.dataSource_etape.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
     
   }
 
   pageChangedConso(event:PageEvent){
-    console.log(event);
+    event.length;
+    let datasource = [... this.displayed_conso];
+    this.page_number_conso = event.pageIndex;    
+    this.dataSource_conso.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
     
   }
 
   pageChangedInv(event:PageEvent){
-    console.log(event);
+    event.length;
+    let datasource = [... this.displayed_ing];
+    this.page_number_ings = event.pageIndex;    
+    this.dataSource_ing.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
     
   }
 }

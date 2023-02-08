@@ -8,16 +8,16 @@
 </head>
 <body>
     <div class="border">
-        <p> <span class="indication">Nom :</span> xxxxxxxxxxxxxx </p>
+        <p> <span class="indication">Nom :</span> {{name_prepa}}</p>
     </div>
    
     <div class="section border">
-        <p> <span class="indication">Temps de préparation théorique :</span> xxxxxxxxxxxxxx </p>
-        <p> <span class="indication">Prime cost :</span> xxxxxxxxx </p>
+        <p> <span class="indication">Temps de préparation théorique :</span> {{tmps_prepa}}</p>
+        <p> <span class="indication">Prime cost :</span> {{prime_cost}} </p>
     </div>
 
     <div class="section border">
-        <p> <span class="indication">Valeur bouchère :</span> xxxxxxxxxxxxxx </p>
+        <p> <span class="indication">Valeur bouchère :</span> {{val_bouch}} </p>
     </div>
     <div class="container text-left section">
         <div class="row">
@@ -47,7 +47,7 @@
                     <tr mat-header-row *matHeaderRowDef="displayedColumnsIng"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumnsIng;"></tr>
                 </table>
-                <mat-paginator #paginatoring [pageSizeOptions]="[3]"
+                <mat-paginator #paginatoring [pageSizeOptions]="[1]"
                     (page)="pageChangedInv($event)"
                     [length]="displayed_ing.length"
                     showFirstLastButtons
@@ -79,7 +79,7 @@
                     <tr mat-header-row *matHeaderRowDef="displayedColumnsConso"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumnsConso;"></tr>
                 </table>
-                <mat-paginator #paginatorconso [pageSizeOptions]="[3]"
+                <mat-paginator #paginatorconso [pageSizeOptions]="[1]"
                     (page)="pageChangedConso($event)"
                     [length]="displayed_conso.length"
                     showFirstLastButtons
@@ -104,7 +104,7 @@
                     <tr mat-header-row *matHeaderRowDef="displayedColumnsEtape"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumnsEtape;"></tr>
                 </table>
-                <mat-paginator #paginatoretape [pageSizeOptions]="[3]"
+                <mat-paginator #paginatoretape [pageSizeOptions]="[1]"
                     (page)="pageChangedEtape($event)"
                     [length]="displayed_etape.length"
                     showFirstLastButtons

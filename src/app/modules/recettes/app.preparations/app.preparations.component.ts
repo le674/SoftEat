@@ -58,7 +58,9 @@ export class AppPreparationsComponent implements OnInit {
         name:"",
         ingredients: [],
         consommables: [],
-        etapes: []
+        etapes: [],
+        unity: "",
+        quantity_after_prep: 0
       }
     });
   }
@@ -74,14 +76,16 @@ export class AppPreparationsComponent implements OnInit {
         name:preparation.nom,
         ingredients:preparation.base_ing,
         consommables: preparation.consommables,
-        etapes: preparation.etapes
+        etapes: preparation.etapes,
+        unity: preparation.unity,
+        quantity_after_prep: preparation.quantity_after_prep
       } 
     })
   }
   
   seePreparation(preparation:Cpreparation):void{
     this.dialog.open(DisplayPreparationsComponent, {
-      height: `${window.innerHeight}px`,
+      height: `${window.innerHeight - window.innerWidth/10}px`,
       width: `${window.innerWidth - window.innerWidth/5}px`,
       data: {
         prop: this.prop,
@@ -89,7 +93,9 @@ export class AppPreparationsComponent implements OnInit {
         name:preparation.nom,
         ingredients: preparation.base_ing,
         consommables: preparation.consommables,
-        etapes: preparation.etapes
+        etapes: preparation.etapes,
+        unity: preparation.unity,
+        quantity_after_prep: preparation.quantity_after_prep
       }
     })
   }

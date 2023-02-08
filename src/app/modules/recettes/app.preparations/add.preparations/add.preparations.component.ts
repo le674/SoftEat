@@ -65,7 +65,9 @@ export class AddPreparationsComponent implements OnInit{
     name:string,
     ingredients: Array<TIngredientBase>,
     consommables: Array<Consommable>,
-    etapes: Array<Cetape>
+    etapes: Array<Cetape>,
+    unity:string,
+    quantity_after_prep:number
     }, private preparation_service: PreparationInteractionService, private ingredient_service: IngredientsInteractionService,
     private prepa_service:CalculPrepaService, private conso_service:ConsommableInteractionService, private _snackBar: MatSnackBar) { 
     this.is_stock = false;  
@@ -88,6 +90,8 @@ export class AddPreparationsComponent implements OnInit{
   ngOnInit(): void {
 
     this.add_prepa_section.controls.name.setValue(this.data.name);
+    this.add_prepa_section.controls.unity.setValue(this.data.unity);
+    this.add_prepa_section.controls.quantity_aft_prep.setValue(this.data.quantity_after_prep);
     let tmp_data:Array<{name:string | null, quantity: number | null, unity: string | null}> = [];
     if((this.data.ingredients !== null) && (this.data.ingredients !== undefined)){
       this.current_inputs_ing = this.data.ingredients.length;
@@ -210,67 +214,65 @@ export class AddPreparationsComponent implements OnInit{
           })
 
           const conso_prop = ing_prop.then(() => {
-            this.conso_service.getConsosmmablesFromBaseConso(this.base_conso, this.data.prop, this.data.restaurant).then((consos) => {
+            const curr_conso = this.conso_service.getConsosmmablesFromBaseConso(this.base_conso, this.data.prop, this.data.restaurant).then((consos) => {
               this.getBaseConso().setErrors(this.notSameStringValidator(consos, this.base_conso, "consommables", true));
               this.base_conso = [];
               let displayed_conso = consos.map((conso) => {
-                  return {nom: conso.name, cost: conso.cost, quantity: conso.quantity, unity: conso.unity}
-              }).filter((conso) => !(conso.nom === ""))
-              for (let index = 0; index < consos.length; index++) {
+                  return {name: conso.name, cost: conso.cost, quantity: conso.quantity, unity: conso.unity}
+              }).filter((conso) => !(conso.name === ""))
+              for (let index = 0; index < displayed_conso.length; index++) {
                 const conso: TConsoBase = {
-                  name: consos[index].name,
-                  quantity: consos[index].quantity,
-                  unity: consos[index].unity,
-                  cost: consos[index].cost
+                  name: displayed_conso[index].name,
+                  quantity: displayed_conso[index].quantity,
+                  unity: displayed_conso[index].unity,
+                  cost: displayed_conso[index].cost
                 }
                  this.base_conso.push(conso)            
               }
             })
-          })
-
-          
-          const unity_aft_prep = this.add_prepa_section.controls.unity.value;
-          const quantity_aft_prep = this.add_prepa_section.controls.quantity_aft_prep.value;
-          if((unity_aft_prep !== null) && (quantity_aft_prep !== null)){
-            this.after_prep.quantity = quantity_aft_prep;
-            this.after_prep.unity = unity_aft_prep;
-          }
-
-          conso_prop.then(() => {
-            if(this.getBaseConso().getError("notSameSize") || this.getBaseIng().getError("notSameSize")){
-              
-              if(this.getBaseConso().getError("notSameSize")){
-                if(this.getBaseIng().getError("notSameSize")){
-                  this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop,
-                    name_prepa.split(" ").join('_'), this.etapes, this.base_ings, this.base_conso, this.after_prep ,this.is_stock).catch((e) => {
-                     this._snackBar.open("nous ne somme pas parvenu à modifier la préparation veuillez contacter SoftEat");
-                    }).finally(() => {
-                     this._snackBar.open("la préparation vient d'être ajouté", "fermer");
-                    });
+            curr_conso.then(() => {
+              const unity_aft_prep = this.add_prepa_section.controls.unity.value;
+              const quantity_aft_prep = this.add_prepa_section.controls.quantity_aft_prep.value;
+              if((unity_aft_prep !== null) && (quantity_aft_prep !== null)){
+                this.after_prep.quantity = quantity_aft_prep;
+                this.after_prep.unity = unity_aft_prep;
+              }
+              conso_prop.then(() => {
+                if(this.getBaseConso().getError("notSameSize") || this.getBaseIng().getError("notSameSize")){           
+                  if(this.getBaseConso().getError("notSameSize")){
+                    if(this.getBaseIng().getError("notSameSize")){
+                      this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop,
+                        name_prepa.split(" ").join('_'), this.etapes, this.base_ings, this.base_conso, this.after_prep ,this.is_stock).catch((e) => {
+                         this._snackBar.open("nous ne somme pas parvenu à modifier la préparation veuillez contacter SoftEat");
+                        }).finally(() => {
+                         this._snackBar.open("la préparation vient d'être ajouté", "fermer");
+                        });
+                    }
+                    else{
+                      // en cas d'erreur ont remet les listes à vides
+                      this.etapes = [];
+                      this.base_conso = [];
+                      this.base_ings = [];
+                      this._snackBar.open(`Veuillez entrer les ingrédients dans la section stock de  l'application`, "fermer")
+                    }
+                  }
+                  else{
+                    // en cas d'erreur ont remet les listes à vides
+                    this.etapes = [];
+                    this.base_conso = [];
+                    this.base_ings = [];
+                    this._snackBar.open(`Veuillez entrer les consomables dans la section stock de  l'application`, "fermer")
+                  }
                 }
                 else{
                   // en cas d'erreur ont remet les listes à vides
                   this.etapes = [];
                   this.base_conso = [];
                   this.base_ings = [];
-                  this._snackBar.open(`Veuillez entrer les ingrédients dans la section stock de  l'application`, "fermer")
-                }
-              }
-              else{
-                // en cas d'erreur ont remet les listes à vides
-                this.etapes = [];
-                this.base_conso = [];
-                this.base_ings = [];
-                this._snackBar.open(`Veuillez entrer les consomables dans la section stock de  l'application`, "fermer")
-              }
-            }
-            else{
-              // en cas d'erreur ont remet les listes à vides
-              this.etapes = [];
-              this.base_conso = [];
-              this.base_ings = [];
-              this._snackBar.open(`Veuillez entrer les consomables et ingrédients dans la section stock de  l'application`, "fermer")
-            } 
+                  this._snackBar.open(`Veuillez entrer les consomables et ingrédients dans la section stock de  l'application`, "fermer")
+                } 
+              })  
+            })
           })
         }
       }

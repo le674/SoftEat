@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { Database, getDatabase, ref, update } from 'firebase/database';
+import { Database, getDatabase, ref, set, update } from 'firebase/database';
 import { Cetape } from 'src/app/interfaces/etape';
 import { TConsoBase, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { AfterPreparation } from 'src/app/interfaces/preparation';
@@ -16,6 +16,7 @@ export class PreparationInteractionService {
 
   async setNewPreparation(restaurant:string,prop:string, name:string,etapes: Array<Cetape>,
      ings: Array<TIngredientBase>, conso:Array<TConsoBase>, after_prepa:AfterPreparation, is_stock:boolean){
+
     const updates = {}
     const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name}/`
     const ref_db = ref(this.db, path);

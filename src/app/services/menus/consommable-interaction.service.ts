@@ -76,9 +76,10 @@ export class ConsommableInteractionService {
       await get(child(ref_db, path)).then((conso_bdd) => {
         if((conso_bdd.child("cost").val() !== null)){
           let conso:Cconsommable = new Cconsommable();
-          conso.name = conso_name.split('_').join(' ')
-          conso.quantity = conso_quantity
-          conso.cost = conso_bdd.child("cost").val()
+          conso.name = conso_name.split('_').join(' ');
+          conso.quantity = conso_quantity;
+          conso.cost = conso_bdd.child("cost").val();
+          conso.unity = conso_bdd.child("unity").val();
           this.consommable.push(conso);
         }
       })
