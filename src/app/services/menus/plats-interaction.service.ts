@@ -87,7 +87,6 @@ export class PlatsInteractionService {
             add_plat.setCategorie(categorie);
             add_plat.setPrix(price);
             add_plat.setTauxTva(tva_taux);
-            add_plat.setQuantity(curr_plat.quantity);
             add_plat.setUnity(curr_plat.unity);
             this.plats.push(add_plat);
           }
@@ -99,8 +98,28 @@ export class PlatsInteractionService {
 
   async getPlatFromRestaurant(prop:string, restaurant:string){
     let lst_plats:Array<Cplat> = [];
+    const path = `plat_${prop}_${restaurant}/${prop}/${restaurant}/`;
     const ref_db = ref(this.db);
-    const path = `plats_${prop}_${restaurant}/${prop}/${restaurant}/`;
+    await get(child(ref_db, path)).then((plats) => {
+      plats.forEach((bdd_plat) => {
+        if(bdd_plat.key !== null){
+          const plat = new Cplat();
+          plat.nom = bdd_plat.key
+          plat.categorie = bdd_plat.child('categorie').val();
+          plat.type = bdd_plat.child('type').val();
+          plat.unity = bdd_plat.child('unity').val();
+          plat.taux_tva = bdd_plat.child('taux_tva').val();
+          plat.ingredients = bdd_plat.child('ingredients').val();
+          plat.preparations = bdd_plat.child('preparation').val();
+          plat.consommables = bdd_plat.child('consommables').val();
+          plat.etapes =  bdd_plat.child('etapes').val();
+          plat.portions =  bdd_plat.child('portions').val();
+          plat.prix =  bdd_plat.child('price').val();
+          lst_plats.push(plat);
+        }
+      })
+    })
+    return lst_plats;
   }
 
 }

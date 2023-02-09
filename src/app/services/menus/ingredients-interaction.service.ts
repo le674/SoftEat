@@ -14,7 +14,6 @@ import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.serv
   providedIn: 'root'
 })
 export class IngredientsInteractionService {
-
   private db: Database;
   private firestore: Firestore;
   private ingredients_minimal: Array<TIngredientBase>
@@ -324,6 +323,32 @@ export class IngredientsInteractionService {
       }
     }
   }
+
+  // ont va chercher les ingrédients directement dans 
+  async getFullIngs(prop:string, restaurant:string) {
+    let ref_db: DatabaseReference;
+    ref_db = ref(this.db, `inventaire_${prop}_${restaurant}/${prop}/${restaurant}/ingredients`)
+    await get(ref_db).then((ings) => {
+      this.ingredients_minimal = [];
+      ings.forEach((ing) => {
+        if(ing.key !== null){
+          let ingredient:TIngredientBase = {
+            name: ing.key,
+            cost:ing.child('cost').val(),
+            quantity:0,
+            quantity_unity: ing.child('quantity_unitaire').val(),
+            unity: ing.child('unity').val(),
+            vrac: ing.child('vrac').val(),
+            taux_tva: ing.child('taux_tva').val(), 
+            material_cost: 0,
+            marge: 0
+          }
+          this.ingredients_minimal.push(ingredient);
+        }
+      })
+    })
+    return this.ingredients_minimal;
+  } 
 
   getIngredientsBrFromRestaurants(){
     return this.data_ingredient.asObservable();

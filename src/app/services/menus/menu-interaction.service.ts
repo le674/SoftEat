@@ -105,7 +105,7 @@ export class MenuInteractionService {
           let curr_plats = tmp_plats.filter((curr_plat) => curr_plat.id === plat.nom);
           if(curr_plats.length > 0){
             let curr_plat = curr_plats[0];
-            plat.quantity = curr_plat.quantity;
+            plat.portions = curr_plat.quantity;
             plat.unity = curr_plat.unity;
           }
         }
