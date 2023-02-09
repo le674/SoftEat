@@ -56,14 +56,20 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
 
 
   ngAfterContentInit(): void {
-    //après initialisatin du contenu ont ajoute les éléments dans le formulaire
+    //Pour le moment ont ne met pas unity mais p, car on ne gère pas les quantitée unitaire
+    // et quantitée dans l'application 
     const unity = this.data.consommable.unity
     this.add_cons_section.get("name")?.setValue(this.data.consommable.nom);
     this.add_cons_section.get("quantity")?.setValue(this.data.consommable.quantity);
-    this.add_cons_section.get("unity")?.setValue(unity);
+
+    //
+    this.add_cons_section.get("unity")?.setValue('p');
     this.add_cons_section.get("cost")?.setValue(this.data.consommable.cost); 
     this.add_cons_section.get("cost_ttc")?.setValue(this.data.consommable.cost_ttc); 
     this.add_cons_section.get("taux_tva")?.setValue(this.data.consommable.taux_tva);
+
+    //
+    this.add_cons_section.controls.unity.disable();
     // Si on récupère une date de limite de consommatin négative on dépose 0 sinon on dépose la dlc
    
     
@@ -85,7 +91,8 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
 
     //on modifie le nom est l'unitée avant envoie dans le base de donnée 
     const name = this.add_cons_section.value["name"]?.split(' ').join('_');
-    const unity = this.add_cons_section.value["unity"]?.split(' ')[0];
+    const unity = this.add_cons_section.controls.unity.value;
+    console.log(unity);
     
     /* On crée un ingrédient à partir des données récupéré depuis le formulaire puis on l'ajoute à la bdd */
     if (name !== undefined) {
@@ -134,6 +141,7 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
           this._snackBar.open("l'ingrédient vient d'être ajouté à la base de donnée du restaurant", "fermer")
         }
       }).catch((e) => {
+        console.log(e);
         if(this.is_modif){
           this._snackBar.open("nous n'avons pas réussit à modifier l'ingrédient dans la base de donnée", "fermer")
         }

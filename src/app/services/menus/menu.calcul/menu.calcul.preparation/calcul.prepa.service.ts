@@ -31,7 +31,6 @@ export class CalculPrepaService {
   }
 
   getPrimCost(etapes: Array<Cetape>, ingredients: Array<TIngredientBase>, consommables: Array<Cconsommable>, salary:number){
-    
     const full_cost_quant_ing = ingredients.map((ing) => {
       let cost = ing.cost*this.calcul_service.convertQuantity(ing.quantity, ing.unity);
       if(!(ing.vrac === 'oui')){
@@ -40,11 +39,13 @@ export class CalculPrepaService {
       }
       return cost
     })
+    
     const full_cost_quant_conso = consommables.map((conso) => {
-      let cost = conso.cost*this.calcul_service.convertQuantity(conso.quantity, conso.unity);
+      let cost = conso.cost*conso.quantity;
       return cost
     })
 
+    
     const sum_cost_ing = full_cost_quant_ing.reduce((curr_cost, next_cost) => curr_cost + next_cost);
     const sum_cost_conso = full_cost_quant_conso.reduce((curr_cost, next_cost) => curr_cost + next_cost);
     const full_time = etapes.map((etape) => etape.temps).
@@ -52,7 +53,7 @@ export class CalculPrepaService {
     // 35 nombr d'heur travaillé par semaine en fonction du nombre de semaine dans un mois
     const mensuel_work_hour = 4.34524*35;
     const second_salary = salary/(mensuel_work_hour * 3600);
-  
+    
     return second_salary*full_time + sum_cost_conso + sum_cost_ing;
 
   }

@@ -89,6 +89,8 @@ export class ConsommableInteractionService {
 
   async setConsoInBdd(consommable: Cconsommable, prop:string, restaurant:string){
     let ref_db: DatabaseReference;
+    console.log(consommable);
+    
     const path_conso = `consommables_${prop}_${restaurant}/${prop}/${restaurant}/${consommable.name}`;
     const path_lst_conso = `inventaire_${prop}_${restaurant}/${prop}/${restaurant}/consommables/${consommable.name}`;
     ref_db = ref(this.db);

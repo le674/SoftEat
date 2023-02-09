@@ -88,7 +88,8 @@ export class AddPreparationsComponent implements OnInit{
 
 
   ngOnInit(): void {
-
+    // pour le moment dans consommable ont met p au lieu d'une autre unitée.  car ont ne gère pas encore les quantitée unitaire
+    //pour les consommables 
     this.add_prepa_section.controls.name.setValue(this.data.name);
     this.add_prepa_section.controls.unity.setValue(this.data.unity);
     this.add_prepa_section.controls.quantity_aft_prep.setValue(this.data.quantity_after_prep);
@@ -118,8 +119,9 @@ export class AddPreparationsComponent implements OnInit{
         const new_conso = this.formBuilder.group({
           name: new FormControl(tmp_data[index].name),
           quantity: new FormControl(tmp_data[index].quantity),
-          unity: new FormControl(tmp_data[index].unity)
+          unity: new FormControl('p')//new FormControl(tmp_data[index].unity)
         });
+        new_conso.controls.unity.disable();
         this.getBaseConso().push(new_conso);
       }
     }
@@ -307,13 +309,16 @@ export class AddPreparationsComponent implements OnInit{
   }
 
   addInputConso(){
+      //pour le moment dans unity ont met p car on ne gère pas encor les quantitées unitaire pour les consommables 
     this.current_inputs_conso = this.current_inputs_conso + 1;
     this.index_consos_inputs.push(this.current_inputs_conso);
+
     const new_conso = this.formBuilder.group({
       name: new FormControl(""),
       quantity: new FormControl(0),
-      unity: new FormControl("")
+      unity: new FormControl("p")
     });
+    new_conso.controls.unity.disable();
     this.getBaseConso().push(new_conso);
   }
 

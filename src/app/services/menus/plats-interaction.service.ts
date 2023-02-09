@@ -97,4 +97,10 @@ export class PlatsInteractionService {
     return this.plats
   }
 
+  async getPlatFromRestaurant(prop:string, restaurant:string){
+    let lst_plats:Array<Cplat> = [];
+    const ref_db = ref(this.db);
+    const path = `plats_${prop}_${restaurant}/${prop}/${restaurant}/`;
+  }
+
 }
