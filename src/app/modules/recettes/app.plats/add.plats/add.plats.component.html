@@ -1,1 +1,137 @@
-<p>add.plats works!</p>
+<form [formGroup]="add_plats_section" (ngSubmit)="changePlats()">
+    <div class="section">
+        <p>Entrer le nom du nouveau plat : </p>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer le nom du nouveau plat</mat-label>
+            <input matInput formControlName="name" placeholder="Ex. frites">
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p>Entrer le nombre de portion pour le plat: </p>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer le nombre de portion du plat</mat-label>
+            <input matInput type="number" formControlName="portion" placeholder="Ex.8">
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer le type de plat</mat-label>
+            <mat-select formControlName="types">
+                <mat-option value="entree">Entrée</mat-option>
+                <mat-option value="plat">Plat principale</mat-option>
+                <mat-option value="dessert">Dessert</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p>Entrer le prix du plat: </p>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer le prix du plat</mat-label>
+            <input matInput type="number" formControlName="price" placeholder="Ex.8">
+        </mat-form-field>
+    </div>
+    <div class="section_fileds">
+        <p>Quelles sont les ingrédients utilisées ? <br> entrer la quantitée de l'ingrédient<br> utilisé pour le plat : </p>
+        <ng-container formArrayName="base_ing">
+            <div class="old" *ngFor="let item of add_plats_section.controls.base_ing.controls;let i=index">
+                <ng-container [formGroupName]="i">
+                     <mat-form-field appearance="fill">
+                        <mat-label>Choisir l'ingrédients</mat-label>
+                        <mat-select (selectionChange)="getUnity($event, 'ing')" formControlName="name">
+                             <mat-option *ngFor="let ingredient of full_lst_ings" [value]="ingredient.name">{{ingredient.name}}</mat-option>
+                        </mat-select>
+                     </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label> quantitée pour le plat </mat-label>
+                        <input matInput type="number" formControlName="quantity">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label> unitée pour le plat </mat-label>
+                        <input matInput  formControlName="unity" value="{{unity_ing}}">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+        </ng-container>
+        <button mat-mini-fab type="button" id="add_input_ing" color="white" matTooltip="ajout d'un ingrédient"
+            aria-label="ajout d'un ingrédient" (click)="addInputIng()">
+            <i class="fa-regular fa-plus"></i>
+        </button>
+    </div>
+    <div class="section_fileds">
+        <p>Quelles sont les consommables ? <br> entrer la quantitée, le nom et l'unitée <br> de consommables utilisés pour le plat : </p>
+        <ng-container formArrayName="base_conso">
+            <div class="old" *ngFor="let item of add_plats_section.controls.base_conso.controls;let i=index">
+                <ng-container [formGroupName]="i">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Choisir le consommable</mat-label>
+                        <mat-select (selectionChange)="getUnity($event, 'conso')" formControlName="name">
+                             <mat-option *ngFor="let consommable of full_lst_conso" [value]="consommable.name">{{consommable.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label> quantitée pour le plat </mat-label>
+                        <input matInput type="number" formControlName="quantity">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label> unitée pour le plat </mat-label>
+                        <input matInput  formControlName="unity" value="{{unity_conso}}">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+        </ng-container>
+        <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'un consommable"
+            aria-label="ajout d'un consommable" (click)="addInputConso()">
+            <i class="fa-regular fa-plus"></i>
+        </button>
+    </div>
+    <div class="section_fileds">
+        <p>Quelles sont les préparations ? <br> entrer la quantitée, le nom et l'unitée <br> de préparations utilisés pour le plat : </p>
+        <ng-container formArrayName="base_prepa">
+            <div class="old" *ngFor="let item of add_plats_section.controls.base_prepa.controls;let i=index">
+                <ng-container [formGroupName]="i">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Choisir la préparation</mat-label>
+                        <mat-select (selectionChange)="getUnity($event, 'prepa')" formControlName="name">
+                             <mat-option *ngFor="let preparation of full_lst_prepa" [value]="preparation.nom">{{preparation.nom}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label> quantitée pour le plat </mat-label>
+                        <input matInput type="number" formControlName="quantity">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+        </ng-container>
+        <button mat-mini-fab type="button" id="add_input_prepa" color="white" matTooltip="ajout d'une préparation"
+            aria-label="ajout d'une preparation" (click)="addInputPrepa()">
+            <i class="fa-regular fa-plus"></i>
+        </button>
+    </div>
+    <div class="section_fileds">
+        <p>Quelles sont les étapes ? <br> entrer le nom, un commentaire et le temps de réalisation <br> des différentes
+            étapes pour réaliser la préparation : </p>
+        <ng-container formArrayName="etapes">
+            <div class="old" *ngFor="let item of add_plats_section.controls.etapes.controls; let i = index">
+                <ng-container [formGroupName]="i">
+                    <mat-form-field appearance="fill">
+                        <mat-label>nom des étapes</mat-label>
+                        <input matInput formControlName="name" placeholder="Ex. création de la sauce salade">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label> commentaire pour l'étape </mat-label>
+                        <input matInput formControlName="comm">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label> temps de réalisation</mat-label>
+                        <input matInput type="number" formControlName="tmps">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+        </ng-container>
+        <button mat-mini-fab type="button" id="add_input_etapes" color="white" matTooltip="ajout de l'étape"
+            aria-label="ajout de l'étape" (click)="addInputEtape()">
+            <i class="fa-regular fa-plus"></i>
+        </button>
+    </div>
+    <button mat-stroked-button type="submit"> Ajouter </button>
+</form>

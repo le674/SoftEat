@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
-import { Cconsommable, CIngredient } from 'src/app/interfaces/ingredient';
+import { Cconsommable, CIngredient, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cplat } from 'src/app/interfaces/plat';
 import { Cpreparation } from 'src/app/interfaces/preparation';
+import { ConsommableInteractionService } from 'src/app/services/menus/consommable-interaction.service';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { PlatsInteractionService } from 'src/app/services/menus/plats-interaction.service';
+import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
 import { AddPlatsComponent } from './add.plats/add.plats.component';
 
 @Component({
@@ -16,9 +18,9 @@ import { AddPlatsComponent } from './add.plats/add.plats.component';
 })
 export class AppPlatsComponent implements OnInit {
 
-  private full_lst_prepa:Array<Cpreparation>;
-  private full_lst_ings:Array<CIngredient>;
-  private full_lst_conso: Array<Cconsommable>;
+  public full_lst_prepa:Array<Cpreparation>;
+  public full_lst_ings:Array<TIngredientBase>;
+  public full_lst_conso: Array<Cconsommable>;
 
   private url: UrlTree;
   private router: Router;
@@ -26,8 +28,8 @@ export class AppPlatsComponent implements OnInit {
   private prop:string;
   private restaurant:string;
 
-  constructor(public dialog: MatDialog, private ingredient_service: IngredientsInteractionService, router: Router,
-     private _snackBar: MatSnackBar, private plat_service: PlatsInteractionService) { 
+  constructor(public dialog: MatDialog, private ingredient_service: IngredientsInteractionService,private conso_service:ConsommableInteractionService,
+    router: Router, private _snackBar: MatSnackBar, private plat_service: PlatsInteractionService, private prepa_service: PreparationInteractionService) { 
     this.plats = [];
     this.router = router;
     this.prop = "";
@@ -44,6 +46,16 @@ export class AppPlatsComponent implements OnInit {
     this.plat_service.getPlatFromRestaurant(this.prop, this.restaurant).then((plats) => { 
       this.plats = plats;
     })
+    this.ingredient_service.getFullIngs(this.prop,this.restaurant).then((ingredients) => {
+      this.full_lst_ings = ingredients;
+    })
+    this.conso_service.getFullConso(this.prop, this.restaurant).then((consomables) => {
+      this.full_lst_conso = consomables;
+    })
+    this.ingredient_service.getIngredientsPrepFromRestaurantsPROMForMenu(this.prop, this.restaurant).then((preparations) => {
+      this.full_lst_prepa = preparations;
+    })
+    
   }
   
   addPlat(){
@@ -53,7 +65,9 @@ export class AppPlatsComponent implements OnInit {
       data: {
         prop: this.prop,
         restaurant: this.restaurant,
-        plat: null
+        full_ingredients: this.full_lst_ings,
+        full_consommables: this.full_lst_conso,
+        full_preparations: this.full_lst_prepa,
       }
     });
   }
@@ -67,7 +81,9 @@ export class AppPlatsComponent implements OnInit {
       data: {
         prop: this.prop,
         restaurant: this.restaurant,
-        plat: plat
+        full_ingredients: this.full_lst_ings,
+        full_consommables: this.full_lst_conso,
+        full_preparations: this.full_lst_prepa,
       }
     });
   }

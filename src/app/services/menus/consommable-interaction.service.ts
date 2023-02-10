@@ -125,4 +125,24 @@ export class ConsommableInteractionService {
     }
   }
 
+  async getFullConso(prop:string, restaurant:string){
+    let ref_db: DatabaseReference;
+    ref_db = ref(this.db, `inventaire_${prop}_${restaurant}/${prop}/${restaurant}/consommables`)
+    await get(ref_db).then((ings) => {
+      this.consommable = [];
+      ings.forEach((ing) => {
+        if(ing.key !== null){
+          let consommable:Cconsommable = new Cconsommable();
+          consommable.name = ing.key;
+          consommable.cost = ing.child('cost').val();
+          consommable.unity = ing.child('unity').val();
+          consommable.taux_tva =  ing.child('taux_tva').val();
+          consommable.date_reception =  new Date();
+          this.consommable.push(consommable);
+        }
+      })
+    })
+    return this.consommable;
+  }
+
 }

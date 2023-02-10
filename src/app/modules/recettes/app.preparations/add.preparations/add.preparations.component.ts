@@ -249,6 +249,9 @@ export class AddPreparationsComponent implements OnInit{
                         name_prepa.split(" ").join('_'), this.etapes, this.base_ings, this.base_conso, this.after_prep ,this.is_stock).catch((e) => {
                          this._snackBar.open("nous ne somme pas parvenu à modifier la préparation veuillez contacter SoftEat");
                         }).finally(() => {
+                          this.etapes = [];
+                          this.base_conso = [];
+                          this.base_ings = [];
                          this._snackBar.open("la préparation vient d'être ajouté", "fermer");
                         });
                     }
