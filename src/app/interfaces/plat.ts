@@ -1,6 +1,6 @@
 import { Etape } from "./etape";
-import { CIngredient, Consommable, Ingredient } from "./ingredient";
-import { Cpreparation, Preparation } from "./preparation";
+import {Consommable, Ingredient, TIngredientBase} from "./ingredient";
+import { Cpreparation } from "./preparation";
 
 export interface Plat{
     "unity":string;
@@ -11,10 +11,10 @@ export interface Plat{
      10% Glaces non conditionnées, Sandwiches / salades couverts, fruits de mers coquillage ouvert, boissons non alcoolisées, plat/menu
      20% boissons alhcolisées
     */
-    "categorie":string;
+    "categorie":string
     "nom":string;
     "portions":number;
-    "ingredients":Array<Ingredient>;
+    "ingredients":Array<TIngredientBase>;
     "consommables":Array<Consommable>;
     "etapes":Array<Etape>;
     "preparations":Array<Cpreparation>;
@@ -24,14 +24,12 @@ export interface Plat{
 
     getType():string;
     setType(type:string):void;
-    getCategorie():string;
-    setCategorie(categorie:string):void;
     getNom():string;
     setNom(nom:string):void;
     getPortion():number;
     setPortions(portion:number):void;
-    setIngredients(ingredients:Array<Ingredient>):void;
-    getIngredients():Array<Ingredient>;
+    setIngredients(ingredients:Array<TIngredientBase>):void;
+    getIngredients():Array<TIngredientBase>;
     setConsommbale(consommables:Array<Consommable>):void;
     getConsommbale():Array<Consommable>;
     getEtapes():Array<Etape>;
@@ -52,12 +50,26 @@ export class Cplat implements Plat{
     "categorie": string;
     "nom": string;
     "portions": number;
-    "ingredients": Ingredient[];
+    "ingredients": TIngredientBase[];
     "consommables": Consommable[];
     "etapes": Etape[];
     "preparations": Cpreparation[];
     "prix": number;
     "taux_tva": number;
+
+    constructor(){
+        this.unity = '';
+        this.type = '';
+        this.categorie = '';
+        this.nom = '';
+        this.portions = 0;
+        this.prix = 0;
+        this.taux_tva = 0;
+        this.ingredients = [];
+        this.consommables = [];
+        this.etapes = [];
+    }
+
     getNom(): string {
         return this.nom
     }
@@ -70,10 +82,16 @@ export class Cplat implements Plat{
     setPortions(portion: number): void {
         this.portions = portion
     }
-    setIngredients(ingredients: Ingredient[]): void {
+    setCategorie(categorie: string) {
+       this.categorie = categorie;
+    }
+    getCategorie(categorie: string) {
+        return categorie;
+     }
+    setIngredients(ingredients: TIngredientBase[]): void {
         this.ingredients = ingredients
     }
-    getIngredients(): Ingredient[] {
+    getIngredients(): TIngredientBase[] {
         return this.ingredients
     }
     setConsommbale(consommables: Consommable[]): void {
@@ -87,12 +105,6 @@ export class Cplat implements Plat{
     }
     setType(type: string): void {
         this.type = type;
-    }
-    getCategorie(): string {
-       return this.categorie;
-    }
-    setCategorie(categorie: string): void {
-       this.categorie = categorie;
     }
    
     getEtapes(): Etape[] {

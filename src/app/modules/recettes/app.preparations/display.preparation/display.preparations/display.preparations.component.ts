@@ -41,7 +41,7 @@ export class DisplayPreparationsComponent implements OnInit {
   public dataSource_etape: MatTableDataSource<{
     nom: string;
     temps: number;
-    commentaire: string;
+    commentaire: string | null;
   }>;
 
   public displayed_ing: Array<{
@@ -62,7 +62,7 @@ export class DisplayPreparationsComponent implements OnInit {
   public displayed_etape: Array<{
     nom: string;
     temps: number;
-    commentaire: string;
+    commentaire: string | null;
   }>;
   @ViewChild('paginatoring') paginatoring!: MatPaginator;
   @ViewChild('paginatorconso') paginatorconso!: MatPaginator;

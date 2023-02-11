@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { child, Database, get, getDatabase, ref } from 'firebase/database';
+import { child, Database, DatabaseReference, get, getDatabase, ref } from 'firebase/database';
 import { Cetape } from 'src/app/interfaces/etape';
-import { Cconsommable, CIngredient, Ingredient } from 'src/app/interfaces/ingredient';
-import { Cplat } from 'src/app/interfaces/plat';
-import { Cpreparation, Preparation } from 'src/app/interfaces/preparation';
+import { Cconsommable,TIngredientBase } from 'src/app/interfaces/ingredient';
+import { Cplat, Plat } from 'src/app/interfaces/plat';
+import { Cpreparation} from 'src/app/interfaces/preparation';
 import { IngredientsInteractionService } from './ingredients-interaction.service';
 
 @Injectable({
@@ -14,7 +14,8 @@ export class PlatsInteractionService {
   private db: Database;
   private plats: Array<Cplat>;
   private consommables: Array<Cconsommable>;
-  private ingredients: Array<CIngredient>;
+  private ingredients: Array<TIngredientBase>;
+  private ingredients_minimal: {name:string, quantity:number, unity:string}[];
   private preparation: Array<Cpreparation>;
   private etapes: Array<Cetape>
   constructor(private ofApp: FirebaseApp, private ingredient_service: IngredientsInteractionService) {
@@ -24,10 +25,29 @@ export class PlatsInteractionService {
     this.ingredients = [];
     this.etapes = [];
     this.preparation = [];
+    this.ingredients_minimal = [];
+  }
+
+  async setPlat(prop:string, restaurant:string, plat:Plat){
+    const ref_db = ref(this.db, `plats_${prop}_${restaurant}/${prop}/${restaurant}/`);
+    if((plat.nom !== null) && (plat.nom !== undefined) && (plat.nom !== "")){
+      await updates(ref_db, {
+        [plat.nom]: {
+          type: plat.type,
+          portion: plat.portions,
+          price: plat.prix,
+          taux_tva:plat.taux_tva,
+          categorie:plat.categorie,
+          ingredients:plat.ingredients,
+          consommables:plat.consommables,
+          etapes:plat.etapes
+        }
+      })
+    }
   }
 
   async getPlatsFromRestaurantsFiltreIds(prop: string, restaurant: string,
-    lst_ings: Array<CIngredient>, lst_conso: Array<Cconsommable>) {
+    lst_ings: Array<TIngredientBase>, lst_conso: Array<Cconsommable>) {
     const ref_db = ref(this.db);
     this.plats = [];
     const path = `plats_${prop}_${restaurant}/${prop}/${restaurant}/`;
@@ -43,6 +63,7 @@ export class PlatsInteractionService {
             let etapes_bdd = plat.child("etapes").val();
             let price = plat.child("price").val();
             let tva_taux = plat.child("taux_tva").val();
+            let type = plat.child("type").val();
             let categorie = plat.child("categorie").val();
             let portion = plat.child("portion").val();
             const iter_preparation: [string, { quantity: number, unity: string }][] = Object.entries(preparations);
@@ -57,7 +78,7 @@ export class PlatsInteractionService {
               }
             }
             for (let ing of iter_ingredients) {
-              const ingredients = lst_ings.filter((ingredient) => ing[0] === ingredient.nom);
+              const ingredients = lst_ings.filter((ingredient) => ing[0] === ingredient.name);
               if (ingredients.length > 0) {
                 const ingredient = ingredients[0];
                 this.ingredients.push(ingredient);
@@ -84,9 +105,10 @@ export class PlatsInteractionService {
             add_plat.setPreparations(this.preparation);
             add_plat.setEtapes(this.etapes);
             add_plat.setPortions(portion);
-            add_plat.setCategorie(categorie);
+            add_plat.setType(type);
             add_plat.setPrix(price);
             add_plat.setTauxTva(tva_taux);
+            add_plat.setCategorie(categorie);
             add_plat.setUnity(curr_plat.unity);
             this.plats.push(add_plat);
           }
@@ -105,7 +127,6 @@ export class PlatsInteractionService {
         if(bdd_plat.key !== null){
           const plat = new Cplat();
           plat.nom = bdd_plat.key
-          plat.categorie = bdd_plat.child('categorie').val();
           plat.type = bdd_plat.child('type').val();
           plat.unity = bdd_plat.child('unity').val();
           plat.taux_tva = bdd_plat.child('taux_tva').val();
@@ -123,3 +144,7 @@ export class PlatsInteractionService {
   }
 
 }
+function updates(ref_db: DatabaseReference, arg1: {}) {
+  throw new Error('Function not implemented.');
+}
+

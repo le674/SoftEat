@@ -14,13 +14,36 @@
         </mat-form-field>
     </div>
     <div class="section">
+        <p>Entrer le type de plat: </p>
         <mat-form-field appearance="fill">
             <mat-label>Entrer le type de plat</mat-label>
-            <mat-select formControlName="types">
+            <mat-select formControlName="type" (selectionChange)="filtreCategorie($event)">
                 <mat-option value="entree">Entrée</mat-option>
                 <mat-option value="plat">Plat principale</mat-option>
                 <mat-option value="dessert">Dessert</mat-option>
+                <mat-option value="boissons">Boissons</mat-option>
             </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p>Entrer la catégorie ou le taux de tva : </p>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer la catégorie TVA</mat-label>
+            <mat-select formControlName="name_tva" (selectionChange)="addTaux($event)">
+                <mat-option *ngIf="boisson" value="boisson non alcholisée conditionnée"> boisson à consommation différée non alcholisée</mat-option>
+                <mat-option *ngIf="boisson" value="boisson non alcholisée non conditionnée"> boisson à consommation immédiate non alcholisée </mat-option>
+                <mat-option *ngIf="boisson" value="boisson alcholisée"> boisson alcholisée </mat-option>
+                <mat-option *ngIf="!boisson" value="produit alimentaire conditionnée"> plat à consommation différée </mat-option>
+                <mat-option *ngIf="!boisson" value="produit alimentaire non conditionnée"> plat à consommation immédiate </mat-option>
+                <mat-option *ngIf="!boisson" value="pain"> pain </mat-option>
+                <mat-option *ngIf="!boisson" value="pâtisserie"> pâtisserie </mat-option>
+                <mat-option *ngIf="!boisson" value="fruit de mer coquillage fermés"> fruit de mer coquillage fermé</mat-option>
+                <mat-option *ngIf="!boisson" value="fruit de mer coquillage ouvert"> fruit de mer coquillage ouvert</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer la taux de TVA </mat-label>
+            <input #taux type="number" matInput formControlName="taux_tva">
         </mat-form-field>
     </div>
     <div class="section">
@@ -47,7 +70,7 @@
                     </mat-form-field>
                     <mat-form-field appearance="fill">
                         <mat-label> unitée pour le plat </mat-label>
-                        <input matInput  formControlName="unity" value="{{unity_ing}}">
+                        <input matInput  formControlName="unity" value="{{unity_ing[i]}}">
                     </mat-form-field>
                 </ng-container>
             </div>
@@ -74,7 +97,7 @@
                     </mat-form-field>
                     <mat-form-field appearance="fill">
                         <mat-label> unitée pour le plat </mat-label>
-                        <input matInput  formControlName="unity" value="{{unity_conso}}">
+                        <input matInput  formControlName="unity" value="{{unity_conso[i]}}">
                     </mat-form-field>
                 </ng-container>
             </div>

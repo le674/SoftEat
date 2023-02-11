@@ -183,6 +183,21 @@ export class CIngredient implements Ingredient {
     }
 
 
+    convertToBase(): any {
+        let ingredient:TIngredientBase = {
+            name:this.nom,
+            quantity: this.quantity,
+            quantity_unity: this.quantity_unity,
+            unity: this.unity,
+            cost: this.cost, 
+            material_cost: 0,
+            vrac: this.vrac,
+            taux_tva: this.taux_tva,
+            marge: this.marge
+        };
+        return ingredient
+      }
+
     getCostTtcFromCat(): void {
         this.cost_ttc = this.service.getCostTtcFromCat(this.categorie_tva, this.cost);
     } 

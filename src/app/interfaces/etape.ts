@@ -1,27 +1,34 @@
 export interface Etape {
     "nom":string;
-    "commentaire":string;
+    "commentaire":string | null;
     "temps":number;
 
     getNom():string;
     setNom(nom:string):void;
-    getComentaire():string;
-    setComentaire(commentaire:string):void;
+    getComentaire():string | null;
+    setComentaire(commentaire:string | null):void;
     getTemps():number;
     setTemps(temps:number):void;
 }
 
 export class Cetape implements Etape{
     "nom": string;
-    "commentaire": string;
+    "commentaire": string | null;
     "temps": number;
+
+    constructor(){
+        this.nom = "";
+        this.commentaire = "";
+        this.temps = 0;
+    }
+
     getNom(): string {
         return this.nom
     }
     setNom(nom: string): void {
         this.nom = nom
     }
-    getComentaire(): string {
+    getComentaire(): string | null{
         return this.commentaire;
     }
     setComentaire(commentaire: string): void {

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, UrlTree } from '@angular/router';
-import { Cconsommable, CIngredient } from 'src/app/interfaces/ingredient';
+import { Cconsommable, CIngredient, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cmenu } from 'src/app/interfaces/menu';
 import { Cplat } from 'src/app/interfaces/plat';
 import { ConsommableInteractionService } from 'src/app/services/menus/consommable-interaction.service';
@@ -49,7 +49,8 @@ export class AppMenuComponent implements OnInit, AfterViewInit {
       this.conso_service.getConsommablesFromRestaurantsFiltreIds(this.prop, this.restaurant).then((consos) => {
         this.consommables = consos;
       }).then(() => {
-        this.plat_service.getPlatsFromRestaurantsFiltreIds(this.prop, this.restaurant, this.ingredients,
+        let ingredients:TIngredientBase[] = this.ingredients.map((ing) => ing.convertToBase());
+        this.plat_service.getPlatsFromRestaurantsFiltreIds(this.prop, this.restaurant, ingredients,
            this.consommables).then((plats) => {
             this.plats = plats;
         }).then(() => {
