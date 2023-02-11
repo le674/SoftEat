@@ -10,6 +10,7 @@ import { IngredientsInteractionService } from 'src/app/services/menus/ingredient
 import { PlatsInteractionService } from 'src/app/services/menus/plats-interaction.service';
 import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
 import { AddPlatsComponent } from './add.plats/add.plats.component';
+import { DisplayPlatsComponent } from './display.plats/display.plats.component';
 
 @Component({
   selector: 'app-plats',
@@ -90,6 +91,17 @@ export class AppPlatsComponent implements OnInit {
     });
   }
   seePlat(plat:Cplat){
-
+    this.dialog.open(DisplayPlatsComponent, {
+      height: `${window.innerHeight - window.innerHeight/10}px`,
+      width: `${window.innerWidth - window.innerWidth/5}px`,
+      data: {
+        prop: this.prop,
+        restaurant: this.restaurant,
+        ingredients: this.full_lst_ings,
+        consommables: this.full_lst_conso,
+        preparations: this.full_lst_prepa,
+        plat:plat
+      }
+    })
   }
 }

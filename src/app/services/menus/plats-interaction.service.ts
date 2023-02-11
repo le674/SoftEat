@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { child, Database, DatabaseReference, get, getDatabase, ref, update } from 'firebase/database';
+import { child, Database, get, getDatabase, ref, update } from 'firebase/database';
 import { Cetape } from 'src/app/interfaces/etape';
 import { Cconsommable,TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cplat, Plat } from 'src/app/interfaces/plat';

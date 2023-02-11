@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plats</title>
+</head>
+<body>
+    <div class="border">
+        <p> <span class="indication">Nom :</span> {{plat.nom}}</p>
+    </div>
+   
+    <div class="section border">
+        <p> <span class="indication">Temps de préparation théorique :</span> xxxxxxxxxxxx</p>
+        <p> <span class="indication">Prime cost :</span> xxxxxxxxxxxxx </p>
+    </div>
+
+    <div class="final_section" >
+        <div class="section border">
+            <p> <span class="indication">Prix hors taxe:</span> xxxxxxxxxxxxxx </p>
+            <p> <span class="indication">Taux de TVA :</span> xxxxxxxxxxxxxx </p> 
+            <p> <span class="indication">Prix TTC :</span> xxxxxxxxxxxxxx </p> 
+        </div>
+        <div class="section border">
+            <p> <span class="indication">Nombre de portions :</span> xxxxxxxxxxxxxx </p>
+            <p> <span class="indication">Coût de portion :</span> xxxxxxxxxxxxxx </p> 
+            <p> <span class="indication">Ratio matière en %:</span> xxxxxxxxxxxxxx </p> 
+        </div>
+    </div>
+    <div class="container text-left section">
+        <div class="row">
+            <div class="col">
+                <h2>Ingrédients</h2>
+                <table mat-table [dataSource]="dataSource_ing" class="mat-elevation-z8">
+                    <ng-container matColumnDef="nom">
+                        <th class="name" mat-header-cell *matHeaderCellDef> nom </th>
+                        <td class="name" mat-cell *matCellDef="let element"> {{element.name}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="quantity">
+                        <th class="other-cells" mat-header-cell *matHeaderCellDef> quantitée</th>
+                        <td class="other-cells" mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="unity">
+                        <th class="other-cells" mat-header-cell *matHeaderCellDef> unitée</th>
+                        <td class="other-cells" mat-cell *matCellDef="let element"> {{element.unity}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="cost">
+                        <th class="other-cells" mat-header-cell *matHeaderCellDef> cout </th>
+                        <td class="other-cells" mat-cell *matCellDef="let element"> {{element.cost}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="cost_matiere">
+                        <th mat-header-cell *matHeaderCellDef> cout <br> matière </th>
+                        <td mat-cell *matCellDef="let element"> {{element.cost_matiere}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsIng"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsIng;"></tr>
+                </table>
+                <mat-paginator #paginatoring [pageSizeOptions]="[1]"
+                    (page)="pageChangedIng($event)"
+                    [length]="displayed_ing.length"
+                    showFirstLastButtons
+                    aria-label="Selection page d'une preparation">
+                </mat-paginator>
+            </div>
+            <div class="col"></div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h2>Consommables</h2>
+                <table mat-table [dataSource]="dataSource_conso" class="mat-elevation-z8">
+                    <ng-container matColumnDef="nom">
+                        <th class="name" mat-header-cell *matHeaderCellDef> nom </th>
+                        <td class="name" mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="cost">
+                        <th class="other-cells" mat-header-cell *matHeaderCellDef> cout </th>
+                        <td class="other-cells" mat-cell *matCellDef="let element"> {{element.cost}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="quantity">
+                        <th class="other-cells" mat-header-cell *matHeaderCellDef> quantitée</th>
+                        <td class="other-cells" mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="unity">
+                        <th class="other-cells" mat-header-cell *matHeaderCellDef> unitée</th>
+                        <td class="other-cells" mat-cell *matCellDef="let element"> {{element.unity}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsConso"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsConso;"></tr>
+                </table>
+                <mat-paginator #paginatorconso [pageSizeOptions]="[1]"
+                    (page)="pageChangedConso($event)"
+                    [length]="displayed_conso.length"
+                    showFirstLastButtons
+                    aria-label="Selection page d'une preparation">
+                </mat-paginator>
+            </div>
+            <div class="col">
+                <h2>Étapes</h2>
+                <table mat-table [dataSource]="dataSource_etape" class="mat-elevation-z8">
+                    <ng-container matColumnDef="nom">
+                        <th class="name" mat-header-cell *matHeaderCellDef> nom </th>
+                        <td class="name" mat-cell *matCellDef="let element"> {{element.nom}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="temps">
+                        <th class="other-cells" mat-header-cell *matHeaderCellDef> temps </th>
+                        <td class="other-cells" mat-cell *matCellDef="let element"> {{element.temps}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="commentaire">
+                        <th class="comm-cells" mat-header-cell *matHeaderCellDef> commentaire</th>
+                        <td class="comm-cells" mat-cell *matCellDef="let element"><p>{{element.commentaire}}</p></td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsEtape"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsEtape;"></tr>
+                </table>
+                <mat-paginator #paginatoretape [pageSizeOptions]="[1]"
+                    (page)="pageChangedEtape($event)"
+                    [length]="displayed_etape.length"
+                    showFirstLastButtons
+                    aria-label="Selection page d'une preparation">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>      
+</body>
+</html>
