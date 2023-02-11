@@ -60,6 +60,7 @@ export class AddPlatsComponent implements OnInit {
     full_ingredients: Array<TIngredientBase>,
     full_consommables: Array<Consommable>,
     full_preparations: Array<Cpreparation>,
+    plat: Cplat
     }, private _snackBar: MatSnackBar, private calcul_service:CalculService) {
     this.unity_conso = [];
     this.unity_ing = [];
@@ -76,6 +77,58 @@ export class AddPlatsComponent implements OnInit {
     this.full_lst_conso = this.data.full_consommables;
     this.full_lst_ings = this.data.full_ingredients;
     this.full_lst_prepa = this.data.full_preparations;
+    if((this.data.plat !== null) && (this.data.plat !== undefined)){
+      if((this.data.plat.nom !== null) && (this.data.plat.nom !== undefined)){
+        this.add_plats_section.controls.name.setValue(this.data.plat.nom.split('_').join(' '));
+      }
+      if((this.data.plat.categorie !== null) && (this.data.plat.categorie !== undefined)){
+        this.add_plats_section.controls.name_tva.setValue(this.data.plat.categorie);
+      }
+      if((this.data.plat.portions !== null) && (this.data.plat.portions !== undefined)){
+        this.add_plats_section.controls.portion.setValue(this.data.plat.portions);
+      }
+      if((this.data.plat.type !== null) && (this.data.plat.type !== undefined)){
+        this.add_plats_section.controls.type.setValue(this.data.plat.type);
+      }
+      if((this.data.plat.taux_tva !== null) && (this.data.plat.taux_tva !== undefined)){
+        this.add_plats_section.controls.taux_tva.setValue(this.data.plat.taux_tva);
+      }
+      if((this.data.plat.prix !== null) && (this.data.plat.prix !== undefined)){
+        this.add_plats_section.controls.price.setValue(this.data.plat.prix);
+      }
+      if((this.data.plat.ingredients !== null) && (this.data.plat.ingredients !== undefined)){
+        this.data.plat.ingredients.forEach((ingredient) => {
+          const to_add_grp = new FormGroup({
+            name:new FormControl(ingredient.name),
+            quantity: new FormControl(ingredient.quantity),
+            unity: new FormControl(ingredient.unity)
+          })
+          to_add_grp.controls.unity.disable();
+          this.getBaseIng().push(to_add_grp);
+        })
+      }
+      if((this.data.plat.consommables !== null) && (this.data.plat.consommables !== undefined)){
+        this.data.plat.consommables.forEach((consommable) => {
+          const to_add_grp = new FormGroup({
+            name:new FormControl(consommable.name),
+            quantity: new FormControl(consommable.quantity),
+            unity: new FormControl(consommable.unity)
+          })
+          to_add_grp.controls.unity.disable();
+          this.getBaseConso().push(to_add_grp);
+        })
+      }
+      if((this.data.plat.etapes !== null) && (this.data.plat.etapes !== undefined)){
+        this.data.plat.etapes.forEach((etape) => {
+          const to_add_grp = new FormGroup({
+            name:new FormControl(etape.nom),
+            comm: new FormControl(etape.commentaire),
+            tmps: new FormControl(etape.temps)
+          })
+          this.getEtapes().push(to_add_grp);
+        })
+      }
+    }
 
   }
   
@@ -102,6 +155,18 @@ export class AddPlatsComponent implements OnInit {
     if(this.add_plats_section.controls.base_ing.value !==null){
       let base_ings = this.add_plats_section.controls.base_ing.value;
       plat.ingredients = this.data.full_ingredients.filter((base_ing) => base_ings.map((ing) => ing.name).includes(base_ing.name))
+      // on ajoute la quantitée présente pour le plat entré dans le formulaire comme étant la quantitée 
+      plat.ingredients.map((ingredient) => {
+        let quantity = 0;
+        const ingredients = base_ings.filter((base) => base.name === ingredient.name);
+        if(ingredients.length > 0){
+          if((ingredients[0].quantity !== null) && (ingredients[0].quantity !== undefined)){
+            quantity = ingredients[0].quantity
+          }
+        }
+        ingredient.quantity = quantity;
+        return ingredient
+      }) 
     }
     if(this.add_plats_section.controls.base_conso.value !== null){
       let base_conso = this.add_plats_section.controls.base_conso.value;
@@ -127,18 +192,33 @@ export class AddPlatsComponent implements OnInit {
         return etape_to_add;
       })
     }
-    this.plat_interaction.setPlat(this.data.prop, this.data.restaurant, plat);
+    this.plat_interaction.setPlat(this.data.prop, this.data.restaurant, plat).finally(() => {
+      this._snackBar.open(`le plat ${plat.nom} vient d'être ajouté`, "fermer")
+    }).catch((e) => {
+      console.log(e);
+      this._snackBar.open(`le plat ${plat.nom} n'a pas pu être ajouté`, "fermer")
+    });
   }
 
-  getUnity(new_selection:MatSelectChange, category:string){
+  getUnity(new_selection:MatSelectChange, category:string, index:number){
 
     if(category === 'ing'){
       const ingredients = this.full_lst_ings.filter((ingredient) => ingredient.name === (new_selection.value as string));
-      if(ingredients.length > 0) this.unity_ing.push(ingredients[0].unity);
+      if(index > this.unity_ing.length){
+        if(ingredients.length > 0) this.unity_ing.push(ingredients[0].unity);
+      }
+      else{
+        if(ingredients.length > 0) this.unity_ing[index] = ingredients[0].unity;
+      }
     }
     if(category === 'conso'){
       const consommables = this.full_lst_conso.filter((consommable) => consommable.name === (new_selection.value) as string);
-      if(consommables.length > 0) this.unity_conso.push(consommables[0].unity);
+      if(index > this.unity_conso.length){
+        if(consommables.length > 0) this.unity_conso.push(consommables[0].unity);
+      }
+      else{
+        if(consommables.length > 0) this.unity_conso[index] = consommables[0].unity;
+      }
     }
   }
 

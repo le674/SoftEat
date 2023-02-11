@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { child, Database, DatabaseReference, get, getDatabase, ref } from 'firebase/database';
+import { child, Database, DatabaseReference, get, getDatabase, ref, update } from 'firebase/database';
 import { Cetape } from 'src/app/interfaces/etape';
 import { Cconsommable,TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cplat, Plat } from 'src/app/interfaces/plat';
@@ -29,10 +29,10 @@ export class PlatsInteractionService {
   }
 
   async setPlat(prop:string, restaurant:string, plat:Plat){
-    const ref_db = ref(this.db, `plats_${prop}_${restaurant}/${prop}/${restaurant}/`);
+    const ref_db = ref(this.db, `plat_${prop}_${restaurant}/${prop}/${restaurant}/`);
     if((plat.nom !== null) && (plat.nom !== undefined) && (plat.nom !== "")){
-      await updates(ref_db, {
-        [plat.nom]: {
+      await update(ref_db, {
+        [plat.nom.split(' ').join('_')]: {
           type: plat.type,
           portion: plat.portions,
           price: plat.prix,
@@ -50,7 +50,7 @@ export class PlatsInteractionService {
     lst_ings: Array<TIngredientBase>, lst_conso: Array<Cconsommable>) {
     const ref_db = ref(this.db);
     this.plats = [];
-    const path = `plats_${prop}_${restaurant}/${prop}/${restaurant}/`;
+    const path = `plat_${prop}_${restaurant}/${prop}/${restaurant}/`;
     await get(child(ref_db, path)).then((plats) => {
       this.ingredient_service.getIngredientsPrepFromRestaurantsPROMForMenu(prop, restaurant).then((lst_prepa: Array<Cpreparation>) => {
         plats.forEach((plat) => {
@@ -128,13 +128,14 @@ export class PlatsInteractionService {
           const plat = new Cplat();
           plat.nom = bdd_plat.key
           plat.type = bdd_plat.child('type').val();
+          plat.categorie =  bdd_plat.child('categorie').val();
           plat.unity = bdd_plat.child('unity').val();
           plat.taux_tva = bdd_plat.child('taux_tva').val();
           plat.ingredients = bdd_plat.child('ingredients').val();
           plat.preparations = bdd_plat.child('preparation').val();
           plat.consommables = bdd_plat.child('consommables').val();
           plat.etapes =  bdd_plat.child('etapes').val();
-          plat.portions =  bdd_plat.child('portions').val();
+          plat.portions =  bdd_plat.child('portion').val();
           plat.prix =  bdd_plat.child('price').val();
           lst_plats.push(plat);
         }
@@ -144,7 +145,3 @@ export class PlatsInteractionService {
   }
 
 }
-function updates(ref_db: DatabaseReference, arg1: {}) {
-  throw new Error('Function not implemented.');
-}
-

@@ -17,12 +17,15 @@
                     <figure>
                         <div class="tourpic">
                             <img width="300" height="200" src='/assets/images/autho.jpg'>
-                            <span class="tourday hot">Plats</span>
+                            <span class="tourday hot">{{plat.type}}</span>
                         </div>
                         <figcaption>
                             <h3 class="entry-title">
-                                <a>{{plat.nom}}</a>
+                                <a>{{plat.nom.split('_').join(' ')}}</a>
                             </h3>
+                            <span class="tourprice">
+                                <span class="currency">EUR. </span><span class="price">{{plat.prix}}</span>
+                            </span>
                         </figcaption>
                         <div class="tourbtn">
                             <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="seePlat(plat)">

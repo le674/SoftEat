@@ -60,7 +60,7 @@
                 <ng-container [formGroupName]="i">
                      <mat-form-field appearance="fill">
                         <mat-label>Choisir l'ingrédients</mat-label>
-                        <mat-select (selectionChange)="getUnity($event, 'ing')" formControlName="name">
+                        <mat-select (selectionChange)="getUnity($event, 'ing', i)" formControlName="name">
                              <mat-option *ngFor="let ingredient of full_lst_ings" [value]="ingredient.name">{{ingredient.name}}</mat-option>
                         </mat-select>
                      </mat-form-field>
@@ -87,7 +87,7 @@
                 <ng-container [formGroupName]="i">
                     <mat-form-field appearance="fill">
                         <mat-label>Choisir le consommable</mat-label>
-                        <mat-select (selectionChange)="getUnity($event, 'conso')" formControlName="name">
+                        <mat-select (selectionChange)="getUnity($event, 'conso', i)" formControlName="name">
                              <mat-option *ngFor="let consommable of full_lst_conso" [value]="consommable.name">{{consommable.name}}</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -114,7 +114,7 @@
                 <ng-container [formGroupName]="i">
                     <mat-form-field appearance="fill">
                         <mat-label>Choisir la préparation</mat-label>
-                        <mat-select (selectionChange)="getUnity($event, 'prepa')" formControlName="name">
+                        <mat-select (selectionChange)="getUnity($event, 'prepa', i)" formControlName="name">
                              <mat-option *ngFor="let preparation of full_lst_prepa" [value]="preparation.nom">{{preparation.nom}}</mat-option>
                         </mat-select>
                     </mat-form-field>

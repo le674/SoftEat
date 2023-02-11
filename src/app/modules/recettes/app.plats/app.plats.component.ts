@@ -68,6 +68,7 @@ export class AppPlatsComponent implements OnInit {
         full_ingredients: this.full_lst_ings,
         full_consommables: this.full_lst_conso,
         full_preparations: this.full_lst_prepa,
+        plat:null
       }
     });
   }
@@ -84,6 +85,7 @@ export class AppPlatsComponent implements OnInit {
         full_ingredients: this.full_lst_ings,
         full_consommables: this.full_lst_conso,
         full_preparations: this.full_lst_prepa,
+        plat:plat
       }
     });
   }
