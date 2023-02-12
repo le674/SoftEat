@@ -101,9 +101,9 @@ export class DisplayPreparationsComponent implements OnInit {
 
     this.name_prepa = this.data.name;
     this.tmps_prepa =  this.prepa_service.getFullTheoTimeFromSec(this.data.etapes);
-    this.restau_service.getSalaryCuisiniee(this.data.prop, this.data.restaurant).then((salary) => {
-      this.prime_cost = this.prepa_service.getPrimCost(this.data.etapes, this.data.ingredients, this.data.consommables, salary);
-    });
+    this.prepa_service.getPrimCost(this.data.prop, this.data.restaurant,this.data.etapes, this.data.ingredients,
+       this.data.consommables).then((prime_cost) =>  this.prime_cost = prime_cost);
+    
     this.val_bouch = this.prepa_service.getValBouchFromBasIng(this.data.ingredients, this.data.quantity_after_prep, this.data.unity);
 
     if(this.data.ingredients !== null){

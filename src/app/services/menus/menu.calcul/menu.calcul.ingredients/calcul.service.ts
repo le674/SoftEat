@@ -27,7 +27,7 @@ export class CalculService {
         }
       }
     }
-    return cost + cost * (taux_tva / 100)
+    return this.ToCentime(cost + cost * (taux_tva / 100));
   }
 
 
@@ -53,7 +53,7 @@ export class CalculService {
   }
 
   getCostTtcFromTaux(taux_tva: number, cost: number): number {
-    return cost + cost * (taux_tva / 100)
+    return this.ToCentime(cost + cost * (taux_tva / 100))
   }
 
 
@@ -166,7 +166,7 @@ export class CalculService {
       return ing.cost * (curr_quantity / prev_quantity);
     })
     base_ing = tpm_ing_base;
-    return _cost_per_quantity.reduce((prev_cost: number, curr_cost) => prev_cost + curr_cost);
+    return this.ToCentime(_cost_per_quantity.reduce((prev_cost: number, curr_cost) => prev_cost + curr_cost));
   }
 
   sortTwoListStringByName(l1: Array<CIngredient>, l2: { name: string; quantity: number; unity: string; quantity_unity: number; cost: number }[]) {
@@ -195,46 +195,8 @@ export class CalculService {
     })
   }
 
-  // on trie les deux liste pour qu'elle contienne les même éléments par example la fonction doit agir comme ceci
-  // 1.  this.data.ingredient.base_ing = [{name: "tomate", quantity: 12}, {name: "cerise", quantity: 5}]
-  // 2.  this.base_ing_full = [{nom: "cerise", ...}]
-  // -> ["", {nom: "cerise", ...}]
-  paralleleTwoList(base_ing_full: Array<"" | CIngredient>, base_ing: {
-    name: string;
-    quantity: number;
-  }[]) {
-    return Array(base_ing.length).fill("").map((value: any, index: number) => {
-      const base_ing_name_only = base_ing_full.map((base) => {
-        if (typeof base !== 'string') {
-          return base.nom
-        }
-        else {
-          return ""
-        }
-      })
-      if (base_ing_name_only.includes(base_ing[index].name)) {
-        const ing = base_ing_full.filter((base_ing_filtre) => {
-          if (typeof base_ing_filtre !== 'string') {
-            return base_ing_filtre.nom === base_ing[index].name;
-          }
-          else {
-            return false
-          }
-        })[0]
-        return ing;
-      }
-      else {
-        return ""
-      }
-    })
+  ToCentime(quantity:number):number{
+    return Math.round(quantity*100)/100;
   }
-
-  /* 
-    stringToDate(date_time_bdd:string): Date{
-  
-      return date_time_bdd
-    } */
-
-
 
 }

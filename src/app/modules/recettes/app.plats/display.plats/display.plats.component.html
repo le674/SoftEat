@@ -12,20 +12,20 @@
     </div>
    
     <div class="section border">
-        <p> <span class="indication">Temps de préparation théorique :</span> xxxxxxxxxxxx</p>
-        <p> <span class="indication">Prime cost :</span> xxxxxxxxxxxxx </p>
+        <p> <span class="indication">Temps de préparation théorique :</span> {{tmps_prepa_theo}}</p>
+        <p> <span class="indication">Prime cost :</span> {{prime_cost}} </p>
     </div>
 
     <div class="final_section" >
         <div class="section border">
-            <p> <span class="indication">Prix hors taxe:</span> xxxxxxxxxxxxxx </p>
-            <p> <span class="indication">Taux de TVA :</span> xxxxxxxxxxxxxx </p> 
-            <p> <span class="indication">Prix TTC :</span> xxxxxxxxxxxxxx </p> 
+            <p> <span class="indication">Prix hors taxe:</span> {{plat.prix}} </p>
+            <p> <span class="indication">Taux de TVA :</span> {{plat.taux_tva}} </p> 
+            <p> <span class="indication">Prix TTC :</span> {{prix_ttc}} </p> 
         </div>
         <div class="section border">
-            <p> <span class="indication">Nombre de portions :</span> xxxxxxxxxxxxxx </p>
-            <p> <span class="indication">Coût de portion :</span> xxxxxxxxxxxxxx </p> 
-            <p> <span class="indication">Ratio matière en %:</span> xxxxxxxxxxxxxx </p> 
+            <p> <span class="indication">Nombre de portions :</span> {{plat.portions}} </p>
+            <p> <span class="indication">Coût de portion :</span> {{portion_cost}} </p> 
+            <p> <span class="indication">Ratio matière en %:</span> {{material_ratio}} %</p> 
         </div>
     </div>
     <div class="container text-left section">

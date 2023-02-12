@@ -40,6 +40,7 @@ export class PlatsInteractionService {
           categorie:plat.categorie,
           ingredients:plat.ingredients,
           consommables:plat.consommables,
+          preparations:plat.preparations,
           etapes:plat.etapes
         }
       })
@@ -132,7 +133,7 @@ export class PlatsInteractionService {
           plat.unity = bdd_plat.child('unity').val();
           plat.taux_tva = bdd_plat.child('taux_tva').val();
           plat.ingredients = bdd_plat.child('ingredients').val();
-          plat.preparations = bdd_plat.child('preparation').val();
+          plat.preparations = bdd_plat.child('preparations').val();
           plat.consommables = bdd_plat.child('consommables').val();
           plat.etapes =  bdd_plat.child('etapes').val();
           plat.portions =  bdd_plat.child('portion').val();

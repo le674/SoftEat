@@ -40,10 +40,9 @@ export class PreparationInteractionService {
     await update(ref_db, updates);
   }
 
-  async getFullPreparations(restaurant:string,prop:string){
-    let ref_db: DatabaseReference;
+  async getFullPreparations(prop:string, restaurant:string){
     const path = `inventaire_${prop}_${restaurant}/${prop}/${restaurant}/preparations`;
-    ref_db = ref(this.db)
+    const ref_db = ref(this.db)
     
     await get(child(ref_db, path)).then((preparations) => {
       this.preparations = [];

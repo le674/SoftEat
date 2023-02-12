@@ -2,9 +2,12 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Consommable, TIngredientBase } from 'src/app/interfaces/ingredient';
+import { Cconsommable, Consommable, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cplat } from 'src/app/interfaces/plat';
 import { Cpreparation } from 'src/app/interfaces/preparation';
+import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { MenuCalculPlatsServiceService } from 'src/app/services/menus/menu.calcul/menu.calcul.plats/menu.calcul.plats.service.service';
+import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 
 @Component({
   selector: 'app-display.plats',
@@ -14,6 +17,11 @@ import { Cpreparation } from 'src/app/interfaces/preparation';
 export class DisplayPlatsComponent implements OnInit {
 
   public plat:Cplat;
+  public tmps_prepa_theo:string;
+  public prime_cost:number;
+  public prix_ttc:number;
+  public portion_cost:number;
+  public material_ratio:number;
   public displayedColumnsIng: string[] = ['nom', 'quantity', 'unity', 'cost', 'cost_matiere'];
   public displayedColumnsConso: string[] = ['nom', 'quantity', 'unity', 'cost'];
   public displayedColumnsEtape: string[] = ['nom', 'temps', 'commentaire'];
@@ -64,6 +72,9 @@ export class DisplayPlatsComponent implements OnInit {
   page_number_etapes: number;
   page_number_conso: number;
   page_number_ings: number;
+  private preparations:Array<Cpreparation>;
+  private ingredients:Array<TIngredientBase>;
+  private consommables:Array<Cconsommable>;
   constructor(public dialogRef: MatDialogRef<DisplayPlatsComponent>, @Inject(MAT_DIALOG_DATA) public data:{
     prop:string,
     restaurant:string,
@@ -71,7 +82,15 @@ export class DisplayPlatsComponent implements OnInit {
     consommables: Array<Consommable>,
     preparations: Array<Cpreparation>,
     plat: Cplat
-    }) {
+    },private prepa_service:CalculPrepaService,private plat_service:MenuCalculPlatsServiceService, private calcul_service:CalculService) {
+      this.preparations = [];
+      this.ingredients = [];
+      this.consommables = [];
+      this.tmps_prepa_theo = '';
+      this.prime_cost = 0;
+      this.prix_ttc = 0;
+      this.portion_cost = 0;
+      this.material_ratio = 0;
       this.plat = this.data.plat;
       this.page_number_conso = 0;
       this.page_number_etapes = 0;
@@ -85,6 +104,14 @@ export class DisplayPlatsComponent implements OnInit {
     }
 
   ngOnInit(): void {
+    //ont récupère les préprations uniquement qui sont 
+    this.tmps_prepa_theo = this.plat_service.getFullTheoTimeFromSec(this.data.plat);
+    this.portion_cost = this.plat_service.getPortionCost(this.data.plat);
+    this.material_ratio = this.plat_service.getRatioMaterial(this.portion_cost,this.data.plat);
+    this.plat_service.getPrimCost(this.data.prop, this.data.restaurant, this.data.plat).then((prime_cost) => this.prime_cost = prime_cost);
+    this.prix_ttc = this.calcul_service.getCostTtcFromTaux(this.data.plat.taux_tva, this.data.plat.prix);
+
+
     if(this.data.ingredients !== null){
       if(this.data.plat.ingredients.length > 0){
 
@@ -96,7 +123,9 @@ export class DisplayPlatsComponent implements OnInit {
     }
     if(this.data.plat.consommables !== null){
       if(this.data.plat.consommables.length > 0){
-        this.displayed_conso = this.data.plat.consommables;
+        this.displayed_conso = this.data.plat.consommables.map((consommable) => {
+          return {name: consommable.name, cost: consommable.cost, quantity:consommable.quantity, unity:consommable.unity};
+        });
         this.dataSource_conso.data = this.displayed_conso; 
       }
     }
@@ -104,6 +133,7 @@ export class DisplayPlatsComponent implements OnInit {
       this.displayed_etape = this.data.plat.etapes.map((etape) => {return {nom: etape.nom, temps: etape.temps, commentaire: etape.commentaire}})
       this.dataSource_etape.data = this.displayed_etape;
     }
+
      // ont initialise la pagination pour le tableau, ingrédient, consommables, étapes
      const ing_data = new PageEvent();
      ing_data.length = this.displayed_ing.length

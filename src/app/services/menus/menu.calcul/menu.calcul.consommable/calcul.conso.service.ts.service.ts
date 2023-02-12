@@ -26,7 +26,7 @@ export class CalculConsoServiceTsService {
 
   getCostTtc(taux_tva:number,cost:number): number {
     const _to_add_pourcent = cost*(taux_tva/100); 
-    return cost + _to_add_pourcent;
+    return this.ToCentime(cost + _to_add_pourcent);
   }
 
   convertUnity(unity: string, is_full: boolean):string {
@@ -50,5 +50,10 @@ export class CalculConsoServiceTsService {
       if(unity === 'p') return 'p (pièce)';
     }
     return ''
+  }
+
+
+  ToCentime(quantity:number):number{
+    return Math.round(quantity*100)/100;
   }
 }

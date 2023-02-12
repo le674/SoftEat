@@ -77,6 +77,8 @@ export class AddPlatsComponent implements OnInit {
     this.full_lst_conso = this.data.full_consommables;
     this.full_lst_ings = this.data.full_ingredients;
     this.full_lst_prepa = this.data.full_preparations;
+    console.log('add', this.full_lst_prepa);
+    
     if((this.data.plat !== null) && (this.data.plat !== undefined)){
       if((this.data.plat.nom !== null) && (this.data.plat.nom !== undefined)){
         this.add_plats_section.controls.name.setValue(this.data.plat.nom.split('_').join(' '));
@@ -128,6 +130,15 @@ export class AddPlatsComponent implements OnInit {
           this.getEtapes().push(to_add_grp);
         })
       }
+      if((this.data.plat.preparations !== null) && (this.data.plat.preparations !== undefined)){
+        this.data.plat.preparations.forEach((preparation) => {
+          const to_add_grp = new FormGroup({
+            name: new FormControl(preparation.nom),
+            quantity: new FormControl(preparation.quantity)
+          })
+          this.getBasePrepa().push(to_add_grp);
+        })
+      }
     }
 
   }
@@ -172,10 +183,6 @@ export class AddPlatsComponent implements OnInit {
       let base_conso = this.add_plats_section.controls.base_conso.value;
       plat.consommables = this.data.full_consommables.filter((consommable) => base_conso.map((conso) => conso.name).includes(consommable.name));
     }
-    if(this.add_plats_section.controls.base_prepa.value !== null){
-      let base_prepa = this.add_plats_section.controls.base_prepa.value;
-      plat.preparations = this.data.full_preparations.filter((preparation) => base_prepa.map((preparation) => preparation.name).includes(preparation.nom));
-    }
     if(this.add_plats_section.controls.etapes.value !== null){
       let base_etapes = this.add_plats_section.controls.etapes.value;
       plat.etapes = base_etapes.map((etape) => {
@@ -191,6 +198,19 @@ export class AddPlatsComponent implements OnInit {
         }
         return etape_to_add;
       })
+    }
+    if(this.add_plats_section.controls.base_prepa.value !== null){
+      let base_prepa = this.add_plats_section.controls.base_prepa.value;
+      plat.preparations = this.data.full_preparations.filter((preparation) => base_prepa.map((prepa) => prepa.name).includes(preparation.nom))
+                                                     .map((preparation) => { const first_prepa = base_prepa.find((prepa) => preparation.nom === prepa.name);
+                                                      if((first_prepa?.quantity !== null) && (first_prepa?.quantity !== undefined)){
+                                                        preparation.quantity = first_prepa.quantity; 
+                                                      }
+                                                      else{
+                                                        preparation.quantity = 0;
+                                                      }
+                                                      return preparation
+                                                    })
     }
     this.plat_interaction.setPlat(this.data.prop, this.data.restaurant, plat).finally(() => {
       this._snackBar.open(`le plat ${plat.nom} vient d'être ajouté`, "fermer")

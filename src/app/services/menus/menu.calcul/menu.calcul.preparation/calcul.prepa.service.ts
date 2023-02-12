@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Cetape } from 'src/app/interfaces/etape';
-import { Cconsommable, CIngredient, TIngredientBase } from 'src/app/interfaces/ingredient';
-import { Cpreparation } from 'src/app/interfaces/preparation';
+import { Cconsommable, TIngredientBase } from 'src/app/interfaces/ingredient';
+import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
 import { CalculService } from '../menu.calcul.ingredients/calcul.service';
 
 @Injectable({
@@ -9,7 +9,10 @@ import { CalculService } from '../menu.calcul.ingredients/calcul.service';
 })
 export class CalculPrepaService {
 
-  constructor(private calcul_service: CalculService) { }
+  private prime_cost:number;
+  constructor(private calcul_service: CalculService, private restau_service:RestaurantService) { 
+    this.prime_cost = 0;
+  }
 
   getCostMaterial(ings:Array<TIngredientBase>):Array<{nom:string, quantity:number, unity:string, cost:number,taux_tva:number, cost_matiere:number}>{
     let ingredients:Array<{nom:string, quantity:number, unity:string, cost:number, taux_tva:number, cost_matiere:number}> = [];
@@ -24,38 +27,41 @@ export class CalculPrepaService {
         unity: ing.unity,
         cost: ing.cost,
         taux_tva: ing.taux_tva,
-        cost_matiere: cost_matiere
+        cost_matiere: this.ToCentime(cost_matiere)
       })
     })
     return ingredients
   }
 
-  getPrimCost(etapes: Array<Cetape>, ingredients: Array<TIngredientBase>, consommables: Array<Cconsommable>, salary:number){
-    const full_cost_quant_ing = ingredients.map((ing) => {
-      let cost = ing.cost*this.calcul_service.convertQuantity(ing.quantity, ing.unity);
-      if(!(ing.vrac === 'oui')){
-        // on normalise le cout par la quantitée unitaire
-        cost = cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity);
-      }
-      return cost
+  async getPrimCost(prop:string,restaurant:string, etapes: Array<Cetape>, ingredients: Array<TIngredientBase>,
+     consommables: Array<Cconsommable>){
+    await this.restau_service.getSalaryCuisiniee(prop, restaurant).then((salary) => {
+      const full_cost_quant_ing = ingredients.map((ing) => {
+        let cost = ing.cost*this.calcul_service.convertQuantity(ing.quantity, ing.unity);
+        if(!(ing.vrac === 'oui')){
+          // on normalise le cout par la quantitée unitaire
+          cost = cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity);
+        }
+        return cost
+      })
+      
+      const full_cost_quant_conso = consommables.map((conso) => {
+        let cost = conso.cost*conso.quantity;
+        return cost
+      })
+  
+      
+      const sum_cost_ing = full_cost_quant_ing.reduce((curr_cost, next_cost) => curr_cost + next_cost);
+      const sum_cost_conso = full_cost_quant_conso.reduce((curr_cost, next_cost) => curr_cost + next_cost);
+      const full_time = etapes.map((etape) => etape.temps).
+                                                          reduce((curr_tmps, next_tmps) => curr_tmps + next_tmps);
+      // 35 nombr d'heur travaillé par semaine en fonction du nombre de semaine dans un mois
+      const mensuel_work_hour = 4.34524*35;
+      const second_salary = salary/(mensuel_work_hour * 3600);
+      
+      this.prime_cost = this.ToCentime(second_salary*full_time + sum_cost_conso + sum_cost_ing);
     })
-    
-    const full_cost_quant_conso = consommables.map((conso) => {
-      let cost = conso.cost*conso.quantity;
-      return cost
-    })
-
-    
-    const sum_cost_ing = full_cost_quant_ing.reduce((curr_cost, next_cost) => curr_cost + next_cost);
-    const sum_cost_conso = full_cost_quant_conso.reduce((curr_cost, next_cost) => curr_cost + next_cost);
-    const full_time = etapes.map((etape) => etape.temps).
-                                                        reduce((curr_tmps, next_tmps) => curr_tmps + next_tmps);
-    // 35 nombr d'heur travaillé par semaine en fonction du nombre de semaine dans un mois
-    const mensuel_work_hour = 4.34524*35;
-    const second_salary = salary/(mensuel_work_hour * 3600);
-    
-    return second_salary*full_time + sum_cost_conso + sum_cost_ing;
-
+    return this.prime_cost;
   }
 
   getFullTheoTimeFromSec(etapes: Array<Cetape>):string{
@@ -69,6 +75,15 @@ export class CalculPrepaService {
     const min = Math.trunc(full_time_sec%3600/60);
     const sec = full_time_sec%60;
     return `${heure}h ${min}min ${sec}sec`
+  }
+  
+  getFullTheoTimeSec(etapes: Array<Cetape>):number{
+    let full_time_sec =  etapes.reduce((prev_etape:Cetape, suiv_etape:Cetape) => {
+      const tmp_etape = new Cetape();
+      tmp_etape.temps =  prev_etape.temps + suiv_etape.temps;
+      return tmp_etape
+    }).temps;
+    return full_time_sec;
   }
 
   getValBouchFromBasIng(base: TIngredientBase[], quantity_aft_prep: number, unity_aft_prep:string): number {
@@ -95,11 +110,14 @@ export class CalculPrepaService {
     const moy_total_cost = moy_cost * moy_quantity;
     const square_final_cost = quantity_unity_act * quantity_unity_act;
     if (square_final_cost !== 0) {
-      return moy_total_cost / square_final_cost;
+      return this.ToCentime(moy_total_cost / square_final_cost);
     }
     else {
       return 0
     }
   }
   
+  ToCentime(quantity:number):number{
+    return Math.round(quantity*100)/100;
+  }
 }

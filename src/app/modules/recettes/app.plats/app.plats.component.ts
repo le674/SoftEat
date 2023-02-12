@@ -53,8 +53,10 @@ export class AppPlatsComponent implements OnInit {
     this.conso_service.getFullConso(this.prop, this.restaurant).then((consomables) => {
       this.full_lst_conso = consomables;
     })
-    this.ingredient_service.getIngredientsPrepFromRestaurantsPROMForMenu(this.prop, this.restaurant).then((preparations) => {
+    this.prepa_service.getFullPreparations(this.prop, this.restaurant).then((preparations) => {
       this.full_lst_prepa = preparations;
+      console.log('app : ', this.full_lst_prepa);
+      
     })
     
   }
