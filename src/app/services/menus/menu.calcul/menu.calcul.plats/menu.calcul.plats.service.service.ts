@@ -31,9 +31,45 @@ export class MenuCalculPlatsServiceService {
       }
       return ingredient
     })).flat();
-    etapes = etapes.concat(prepa_etapes);
-    ingredients = ingredients.concat(prepa_ingredients);
-    consommables = consommables.concat(prepa_consommables);
+    if((etapes !== null) && (prepa_etapes !== null)){
+      etapes = etapes.concat(prepa_etapes);
+    }
+    else{
+      if(etapes === null){
+        if(prepa_etapes !== null){
+          etapes = prepa_etapes;
+        }
+        else{
+          etapes = [];
+        } 
+      }
+    }
+    if((ingredients !== null) && (prepa_ingredients !== null)){
+      ingredients = ingredients.concat(prepa_ingredients);
+    }
+    else{
+      if(ingredients === null){
+        if(prepa_consommables !== null){
+          ingredients = prepa_ingredients;
+        }
+        else{
+          ingredients = [];
+        } 
+      }
+    }
+    if((consommables !== null) && (prepa_consommables !== null)){
+      consommables = consommables.concat(prepa_consommables);
+    }
+    else{
+      if(consommables === null){
+        if(prepa_consommables !== null){
+          consommables = prepa_consommables;
+        }
+        else{
+          consommables = [];
+        } 
+      }
+    }
     return this.prepa_service.getPrimCost(prop, restaurant, etapes, ingredients, consommables)
   }
 
@@ -75,7 +111,7 @@ export class MenuCalculPlatsServiceService {
 
   getRatioMaterial(portion_cost:number,plat:Cplat){
     const price_ht = plat.prix;
-    return(this.ToCentime(portion_cost/price_ht)*100)
+    return(Math.round(this.ToCentime(portion_cost/price_ht)*100))
   }
 
   ToCentime(quantity:number):number{
