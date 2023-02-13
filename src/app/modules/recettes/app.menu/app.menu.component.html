@@ -32,13 +32,13 @@
                             </span>
                         </figcaption>
                         <div class="tourbtn">
-                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer">
+                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="seeMenu(menu)">
                               <br>  <i class="fa-solid fa-eye"></i> <br> Consulter
                             </a>
-                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer">
+                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="modifyMenu(menu)">
                                 <br> <i class="fa-solid fa-pen"> </i> <br> Modifier
                             </a>
-                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer">
+                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="suppressMenu(menu)">
                                 <br> <i class="fa-solid fa-trash"> </i> <br> Supprimer
                             </a>
                         </div>

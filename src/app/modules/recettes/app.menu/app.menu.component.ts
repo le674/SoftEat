@@ -9,6 +9,7 @@ import { IngredientsInteractionService } from 'src/app/services/menus/ingredient
 import { MenuInteractionService } from 'src/app/services/menus/menu-interaction.service';
 import { PlatsInteractionService } from 'src/app/services/menus/plats-interaction.service';
 import { AddMenuComponent } from './add.menu/add.menu.component';
+import { DisplayMenuComponent } from './display.menu/display.menu.component';
 
 @Component({
   selector: 'app-menu',
@@ -49,14 +50,11 @@ export class AppMenuComponent implements OnInit, AfterViewInit {
       this.conso_service.getConsommablesFromRestaurantsFiltreIds(this.prop, this.restaurant).then((consos) => {
         this.consommables = consos;
       }).then(() => {
-        let ingredients:TIngredientBase[] = this.ingredients.map((ing) => ing.convertToBase());
-        this.plat_service.getPlatsFromRestaurantsFiltreIds(this.prop, this.restaurant, ingredients,
-           this.consommables).then((plats) => {
+        this.plat_service.getPlatFromRestaurant(this.prop, this.restaurant).then((plats) => {
             this.plats = plats;
         }).then(() => {
           this.menu_service.getMenusFromRestaurants(this.prop, this.restaurant, this.ingredients, this.consommables, this.plats).then((menus) => {
-            this.menus = menus;
-            console.log(this.menus);    
+            this.menus = menus;   
           })
       })
     })
@@ -69,9 +67,39 @@ export class AppMenuComponent implements OnInit, AfterViewInit {
 
   addMenu():void{
     const dialogRef = this.dialog.open(AddMenuComponent, {
-      height: `${window.innerHeight/2}px`,
-      width: `${window.innerWidth - window.innerWidth / 5}px`
+      height: `${window.innerHeight - window.innerWidth / 5}px`,
+      width: `${window.innerWidth - window.innerWidth / 10}px`,
+      data:{
+        ingredients: this.ingredients,
+        consommables:this.consommables,
+        plats:this.plats,
+        menu:null
+      }
     });
+  }
+
+  modifyMenu(menu:Cmenu):void{
+    const dialogRef = this.dialog.open(AddMenuComponent, {
+      height: `${window.innerHeight - window.innerWidth / 5}px`,
+      width: `${window.innerWidth - window.innerWidth / 10}px`,
+      data:{
+        ingredients: this.ingredients,
+        consommables:this.consommables,
+        plats:this.plats,
+        menu:menu
+      }
+    });
+  }
+
+  seeMenu(menu:Cmenu):void{
+    const dialogRef = this.dialog.open(DisplayMenuComponent, {
+      height: `${window.innerHeight - window.innerWidth / 5}px`,
+      width: `${window.innerWidth - window.innerWidth / 10}px`
+    })
+  }
+
+  suppressMenu(menu:Cmenu):void{
+      
   }
 
 }

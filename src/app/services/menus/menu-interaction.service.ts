@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { child, Database, get, getDatabase, ref } from 'firebase/database';
+import { child, Database, get, getDatabase, ref, update } from 'firebase/database';
 import { Cetape, Etape } from 'src/app/interfaces/etape';
 import { Cconsommable, CIngredient } from 'src/app/interfaces/ingredient';
 import { Cmenu, TMPmenu } from 'src/app/interfaces/menu';
@@ -122,4 +122,17 @@ export class MenuInteractionService {
     return this.menus
   }
 
+  async setMenu(prop:string,restaurant:string,menu:Cmenu){
+    const ref_db = ref(this.db, `menu_${prop}_${restaurant}/${prop}/${restaurant}/`);
+    if((menu.nom !== null) && (menu.nom !== undefined) && (menu.nom !== "")){
+      await update(ref_db, {
+        [menu.nom.split(' ').join('_')]: {
+          price: menu.prix,
+          ingredients:menu.ingredients,
+          consommables:menu.consommables,
+          plats:menu.plats,
+        }
+      })
+    }
+  }
 }

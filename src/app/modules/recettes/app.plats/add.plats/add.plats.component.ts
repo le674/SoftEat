@@ -77,7 +77,6 @@ export class AddPlatsComponent implements OnInit {
     this.full_lst_conso = this.data.full_consommables;
     this.full_lst_ings = this.data.full_ingredients;
     this.full_lst_prepa = this.data.full_preparations;
-    console.log('add', this.full_lst_prepa);
     
     if((this.data.plat !== null) && (this.data.plat !== undefined)){
       if((this.data.plat.nom !== null) && (this.data.plat.nom !== undefined)){
