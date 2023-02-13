@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Cconsommable, CIngredient, Consommable, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cmenu } from 'src/app/interfaces/menu';
 import { Cplat } from 'src/app/interfaces/plat';
@@ -43,7 +44,7 @@ export class AddMenuComponent implements OnInit {
     consommables: Array<Consommable>,
     plats: Array<Cplat>,
     menu: Cmenu
-    }, private menu_service:MenuInteractionService) {
+    }, private menu_service:MenuInteractionService, private _snackBar:MatSnackBar) {
       this.unity_conso = [];
       this.unity_ing = [];
       this.plats = this.data.plats;
@@ -133,7 +134,11 @@ export class AddMenuComponent implements OnInit {
       menu.ingredients = _ing;
       menu.consommables = _conso;
       menu.plats = _plats;
-      this.menu_service.setMenu(this.data.prop, this.data.restaurant, menu);
+      this.menu_service.setMenu(this.data.prop, this.data.restaurant, menu).catch(() => {
+        this._snackBar.open("le menu n'a pas été ajouté", "fermer");
+      }).finally(() => {
+        this._snackBar.open("le menu vient d'être ajouté", "fermer");
+      });
 
     }
   }

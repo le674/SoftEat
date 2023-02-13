@@ -124,11 +124,21 @@ export class MenuInteractionService {
 
   async setMenu(prop:string,restaurant:string,menu:Cmenu){
     const ref_db = ref(this.db, `menu_${prop}_${restaurant}/${prop}/${restaurant}/`);
-    if((menu.nom !== null) && (menu.nom !== undefined) && (menu.nom !== "")){
+    const name = menu.nom;
+    console.log(name);
+    console.log(menu);
+    if((name !== null) && (name!== undefined) && (name !== "")){
       await update(ref_db, {
         [menu.nom.split(' ').join('_')]: {
           price: menu.prix,
-          ingredients:menu.ingredients,
+          ingredients:menu.ingredients.map((ingredient) => { return {name: ingredient.nom,
+             cost:ingredient.cost,
+             taux_tva:ingredient.taux_tva,
+             quantity:ingredient.quantity,
+             quantity_unity:ingredient.quantity_unity,
+             unity:ingredient.unity,
+             vrac:ingredient.vrac
+          }}),
           consommables:menu.consommables,
           plats:menu.plats,
         }

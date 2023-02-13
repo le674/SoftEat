@@ -70,6 +70,8 @@ export class AppMenuComponent implements OnInit, AfterViewInit {
       height: `${window.innerHeight - window.innerWidth / 5}px`,
       width: `${window.innerWidth - window.innerWidth / 10}px`,
       data:{
+        prop: this.prop,
+        restaurant: this.restaurant,
         ingredients: this.ingredients,
         consommables:this.consommables,
         plats:this.plats,
@@ -83,6 +85,8 @@ export class AppMenuComponent implements OnInit, AfterViewInit {
       height: `${window.innerHeight - window.innerWidth / 5}px`,
       width: `${window.innerWidth - window.innerWidth / 10}px`,
       data:{
+        prop: this.prop,
+        restaurant: this.restaurant,
         ingredients: this.ingredients,
         consommables:this.consommables,
         plats:this.plats,
