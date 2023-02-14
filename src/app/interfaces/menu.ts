@@ -1,5 +1,5 @@
 import { Etape } from "./etape";
-import { Consommable, Ingredient } from "./ingredient";
+import { Consommable, TIngredientBase } from "./ingredient";
 import { Plat } from "./plat";
 
 export interface Menu{
@@ -8,8 +8,9 @@ export interface Menu{
     "nom":string;
     "taux_tva":number;
     "prix":number;
+    "prix_ttc":number;
     "consommables":Array<Consommable>;
-    "ingredients":Array<Ingredient>;
+    "ingredients":Array<TIngredientBase>;
     "etapes":Array<Etape>;
     "plats":Array<Plat>;
 
@@ -18,10 +19,12 @@ export interface Menu{
     setNom(nom:string):void;
     setPrix(prix:number):void;
     getPrix():number;
+    setPrixTtc(prix:number):void;
+    getPrixTtc():number;
     setTauxTva(tva:number):void;
     getTauxTva():number;
-    setIngredients(ingredients:Array<Ingredient>):void;
-    getIngredients():Array<Ingredient>;
+    setIngredients(ingredients:Array<TIngredientBase>):void;
+    getIngredients():Array<TIngredientBase>;
     setConsommbale(consommables:Array<Consommable>):void;
     getConsommbale():Array<Consommable>;
     getEtapes():Array<Etape>;
@@ -34,8 +37,9 @@ export class Cmenu implements Menu{
     "nom":string;
     "taux_tva": number;
     "prix": number;
+    "prix_ttc":number;
     "consommables": Consommable[];
-    "ingredients": Ingredient[];
+    "ingredients": TIngredientBase[];
     "etapes": Etape[];
     "plats": Plat[];
     
@@ -57,16 +61,22 @@ export class Cmenu implements Menu{
      getPrix(): number {
         return this.prix;
      }
+     setPrixTtc(prix: number): void {
+        this.prix_ttc = prix;
+    }
+     getPrixTtc(): number {
+       return this.prix_ttc;
+    }
      setTauxTva(tva: number): void {
         this.taux_tva = tva;
      }
      getTauxTva(): number {
          return this.taux_tva;
      }
-     setIngredients(ingredients: Ingredient[]): void {
+     setIngredients(ingredients: TIngredientBase[]): void {
         this.ingredients = ingredients
     }
-    getIngredients(): Ingredient[] {
+    getIngredients(): TIngredientBase[] {
         return this.ingredients
     }
     setPlats(plats: Plat[]): void {

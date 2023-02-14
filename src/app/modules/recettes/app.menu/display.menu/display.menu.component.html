@@ -1,1 +1,59 @@
-<p>display.menu works!</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affihcage du menu</title>
+</head>
+<body>
+    <div class="container text-left">
+        <div class="row">
+          <div class="col"></div>
+          <div class="col-4"> <h1>{{menu.nom}}</h1></div>
+          <div class="col"></div>
+        </div>
+      </div>
+    <div class="border section-princ">
+        <div class="row">
+            <div class="col">
+                <p><span class="indication">Prix HT : </span>{{menu.prix}}</p>
+            </div>
+            <div class="col-4">
+                <p> <span class="indication">Taux de tva : </span>{{taux_tva}}</p>
+            </div>
+            <div class="col">
+                <p> <span class="indication">Prix TTC : </span>{{prix_ttc}}</p>
+            </div>
+          </div>
+    </div>
+    <div class="container text-center">
+        <div class="row">
+          <div class="col"></div>
+          <div class="col">
+            <mat-list role="list">
+                <mat-list-item class="h2" role="listitem">Entrée</mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item *ngFor="let entree of entrees"  role="listitem">{{entree}}</mat-list-item>
+            </mat-list>
+            <mat-list role="list">
+                <mat-list-item class="h2" role="listitem">Plats</mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item *ngFor="let plat of plats"  role="listitem">{{plat}}</mat-list-item>
+            </mat-list>
+            <mat-list role="list">
+                <mat-list-item class="h2" role="listitem">Desserts</mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item *ngFor="let dessert of desserts"  role="listitem">{{dessert}}</mat-list-item>
+            </mat-list>
+            <mat-list role="list">
+                <mat-list-item class="h2" role="listitem">Autres</mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item *ngFor="let autre of autres"  role="listitem">{{autre}}</mat-list-item>
+            </mat-list>
+          </div>
+          <div class="col"></div>
+        </div>
+      </div>
+</body>
+</html>

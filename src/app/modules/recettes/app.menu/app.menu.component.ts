@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
 import { Cconsommable, CIngredient, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cmenu } from 'src/app/interfaces/menu';
@@ -23,13 +24,13 @@ export class AppMenuComponent implements OnInit, AfterViewInit {
   private prop:string;
   private restaurant:string;
   private router: Router;
-  private ingredients: Array<CIngredient>
+  private ingredients: Array<TIngredientBase>
   private consommables: Array<Cconsommable>
   private plats: Array<Cplat>;
 
   constructor(private menu_service:MenuInteractionService,
     router: Router,  public dialog: MatDialog, private ingredient_service: IngredientsInteractionService,
-    private conso_service: ConsommableInteractionService, private plat_service: PlatsInteractionService) {
+    private conso_service: ConsommableInteractionService, private plat_service: PlatsInteractionService, private _snackBar:MatSnackBar) {
     this.menus = [];  
     this.ingredients = [];
     this.consommables = [];
@@ -45,7 +46,9 @@ export class AppMenuComponent implements OnInit, AfterViewInit {
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];
     this.ingredient_service.getIngredientsBrFromRestaurantsPROM(this.prop, this.restaurant).then((ingredients) => {
-      this.ingredients = ingredients;
+      this.ingredients = ingredients.map((ingredient) => {
+        return ingredient.convertToBase()
+      });
     }).then(() => {
       this.conso_service.getConsommablesFromRestaurantsFiltreIds(this.prop, this.restaurant).then((consos) => {
         this.consommables = consos;
@@ -66,6 +69,7 @@ export class AppMenuComponent implements OnInit, AfterViewInit {
   }
 
   addMenu():void{
+
     const dialogRef = this.dialog.open(AddMenuComponent, {
       height: `${window.innerHeight - window.innerWidth / 5}px`,
       width: `${window.innerWidth - window.innerWidth / 10}px`,
@@ -81,8 +85,9 @@ export class AppMenuComponent implements OnInit, AfterViewInit {
   }
 
   modifyMenu(menu:Cmenu):void{
+    console.log(menu);
     const dialogRef = this.dialog.open(AddMenuComponent, {
-      height: `${window.innerHeight - window.innerWidth / 5}px`,
+      height: `${window.innerHeight - window.innerWidth / 10}px`,
       width: `${window.innerWidth - window.innerWidth / 10}px`,
       data:{
         prop: this.prop,
@@ -97,13 +102,20 @@ export class AppMenuComponent implements OnInit, AfterViewInit {
 
   seeMenu(menu:Cmenu):void{
     const dialogRef = this.dialog.open(DisplayMenuComponent, {
-      height: `${window.innerHeight - window.innerWidth / 5}px`,
-      width: `${window.innerWidth - window.innerWidth / 10}px`
+      height: `${window.innerHeight}px`,
+      width: `800px`,
+      data:{
+        menu:menu
+      }
     })
   }
 
   suppressMenu(menu:Cmenu):void{
-      
+      this.menu_service.deleteMenu(this.prop, this.restaurant, menu).catch(() => {
+        this._snackBar.open("la suppression du menu n'a pas pu être réalisée", "fermer");
+      }).finally(() => {
+        this._snackBar.open(`le menu ${menu.nom} vient d'être supprimé`, "fermer")
+      });
   }
 
 }

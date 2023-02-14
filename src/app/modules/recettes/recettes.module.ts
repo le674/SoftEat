@@ -24,6 +24,7 @@ import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calc
 import { AddPlatsComponent } from './app.plats/add.plats/add.plats.component';
 import { DisplayPlatsComponent } from './app.plats/display.plats/display.plats.component';
 import { DisplayMenuComponent } from './app.menu/display.menu/display.menu.component';
+import { MatListModule } from '@angular/material/list';
 
 
 
@@ -49,6 +50,7 @@ import { DisplayMenuComponent } from './app.menu/display.menu/display.menu.compo
     MatOptionModule,
     MatSelectModule,
     MatTooltipModule,
+    MatListModule,
     MatGridListModule,
     ReactiveFormsModule,
     MatRadioModule,

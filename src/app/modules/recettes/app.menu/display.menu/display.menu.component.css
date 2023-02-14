@@ -1,0 +1,45 @@
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.section {
+    margin-top: 20px;
+}
+p{
+    padding-top: 16px;
+    margin-left: 10px;
+}
+.indication{
+    color: rgb(125, 181, 46);
+}
+
+h1 {
+    font-size: xx-large;
+    color: rgb(125, 181, 46);
+    margin-bottom: 35px;
+}
+.h2 {
+    font-size: larger;
+    color: rgb(125, 181, 46);
+}
+
+.mat-grid-tile-content{
+    justify-content: flex-start;
+}
+
+table{
+    min-width: auto;
+}
+.name{
+    max-width: 100px;
+}
+.comm-cells{
+    min-width: 150px;
+}
+.other-cells{
+    min-width: 100px;
+}
+table{
+    width: 100%;
+}

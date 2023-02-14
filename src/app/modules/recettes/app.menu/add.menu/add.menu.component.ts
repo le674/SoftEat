@@ -7,6 +7,7 @@ import { Cconsommable, CIngredient, Consommable, TIngredientBase } from 'src/app
 import { Cmenu } from 'src/app/interfaces/menu';
 import { Cplat } from 'src/app/interfaces/plat';
 import { MenuInteractionService } from 'src/app/services/menus/menu-interaction.service';
+import { MenuCalculMenuService } from 'src/app/services/menus/menu.calcul/menu.calcul.menu.service';
 
 @Component({
   selector: 'app-add.menu',
@@ -15,7 +16,7 @@ import { MenuInteractionService } from 'src/app/services/menus/menu-interaction.
 })
 export class AddMenuComponent implements OnInit {
   public plats: Array<Cplat>;
-  public ingredients: Array<CIngredient>;
+  public ingredients: Array<TIngredientBase>;
   public consommables: Array<Cconsommable>;
   public unity_conso:Array<string>;
   public unity_ing:Array<string>;
@@ -40,14 +41,15 @@ export class AddMenuComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<AddMenuComponent>, private formBuilder: FormBuilder, @Inject(MAT_DIALOG_DATA) public data:{
     prop:string,
     restaurant:string,
-    ingredients: Array<CIngredient>,
+    ingredients: Array<TIngredientBase>,
     consommables: Array<Consommable>,
     plats: Array<Cplat>,
     menu: Cmenu
-    }, private menu_service:MenuInteractionService, private _snackBar:MatSnackBar) {
+    }, private menu_service:MenuInteractionService, private _snackBar:MatSnackBar, private menu_calcul:MenuCalculMenuService) {
       this.unity_conso = [];
       this.unity_ing = [];
       this.plats = this.data.plats;
+      
       this.ingredients = this.data.ingredients;
       this.consommables = this.data.consommables;
      }
@@ -60,10 +62,22 @@ export class AddMenuComponent implements OnInit {
           this.add_menu_section.controls.price.setValue(this.data.menu.prix);
         }
         if((this.data.menu.ingredients !== null) && (this.data.menu.ingredients !== undefined)){
+
           this.data.menu.ingredients.forEach((ingredient) => {
+            let quantity = ingredient.quantity;
+            let _ing = this.data.ingredients.find((ing) =>  ing.name === ingredient.name);
+            if(!(ingredient.vrac === 'oui')){
+              if(_ing === undefined){
+                console.log("l'ingrédient n'est pas définit");
+                
+              }
+              else{
+                quantity = ingredient.quantity*ingredient.quantity_unity;
+              }
+            }
             const form_ingredient = new FormGroup({
-              name: new FormControl(ingredient.nom),
-              quantity: new FormControl(ingredient.quantity),
+              name: new FormControl(ingredient.name),
+              quantity: new FormControl(quantity),
               unity: new FormControl(ingredient.unity)
             })
             this.getBaseIng().push(form_ingredient);
@@ -109,12 +123,12 @@ export class AddMenuComponent implements OnInit {
         menu.prix = price;
       }
       let _ing = this.data.ingredients.filter((ingredient) =>  ingredients.map((ing) => ing.name)
-                                          .includes(ingredient.nom))
+                                          .includes(ingredient.name))
       let _conso = this.data.consommables.filter((consommable) => consommables.map((conso) => conso.name)
                                              .includes(consommable.name))
       let _plats = this.data.plats.filter((plat) => plats.includes(plat.nom))
       _ing.forEach((full_ingredient) => {
-        const _ingredient = ingredients.find((ingredient) => full_ingredient.nom === ingredient.name);
+        const _ingredient = ingredients.find((ingredient) => full_ingredient.name === ingredient.name);
         if(_ingredient !== undefined){
             if(_ingredient.quantity !== null){
               full_ingredient.quantity = _ingredient.quantity
@@ -134,6 +148,8 @@ export class AddMenuComponent implements OnInit {
       menu.ingredients = _ing;
       menu.consommables = _conso;
       menu.plats = _plats;
+      menu.taux_tva = this.menu_calcul.getTauxTvaVentilee(menu);
+      menu.prix_ttc = this.menu_calcul.getPriceTTC(menu.prix,menu.taux_tva);
       this.menu_service.setMenu(this.data.prop, this.data.restaurant, menu).catch(() => {
         this._snackBar.open("le menu n'a pas été ajouté", "fermer");
       }).finally(() => {
@@ -146,7 +162,7 @@ export class AddMenuComponent implements OnInit {
   getUnity(new_selection:MatSelectChange, category:string, index:number){
 
     if(category === 'ing'){
-      const ingredients = this.ingredients.filter((ingredient) => ingredient.nom === (new_selection.value as string));
+      const ingredients = this.ingredients.filter((ingredient) => ingredient.name === (new_selection.value as string));
       if(index > this.unity_ing.length){
         if(ingredients.length > 0) this.unity_ing.push(ingredients[0].unity);
       }
