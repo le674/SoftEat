@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { child, get, getDatabase, push, ref, set, update } from 'firebase/database';
+import { child, connectDatabaseEmulator, get, getDatabase, push, ref, set, update } from 'firebase/database';
 import { User } from '../interfaces/user';
 import { FirebaseApp } from "@angular/fire/app";
 import { Proprietaire } from '../interfaces/proprietaire';
@@ -24,6 +24,10 @@ export class UserInteractionService{
       employee : []
     }
     this.db = getDatabase(ofApp);
+    if (location.hostname === "localhost") {
+      // Point to the RTDB emulator running on localhost.
+      connectDatabaseEmulator(this.db, "localhost", 9000);
+    } 
     this.user = new User();
     this.count = 0;
     this.proprietary = "";

@@ -1,7 +1,7 @@
 import {ElementRef, Injectable, ViewChild} from '@angular/core';
 import {FirebaseApp} from "@angular/fire/app";
 import {getAuth} from 'firebase/auth';
-import {child, get, getDatabase, ref, set, update} from 'firebase/database';
+import {child, connectDatabaseEmulator, get, getDatabase, ref, set, update} from 'firebase/database';
 import {Restaurant, UserRestaurant} from 'src/app/interfaces/restaurant';
 
 
@@ -29,6 +29,10 @@ export class InteractionRestaurantService{
       this.restaurant = [];
       const auth = getAuth(ofApp);
       this.db = getDatabase(ofApp);
+      if (location.hostname === "localhost") {
+        // Point to the RTDB emulator running on localhost.
+        connectDatabaseEmulator(this.db, "localhost", 9000);
+      } 
   }
 
   //préférer utiliser cette requete si on veut récupérer les deux information car elle fait un seil appel au 

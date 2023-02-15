@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { child, Database, get, getDatabase, ref, remove, update } from 'firebase/database';
+import { child, connectDatabaseEmulator, Database, get, getDatabase, ref, remove, update } from 'firebase/database';
 import { Cetape, Etape } from 'src/app/interfaces/etape';
 import { Cconsommable, CIngredient, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cmenu, TMPmenu } from 'src/app/interfaces/menu';
@@ -19,6 +19,10 @@ export class MenuInteractionService {
   constructor(private ofApp: FirebaseApp, private ingredient_service: IngredientsInteractionService,
     private conso_service: ConsommableInteractionService, private plat_service: PlatsInteractionService) {
     this.db = getDatabase(ofApp);
+    if (location.hostname === "localhost") {
+      // Point to the RTDB emulator running on localhost.
+      connectDatabaseEmulator(this.db, "localhost", 9000);
+    } 
     this.menus = [];
   }
 

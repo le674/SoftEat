@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { child, Database, DatabaseReference, get, getDatabase, ref, remove, update } from 'firebase/database';
+import { child, connectDatabaseEmulator, Database, DatabaseReference, get, getDatabase, ref, remove, update } from 'firebase/database';
 import { Cconsommable, TConsoBase } from 'src/app/interfaces/ingredient';
 
 @Injectable({
@@ -13,6 +13,10 @@ export class ConsommableInteractionService {
 
   constructor(private ofApp: FirebaseApp){
     this.db = getDatabase(ofApp);
+    if (location.hostname === "localhost") {
+      // Point to the RTDB emulator running on localhost.
+      connectDatabaseEmulator(this.db, "localhost", 9000);
+    } 
     this.consommable = [];
   }
 
