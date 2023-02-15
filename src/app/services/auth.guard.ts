@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { Observable } from 'rxjs';
+import { FIREBASE_AUTH_EMULATOR_HOST } from 'src/environments/variables';
 import { AuthentificationService } from './authentification.service';
 const auth = getAuth();
 if (location.hostname === "localhost") {
     // Point to the RTDB emulator running on localhost.
-    connectAuthEmulator(auth, "http://127.0.0.1:9099");
+    connectAuthEmulator(auth, FIREBASE_AUTH_EMULATOR_HOST);
 } 
 
 @Injectable({
