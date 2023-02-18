@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import { child, Database, DatabaseReference, get, getDatabase, ref, update } from 'firebase/database';
-import { FIREBASE_DATABASE_EMULATOR_HOST } from 'src/environments/variables';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +12,8 @@ export class RestaurantService {
     this.salary = 0;
     this.db = getDatabase(ofApp);
     if (location.hostname === "localhost") {
-      connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
+      // Point to the RTDB emulator running on localhost.
+      connectDatabaseEmulator(this.db, "localhost", 9000);
     } 
   }
 

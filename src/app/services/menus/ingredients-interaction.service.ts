@@ -3,11 +3,10 @@ import { Injectable } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
 import { Unsubscribe } from 'firebase/auth';
 import { child, connectDatabaseEmulator, Database, DatabaseReference, get, getDatabase, onValue, ref, remove, update } from 'firebase/database';
-import { collection, connectFirestoreEmulator, Firestore, getDocs, getFirestore } from "firebase/firestore";
+import { collection, Firestore, getDocs, getFirestore } from "firebase/firestore";
 import { Subject } from 'rxjs';
 import { CIngredient, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cpreparation } from 'src/app/interfaces/preparation';
-import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_FIRESTORE_EMULATOR_HOST } from 'src/environments/variables';
 import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.service';
 
 
@@ -28,12 +27,11 @@ export class IngredientsInteractionService {
 
   constructor(private ofApp: FirebaseApp, private service: CalculService) {
     this.db = getDatabase(ofApp);
-    this.firestore = getFirestore(ofApp);
     if (location.hostname === "localhost") {
       // Point to the RTDB emulator running on localhost.
-      connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
-      connectFirestoreEmulator(this.firestore, FIREBASE_FIRESTORE_EMULATOR_HOST.host, FIREBASE_FIRESTORE_EMULATOR_HOST.port);
+      connectDatabaseEmulator(this.db, "localhost", 9000);
     } 
+    this.firestore = getFirestore(ofApp);
     this.ingredients = [];
     this.preparation = [];
     this.ingredients_minimal = [];

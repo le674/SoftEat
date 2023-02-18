@@ -4,7 +4,6 @@ import { child, Database, DatabaseReference, get, getDatabase, ref, update } fro
 import { Cetape } from 'src/app/interfaces/etape';
 import { TConsoBase, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { AfterPreparation, Cpreparation } from 'src/app/interfaces/preparation';
-import { FIREBASE_DATABASE_EMULATOR_HOST } from 'src/environments/variables';
 import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.service';
 
 @Injectable({
@@ -18,7 +17,7 @@ export class PreparationInteractionService {
     this.db = getDatabase(ofApp);
     if (location.hostname === "localhost") {
       // Point to the RTDB emulator running on localhost.
-      connectDatabaseEmulator(this.db,FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
+      connectDatabaseEmulator(this.db, "localhost", 9000);
     } 
   }
 

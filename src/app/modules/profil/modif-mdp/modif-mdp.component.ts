@@ -5,7 +5,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import {connectAuthEmulator, updatePassword } from 'firebase/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FIREBASE_AUTH_EMULATOR_HOST } from 'src/environments/variables';
 
 @Component({
   selector: 'app-modif-mdp',
@@ -25,7 +24,7 @@ export class ModifMdpComponent implements OnInit {
     this.auth = getAuth(this.ofApp);
     if (location.hostname === "localhost") {
       // Point to the RTDB emulator running on localhost.
-      connectAuthEmulator(this.auth, FIREBASE_AUTH_EMULATOR_HOST);
+      connectAuthEmulator(this.auth, "http://127.0.0.1:9099");
   } 
   
   }
