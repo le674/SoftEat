@@ -30,6 +30,7 @@ export class IngredientsInteractionService {
     this.db = getDatabase(ofApp);
     this.firestore = getFirestore(ofApp);
     if (location.hostname === "localhost") {
+      // Point to the RTDB emulator running on localhost.
       connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
       connectFirestoreEmulator(this.firestore, FIREBASE_FIRESTORE_EMULATOR_HOST.host, FIREBASE_FIRESTORE_EMULATOR_HOST.port);
     } 
