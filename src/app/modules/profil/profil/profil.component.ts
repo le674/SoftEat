@@ -5,7 +5,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
-import { connectAuthEmulator, getAuth, onAuthStateChanged, updateCurrentUser } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, updateCurrentUser } from 'firebase/auth';
 import { User } from 'src/app/interfaces/user';
 import { MailServicesService } from 'src/app/services/mail-services.service';
 import { UserInteractionService } from 'src/app/services/user-interaction.service';
@@ -40,11 +40,6 @@ export class ProfilComponent implements OnInit {
     this.restaurants = "";
     this.mobile = false;
     this.auth = getAuth(this.ofApp);
-    if (location.hostname === "localhost") {
-      // Point to the RTDB emulator running on localhost.
-      connectAuthEmulator(this.auth, "http://127.0.0.1:9099");
-    } 
-  
     // Attention l'url doit contenir l'information concernant le restaurant et le proprietaire
     this.url = this.router.parseUrl(this.router.url)
   }

@@ -1,7 +1,7 @@
 
 import { Injectable, NgZone, Optional } from '@angular/core';
 import { Router } from '@angular/router';
-import { Auth, browserPopupRedirectResolver, connectAuthEmulator, createUserWithEmailAndPassword , getAuth, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile, User } from 'firebase/auth';
+import { Auth, browserPopupRedirectResolver, createUserWithEmailAndPassword , getAuth, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile, User } from 'firebase/auth';
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { authState, user } from '@angular/fire/auth';
 
@@ -27,11 +27,6 @@ export class AuthentificationService {
   userData: any; // Save logged in user data
   private connecter:boolean;
   constructor(public router: Router){
-    if (location.hostname === "localhost") {
-      // Point to the RTDB emulator running on localhost.
-      connectAuthEmulator(this.auth, "http://127.0.0.1:9099");
-    } 
-  
     this.connecter=false;
     onAuthStateChanged(this.auth, (user) => {
       if (user) {

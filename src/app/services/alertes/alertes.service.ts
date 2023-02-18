@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { child, connectDatabaseEmulator, Database, get, getDatabase, onValue, ref,set, update } from 'firebase/database';
+import { child, Database, get, getDatabase, onValue, ref,set, update } from 'firebase/database';
 import { CAlerte } from 'src/app/interfaces/alerte';
 import { Subject, BehaviorSubject, Subscription } from 'rxjs';
 import { Unsubscribe } from 'firebase/auth';
@@ -20,10 +20,6 @@ export class AlertesService {
 
   constructor(private ofApp: FirebaseApp) {
     this.db = getDatabase(ofApp);
-    if (location.hostname === "localhost") {
-      // Point to the RTDB emulator running on localhost.
-      connectDatabaseEmulator(this.db, "localhost", 9000);
-    } 
     this.alertes = [];
     this.num_package = 0;
     this.size_package = 0;

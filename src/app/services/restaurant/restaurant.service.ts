@@ -11,10 +11,6 @@ export class RestaurantService {
   constructor(private ofApp: FirebaseApp) { 
     this.salary = 0;
     this.db = getDatabase(ofApp);
-    if (location.hostname === "localhost") {
-      // Point to the RTDB emulator running on localhost.
-      connectDatabaseEmulator(this.db, "localhost", 9000);
-    } 
   }
 
   async getSalaryCuisiniee(prop:string, restaurant:string){
@@ -38,7 +34,3 @@ export class RestaurantService {
     });
   }
 }
-function connectDatabaseEmulator(db: Database, arg1: string, arg2: number) {
-  throw new Error('Function not implemented.');
-}
-

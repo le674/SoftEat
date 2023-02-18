@@ -15,10 +15,6 @@ export class PreparationInteractionService {
   constructor(private ofApp: FirebaseApp, private calcul_service:CalculService) {
     this.preparations = [];
     this.db = getDatabase(ofApp);
-    if (location.hostname === "localhost") {
-      // Point to the RTDB emulator running on localhost.
-      connectDatabaseEmulator(this.db, "localhost", 9000);
-    } 
   }
 
   //on ajoute la préparation pour le stock et pour la fiche technique
@@ -66,7 +62,3 @@ export class PreparationInteractionService {
     return this.preparations;
   }
 }
-function connectDatabaseEmulator(db: Database, arg1: string, arg2: number) {
-  throw new Error('Function not implemented.');
-}
-

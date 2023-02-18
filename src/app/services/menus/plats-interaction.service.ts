@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { child, connectDatabaseEmulator, Database, get, getDatabase, ref, update } from 'firebase/database';
+import { child, Database, get, getDatabase, ref, update } from 'firebase/database';
 import { Cetape } from 'src/app/interfaces/etape';
 import { Cconsommable,TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cplat, Plat } from 'src/app/interfaces/plat';
@@ -21,10 +21,6 @@ export class PlatsInteractionService {
   constructor(private ofApp: FirebaseApp, private ingredient_service: IngredientsInteractionService) {
     this.plats = [];
     this.db = getDatabase(ofApp);
-    if (location.hostname === "localhost") {
-      // Point to the RTDB emulator running on localhost.
-      connectDatabaseEmulator(this.db, "localhost", 9000);
-    } 
     this.consommables = [];
     this.ingredients = [];
     this.etapes = [];
