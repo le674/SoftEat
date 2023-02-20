@@ -157,6 +157,8 @@ export class CIngredient implements Ingredient {
 
 
     async getInfoDico(): Promise<CIngredient> {
+        
+        console.log('test');
         const Pingredient = await this.db_service.getInfoIngFromDico(this.nom);
         this.categorie_dico = Pingredient.categorie_dico;
         this.conditionnement = Pingredient.conditionnement;

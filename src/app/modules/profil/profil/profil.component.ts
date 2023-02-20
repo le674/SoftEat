@@ -9,7 +9,7 @@ import { connectAuthEmulator, getAuth, onAuthStateChanged, updateCurrentUser } f
 import { User } from 'src/app/interfaces/user';
 import { MailServicesService } from 'src/app/services/mail-services.service';
 import { UserInteractionService } from 'src/app/services/user-interaction.service';
-import { FIREBASE_AUTH_EMULATOR_HOST } from 'src/environments/variables';
+import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
 import { ModifMailComponent } from '../modif-mail/modif-mail.component';
 import { ModifMdpComponent } from '../modif-mdp/modif-mdp.component';
 import { ModifNumberComponent } from '../modif-number/modif-number.component';
@@ -41,7 +41,7 @@ export class ProfilComponent implements OnInit {
     this.restaurants = "";
     this.mobile = false;
     this.auth = getAuth(this.ofApp);
-    if (location.hostname === "localhost") {
+    if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
       // Point to the RTDB emulator running on localhost.
       connectAuthEmulator(this.auth, FIREBASE_AUTH_EMULATOR_HOST);
     } 

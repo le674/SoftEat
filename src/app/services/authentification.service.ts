@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Auth, browserPopupRedirectResolver, connectAuthEmulator, createUserWithEmailAndPassword , getAuth, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile, User } from 'firebase/auth';
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { authState, user } from '@angular/fire/auth';
-import { FIREBASE_AUTH_EMULATOR_HOST } from 'src/environments/variables';
+import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
 
 
 
@@ -28,7 +28,7 @@ export class AuthentificationService {
   userData: any; // Save logged in user data
   private connecter:boolean;
   constructor(public router: Router){
-    if (location.hostname === "localhost") {
+    if((location.hostname === "localhost") && (!FIREBASE_PROD)) {
       // Point to the RTDB emulator running on localhost.
       connectAuthEmulator(this.auth, FIREBASE_AUTH_EMULATOR_HOST);
     } 

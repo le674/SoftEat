@@ -5,7 +5,7 @@ import { Cetape, Etape } from 'src/app/interfaces/etape';
 import { Cconsommable, CIngredient, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cmenu, TMPmenu } from 'src/app/interfaces/menu';
 import { Cplat } from 'src/app/interfaces/plat';
-import { FIREBASE_DATABASE_EMULATOR_HOST } from 'src/environments/variables';
+import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
 import { ConsommableInteractionService } from './consommable-interaction.service';
 import { IngredientsInteractionService } from './ingredients-interaction.service';
 import { PlatsInteractionService } from './plats-interaction.service';
@@ -20,7 +20,7 @@ export class MenuInteractionService {
   constructor(private ofApp: FirebaseApp, private ingredient_service: IngredientsInteractionService,
     private conso_service: ConsommableInteractionService, private plat_service: PlatsInteractionService) {
     this.db = getDatabase(ofApp);
-    if (location.hostname === "localhost") {
+    if((location.hostname === "localhost") && (!FIREBASE_PROD)) {
       // Point to the RTDB emulator running on localhost.
       connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
     } 

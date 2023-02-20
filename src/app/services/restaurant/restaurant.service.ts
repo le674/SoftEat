@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { child, Database, DatabaseReference, get, getDatabase, ref, update } from 'firebase/database';
-import { FIREBASE_DATABASE_EMULATOR_HOST } from 'src/environments/variables';
+import { child, connectDatabaseEmulator, Database, DatabaseReference, get, getDatabase, ref, update } from 'firebase/database';
+import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class RestaurantService {
   constructor(private ofApp: FirebaseApp) { 
     this.salary = 0;
     this.db = getDatabase(ofApp);
-    if (location.hostname === "localhost") {
+    if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
       connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
     } 
   }
@@ -38,7 +38,5 @@ export class RestaurantService {
     });
   }
 }
-function connectDatabaseEmulator(db: Database, arg1: string, arg2: number) {
-  throw new Error('Function not implemented.');
-}
+
 

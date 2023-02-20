@@ -7,7 +7,6 @@ import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/auth';
 import {Subscription } from 'rxjs';
 import { CIngredient } from 'src/app/interfaces/ingredient';
-import { Cpreparation } from 'src/app/interfaces/preparation';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.component';
@@ -63,7 +62,6 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
   private prop: string;
   private restaurant: string;
   private req_ingredients_brt!: Unsubscribe;
-  private req_ingredients_prep!: Unsubscribe;
   private req_merge_obs!: Subscription
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -79,7 +77,6 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     this.ingredients_displayed_prep = [];
     this.dataSource = new MatTableDataSource(this.ingredients_displayed_br);
     this.url = this.router.parseUrl(this.router.url);
-    /* this.ingredient_table_prep = []; */
   }
 
   ngAfterViewInit(): void {
@@ -100,13 +97,10 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     this.req_merge_obs = obs_ing.subscribe((ingBR) => {
       let val_bouch: any = "veuillez entre les ingrédients de bases"
       this.ingredients_displayed_br = [];
-      /* this.ingredients_displayed_prep = []; */
       this.dataSource = new MatTableDataSource(this.ingredients_displayed_br);
       this.ingredient_table = ingBR;
       for (let i = 0; i < ingBR.length; i++) {
         // on vérifie si le nombre d'ingrédient présent est inférieur à la marge si c'est le cas on lève une alerte
-        /*  if(ingBR[i].getQuantity() > 0)
-         if(ingBR[i].getQuantity() < ingBR[i].getMarge()) */
         ingBR[i].getInfoDico().then((ingredient: any) => {
           if ((ingBR[i].getTauxTva() === 0) || (ingBR[i].getTauxTva === undefined)) {
             ingredient.getCostTtcFromCat();
@@ -140,61 +134,6 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         })
       }
-      /* if (ingBR.length > 0) {
-        for (let i = 0; i < ingPREP.length; i++) {
-          const nom = (ingPREP[i].nom === null) ? "" : ingPREP[i].nom as string;
-          if ((ingPREP[i].base_ing !== null) && (ingPREP[i].base_ing !== undefined)) {
-            let lst_base_ing = this.ingredient_table
-              .filter((ingredient) => ingPREP[i].base_ing
-                .map((ing) => ing.name)
-                .includes(ingredient.nom))
-            this.calc_service.sortTwoListStringByName(lst_base_ing, ingPREP[i].base_ing);
-            let ings = ingPREP[i].base_ing.filter((ing) => lst_base_ing.map((base) => base.nom).includes(ing.name));
-            ings.map((ing, index: number) => {
-
-              ing.unity = lst_base_ing[index].unity;
-              ing.cost = lst_base_ing[index].cost;
-              ing.quantity_unity = lst_base_ing[index].quantity_unity;
-            })
-
-            if (lst_base_ing.length > 0) {
-              ingPREP[i].cost = lst_base_ing
-                .map((base) => base.cost)
-                .reduce((cost, next_cost) => cost + next_cost);
-              ingPREP[i].cost_ttc = lst_base_ing
-                .map((base) => base.cost_ttc)
-                .reduce((cost, next_cost) => cost + next_cost);
-            }
-
-            ingPREP[i].val_bouch = this.calc_service.getValBouchFromBasIng(lst_base_ing, ingPREP[i]);
-
-            let val_bouch: any = ingPREP[i].val_bouch;
-            if ((ingPREP[i].quantity_bef_prep > 0) && (val_bouch === 0)) {
-              val_bouch = "veuillez entrer les ingrédients de bases"
-            }
-
-          }
-
-          let row_ingredient = {
-            nom: nom.split('_').join('<br>'),
-            categorie_tva: ingPREP[i].categorie_tva.split(' ').join('<br>'),
-            cost: ingPREP[i].cost,
-            cost_ttc: ingPREP[i].cost_ttc,
-            val_bouch: val_bouch,
-            bef_prep: ingPREP[i].quantity_bef_prep,
-            after_prep: ingPREP[i].quantity_after_prep,
-            quantity: ingPREP[i].quantity,
-            quantity_unity: ingPREP[i].quantity_unity,
-            unity: ingPREP[i].unity,
-            cuisinee: 'oui',
-            date_reception: ingPREP[i].date_reception.toLocaleString(),
-            dlc: ingPREP[i].dlc.toLocaleString(),
-            marge: ingPREP[i].marge,
-            vrac: ingPREP[i].vrac
-          };
-          this.ingredients_displayed_prep.push(row_ingredient);
-        }
-      } */
     })
   }
 
@@ -247,13 +186,6 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     ele.nom = ele.nom.split('<br>').join('_')
     ele.categorie_tva = ele.categorie_tva.split('<br>').join(' ')
     let ingredient = new CIngredient(this.calc_service, this.service)
-    /* const base_ings = this.ingredient_table_prep.filter((ingredient) => ingredient.nom === ele.nom) */
-    // TO DO remplacer les window.alert
- /*    if (base_ings.length > 1) window.alert('attention plusieurs ingrésient en base de donnée pour l ingrédient modifié (on prend le premier), contctez SoftEat');
-    if (base_ings.length === 1) {
-      var_base_ing = base_ings[0].base_ing;
-    } */
-
 
     ingredient.nom = ele.nom;
     ingredient.categorie_tva = ele.categorie_tva;

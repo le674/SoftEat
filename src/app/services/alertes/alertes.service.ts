@@ -4,7 +4,7 @@ import { child, connectDatabaseEmulator, Database, get, getDatabase, onValue, re
 import { CAlerte } from 'src/app/interfaces/alerte';
 import { Subject, BehaviorSubject, Subscription } from 'rxjs';
 import { Unsubscribe } from 'firebase/auth';
-import { FIREBASE_DATABASE_EMULATOR_HOST } from 'src/environments/variables';
+import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
 
 
 @Injectable({
@@ -21,7 +21,7 @@ export class AlertesService {
 
   constructor(private ofApp: FirebaseApp) {
     this.db = getDatabase(ofApp);
-    if (location.hostname === "localhost") {
+    if((location.hostname === "localhost") && (!FIREBASE_PROD)) {
       // Point to the RTDB emulator running on localhost.
       connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
     } 

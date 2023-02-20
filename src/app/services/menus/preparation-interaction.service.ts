@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { child, Database, DatabaseReference, get, getDatabase, ref, update } from 'firebase/database';
+import { child, connectDatabaseEmulator, Database, DatabaseReference, get, getDatabase, ref, update } from 'firebase/database';
 import { Cetape } from 'src/app/interfaces/etape';
 import { TConsoBase, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { AfterPreparation, Cpreparation } from 'src/app/interfaces/preparation';
-import { FIREBASE_DATABASE_EMULATOR_HOST } from 'src/environments/variables';
+import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
 import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.service';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class PreparationInteractionService {
   constructor(private ofApp: FirebaseApp, private calcul_service:CalculService) {
     this.preparations = [];
     this.db = getDatabase(ofApp);
-    if (location.hostname === "localhost") {
+    if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
       // Point to the RTDB emulator running on localhost.
       connectDatabaseEmulator(this.db,FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
     } 
@@ -67,7 +67,5 @@ export class PreparationInteractionService {
     return this.preparations;
   }
 }
-function connectDatabaseEmulator(db: Database, arg1: string, arg2: number) {
-  throw new Error('Function not implemented.');
-}
+
 

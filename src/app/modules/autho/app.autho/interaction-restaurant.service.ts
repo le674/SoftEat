@@ -1,9 +1,9 @@
-import {ElementRef, Injectable, ViewChild} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {FirebaseApp} from "@angular/fire/app";
 import {getAuth} from 'firebase/auth';
 import {child, connectDatabaseEmulator, get, getDatabase, ref, set, update} from 'firebase/database';
 import {Restaurant, UserRestaurant} from 'src/app/interfaces/restaurant';
-import { FIREBASE_DATABASE_EMULATOR_HOST } from 'src/environments/variables';
+import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
 
 
 
@@ -30,7 +30,7 @@ export class InteractionRestaurantService{
       this.restaurant = [];
       const auth = getAuth(ofApp);
       this.db = getDatabase(ofApp);
-      if (location.hostname === "localhost") {
+      if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
         // Point to the RTDB emulator running on localhost.
         connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host , FIREBASE_DATABASE_EMULATOR_HOST.port);
       } 
