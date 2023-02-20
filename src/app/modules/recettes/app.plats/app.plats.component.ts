@@ -55,8 +55,6 @@ export class AppPlatsComponent implements OnInit {
     })
     this.prepa_service.getFullPreparations(this.prop, this.restaurant).then((preparations) => {
       this.full_lst_prepa = preparations;
-      console.log('app : ', this.full_lst_prepa);
-      
     })
     
   }

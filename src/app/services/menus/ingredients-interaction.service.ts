@@ -2,7 +2,7 @@ import { ThisReceiver } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
 import { Unsubscribe } from 'firebase/auth';
-import { child, Database, DatabaseReference, get, getDatabase, onValue, ref, remove, update } from 'firebase/database';
+import { child, connectDatabaseEmulator, Database, DatabaseReference, get, getDatabase, onValue, ref, remove, update } from 'firebase/database';
 import { collection, Firestore, getDocs, getFirestore } from "firebase/firestore";
 import { Subject } from 'rxjs';
 import { CIngredient, TIngredientBase } from 'src/app/interfaces/ingredient';
@@ -27,6 +27,10 @@ export class IngredientsInteractionService {
 
   constructor(private ofApp: FirebaseApp, private service: CalculService) {
     this.db = getDatabase(ofApp);
+    if (location.hostname === "localhost") {
+      // Point to the RTDB emulator running on localhost.
+      connectDatabaseEmulator(this.db, "localhost", 9000);
+    } 
     this.firestore = getFirestore(ofApp);
     this.ingredients = [];
     this.preparation = [];

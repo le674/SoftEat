@@ -3,7 +3,7 @@ import { FirebaseApp } from '@angular/fire/app';
 import { Auth, getAuth, updateCurrentUser } from '@angular/fire/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import {updatePassword } from 'firebase/auth';
+import {connectAuthEmulator, updatePassword } from 'firebase/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -22,6 +22,11 @@ export class ModifMdpComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<ModifMdpComponent>, private ofApp: FirebaseApp, private _snackBar: MatSnackBar) {
     this.auth = getAuth(this.ofApp);
+    if (location.hostname === "localhost") {
+      // Point to the RTDB emulator running on localhost.
+      connectAuthEmulator(this.auth, "http://127.0.0.1:9099");
+  } 
+  
   }
 
   ngOnInit(): void {

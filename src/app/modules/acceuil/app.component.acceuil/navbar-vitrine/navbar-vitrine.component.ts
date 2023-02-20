@@ -2,7 +2,7 @@ import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@a
 import { ConnectionComponent } from '../connection/connection.component';
 import { DOCUMENT } from '@angular/common'; 
 import { AuthentificationService } from 'src/app/services/authentification.service';
-import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
+import { connectAuthEmulator, getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { Router } from '@angular/router';
 const firebaseConfig = {
@@ -18,7 +18,14 @@ const firebaseConfig = {
   
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+  const auth = getAuth(app);
+
+  if (location.hostname === "localhost") {
+    // Point to the RTDB emulator running on localhost.
+    connectAuthEmulator(auth, "http://127.0.0.1:9099");
+  } 
+
+
 let user = auth.currentUser;
 let email: string | null = null;
 let displayName: string | null = null;
