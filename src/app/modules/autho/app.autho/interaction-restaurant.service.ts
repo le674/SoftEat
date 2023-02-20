@@ -3,6 +3,7 @@ import {FirebaseApp} from "@angular/fire/app";
 import {getAuth} from 'firebase/auth';
 import {child, connectDatabaseEmulator, get, getDatabase, ref, set, update} from 'firebase/database';
 import {Restaurant, UserRestaurant} from 'src/app/interfaces/restaurant';
+import { FIREBASE_DATABASE_EMULATOR_HOST } from 'src/environments/variables';
 
 
 
@@ -31,7 +32,7 @@ export class InteractionRestaurantService{
       this.db = getDatabase(ofApp);
       if (location.hostname === "localhost") {
         // Point to the RTDB emulator running on localhost.
-        connectDatabaseEmulator(this.db, "localhost", 9000);
+        connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host , FIREBASE_DATABASE_EMULATOR_HOST.port);
       } 
   }
 
