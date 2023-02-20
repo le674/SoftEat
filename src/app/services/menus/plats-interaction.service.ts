@@ -5,6 +5,7 @@ import { Cetape } from 'src/app/interfaces/etape';
 import { Cconsommable,TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cplat, Plat } from 'src/app/interfaces/plat';
 import { Cpreparation} from 'src/app/interfaces/preparation';
+import { FIREBASE_DATABASE_EMULATOR_HOST } from 'src/environments/variables';
 import { IngredientsInteractionService } from './ingredients-interaction.service';
 
 @Injectable({
@@ -23,7 +24,7 @@ export class PlatsInteractionService {
     this.db = getDatabase(ofApp);
     if (location.hostname === "localhost") {
       // Point to the RTDB emulator running on localhost.
-      connectDatabaseEmulator(this.db, "localhost", 9000);
+      connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
     } 
     this.consommables = [];
     this.ingredients = [];

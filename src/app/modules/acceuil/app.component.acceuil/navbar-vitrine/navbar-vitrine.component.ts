@@ -5,6 +5,7 @@ import { AuthentificationService } from 'src/app/services/authentification.servi
 import { connectAuthEmulator, getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { Router } from '@angular/router';
+import { FIREBASE_AUTH_EMULATOR_HOST } from 'src/environments/variables';
 const firebaseConfig = {
   apiKey: "AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo",
   authDomain: "psofteat-65478545498421319564.firebaseapp.com",
@@ -22,7 +23,7 @@ const firebaseConfig = {
 
   if (location.hostname === "localhost") {
     // Point to the RTDB emulator running on localhost.
-    connectAuthEmulator(auth, "http://127.0.0.1:9099");
+    connectAuthEmulator(auth, FIREBASE_AUTH_EMULATOR_HOST);
   } 
 
 

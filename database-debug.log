@@ -17,3 +17,9 @@ namespace 127, but the emulator is configured for psofteat-65478545498421319564-
 opt-out of single project mode add/set the single_project_mode: false property in 
 the firebase.json emulators config. 
 14:35:48.850 [NamespaceSystem-akka.actor.default-dispatcher-20] INFO com.firebase.core.namespace.NamespaceActor - 127 successfully activated FBKV (SurveyIdle(0)) wait: 1ms, init: 0ms
+14:50:11.706 [Thread-0] INFO com.firebase.server.forge.App$ - Attempting graceful shutdown.
+14:50:11.715 [NamespaceSystem-akka.actor.default-dispatcher-16] INFO com.firebase.core.namespace.Terminator$Terminator - 3 actors left to terminate: project-firebase-44cfe-default-rtdb, psofteat-65478545498421319564-default-rtdb, 127
+14:50:11.723 [NamespaceSystem-akka.actor.default-dispatcher-25] INFO com.firebase.core.namespace.NamespaceActor - stopped namespace actor for psofteat-65478545498421319564-default-rtdb
+14:50:11.723 [NamespaceSystem-akka.actor.default-dispatcher-24] INFO com.firebase.core.namespace.NamespaceActor - stopped namespace actor for project-firebase-44cfe-default-rtdb
+14:50:11.723 [NamespaceSystem-akka.actor.default-dispatcher-26] INFO com.firebase.core.namespace.NamespaceActor - stopped namespace actor for 127
+14:50:11.726 [Thread-0] INFO com.firebase.server.forge.App$ - Graceful shutdown complete.
