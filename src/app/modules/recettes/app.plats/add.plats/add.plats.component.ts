@@ -255,12 +255,14 @@ export class AddPlatsComponent implements OnInit {
     let name = "";
     let quantity = 0;
     let unity = "";
-    const ingredient_length = this.getBaseIng().length - 1;
+    const ingredient_length = this.getBaseIng().length;
     const ingredients = this.data.plat.ingredients;
-    if((ingredients[ingredient_length] !== undefined) && (ingredients.length > 0)){
-      name = ingredients[ingredient_length].name;
-      quantity = ingredients[ingredient_length].quantity;
-      unity = ingredients[ingredient_length].unity;   
+    if(ingredients !== null){
+      if((ingredients[ingredient_length] !== undefined) && (ingredients.length > 0)){
+        name = ingredients[ingredient_length].name;
+        quantity = ingredients[ingredient_length].quantity;
+        unity = ingredients[ingredient_length].unity;   
+      }
     }
     const new_ing = this.formBuilder.group({
       name: new FormControl(name, Validators.required),
@@ -275,14 +277,15 @@ export class AddPlatsComponent implements OnInit {
     let name = "";
     let quantity = 0;
     let unity = "";
-    const consommable_length = this.getBaseConso().length - 1;
+    const consommable_length = this.getBaseConso().length;
     const consommables = this.data.plat.consommables;
-    if((consommables[consommable_length] !== undefined) && (consommables.length > 0)){
-      name = consommables[consommable_length].name;
-      quantity = consommables[consommable_length].quantity;
-      unity =  consommables[consommable_length].unity;
+    if(consommables !== null){
+      if((consommables[consommable_length] !== undefined) && (consommables.length > 0)){
+        name = consommables[consommable_length].name;
+        quantity = consommables[consommable_length].quantity;
+        unity =  consommables[consommable_length].unity;
+      }
     }
-
     const new_conso = this.formBuilder.group({
       name: new FormControl(name, Validators.required),
       quantity: new FormControl(quantity),
@@ -295,15 +298,17 @@ export class AddPlatsComponent implements OnInit {
   addInputPrepa(){
     let name = "";
     let quantity = 0;
-    const prepa_length = this.getBasePrepa().length - 1;
+    const prepa_length = this.getBasePrepa().length;
     const preparations = this.data.plat.preparations;
-    if((preparations[prepa_length] !== undefined) && (preparations.length > 0)){
-      if(preparations[prepa_length].nom !== null)  name = preparations[prepa_length].nom as string;
-      if(preparations[prepa_length].quantity !== null) quantity = preparations[prepa_length].quantity;
+    if(preparations !== null){
+      if((preparations[prepa_length] !== undefined) && (preparations.length > 0)){
+        if(preparations[prepa_length].nom !== null)  name = preparations[prepa_length].nom as string;
+        if(preparations[prepa_length].quantity !== null) quantity = preparations[prepa_length].quantity;
+      }
     }
     const new_prepa = this.formBuilder.group({
-      name: new FormControl("", Validators.required),
-      quantity: new FormControl(0)
+      name: new FormControl(name, Validators.required),
+      quantity: new FormControl(quantity)
     });
     this.getBasePrepa().push(new_prepa);
   }
@@ -312,14 +317,15 @@ export class AddPlatsComponent implements OnInit {
     let name = "";
     let comm = "";
     let tmps = 0;
-    const etape_length = this.getEtapes().length - 1;
+    const etape_length = this.getEtapes().length;
     const etapes = this.data.plat.etapes;
-    if((etapes[etape_length] !== undefined) && (etapes.length > 0)){
-      if(etapes[etape_length].nom !== null)  name = etapes[etape_length].nom as string;
-      if(etapes[etape_length].commentaire !== null) comm = etapes[etape_length].commentaire as string;
-      if(etapes[etape_length].temps !== null) tmps = etapes[etape_length].temps;
+    if(etapes !== null){
+      if((etapes[etape_length] !== undefined) && (etapes.length > 0)){
+        if(etapes[etape_length].nom !== null)  name = etapes[etape_length].nom as string;
+        if(etapes[etape_length].commentaire !== null) comm = etapes[etape_length].commentaire as string;
+        if(etapes[etape_length].temps !== null) tmps = etapes[etape_length].temps;
+      }
     }
-
     const new_etape = this.formBuilder.group({
       name: new FormControl(name, Validators.required),
       comm: new FormControl(comm),

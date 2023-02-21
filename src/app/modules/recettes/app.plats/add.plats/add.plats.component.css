@@ -6,6 +6,10 @@
     color: red;
 }
 
+.inputs-containers{
+    display: flex;
+    flex-direction: column;
+}
 
 .mat-mini-fab{
     color: white;

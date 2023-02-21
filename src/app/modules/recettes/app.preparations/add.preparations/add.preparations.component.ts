@@ -285,18 +285,20 @@ export class AddPreparationsComponent implements OnInit{
   }
 
   addInputIng(){
-    const ings_length = this.getBaseIng().length - 1;
-    const ingredients = this.data.ingredients.map((ing) => {
-      return {name: ing.name, quantity: ing.quantity, unity: ing.unity};
-    })
+    const ings_length = this.getBaseIng().length;
     let name = "";
     let quantity = 0;
     let unity = "";
-    if(ings_length > 0){
-      if(ingredients[ings_length] !== undefined){
-        name = ingredients[ings_length].name;
-        quantity = ingredients[ings_length].quantity;
-        unity = ingredients[ings_length].unity; 
+    if(this.data.ingredients !== null){
+      const ingredients = this.data.ingredients.map((ing) => {
+        return {name: ing.name, quantity: ing.quantity, unity: ing.unity};
+      })
+      if(ings_length > 0){
+        if(ingredients[ings_length] !== undefined){
+          name = ingredients[ings_length].name;
+          quantity = ingredients[ings_length].quantity;
+          unity = ingredients[ings_length].unity; 
+        }
       }
     }
     const new_ing = this.formBuilder.group({
@@ -312,14 +314,16 @@ export class AddPreparationsComponent implements OnInit{
     let name = "";
     let quantity = 0;
     let unity = "p";
-    const consommable_length = this.data.consommables.length - 1;
-    const consommables =  this.data.consommables.map((conso) => {
+    const consommable_length = this.getBaseConso().length;
+    if(this.data.consommables !== null){
+      const consommables =  this.data.consommables.map((conso) => {
         return {name: conso.name, quantity: conso.quantity, unity: conso.unity};
-    }); 
-    if((consommables[consommable_length] !== undefined) && (consommable_length > 0)){
-      name = consommables[consommable_length].name;
-      quantity = consommables[consommable_length].quantity;
-      unity = consommables[consommable_length].unity;
+      }); 
+      if((consommables[consommable_length] !== undefined) && (consommable_length > 0)){
+        name = consommables[consommable_length].name;
+        quantity = consommables[consommable_length].quantity;
+        unity = consommables[consommable_length].unity;
+      }
     }
     const new_conso = this.formBuilder.group({
       name: name,
@@ -334,12 +338,14 @@ export class AddPreparationsComponent implements OnInit{
     let name = "";
     let comm = "";
     let tmps = 0;
-    const etape_length = this.data.etapes.length - 1;
+    const etape_length = this.getEtapes().length;
     const etapes = this.data.etapes;
-    if((etapes[etape_length] !== undefined) && (etape_length > 0)){
-      name = etapes[etape_length].nom;
-      if(etapes[etape_length].commentaire !== null) comm = etapes[etape_length].commentaire as string;
-      if(etapes[etape_length].temps !== null) tmps = etapes[etape_length].temps;
+    if(etapes !== null){
+      if((etapes[etape_length] !== undefined) && (etape_length > 0)){
+        name = etapes[etape_length].nom;
+        if(etapes[etape_length].commentaire !== null) comm = etapes[etape_length].commentaire as string;
+        if(etapes[etape_length].temps !== null) tmps = etapes[etape_length].temps;
+      } 
     }
     const new_etape = this.formBuilder.group({
       name: new FormControl(name),
