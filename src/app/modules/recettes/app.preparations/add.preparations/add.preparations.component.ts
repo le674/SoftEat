@@ -18,12 +18,6 @@ import { PreparationInteractionService } from 'src/app/services/menus/preparatio
 })
 export class AddPreparationsComponent implements OnInit{
   private is_stock:boolean;
-  private current_inputs_ing: number;
-  private current_inputs_conso: number;
-  private current_inputs_etapes: number;
-  public index_ings_inputs: Array<number>;
-  public index_consos_inputs: Array<number>;
-  public index_etapes_inputs: Array<number>;
   public add_prepa_section = new FormGroup({
     name: new FormControl('', Validators.required),
     base_ing: new FormArray<FormGroup<{
@@ -76,12 +70,6 @@ export class AddPreparationsComponent implements OnInit{
     this.etapes = [];
     this.bdd_conso = [];
     this.bdd_etapes = [];
-    this.index_consos_inputs = [];
-    this.index_ings_inputs = [];
-    this.index_etapes_inputs = [];
-    this.current_inputs_ing = 1;
-    this.current_inputs_conso = 1;
-    this.current_inputs_etapes = 1;
     this.to_add = "";
     this.unity = "";
   }
@@ -95,12 +83,11 @@ export class AddPreparationsComponent implements OnInit{
     this.add_prepa_section.controls.quantity_aft_prep.setValue(this.data.quantity_after_prep);
     let tmp_data:Array<{name:string | null, quantity: number | null, unity: string | null}> = [];
     if((this.data.ingredients !== null) && (this.data.ingredients !== undefined)){
-      this.current_inputs_ing = this.data.ingredients.length;
+      const current_inputs_ing = this.data.ingredients.length;
       tmp_data = this.data.ingredients.map((ing) => {
         return {name: ing.name, quantity: ing.quantity, unity: ing.unity};
       })
-      for (let index = 0; index < this.current_inputs_ing; index++) {
-        this.index_ings_inputs.push(index);
+      for (let index = 0; index < current_inputs_ing; index++) {
         const new_ing = this.formBuilder.group({
           name: new FormControl(tmp_data[index].name),
           quantity: new FormControl(tmp_data[index].quantity),
@@ -111,11 +98,11 @@ export class AddPreparationsComponent implements OnInit{
     }
 
     if((this.data.consommables !== null) && (this.data.consommables !== undefined)){
-      this.current_inputs_conso = this.data.consommables.length;
+      const current_inputs_conso = this.data.consommables.length;
       tmp_data =  this.data.consommables.map((conso) => {
         return {name: conso.name, quantity: conso.quantity, unity: conso.unity};
       })
-      for (let index = 0; index < this.current_inputs_conso ; index++) {
+      for (let index = 0; index < current_inputs_conso ; index++) {
         const new_conso = this.formBuilder.group({
           name: new FormControl(tmp_data[index].name),
           quantity: new FormControl(tmp_data[index].quantity),
@@ -127,8 +114,8 @@ export class AddPreparationsComponent implements OnInit{
     }
     
     if((this.data.etapes !== null) && (this.data.etapes !== undefined)){
-      this.current_inputs_etapes = this.data.etapes.length;
-      for (let index = 0; index < this.current_inputs_etapes; index++) {
+      const current_inputs_etapes = this.data.etapes.length;
+      for (let index = 0; index < current_inputs_etapes; index++) {
         const new_etape = this.formBuilder.group({
           name: new FormControl(this.data.etapes[index].nom),
           comm: new FormControl(this.data.etapes[index].commentaire),
@@ -142,8 +129,6 @@ export class AddPreparationsComponent implements OnInit{
 
   changePreparation(){
     let to_add_preparation_name:string = "";
-    
-    
     const name_prepa = this.add_prepa_section.value.name
     if(name_prepa !== undefined){
 
@@ -300,41 +285,80 @@ export class AddPreparationsComponent implements OnInit{
   }
 
   addInputIng(){
-    this.current_inputs_ing = this.current_inputs_ing + 1;
-    this.index_ings_inputs.push(this.current_inputs_ing);
+    const ings_length = this.getBaseIng().length - 1;
+    const ingredients = this.data.ingredients.map((ing) => {
+      return {name: ing.name, quantity: ing.quantity, unity: ing.unity};
+    })
+    let name = "";
+    let quantity = 0;
+    let unity = "";
+    if(ings_length > 0){
+      if(ingredients[ings_length] !== undefined){
+        name = ingredients[ings_length].name;
+        quantity = ingredients[ings_length].quantity;
+        unity = ingredients[ings_length].unity; 
+      }
+    }
     const new_ing = this.formBuilder.group({
-      name: new FormControl(""),
-      quantity: new FormControl(0),
-      unity: new FormControl("")
+      name: new FormControl(name),
+      quantity: new FormControl(quantity),
+      unity: new FormControl(unity)
     });
     this.getBaseIng().push(new_ing);
-
   }
 
   addInputConso(){
-      //pour le moment dans unity ont met p car on ne gère pas encor les quantitées unitaire pour les consommables 
-    this.current_inputs_conso = this.current_inputs_conso + 1;
-    this.index_consos_inputs.push(this.current_inputs_conso);
-
+    //pour le moment dans unity ont met p car on ne gère pas encor les quantitées unitaire pour les consommables 
+    let name = "";
+    let quantity = 0;
+    let unity = "p";
+    const consommable_length = this.data.consommables.length - 1;
+    const consommables =  this.data.consommables.map((conso) => {
+        return {name: conso.name, quantity: conso.quantity, unity: conso.unity};
+    }); 
+    if((consommables[consommable_length] !== undefined) && (consommable_length > 0)){
+      name = consommables[consommable_length].name;
+      quantity = consommables[consommable_length].quantity;
+      unity = consommables[consommable_length].unity;
+    }
     const new_conso = this.formBuilder.group({
-      name: new FormControl(""),
-      quantity: new FormControl(0),
-      unity: new FormControl("p")
+      name: name,
+      quantity: quantity,
+      unity: unity
     });
     new_conso.controls.unity.disable();
     this.getBaseConso().push(new_conso);
   }
 
   addInputEtape(){
-
-    this.current_inputs_etapes = this.current_inputs_etapes + 1;
-    this.index_etapes_inputs.push(this.current_inputs_etapes);
+    let name = "";
+    let comm = "";
+    let tmps = 0;
+    const etape_length = this.data.etapes.length - 1;
+    const etapes = this.data.etapes;
+    if((etapes[etape_length] !== undefined) && (etape_length > 0)){
+      name = etapes[etape_length].nom;
+      if(etapes[etape_length].commentaire !== null) comm = etapes[etape_length].commentaire as string;
+      if(etapes[etape_length].temps !== null) tmps = etapes[etape_length].temps;
+    }
     const new_etape = this.formBuilder.group({
-      name: new FormControl(""),
-      comm: new FormControl(""),
-      tmps: new FormControl(0),
+      name: new FormControl(name),
+      comm: new FormControl(comm),
+      tmps: new FormControl(tmps),
     });
     this.getEtapes().push(new_etape);
+  }
+
+  suppInputIng(){
+    this.getBaseIng().removeAt(this.getBaseIng().length - 1);
+  }
+
+  suppInputConso(){
+    this.getBaseConso().removeAt(this.getBaseConso().length - 1);
+  }
+
+  suppInputEtape(){
+    this.getEtapes().removeAt(this.getEtapes().length - 1);
   }
 
   notSameStringValidator(l1: Array<any>, l2: Array<any>, name:string, last:boolean):ValidationErrors{

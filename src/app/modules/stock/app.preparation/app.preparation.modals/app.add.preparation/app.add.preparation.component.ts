@@ -314,6 +314,12 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit {
     this.getBaseIng().push(new_ing);
   }
 
+  suppInput(){
+    this.current_inputs = this.current_inputs - 1;
+    this.index_inputs.pop();
+    this.getBaseIng().removeAt(this.getBaseIng().length - 1);
+  }
+
   clickRadioVrac(state: boolean) {
     this.is_vrac = state
     // dans le cas ou on a clické sur le boutton pour spécifier l'ingrésient en vrac on remet l'input à 0 

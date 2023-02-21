@@ -35,10 +35,16 @@
                 </ng-container>
             </div>
         </ng-container>
-        <button mat-mini-fab type="button" id="add_input_ing" color="white" matTooltip="ajout d'un ingrédient"
+        <div class="inputs-containers">
+            <button mat-mini-fab type="button" id="add_input_ing" color="white" matTooltip="ajout d'un ingrédient"
             aria-label="ajout d'un ingrédient" (click)="addInputIng()">
-            <i class="fa-regular fa-plus"></i>
-        </button>
+                <i class="fa-regular fa-plus"></i>
+            </button>
+            <button mat-mini-fab type="button" id="supp_input_ing" color="white" matTooltip="supprimer un ingrédient"
+            aria-label="supprimer d'un ingrédient" (click)="suppInputIng()">
+                <i class="fa-regular fa-minus"></i>
+            </button>
+        </div>
     </div>
     <div class="section_fileds">
         <p>Quelles sont les consommables ? <br> entrer la quantitée, le nom et l'unitée <br> de consommables utilisés pour le menu : </p>
@@ -62,10 +68,16 @@
                 </ng-container>
             </div>
         </ng-container>
-        <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'un consommable"
+        <div class="inputs-containers">
+            <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'un consommable"
             aria-label="ajout d'un consommable" (click)="addInputConso()">
-            <i class="fa-regular fa-plus"></i>
-        </button>
+                <i class="fa-regular fa-plus"></i>
+            </button>
+            <button mat-mini-fab type="button" id="supp_input_ing" color="white" matTooltip="supprimer un ingrédient"
+            aria-label="supprimer d'un ingrédient" (click)="suppInputConso()">
+                <i class="fa-regular fa-minus"></i>
+            </button>
+        </div>
     </div>
     <div class="section_fileds">
         <p>Quelles sont les plats ? <br> entrer la quantitée, le nom et l'unitée <br> de préparations utilisés pour le menu : </p>
@@ -81,10 +93,16 @@
                 </ng-container>
             </div>
         </ng-container>
-        <button mat-mini-fab type="button" id="add_input_prepa" color="white" matTooltip="ajout d'un plat"
-            aria-label="ajout d'un plat" (click)="addInputPlat()">
-            <i class="fa-regular fa-plus"></i>
-        </button>
+        <div class="inputs-containers">
+            <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'un consommable"
+            aria-label="ajout d'un consommable" (click)="addInputPlat()">
+                <i class="fa-regular fa-plus"></i>
+            </button>
+            <button mat-mini-fab type="button" id="supp_input_ing" color="white" matTooltip="supprimer un ingrédient"
+            aria-label="supprimer d'un ingrédient" (click)="suppInputPlat()">
+                <i class="fa-regular fa-minus"></i>
+            </button>
+        </div>
     </div>
     <button mat-stroked-button type="submit"> Ajouter </button>
 </form>

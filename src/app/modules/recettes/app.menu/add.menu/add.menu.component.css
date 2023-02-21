@@ -1,5 +1,9 @@
-i{
+.fa-plus{
     color: rgb(125, 181, 46);
+}
+
+.fa-minus{
+    color: red;
 }
 
 .mat-mini-fab{
@@ -81,4 +85,9 @@ mat-radio-button{
     display: flex;
     justify-content: flex-start;
     align-items: center;  
+}
+
+.inputs-containers{
+    display: flex;
+    flex-direction: column;
 }

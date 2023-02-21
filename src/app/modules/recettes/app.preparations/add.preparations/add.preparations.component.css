@@ -1,6 +1,11 @@
-i{
+.fa-plus{
     color: rgb(125, 181, 46);
 }
+
+.fa-minus{
+    color: red;
+}
+
 
 .mat-mini-fab{
     color: white;

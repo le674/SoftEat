@@ -1,11 +1,3 @@
-<!-- <div class="selectSection">
-    <p>l'ingrédient a-t-il été préparé en salle ?</p>
-    <mat-radio-group aria-label="SelectPrepa" id="is_cooked">
-        <mat-radio-button (change)="clickRadio(true)" value="oui">Oui</mat-radio-button>
-        <mat-radio-button (change)="clickRadio(false)" value="non">Non</mat-radio-button>
-        <mat-radio-button (change)="clickRadio(false)" value="aucune">Ne pas préciser</mat-radio-button>
-    </mat-radio-group>
-</div> -->
 <form [formGroup]="add_preparation" (ngSubmit)="changePreparation()">
     <div class="section">
         <p>Entrer le nom de la nouvelle préparation : </p>
@@ -84,10 +76,16 @@
                 </ng-container>
             </div>
         </ng-container>
-        <button mat-mini-fab type="button" id="add_input" color="white" matTooltip="ajout d'un ingrédient"
+        <div id="manip-base-ings">
+            <button mat-mini-fab type="button" id="add_input" color="white" matTooltip="ajout d'un ingrédient"
             aria-label="ajout d'un ingrédient" (click)="addInput()">
-            <i class="fa-regular fa-plus"></i>
-        </button>
+                <i class="fa-regular fa-plus"></i>
+            </button>
+            <button mat-mini-fab type="button" id="supp_input" color="white" matTooltip="suppression d'un ingrédient"
+            aria-label="suppression d'un ingrédient" (click)="suppInput()">
+                <i class="fa-regular fa-minus"></i>
+            </button>
+        </div>
     </div>
     <div class="section" *ngIf="is_vrac">
         <p id="last">Entrer la quantitée obtenu pour cette ingrédient : </p>

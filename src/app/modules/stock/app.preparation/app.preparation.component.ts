@@ -48,7 +48,6 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
   private router: Router;
   private ingredients_table: Array<CIngredient>;
   private preparation_table: Array<Cpreparation>;
-/*   private ingredient_table_prep: Array<Cpreparation>; */
   private url: UrlTree;
   private prop: string;
   private restaurant: string;
@@ -69,7 +68,6 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     this.displayed_prep = [];
     this.dataSource = new MatTableDataSource(this.displayed_prep);
     this.url = this.router.parseUrl(this.router.url);
-    /* this.ingredient_table_prep = []; */
   }
 
   ngAfterViewInit(): void {
@@ -152,66 +150,9 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
         }
       }
     })
-      /* if (ingBR.length > 0) {
-        for (let i = 0; i < ingPREP.length; i++) {
-          const nom = (ingPREP[i].nom === null) ? "" : ingPREP[i].nom as string;
-          if ((ingPREP[i].base_ing !== null) && (ingPREP[i].base_ing !== undefined)) {
-            let lst_base_ing = this.ingredient_table
-              .filter((ingredient) => ingPREP[i].base_ing
-                .map((ing) => ing.name)
-                .includes(ingredient.nom))
-            this.calc_service.sortTwoListStringByName(lst_base_ing, ingPREP[i].base_ing);
-            let ings = ingPREP[i].base_ing.filter((ing) => lst_base_ing.map((base) => base.nom).includes(ing.name));
-            ings.map((ing, index: number) => {
-
-              ing.unity = lst_base_ing[index].unity;
-              ing.cost = lst_base_ing[index].cost;
-              ing.quantity_unity = lst_base_ing[index].quantity_unity;
-            })
-
-            if (lst_base_ing.length > 0) {
-              ingPREP[i].cost = lst_base_ing
-                .map((base) => base.cost)
-                .reduce((cost, next_cost) => cost + next_cost);
-              ingPREP[i].cost_ttc = lst_base_ing
-                .map((base) => base.cost_ttc)
-                .reduce((cost, next_cost) => cost + next_cost);
-            }
-
-            ingPREP[i].val_bouch = this.calc_service.getValBouchFromBasIng(lst_base_ing, ingPREP[i]);
-
-            let val_bouch: any = ingPREP[i].val_bouch;
-            if ((ingPREP[i].quantity_bef_prep > 0) && (val_bouch === 0)) {
-              val_bouch = "veuillez entrer les ingrédients de bases"
-            }
-
-          }
-
-          let row_ingredient = {
-            nom: nom.split('_').join('<br>'),
-            categorie_tva: ingPREP[i].categorie_tva.split(' ').join('<br>'),
-            cost: ingPREP[i].cost,
-            cost_ttc: ingPREP[i].cost_ttc,
-            val_bouch: val_bouch,
-            bef_prep: ingPREP[i].quantity_bef_prep,
-            after_prep: ingPREP[i].quantity_after_prep,
-            quantity: ingPREP[i].quantity,
-            quantity_unity: ingPREP[i].quantity_unity,
-            unity: ingPREP[i].unity,
-            cuisinee: 'oui',
-            date_reception: ingPREP[i].date_reception.toLocaleString(),
-            dlc: ingPREP[i].dlc.toLocaleString(),
-            marge: ingPREP[i].marge,
-            vrac: ingPREP[i].vrac
-          };
-          this.ingredients_displayed_prep.push(row_ingredient);
-        }
-      } */
-/*     }) */
   }
 
   OpenAddPrepaForm() {
-
     const dialogRef = this.dialog.open(AppAddPreparationComponent, {
       height: `${window.innerHeight}px`,
       width: `${window.innerWidth - window.innerWidth / 15}px`,

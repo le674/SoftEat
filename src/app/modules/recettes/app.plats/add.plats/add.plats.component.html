@@ -75,10 +75,16 @@
                 </ng-container>
             </div>
         </ng-container>
-        <button mat-mini-fab type="button" id="add_input_ing" color="white" matTooltip="ajout d'un ingrédient"
+        <div class="inputs-containers">
+            <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'un ingrédient"
             aria-label="ajout d'un ingrédient" (click)="addInputIng()">
-            <i class="fa-regular fa-plus"></i>
-        </button>
+                <i class="fa-regular fa-plus"></i>
+            </button>
+            <button mat-mini-fab type="button" id="supp_input_ing" color="white" matTooltip="supprimer un ingrédient"
+            aria-label="supprimer d'un ingrédient" (click)="suppInputIng()">
+                <i class="fa-regular fa-minus"></i>
+            </button>
+        </div>
     </div>
     <div class="section_fileds">
         <p>Quelles sont les consommables ? <br> entrer la quantitée, le nom et l'unitée <br> de consommables utilisés pour le plat : </p>
@@ -102,10 +108,16 @@
                 </ng-container>
             </div>
         </ng-container>
-        <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'un consommable"
+        <div class="inputs-containers">
+            <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'un consommable"
             aria-label="ajout d'un consommable" (click)="addInputConso()">
-            <i class="fa-regular fa-plus"></i>
-        </button>
+                <i class="fa-regular fa-plus"></i>
+            </button>
+            <button mat-mini-fab type="button" id="supp_input_ing" color="white" matTooltip="supprimer un consommable"
+            aria-label="supprimer un cnsommable" (click)="suppInputConso()">
+                <i class="fa-regular fa-minus"></i>
+            </button>
+        </div>
     </div>
     <div class="section_fileds">
         <p>Quelles sont les préparations ? <br> entrer la quantitée, le nom et l'unitée <br> de préparations utilisés pour le plat : </p>
@@ -125,10 +137,16 @@
                 </ng-container>
             </div>
         </ng-container>
-        <button mat-mini-fab type="button" id="add_input_prepa" color="white" matTooltip="ajout d'une préparation"
-            aria-label="ajout d'une preparation" (click)="addInputPrepa()">
-            <i class="fa-regular fa-plus"></i>
-        </button>
+        <div class="inputs-containers">
+            <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'une préparation"
+            aria-label="ajout d'une préparation" (click)="addInputPrepa()">
+                <i class="fa-regular fa-plus"></i>
+            </button>
+            <button mat-mini-fab type="button" id="supp_input_ing" color="white" matTooltip="supprimer une préparation"
+            aria-label="supprimer une préparation" (click)="suppInputPrepa()">
+                <i class="fa-regular fa-minus"></i>
+            </button>
+        </div>
     </div>
     <div class="section_fileds">
         <p>Quelles sont les étapes ? <br> entrer le nom, un commentaire et le temps de réalisation <br> des différentes
@@ -151,10 +169,16 @@
                 </ng-container>
             </div>
         </ng-container>
-        <button mat-mini-fab type="button" id="add_input_etapes" color="white" matTooltip="ajout de l'étape"
-            aria-label="ajout de l'étape" (click)="addInputEtape()">
-            <i class="fa-regular fa-plus"></i>
-        </button>
+        <div class="inputs-containers">
+            <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'une étape"
+            aria-label="ajout d'une étape" (click)="addInputEtape()">
+                <i class="fa-regular fa-plus"></i>
+            </button>
+            <button mat-mini-fab type="button" id="supp_input_ing" color="white" matTooltip="supprimer une étape"
+            aria-label="supprimer d'une étape" (click)="suppInputEtape()">
+                <i class="fa-regular fa-minus"></i>
+            </button>
+        </div>
     </div>
     <button mat-stroked-button type="submit"> Ajouter </button>
 </form>

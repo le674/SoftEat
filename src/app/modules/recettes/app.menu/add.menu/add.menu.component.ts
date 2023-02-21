@@ -20,6 +20,7 @@ export class AddMenuComponent implements OnInit {
   public consommables: Array<Cconsommable>;
   public unity_conso:Array<string>;
   public unity_ing:Array<string>;
+
   public add_menu_section = new FormGroup({
     name: new FormControl('', Validators.required),
     price: new FormControl(0, Validators.required),
@@ -49,7 +50,6 @@ export class AddMenuComponent implements OnInit {
       this.unity_conso = [];
       this.unity_ing = [];
       this.plats = this.data.plats;
-      
       this.ingredients = this.data.ingredients;
       this.consommables = this.data.consommables;
      }
@@ -181,31 +181,69 @@ export class AddMenuComponent implements OnInit {
     }
   }
   addInputIng(){
+    let _curr_ings_length = this.getBaseIng().length;
+    let name = "";
+    let quantity= 0;
+    let unity = "";
+    if(this.data.menu.ingredients[_curr_ings_length] !== undefined){
+      let _curr_ing = this.data.menu.ingredients[_curr_ings_length];
+      name = _curr_ing.name;
+      quantity = _curr_ing.quantity;
+      unity = _curr_ing.unity;
+    }
     const new_ing = this.formBuilder.group({
-      name: new FormControl("", Validators.required),
-      quantity: new FormControl(0),
-      unity: new FormControl("")
+      name: new FormControl(name, Validators.required),
+      quantity: new FormControl(quantity),
+      unity: new FormControl(unity)
     });
     new_ing.controls.unity.disable();
     this.getBaseIng().push(new_ing);
   }
 
   addInputConso(){
+    let _curr_conso_length = this.getBaseConso().length;
+    let name = "";
+    let quantity = 0;
+    let unity = "";
+    if(this.data.menu.consommables[_curr_conso_length] !== undefined){
+      let _curr_conso = this.data.menu.consommables[_curr_conso_length];
+      name = _curr_conso.name;
+      quantity = _curr_conso.quantity;
+      unity = _curr_conso.unity;
+    }
     const new_conso = this.formBuilder.group({
-      name: new FormControl("", Validators.required),
-      quantity: new FormControl(0),
-      unity: new FormControl("")
+      name: new FormControl(name, Validators.required),
+      quantity: new FormControl(quantity),
+      unity: new FormControl(unity)
     });
     new_conso.controls.unity.disable();
     this.getBaseConso().push(new_conso);
   }
 
   addInputPlat(){
+    let curr_plat_length = this.getBasePlat().length;
+    let name = "";
+    if(this.data.menu.plats[curr_plat_length] !== undefined){
+      name = this.data.menu.plats[curr_plat_length].nom;
+    }
     const new_plat = this.formBuilder.group({
-      name: new FormControl("", Validators.required),
+      name: new FormControl(name, Validators.required),
     });
     this.getBasePlat().push(new_plat);
   }
+
+  suppInputIng(){
+    this.getBaseIng().removeAt(this.getBaseIng().length - 1);
+  }
+
+  suppInputConso(){
+    this.getBaseConso().removeAt(this.getBaseConso().length - 1);
+  }
+
+  suppInputPlat(){
+    this.getBasePlat().removeAt(this.getBasePlat().length - 1);
+  }
+  
   getBaseIng(){
     return this.add_menu_section.get("base_ing") as FormArray<FormGroup<{
       name:FormControl<string | null>,

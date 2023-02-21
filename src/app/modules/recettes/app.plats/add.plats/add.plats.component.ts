@@ -220,7 +220,6 @@ export class AddPlatsComponent implements OnInit {
   }
 
   getUnity(new_selection:MatSelectChange, category:string, index:number){
-
     if(category === 'ing'){
       const ingredients = this.full_lst_ings.filter((ingredient) => ingredient.name === (new_selection.value as string));
       if(index > this.unity_ing.length){
@@ -253,26 +252,55 @@ export class AddPlatsComponent implements OnInit {
   }
 
   addInputIng(){
+    let name = "";
+    let quantity = 0;
+    let unity = "";
+    const ingredient_length = this.getBaseIng().length - 1;
+    const ingredients = this.data.plat.ingredients;
+    if((ingredients[ingredient_length] !== undefined) && (ingredients.length > 0)){
+      name = ingredients[ingredient_length].name;
+      quantity = ingredients[ingredient_length].quantity;
+      unity = ingredients[ingredient_length].unity;   
+    }
     const new_ing = this.formBuilder.group({
-      name: new FormControl("", Validators.required),
-      quantity: new FormControl(0),
-      unity: new FormControl("")
+      name: new FormControl(name, Validators.required),
+      quantity: new FormControl(quantity),
+      unity: new FormControl(unity)
     });
     new_ing.controls.unity.disable();
     this.getBaseIng().push(new_ing);
   }
 
   addInputConso(){
+    let name = "";
+    let quantity = 0;
+    let unity = "";
+    const consommable_length = this.getBaseConso().length - 1;
+    const consommables = this.data.plat.consommables;
+    if((consommables[consommable_length] !== undefined) && (consommables.length > 0)){
+      name = consommables[consommable_length].name;
+      quantity = consommables[consommable_length].quantity;
+      unity =  consommables[consommable_length].unity;
+    }
+
     const new_conso = this.formBuilder.group({
-      name: new FormControl("", Validators.required),
-      quantity: new FormControl(0),
-      unity: new FormControl("")
+      name: new FormControl(name, Validators.required),
+      quantity: new FormControl(quantity),
+      unity: new FormControl(unity)
     });
     new_conso.controls.unity.disable();
     this.getBaseConso().push(new_conso);
   }
 
   addInputPrepa(){
+    let name = "";
+    let quantity = 0;
+    const prepa_length = this.getBasePrepa().length - 1;
+    const preparations = this.data.plat.preparations;
+    if((preparations[prepa_length] !== undefined) && (preparations.length > 0)){
+      if(preparations[prepa_length].nom !== null)  name = preparations[prepa_length].nom as string;
+      if(preparations[prepa_length].quantity !== null) quantity = preparations[prepa_length].quantity;
+    }
     const new_prepa = this.formBuilder.group({
       name: new FormControl("", Validators.required),
       quantity: new FormControl(0)
@@ -281,12 +309,39 @@ export class AddPlatsComponent implements OnInit {
   }
 
   addInputEtape(){
+    let name = "";
+    let comm = "";
+    let tmps = 0;
+    const etape_length = this.getEtapes().length - 1;
+    const etapes = this.data.plat.etapes;
+    if((etapes[etape_length] !== undefined) && (etapes.length > 0)){
+      if(etapes[etape_length].nom !== null)  name = etapes[etape_length].nom as string;
+      if(etapes[etape_length].commentaire !== null) comm = etapes[etape_length].commentaire as string;
+      if(etapes[etape_length].temps !== null) tmps = etapes[etape_length].temps;
+    }
+
     const new_etape = this.formBuilder.group({
-      name: new FormControl("", Validators.required),
-      comm: new FormControl(""),
-      tmps: new FormControl(0)
+      name: new FormControl(name, Validators.required),
+      comm: new FormControl(comm),
+      tmps: new FormControl(tmps)
     });
     this.getEtapes().push(new_etape);
+  }
+
+  suppInputIng(){
+    this.getBaseIng().removeAt(this.getBaseIng().length - 1);
+  }
+
+  suppInputConso(){
+    this.getBaseConso().removeAt(this.getBaseConso().length - 1);
+  }
+
+  suppInputPrepa(){
+    this.getBasePrepa().removeAt(this.getBasePrepa().length - 1);
+  }
+
+  suppInputEtape(){
+    this.getEtapes().removeAt(this.getEtapes().length - 1);
   }
 
   getBaseIng(){
