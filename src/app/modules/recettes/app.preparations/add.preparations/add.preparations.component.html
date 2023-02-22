@@ -20,8 +20,10 @@
             <div class="old" *ngFor="let item of add_prepa_section.controls.base_ing.controls;let i=index">
                 <ng-container [formGroupName]="i">
                     <mat-form-field appearance="fill">
-                        <mat-label>nom de l'ingrédient</mat-label>
-                        <input matInput formControlName="name" placeholder="Ex. Pizza">
+                        <mat-label>Choisir l'ingrédient</mat-label>
+                        <mat-select (selectionChange)="getUnity($event, 'ing', i)" formControlName="name">
+                             <mat-option *ngFor="let ingredient of ingredients" [value]="ingredient.name">{{ingredient.name}}</mat-option>
+                        </mat-select>
                     </mat-form-field>
                     <mat-form-field appearance="fill">
                         <mat-label> quantitée pour la préparation </mat-label>
@@ -60,8 +62,10 @@
             <div class="old" *ngFor="let item of add_prepa_section.controls.base_conso.controls;let i=index">
                 <ng-container [formGroupName]="i">
                     <mat-form-field appearance="fill">
-                        <mat-label>nom du consommable</mat-label>
-                        <input matInput formControlName="name" placeholder="Ex. Film d'aluminium">
+                        <mat-label>Choisir le consommable</mat-label>
+                        <mat-select (selectionChange)="getUnity($event, 'conso', i)" formControlName="name">
+                             <mat-option *ngFor="let consommable of consommables" [value]="consommable.name">{{consommable.name}}</mat-option>
+                        </mat-select>
                     </mat-form-field>
                     <mat-form-field appearance="fill">
                         <mat-label> quantitée pour la préparation </mat-label>

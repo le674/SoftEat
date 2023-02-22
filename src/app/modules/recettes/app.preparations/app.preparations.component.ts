@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
+import { Cconsommable, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cpreparation } from 'src/app/interfaces/preparation';
+import { ConsommableInteractionService } from 'src/app/services/menus/consommable-interaction.service';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { AddPreparationsComponent } from './add.preparations/add.preparations.component';
 import { DisplayPreparationsComponent } from './display.preparation/display.preparations/display.preparations.component';
@@ -19,9 +21,14 @@ export class AppPreparationsComponent implements OnInit {
   private prepa_names: Array<string | null>;
   private prop:string;
   private restaurant:string;
+  private full_ing_lst: Array<TIngredientBase>;
+  private full_conso_lst: Array<Cconsommable>;
 
-  constructor(public dialog: MatDialog, private ingredient_service: IngredientsInteractionService, router: Router, private _snackBar: MatSnackBar) { 
+  constructor(public dialog: MatDialog, private ingredient_service: IngredientsInteractionService,
+  private consommable_service: ConsommableInteractionService, router: Router, private _snackBar: MatSnackBar) { 
     this.preparations = [];
+    this.full_ing_lst = [];
+    this.full_conso_lst = [];
     this.prepa_names = [];
     this.router = router;
     this.prop = "";
@@ -33,8 +40,12 @@ export class AppPreparationsComponent implements OnInit {
     let user_info = this.url.queryParams;
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];
-    this.ingredient_service.getIngredientsPrepFromRestaurantsPROMForMenu(this.prop,this.restaurant).then((preparations) => {
 
+    this.ingredient_service.getIngredientsBrFromRestaurantsPROM(this.prop, this.restaurant).then((ingredients) => {
+      this.full_ing_lst = ingredients.map((ingredient) => ingredient.convertToBase());
+    });
+
+    this.ingredient_service.getIngredientsPrepFromRestaurantsPROMForMenu(this.prop,this.restaurant).then((preparations) => {
       let nom_prep = "";
       for (let index = 0; index < preparations.length; index++) {
         if(preparations[index].nom !== null){
@@ -43,7 +54,12 @@ export class AppPreparationsComponent implements OnInit {
          this.preparations.push(preparations[index]);
         }
       }
+    });
+
+    this.consommable_service.getConsommablesFromRestaurants(this.prop, this.restaurant).then((consommables) => {
+      this.full_conso_lst = consommables;
     })
+
   }
 
   addPreparation():void {
@@ -56,6 +72,8 @@ export class AppPreparationsComponent implements OnInit {
         restaurant: this.restaurant,
         names: this.prepa_names,
         name:"",
+        full_ingredients: this.full_ing_lst,
+        full_consommables: this.full_conso_lst,
         ingredients: [],
         consommables: [],
         etapes: [],
@@ -74,6 +92,8 @@ export class AppPreparationsComponent implements OnInit {
         restaurant: this.restaurant,
         names: this.prepa_names,   
         name:preparation.nom,
+        full_ingredients: this.full_ing_lst,
+        full_consommables: this.full_conso_lst,
         ingredients:preparation.base_ing,
         consommables: preparation.consommables,
         etapes: preparation.etapes,
