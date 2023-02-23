@@ -25,6 +25,14 @@ export class DisplayPlatsComponent implements OnInit {
   public displayedColumnsIng: string[] = ['nom', 'quantity', 'unity', 'cost', 'cost_matiere'];
   public displayedColumnsConso: string[] = ['nom', 'quantity', 'unity', 'cost'];
   public displayedColumnsEtape: string[] = ['nom', 'temps', 'commentaire'];
+  public displayedColumnsPrepa: string[] = ['nom', 'val_bouch', 'cost'];
+
+  public dataSource_prepa: MatTableDataSource<{
+    name: string;
+    val_bouch:number;
+    cost:number
+  }>
+
   public dataSource_ing: MatTableDataSource<{
     name: string;
     quantity: number;
@@ -37,7 +45,7 @@ export class DisplayPlatsComponent implements OnInit {
     name: string;
     cost: number;
     quantity: number;
-    unity: string,
+    unity: string;
   }>;
 
   public dataSource_etape: MatTableDataSource<{
@@ -45,6 +53,13 @@ export class DisplayPlatsComponent implements OnInit {
     temps: number;
     commentaire: string | null;
   }>;
+
+
+  public displayed_prepa: Array<{
+    name:string;
+    val_bouch:number;
+    cost:number;
+  }>
 
   public displayed_ing: Array<{
     name: string;
@@ -72,6 +87,7 @@ export class DisplayPlatsComponent implements OnInit {
   page_number_etapes: number;
   page_number_conso: number;
   page_number_ings: number;
+  page_number_prepa:number;
   private preparations:Array<Cpreparation>;
   private ingredients:Array<TIngredientBase>;
   private consommables:Array<Cconsommable>;
@@ -95,16 +111,18 @@ export class DisplayPlatsComponent implements OnInit {
       this.page_number_conso = 0;
       this.page_number_etapes = 0;
       this.page_number_ings = 0;
+      this.page_number_prepa = 0;
       this.displayed_ing = [];
       this.displayed_conso = [];
       this.displayed_etape = [];
+      this.displayed_prepa = [];
       this.dataSource_ing = new MatTableDataSource(this.displayed_ing);
       this.dataSource_conso = new MatTableDataSource(this.displayed_conso);
       this.dataSource_etape = new MatTableDataSource(this.displayed_etape);
+      this.dataSource_prepa = new MatTableDataSource(this.displayed_prepa);
     }
 
   ngOnInit(): void {
-    debugger;
     //ont récupère les préprations uniquement qui sont 
     this.tmps_prepa_theo = this.plat_service.getFullTheoTimeFromSec(this.data.plat);
     this.portion_cost = this.plat_service.getPortionCost(this.data.plat);
@@ -112,12 +130,25 @@ export class DisplayPlatsComponent implements OnInit {
     this.plat_service.getPrimCost(this.data.prop, this.data.restaurant, this.data.plat).then((prime_cost) => this.prime_cost = prime_cost);
     this.prix_ttc = this.calcul_service.getCostTtcFromTaux(this.data.plat.taux_tva, this.data.plat.prix);
 
+    if(this.data.plat.preparations !== null){
+      if(this.data.plat.preparations.length > 0){
+          const res = this.data.plat.preparations.filter((prepa) => prepa.nom !== null)
+          this.displayed_prepa = res.map((preparation) => {
+            return {name: preparation.nom as string,
+                    val_bouch: this.prepa_service.getValBouchFromBasIng(preparation.base_ing as TIngredientBase[], 1, "p"),
+                    cost: this.prepa_service.getTotCost(preparation.base_ing as TIngredientBase[])
+            }
+        })
+        this.dataSource_prepa.data = this.displayed_prepa;
+      }
+    }
 
     if(this.data.ingredients !== null){
       if(this.data.plat.ingredients.length > 0){
+        const material_cost = this.prepa_service.getCostMaterial(this.data.plat.ingredients);
+        this.displayed_ing = material_cost.map((ing) => {
 
-        this.displayed_ing = this.data.plat.ingredients.map((ing) => {
-          return {name: ing.name, quantity: ing.quantity, unity: ing.unity, cost:ing.cost, cost_matiere: ing.material_cost}
+          return {name: ing.nom, quantity: ing.quantity, unity: ing.unity, cost:ing.cost, cost_matiere: ing.cost_matiere}
         })
         this.dataSource_ing.data = this.displayed_ing;
       }
@@ -154,7 +185,22 @@ export class DisplayPlatsComponent implements OnInit {
      etapes_data.pageSize = 1
      etapes_data.pageIndex = this.page_number_etapes
      this.pageChangedEtape(etapes_data);
+
+     const prepa_data = new PageEvent();
+     prepa_data.length = this.displayed_prepa.length
+     prepa_data.pageSize = 1
+     prepa_data.pageIndex = this.page_number_prepa
+     this.pageChangedPrepa(prepa_data);
   }
+
+  pageChangedPrepa(event:PageEvent){
+    event.length;
+    let datasource = [... this.displayed_prepa];
+    this.page_number_prepa = event.pageIndex;    
+    this.dataSource_prepa.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
+    
+  }
+
   pageChangedEtape(event:PageEvent){
     event.length;
     let datasource = [... this.displayed_etape];

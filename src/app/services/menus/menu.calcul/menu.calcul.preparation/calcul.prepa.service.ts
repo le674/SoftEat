@@ -144,6 +144,21 @@ export class CalculPrepaService {
     }
   }
   
+
+  getTotCost(ingredients:Array<TIngredientBase>):number{
+    let cost = 0
+    if(ingredients !== null){
+      cost = ingredients.map((ing) => {
+        if(ing !== null){
+          return ing.cost
+        }
+        else{
+          return 0
+      }}).reduce((prev_cost, next_cost) => prev_cost + next_cost);
+    }
+    return cost
+  }
+
   ToCentime(quantity:number):number{
     return Math.round(quantity*100)/100;
   }

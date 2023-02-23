@@ -63,7 +63,31 @@
                     aria-label="Selection page d'une preparation">
                 </mat-paginator>
             </div>
-            <div class="col"></div>
+            <div class="col">
+                <h2>Préparations</h2>
+                <table mat-table [dataSource]="dataSource_prepa" class="mat-elevation-z8">
+                    <ng-container matColumnDef="nom">
+                        <th class="name" mat-header-cell *matHeaderCellDef> nom </th>
+                        <td class="name" mat-cell *matCellDef="let element"> {{element.name.split('_').join(' ')}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="val_bouch">
+                        <th class="other-cells" mat-header-cell *matHeaderCellDef> valeur bouchère</th>
+                        <td class="other-cells" mat-cell *matCellDef="let element"> {{element.val_bouch}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="cost">
+                        <th class="other-cells" mat-header-cell *matHeaderCellDef> coût </th>
+                        <td class="other-cells" mat-cell *matCellDef="let element"> {{element.cost}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsPrepa"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsPrepa;"></tr>
+                </table>
+                <mat-paginator #paginatoring [pageSizeOptions]="[1]"
+                    (page)="pageChangedPrepa($event)"
+                    [length]="displayed_prepa.length"
+                    showFirstLastButtons
+                    aria-label="Selection page d'une preparation">
+                </mat-paginator>
+            </div>
         </div>
         <div class="row">
             <div class="col">
