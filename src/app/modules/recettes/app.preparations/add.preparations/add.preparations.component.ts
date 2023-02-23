@@ -208,6 +208,9 @@ export class AddPreparationsComponent implements OnInit{
           let result = this.prepa_service.getCostMaterial(ings).filter((ing) => !(ing.nom === ""));
           let displayed_conso = consos.map((conso) => { return {name: conso.name, cost: conso.cost, quantity: conso.quantity, unity: conso.unity}})
                                       .filter((conso) => !(conso.name === ""));
+          // ont vide les listes avant l'ajout dans la bdd
+          this.base_ings = [];
+          this.base_conso = [];
           for(let index = 0; index < result.length; index++){
               const ing: TIngredientBase = {
                 name: result[index].nom,

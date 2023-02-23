@@ -185,12 +185,14 @@ export class AddMenuComponent implements OnInit {
     let name = "";
     let quantity= 0;
     let unity = "";
-    if(this.data.menu.ingredients !== null){
-      if(this.data.menu.ingredients[_curr_ings_length] !== undefined){
-        let _curr_ing = this.data.menu.ingredients[_curr_ings_length];
-        name = _curr_ing.name;
-        quantity = _curr_ing.quantity;
-        unity = _curr_ing.unity;
+    if(this.data.menu !== null){
+      if(this.data.menu.ingredients !== null){
+        if(this.data.menu.ingredients[_curr_ings_length] !== undefined){
+          let _curr_ing = this.data.menu.ingredients[_curr_ings_length];
+          name = _curr_ing.name;
+          quantity = _curr_ing.quantity;
+          unity = _curr_ing.unity;
+        }
       }
     }
     const new_ing = this.formBuilder.group({
@@ -207,12 +209,14 @@ export class AddMenuComponent implements OnInit {
     let name = "";
     let quantity = 0;
     let unity = "";
-    if(this.data.menu.consommables !== null){
-      if(this.data.menu.consommables[_curr_conso_length] !== undefined){
-        let _curr_conso = this.data.menu.consommables[_curr_conso_length];
-        name = _curr_conso.name;
-        quantity = _curr_conso.quantity;
-        unity = _curr_conso.unity;
+    if(this.data.menu !== null){
+      if(this.data.menu.consommables !== null){
+        if(this.data.menu.consommables[_curr_conso_length] !== undefined){
+          let _curr_conso = this.data.menu.consommables[_curr_conso_length];
+          name = _curr_conso.name;
+          quantity = _curr_conso.quantity;
+          unity = _curr_conso.unity;
+        }
       }
     }
     const new_conso = this.formBuilder.group({
@@ -226,10 +230,11 @@ export class AddMenuComponent implements OnInit {
 
   addInputPlat(){
     let curr_plat_length = this.getBasePlat().length;
-    let name = "";
-    if(this.data.menu.plats !== null){
-      if(this.data.menu.plats[curr_plat_length] !== undefined){
-        name = this.data.menu.plats[curr_plat_length].nom;
+    let name = "";if(this.data.menu !== null){
+      if(this.data.menu.plats !== null){
+        if(this.data.menu.plats[curr_plat_length] !== undefined){
+          name = this.data.menu.plats[curr_plat_length].nom;
+        }
       }
     }
     const new_plat = this.formBuilder.group({

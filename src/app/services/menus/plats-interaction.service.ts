@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { child, connectDatabaseEmulator, Database, get, getDatabase, ref, update } from 'firebase/database';
+import { child, connectDatabaseEmulator, Database, get, getDatabase, ref, remove, update } from 'firebase/database';
 import { Cetape } from 'src/app/interfaces/etape';
 import { Cconsommable,TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cplat, Plat } from 'src/app/interfaces/plat';
@@ -148,6 +148,12 @@ export class PlatsInteractionService {
       })
     })
     return lst_plats;
+  }
+
+  async removePlatInBdd(plat: string, prop: string, restaurant: string) {
+    const path = `plat_${prop}_${restaurant}/${prop}/${restaurant}/${plat}`
+    const ref_db = ref(this.db, path);
+    await remove(ref_db).then(() => console.log("ingrédient ", plat, "bien supprimée"))
   }
 
 }

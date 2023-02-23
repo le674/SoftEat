@@ -74,7 +74,14 @@ export class AppPlatsComponent implements OnInit {
     });
   }
   suppressPlat(plat:Cplat){
-
+    if(plat.nom !== null){
+      this.plat_service.removePlatInBdd(plat.nom.split(" ").join('_'), this.prop, this.restaurant).catch((e) => {
+        console.log(e);
+        this._snackBar.open(`nous ne somme pas parvenu à supprimer le ${plat.nom}`)
+      }).finally(() => {
+        this._snackBar.open(`la préparation ${plat.nom.split(" ").join('_')} vient d'être suprrimé de la base de donnée`, "fermer")
+      });
+    }
   }
   modifPlat(plat:Cplat){
     this.dialog.open(AddPlatsComponent, {

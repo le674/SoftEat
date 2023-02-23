@@ -256,12 +256,14 @@ export class AddPlatsComponent implements OnInit {
     let quantity = 0;
     let unity = "";
     const ingredient_length = this.getBaseIng().length;
-    const ingredients = this.data.plat.ingredients;
-    if(ingredients !== null){
-      if((ingredients[ingredient_length] !== undefined) && (ingredients.length > 0)){
-        name = ingredients[ingredient_length].name;
-        quantity = ingredients[ingredient_length].quantity;
-        unity = ingredients[ingredient_length].unity;   
+    if(this.data.plat !== null){
+      const ingredients = this.data.plat.ingredients;
+      if(ingredients !== null){
+        if((ingredients[ingredient_length] !== undefined) && (ingredients.length > 0)){
+          name = ingredients[ingredient_length].name;
+          quantity = ingredients[ingredient_length].quantity;
+          unity = ingredients[ingredient_length].unity;   
+        }
       }
     }
     const new_ing = this.formBuilder.group({
@@ -278,12 +280,14 @@ export class AddPlatsComponent implements OnInit {
     let quantity = 0;
     let unity = "";
     const consommable_length = this.getBaseConso().length;
-    const consommables = this.data.plat.consommables;
-    if(consommables !== null){
-      if((consommables[consommable_length] !== undefined) && (consommables.length > 0)){
-        name = consommables[consommable_length].name;
-        quantity = consommables[consommable_length].quantity;
-        unity =  consommables[consommable_length].unity;
+    if(this.data.plat !== null){
+      const consommables = this.data.plat.consommables;
+      if(consommables !== null){
+        if((consommables[consommable_length] !== undefined) && (consommables.length > 0)){
+          name = consommables[consommable_length].name;
+          quantity = consommables[consommable_length].quantity;
+          unity =  consommables[consommable_length].unity;
+        }
       }
     }
     const new_conso = this.formBuilder.group({
@@ -299,12 +303,14 @@ export class AddPlatsComponent implements OnInit {
     let name = "";
     let quantity = 0;
     const prepa_length = this.getBasePrepa().length;
-    const preparations = this.data.plat.preparations;
-    if(preparations !== null){
-      if((preparations[prepa_length] !== undefined) && (preparations.length > 0)){
-        if(preparations[prepa_length].nom !== null)  name = preparations[prepa_length].nom as string;
-        if(preparations[prepa_length].quantity !== null) quantity = preparations[prepa_length].quantity;
-      }
+    if(this.data.plat !== null){
+      const preparations = this.data.plat.preparations;
+      if(preparations !== null){
+        if((preparations[prepa_length] !== undefined) && (preparations.length > 0)){
+         if(preparations[prepa_length].nom !== null)  name = preparations[prepa_length].nom as string;
+          if(preparations[prepa_length].quantity !== null) quantity = preparations[prepa_length].quantity;
+        }
+      } 
     }
     const new_prepa = this.formBuilder.group({
       name: new FormControl(name, Validators.required),
@@ -318,12 +324,14 @@ export class AddPlatsComponent implements OnInit {
     let comm = "";
     let tmps = 0;
     const etape_length = this.getEtapes().length;
-    const etapes = this.data.plat.etapes;
-    if(etapes !== null){
-      if((etapes[etape_length] !== undefined) && (etapes.length > 0)){
-        if(etapes[etape_length].nom !== null)  name = etapes[etape_length].nom as string;
-        if(etapes[etape_length].commentaire !== null) comm = etapes[etape_length].commentaire as string;
-        if(etapes[etape_length].temps !== null) tmps = etapes[etape_length].temps;
+    if(this.data.plat !== null){
+      const etapes = this.data.plat.etapes;
+      if(etapes !== null){
+        if((etapes[etape_length] !== undefined) && (etapes.length > 0)){
+          if(etapes[etape_length].nom !== null)  name = etapes[etape_length].nom as string;
+          if(etapes[etape_length].commentaire !== null) comm = etapes[etape_length].commentaire as string;
+          if(etapes[etape_length].temps !== null) tmps = etapes[etape_length].temps;
+        }
       }
     }
     const new_etape = this.formBuilder.group({

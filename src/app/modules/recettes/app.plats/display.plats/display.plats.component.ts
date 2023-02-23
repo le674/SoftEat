@@ -104,6 +104,7 @@ export class DisplayPlatsComponent implements OnInit {
     }
 
   ngOnInit(): void {
+    debugger;
     //ont récupère les préprations uniquement qui sont 
     this.tmps_prepa_theo = this.plat_service.getFullTheoTimeFromSec(this.data.plat);
     this.portion_cost = this.plat_service.getPortionCost(this.data.plat);

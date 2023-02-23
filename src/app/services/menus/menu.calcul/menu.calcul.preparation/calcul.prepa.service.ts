@@ -36,28 +36,46 @@ export class CalculPrepaService {
   async getPrimCost(prop:string,restaurant:string, etapes: Array<Cetape>, ingredients: Array<TIngredientBase>,
      consommables: Array<Cconsommable>){
     await this.restau_service.getSalaryCuisiniee(prop, restaurant).then((salary) => {
-      const full_cost_quant_ing = ingredients.map((ing) => {
-        let cost = ing.cost*this.calcul_service.convertQuantity(ing.quantity, ing.unity);
-        if(!(ing.vrac === 'oui')){
-          // on normalise le cout par la quantitée unitaire
-          cost = cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity);
+      let second_salary = 0;
+      let full_time = 0;
+      let full_cost_quant_ing:Array<number> = [0];
+      let full_cost_quant_conso:Array<number> = [0];
+      if(ingredients !== null){
+        if(ingredients.length > 0){
+          full_cost_quant_ing = ingredients.map((ing) => {
+            let cost = ing.cost*this.calcul_service.convertQuantity(ing.quantity, ing.unity);
+            if(!(ing.vrac === 'oui')){
+              // on normalise le cout par la quantitée unitaire
+              cost = cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity);
+            }
+            return cost
+          })
         }
-        return cost
-      })
-      
-      const full_cost_quant_conso = consommables.map((conso) => {
-        let cost = conso.cost*conso.quantity;
-        return cost
-      })
-  
-      
+      }
+      if(consommables !== null){
+        if(consommables.length > 0){
+          full_cost_quant_conso = consommables.map((conso) => {
+            let cost = conso.cost*conso.quantity;
+            return cost
+          })
+        }
+      }
+      if(etapes !== null){
+        if(etapes.length > 0){
+          full_time = etapes.map((etape) => etape.temps).reduce((curr_tmps, next_tmps) => curr_tmps + next_tmps);
+        }
+      }
       const sum_cost_ing = full_cost_quant_ing.reduce((curr_cost, next_cost) => curr_cost + next_cost);
       const sum_cost_conso = full_cost_quant_conso.reduce((curr_cost, next_cost) => curr_cost + next_cost);
-      const full_time = etapes.map((etape) => etape.temps).
-                                                          reduce((curr_tmps, next_tmps) => curr_tmps + next_tmps);
       // 35 nombr d'heur travaillé par semaine en fonction du nombre de semaine dans un mois
       const mensuel_work_hour = 4.34524*35;
-      const second_salary = salary/(mensuel_work_hour * 3600);
+      if((salary !== null) && (salary !== undefined)){
+        second_salary = salary/(mensuel_work_hour * 3600);
+      }
+      else{
+        console.log("veuillez entrer le salaire dans la base de donnée");
+        
+      }
       
       this.prime_cost = this.ToCentime(second_salary*full_time + sum_cost_conso + sum_cost_ing);
     })
@@ -65,25 +83,34 @@ export class CalculPrepaService {
   }
 
   getFullTheoTimeFromSec(etapes: Array<Cetape>):string{
-    let full_time_sec =  etapes.reduce((prev_etape:Cetape, suiv_etape:Cetape) => {
-      const tmp_etape = new Cetape();
-      tmp_etape.temps =  prev_etape.temps + suiv_etape.temps;
-      return tmp_etape
-    }).temps;
-    
-    const heure = Math.trunc(full_time_sec/3600);
-    const min = Math.trunc(full_time_sec%3600/60);
-    const sec = full_time_sec%60;
-    return `${heure}h ${min}min ${sec}sec`
+    if((etapes !== undefined) && (etapes !== null)){
+      let full_time_sec =  etapes.reduce((prev_etape:Cetape, suiv_etape:Cetape) => {
+        const tmp_etape = new Cetape();
+        tmp_etape.temps =  prev_etape.temps + suiv_etape.temps;
+        return tmp_etape
+      }).temps;
+      const heure = Math.trunc(full_time_sec/3600);
+      const min = Math.trunc(full_time_sec%3600/60);
+      const sec = full_time_sec%60;
+      return `${heure}h ${min}min ${sec}sec`
+    }
+    else{
+      return "0h 0min 0sec"
+    }
   }
   
   getFullTheoTimeSec(etapes: Array<Cetape>):number{
-    let full_time_sec =  etapes.reduce((prev_etape:Cetape, suiv_etape:Cetape) => {
-      const tmp_etape = new Cetape();
-      tmp_etape.temps =  prev_etape.temps + suiv_etape.temps;
-      return tmp_etape
-    }).temps;
-    return full_time_sec;
+    if(etapes !== null){
+      let full_time_sec =  etapes.reduce((prev_etape:Cetape, suiv_etape:Cetape) => {
+        const tmp_etape = new Cetape();
+        tmp_etape.temps =  prev_etape.temps + suiv_etape.temps;
+        return tmp_etape
+      }).temps;
+      return full_time_sec;
+    }
+    else{
+      return 0
+    }
   }
 
   getValBouchFromBasIng(base: TIngredientBase[], quantity_aft_prep: number, unity_aft_prep:string): number {
