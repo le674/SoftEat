@@ -43,11 +43,9 @@ export class CalculPrepaService {
       if(ingredients !== null){
         if(ingredients.length > 0){
           full_cost_quant_ing = ingredients.map((ing) => {
+            // on normalise le cout par la quantitée unitaire
             let cost = ing.cost*this.calcul_service.convertQuantity(ing.quantity, ing.unity);
-            if(!(ing.vrac === 'oui')){
-              // on normalise le cout par la quantitée unitaire
-              cost = cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity);
-            }
+            cost = cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity);
             return cost
           })
         }

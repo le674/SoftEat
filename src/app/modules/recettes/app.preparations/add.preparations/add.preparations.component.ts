@@ -152,6 +152,8 @@ export class AddPreparationsComponent implements OnInit{
   }
 
   changePreparation(){
+    let consos:Cconsommable[] = [];
+    let ings:TIngredientBase[] = [];
     let to_add_preparation_name:string = "";
     const name_prepa = this.add_prepa_section.value.name
     if(name_prepa !== undefined){
@@ -171,7 +173,8 @@ export class AddPreparationsComponent implements OnInit{
               full_ing.name = ing.name as string;
               if((ing.quantity !== undefined) || (ing.quantity !== null)){
                 full_ing.quantity = ing.quantity as number;
-              } 
+              }
+
               if((ing.unity !== undefined) || (ing.unity !== null)){
                 full_ing.unity =  ing.unity as string;
               } 
@@ -203,8 +206,22 @@ export class AddPreparationsComponent implements OnInit{
               }
             } 
           });
-          let ings = this.data.full_ingredients.filter((ingredient) => this.base_ings.map((ing) => ing.name).includes(ingredient.name));
-          let consos = this.data.full_consommables.filter((consommable) => this.base_conso.map((conso) => conso.name).includes(consommable.name));
+          // le problème c'est que là on supprime les quantitée que l'on à mit avant 
+          this.base_ings.forEach((ingredient) => {
+            const _ingredient = this.data.full_ingredients.find((ing) => ingredient.name === ing.name);
+            if(_ingredient?.quantity !== undefined){
+              _ingredient.quantity = ingredient.quantity;
+              ings.push(_ingredient);
+            }
+          });
+
+          this.base_conso.forEach((_consommable) => {
+            const consommable = this.data.full_consommables.find((conso) => _consommable.name === conso.name);
+            if(consommable?.quantity !== undefined){
+              consommable.quantity = _consommable.quantity;
+              consos.push(consommable);
+            }
+          })
           let result = this.prepa_service.getCostMaterial(ings).filter((ing) => !(ing.nom === ""));
           let displayed_conso = consos.map((conso) => { return {name: conso.name, cost: conso.cost, quantity: conso.quantity, unity: conso.unity}})
                                       .filter((conso) => !(conso.name === ""));

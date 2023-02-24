@@ -13,13 +13,14 @@ export class MenuCalculPlatsServiceService {
   constructor(private prepa_service:CalculPrepaService) { }
 
   getPrimCost(prop:string, restaurant:string,plat:Cplat):Promise<number>{
-  let ingredients:Array<TIngredientBase> = [];
+
+    let arr_ings:Array<TIngredientBase> = [];
     let consommables:Array<Cconsommable> = [];
     let etapes:Array<Cetape> = [];
     let prepa_etapes:Array<Cetape> = [];
     let prepa_consommables:Array<Cconsommable> = [];
     let prepa_ingredients:Array<TIngredientBase> = [];
-    if(plat.ingredients !== null) ingredients = plat.ingredients;
+    if(plat.ingredients !== null) arr_ings = plat.ingredients;
     if(plat.consommables !== null) consommables = plat.consommables;
     if(etapes !== null) etapes = plat.etapes;
     if(plat.preparations !== null){
@@ -43,13 +44,13 @@ export class MenuCalculPlatsServiceService {
     if((etapes) && (prepa_etapes !== null)){
       etapes = etapes.concat(prepa_etapes);
     }
-    if((ingredients !== null) && (prepa_ingredients !== null)){
-      ingredients = ingredients.concat(prepa_ingredients);
+    if((arr_ings !== null) && (prepa_ingredients !== null)){
+      arr_ings = arr_ings.concat(prepa_ingredients);
     }
     if((consommables !== null) && (prepa_consommables !== null)){
       consommables = consommables.concat(prepa_consommables);
     }
-    return this.prepa_service.getPrimCost(prop, restaurant, etapes, ingredients, consommables)
+    return this.prepa_service.getPrimCost(prop, restaurant, etapes, arr_ings, consommables)
   }
 
   getFullTheoTimeFromSec(plat:Cplat):string{
