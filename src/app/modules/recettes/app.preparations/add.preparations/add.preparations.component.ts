@@ -157,7 +157,6 @@ export class AddPreparationsComponent implements OnInit{
     let to_add_preparation_name:string = "";
     const name_prepa = this.add_prepa_section.value.name
     if(name_prepa !== undefined){
-
       if(!this.data.names.includes(name_prepa)){
         if(name_prepa !== null){
           to_add_preparation_name = name_prepa;
