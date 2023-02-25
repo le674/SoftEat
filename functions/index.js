@@ -200,9 +200,6 @@ exports.suppPlats = functions.https.onRequest((req, res) => {
                     delete preparations.name;
                     return {[name]:preparations};
                 }));
-                console.log("ingredients", db_ingredients);
-                console.log('consommables', db_consommables);
-                console.log("preparations", db_preparations);
                 set(ref2,  db_ingredients).then(() => {
                     set(child(ref2, '/preparation'), db_preparations).then(() => {
                         set(ref3, db_consommables).finally(() => {
