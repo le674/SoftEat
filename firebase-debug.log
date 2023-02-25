@@ -1,0 +1,497 @@
+[debug] [2023-02-25T19:26:01.881Z] ----------------------------------------------------------------------
+[debug] [2023-02-25T19:26:01.882Z] Command:       /usr/local/bin/node /usr/local/bin/firebase emulators:start --inspect-functions 4500
+[debug] [2023-02-25T19:26:01.882Z] CLI Version:   11.19.0
+[debug] [2023-02-25T19:26:01.883Z] Platform:      linux
+[debug] [2023-02-25T19:26:01.883Z] Node Version:  v18.7.0
+[debug] [2023-02-25T19:26:01.883Z] Time:          Sat Feb 25 2023 20:26:01 GMT+0100 (heure normale d’Europe centrale)
+[debug] [2023-02-25T19:26:01.883Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-02-25T19:26:01.945Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-02-25T19:26:01.945Z] > authorizing via signed-in user (softeat.contact@gmail.com)
+[debug] [2023-02-25T19:26:01.979Z] openjdk version "11.0.17" 2022-10-18
+
+[debug] [2023-02-25T19:26:01.979Z] OpenJDK Runtime Environment (build 11.0.17+8-post-Ubuntu-1ubuntu222.04)
+OpenJDK 64-Bit Server VM (build 11.0.17+8-post-Ubuntu-1ubuntu222.04, mixed mode, sharing)
+
+[debug] [2023-02-25T19:26:01.985Z] Parsed Java major version: 11
+[info] i  emulators: Starting emulators: auth, functions, firestore, database, storage {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, functions, firestore, database, storage"}}
+[debug] [2023-02-25T19:26:01.989Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-02-25T19:26:01.989Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-02-25T19:26:01.989Z] [firestore] Firestore Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-02-25T19:26:01.989Z] [firestore.websocket] websocket server for firestore only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-02-25T19:26:01.989Z] [database] Database Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-02-25T19:26:01.989Z] [storage] Storage Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-02-25T19:26:01.989Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}],"database":[{"address":"127.0.0.1","family":"IPv4","port":9000}],"storage":[{"address":"127.0.0.1","family":"IPv4","port":9199}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[warn] ⚠  emulators: It seems that you are running multiple instances of the emulator suite for project psofteat-65478545498421319564. This may result in unexpected behavior. 
+[debug] [2023-02-25T19:26:01.995Z] [hub] writing locator at /tmp/hub-psofteat-65478545498421319564.json
+[debug] [2023-02-25T19:26:02.001Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-02-25T19:26:02.001Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-02-25T19:26:02.001Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}],"database":[{"address":"127.0.0.1","family":"IPv4","port":9000}],"storage":[{"address":"127.0.0.1","family":"IPv4","port":9199}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[warn] ⚠  functions: You are running the Functions emulator in debug mode (port=4500). This means that functions will execute in sequence rather than in parallel. {"metadata":{"emulator":{"name":"functions"},"message":"You are running the Functions emulator in debug mode (port=4500). This means that functions will execute in sequence rather than in parallel."}}
+[warn] ⚠  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: hosting, pubsub {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mhosting, pubsub\u001b[22m"}}
+[warn] ⚠  Your requested "node" version "16" doesn't match your global version "18". Using node@18 from host. {"metadata":{"emulator":{"name":"functions"},"message":"Your requested \"node\" version \"16\" doesn't match your global version \"18\". Using node@18 from host."}}
+[warn] ⚠  Your requested "node" version "16" doesn't match your global version "18". Using node@18 from host. {"metadata":{"emulator":{"name":"functions"},"message":"Your requested \"node\" version \"16\" doesn't match your global version \"18\". Using node@18 from host."}}
+[debug] [2023-02-25T19:26:02.020Z] defaultcredentials: writing to file /home/electric_eyes/.config/firebase/softeat_contact_gmail.com_application_default_credentials.json
+[debug] [2023-02-25T19:26:02.022Z] Setting GAC to /home/electric_eyes/.config/firebase/softeat_contact_gmail.com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to /home/electric_eyes/.config/firebase/softeat_contact_gmail.com_application_default_credentials.json"}}
+[debug] [2023-02-25T19:26:02.023Z] > refreshing access token with scopes: []
+[debug] [2023-02-25T19:26:02.024Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2023-02-25T19:26:02.024Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-02-25T19:26:02.154Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2023-02-25T19:26:02.154Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-02-25T19:26:02.165Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/psofteat-65478545498421319564/adminSdkConfig [none]
+[debug] [2023-02-25T19:26:02.532Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/psofteat-65478545498421319564/adminSdkConfig 200
+[debug] [2023-02-25T19:26:02.532Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/psofteat-65478545498421319564/adminSdkConfig {"projectId":"psofteat-65478545498421319564","databaseURL":"https://psofteat-65478545498421319564-default-rtdb.firebaseio.com","storageBucket":"psofteat-65478545498421319564.appspot.com"}
+[debug] [2023-02-25T19:26:02.550Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-02-25T19:26:02.550Z] Ignoring unsupported arg: single_project_mode_error {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: single_project_mode_error"}}
+[debug] [2023-02-25T19:26:02.550Z] Starting Firestore Emulator with command {"binary":"java","args":["-Dgoogle.cloud_firestore.debug_log_level=FINE","-Duser.language=en","-jar","/home/electric_eyes/.cache/firebase/emulators/cloud-firestore-emulator-v1.15.1.jar","--host","127.0.0.1","--port",8080,"--websocket_port",9150,"--project_id","psofteat-65478545498421319564","--rules","/home/electric_eyes/resto+/restoP/firestore.rules","--single_project_mode",true,"--functions_emulator","127.0.0.1:5001"],"optionalArgs":["port","webchannel_port","host","rules","websocket_port","functions_emulator","seed_from_export","project_id","single_project_mode"],"joinArgs":false} {"metadata":{"emulator":{"name":"firestore"},"message":"Starting Firestore Emulator with command {\"binary\":\"java\",\"args\":[\"-Dgoogle.cloud_firestore.debug_log_level=FINE\",\"-Duser.language=en\",\"-jar\",\"/home/electric_eyes/.cache/firebase/emulators/cloud-firestore-emulator-v1.15.1.jar\",\"--host\",\"127.0.0.1\",\"--port\",8080,\"--websocket_port\",9150,\"--project_id\",\"psofteat-65478545498421319564\",\"--rules\",\"/home/electric_eyes/resto+/restoP/firestore.rules\",\"--single_project_mode\",true,\"--functions_emulator\",\"127.0.0.1:5001\"],\"optionalArgs\":[\"port\",\"webchannel_port\",\"host\",\"rules\",\"websocket_port\",\"functions_emulator\",\"seed_from_export\",\"project_id\",\"single_project_mode\"],\"joinArgs\":false}"}}
+[info] i  firestore: Firestore Emulator logging to firestore-debug.log {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator logging to \u001b[1mfirestore-debug.log\u001b[22m"}}
+[debug] [2023-02-25T19:26:03.219Z] Feb 25, 2023 8:26:03 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketServer start
+INFO: Started WebSocket server on ws://127.0.0.1:9150
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Feb 25, 2023 8:26:03 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketServer start\nINFO: Started WebSocket server on ws://127.0.0.1:9150\n"}}
+[debug] [2023-02-25T19:26:03.284Z] API endpoint: http://127.0.0.1:8080
+ {"metadata":{"emulator":{"name":"firestore"},"message":"API endpoint: http://127.0.0.1:8080\n"}}
+[debug] [2023-02-25T19:26:03.284Z] If you are using a library that supports the FIRESTORE_EMULATOR_HOST environment variable, run:
+
+   export FIRESTORE_EMULATOR_HOST=127.0.0.1:8080
+
+Dev App Server is now running.
+
+ {"metadata":{"emulator":{"name":"firestore"},"message":"If you are using a library that supports the FIRESTORE_EMULATOR_HOST environment variable, run:\n\n   export FIRESTORE_EMULATOR_HOST=127.0.0.1:8080\n\nDev App Server is now running.\n\n"}}
+[info] ✔  firestore: Firestore Emulator UI websocket is running on 9150. {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator UI websocket is running on 9150."}}
+[debug] [2023-02-25T19:26:03.321Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/psofteat-65478545498421319564 [none]
+[debug] [2023-02-25T19:26:03.563Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/psofteat-65478545498421319564 200
+[debug] [2023-02-25T19:26:03.564Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/psofteat-65478545498421319564 {"projectId":"psofteat-65478545498421319564","projectNumber":"135059251548","displayName":"PSoftEat-65478545498421319564","name":"projects/psofteat-65478545498421319564","resources":{"hostingSite":"psofteat-65478545498421319564","realtimeDatabaseInstance":"psofteat-65478545498421319564-default-rtdb"},"state":"ACTIVE","etag":"1_2e2c69aa-d9ad-4cbd-a4a3-a44772e2bed1"}
+[debug] [2023-02-25T19:26:03.565Z] database rules config:  [{"instance":"psofteat-65478545498421319564-default-rtdb","rules":"/home/electric_eyes/resto+/restoP/database.rules.json"}]
+[debug] [2023-02-25T19:26:03.573Z] Ignoring unsupported arg: projectId {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: projectId"}}
+[debug] [2023-02-25T19:26:03.574Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-02-25T19:26:03.574Z] Ignoring unsupported arg: rules {"metadata":{"emulator":{"name":"database"},"message":"Ignoring unsupported arg: rules"}}
+[debug] [2023-02-25T19:26:03.574Z] Starting Database Emulator with command {"binary":"java","args":["-Duser.language=en","-jar","/home/electric_eyes/.cache/firebase/emulators/firebase-database-emulator-v4.11.0.jar","--host","127.0.0.1","--port",9000,"--single_project_mode","Warning","--functions_emulator_host","127.0.0.1","--functions_emulator_port",5001],"optionalArgs":["port","host","functions_emulator_port","functions_emulator_host","single_project_mode"],"joinArgs":false} {"metadata":{"emulator":{"name":"database"},"message":"Starting Database Emulator with command {\"binary\":\"java\",\"args\":[\"-Duser.language=en\",\"-jar\",\"/home/electric_eyes/.cache/firebase/emulators/firebase-database-emulator-v4.11.0.jar\",\"--host\",\"127.0.0.1\",\"--port\",9000,\"--single_project_mode\",\"Warning\",\"--functions_emulator_host\",\"127.0.0.1\",\"--functions_emulator_port\",5001],\"optionalArgs\":[\"port\",\"host\",\"functions_emulator_port\",\"functions_emulator_host\",\"single_project_mode\"],\"joinArgs\":false}"}}
+[info] i  database: Database Emulator logging to database-debug.log {"metadata":{"emulator":{"name":"database"},"message":"Database Emulator logging to \u001b[1mdatabase-debug.log\u001b[22m"}}
+[debug] [2023-02-25T19:26:03.966Z] WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.ReflectionUtil (file:/home/electric_eyes/.cache/firebase/emulators/firebase-database-emulator-v4.11.0.jar) to field sun.nio.ch.SelectorImpl.selectedKeys
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.ReflectionUtil
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+ {"metadata":{"emulator":{"name":"database"},"message":"WARNING: An illegal reflective access operation has occurred\nWARNING: Illegal reflective access by io.netty.util.internal.ReflectionUtil (file:/home/electric_eyes/.cache/firebase/emulators/firebase-database-emulator-v4.11.0.jar) to field sun.nio.ch.SelectorImpl.selectedKeys\nWARNING: Please consider reporting this to the maintainers of io.netty.util.internal.ReflectionUtil\nWARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations\nWARNING: All illegal access operations will be denied in a future release\n"}}
+[debug] [2023-02-25T19:26:04.355Z] 20:26:04.354 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
+ {"metadata":{"emulator":{"name":"database"},"message":"20:26:04.354 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started\n"}}
+[debug] [2023-02-25T19:26:04.474Z] 20:26:04.474 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000
+ {"metadata":{"emulator":{"name":"database"},"message":"20:26:04.474 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000\n"}}
+[debug] [2023-02-25T19:26:09.057Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"storage"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-02-25T19:26:09.574Z] Temp file directory for storage emulator: /tmp/firebase/storage/blobs {"metadata":{"emulator":{"name":"storage"},"message":"Temp file directory for storage emulator: /tmp/firebase/storage/blobs"}}
+[debug] [2023-02-25T19:26:09.583Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-02-25T19:26:09.583Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-02-25T19:26:09.583Z] Starting Emulator UI with command {"binary":"node","args":["/home/electric_eyes/.cache/firebase/emulators/ui-v1.11.1/server/server.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"/home/electric_eyes/.cache/firebase/emulators/ui-v1.11.1/server/server.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2023-02-25T19:26:09.660Z] Web / API server started at 127.0.0.1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4000\n"}}
+[debug] [2023-02-25T19:26:09.661Z] Web / API server started at ::1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4000\n"}}
+[info] i  functions: Watching "/home/electric_eyes/resto+/restoP/functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"/home/electric_eyes/resto+/restoP/functions\" for Cloud Functions..."}}
+[debug] [2023-02-25T19:26:09.853Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] ⚠  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2023-02-25T19:26:10.208Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "firebase-admin": "^10.0.2",
+    "firebase-functions": "^3.18.0",
+    "nodemailer": "^6.8.0"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^0.2.0"
+  },
+  "private": true
+}
+[debug] [2023-02-25T19:26:10.208Z] Building nodejs source
+[debug] [2023-02-25T19:26:10.209Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-02-25T19:26:10.303Z] Serving at port 9005
+
+[debug] [2023-02-25T19:26:10.371Z] Got response from /__/functions.yaml {"endpoints":{"sendMail":{"platform":"gcfv1","httpsTrigger":{},"entryPoint":"sendMail"},"suppPlats":{"platform":"gcfv1","httpsTrigger":{},"entryPoint":"suppPlats"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-02-25T19:26:10.377Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: sendMail, suppPlats. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: sendMail, suppPlats."}}
+[info] ✔  functions[us-central1-sendMail]: http function initialized (http://127.0.0.1:5001/psofteat-65478545498421319564/us-central1/sendMail). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/psofteat-65478545498421319564/us-central1/sendMail)."}}
+[info] ✔  functions[us-central1-suppPlats]: http function initialized (http://127.0.0.1:5001/psofteat-65478545498421319564/us-central1/suppPlats). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/psofteat-65478545498421319564/us-central1/suppPlats)."}}
+[debug] [2023-02-25T19:26:10.395Z] [worker-pool] addWorker(~shared~) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(~shared~)"}}
+[debug] [2023-02-25T19:26:10.395Z] [worker-pool] Adding worker with key ~shared~, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key ~shared~, total=1"}}
+[info] >  Starting inspector on 127.0.0.1:4500 failed: address already in use {"user":"Starting inspector on 127.0.0.1:4500 failed: address already in use","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m Starting inspector on 127.0.0.1:4500 failed: address already in use"}}
+[debug] [2023-02-25T19:26:10.819Z] [runtime-status] [24175] Resolved module firebase-admin {"declared":true,"installed":true,"version":"10.3.0","resolution":"/home/electric_eyes/resto+/restoP/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [24175] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"10.3.0\",\"resolution\":\"/home/electric_eyes/resto+/restoP/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2023-02-25T19:26:10.819Z] [runtime-status] [24175] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.24.1","resolution":"/home/electric_eyes/resto+/restoP/functions/node_modules/firebase-functions/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [24175] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"3.24.1\",\"resolution\":\"/home/electric_eyes/resto+/restoP/functions/node_modules/firebase-functions/lib/index.js\"}"}}
+[debug] [2023-02-25T19:26:10.820Z] [runtime-status] [24175] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [24175] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2023-02-25T19:26:10.820Z] [runtime-status] [24175] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.24.1","resolution":"/home/electric_eyes/resto+/restoP/functions/node_modules/firebase-functions/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [24175] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"3.24.1\",\"resolution\":\"/home/electric_eyes/resto+/restoP/functions/node_modules/firebase-functions/lib/index.js\"}"}}
+[debug] [2023-02-25T19:26:10.845Z] [runtime-status] [24175] Checked functions.config() {"config":{}} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [24175] Checked functions.config() {\"config\":{}}"}}
+[debug] [2023-02-25T19:26:10.845Z] [runtime-status] [24175] firebase-functions has been stubbed. {"functionsResolution":{"declared":true,"installed":true,"version":"3.24.1","resolution":"/home/electric_eyes/resto+/restoP/functions/node_modules/firebase-functions/lib/index.js"}} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [24175] firebase-functions has been stubbed. {\"functionsResolution\":{\"declared\":true,\"installed\":true,\"version\":\"3.24.1\",\"resolution\":\"/home/electric_eyes/resto+/restoP/functions/node_modules/firebase-functions/lib/index.js\"}}"}}
+[debug] [2023-02-25T19:26:10.845Z] [runtime-status] [24175] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.24.1","resolution":"/home/electric_eyes/resto+/restoP/functions/node_modules/firebase-functions/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [24175] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"3.24.1\",\"resolution\":\"/home/electric_eyes/resto+/restoP/functions/node_modules/firebase-functions/lib/index.js\"}"}}
+[debug] [2023-02-25T19:26:10.846Z] [runtime-status] [24175] Resolved module firebase-admin {"declared":true,"installed":true,"version":"10.3.0","resolution":"/home/electric_eyes/resto+/restoP/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [24175] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"10.3.0\",\"resolution\":\"/home/electric_eyes/resto+/restoP/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2023-02-25T19:26:10.846Z] [runtime-status] [24175] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.24.1","resolution":"/home/electric_eyes/resto+/restoP/functions/node_modules/firebase-functions/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [24175] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"3.24.1\",\"resolution\":\"/home/electric_eyes/resto+/restoP/functions/node_modules/firebase-functions/lib/index.js\"}"}}
+[debug] [2023-02-25T19:26:10.846Z] [runtime-status] [24175] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"10.3.0","resolution":"/home/electric_eyes/resto+/restoP/functions/node_modules/firebase-admin/lib/index.js"}} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [24175] firebase-admin has been stubbed. {\"adminResolution\":{\"declared\":true,\"installed\":true,\"version\":\"10.3.0\",\"resolution\":\"/home/electric_eyes/resto+/restoP/functions/node_modules/firebase-admin/lib/index.js\"}}"}}
+[debug] [2023-02-25T19:26:10.876Z] [runtime-status] [24175] initializeApp(DEFAULT) {"storageBucket":"psofteat-65478545498421319564.appspot.com","databaseURL":"http://127.0.0.1:9000/?ns=psofteat-65478545498421319564-default-rtdb","projectId":"psofteat-65478545498421319564"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [24175] initializeApp(DEFAULT) {\"storageBucket\":\"psofteat-65478545498421319564.appspot.com\",\"databaseURL\":\"http://127.0.0.1:9000/?ns=psofteat-65478545498421319564-default-rtdb\",\"projectId\":\"psofteat-65478545498421319564\"}"}}
+[debug] [2023-02-25T19:26:10.881Z] [runtime-status] [24175] Functions runtime initialized. {"cwd":"/home/electric_eyes/resto+/restoP/functions","node_version":"18.7.0"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [24175] Functions runtime initialized. {\"cwd\":\"/home/electric_eyes/resto+/restoP/functions\",\"node_version\":\"18.7.0\"}"}}
+[debug] [2023-02-25T19:26:10.881Z] [runtime-status] [24175] Listening to port: /tmp/fire_emu_70501f20d3461aa5.sock {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [24175] Listening to port: /tmp/fire_emu_70501f20d3461aa5.sock"}}
+[debug] [2023-02-25T19:26:10.905Z] [worker-~shared~-52640fb3-b5b1-4aa1-af23-802a52204eaa]: IDLE {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~shared~-52640fb3-b5b1-4aa1-af23-802a52204eaa]: IDLE"}}
+[info] i  functions: Watching "/home/electric_eyes/resto+/restoP/softeat" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"/home/electric_eyes/resto+/restoP/softeat\" for Cloud Functions..."}}
+[debug] [2023-02-25T19:26:10.906Z] Validating nodejs source
+[warn] ⚠  functions: Couldn't find firebase-functions package in your source code. Have you run 'npm install'? 
+[debug] [2023-02-25T19:26:10.906Z] getFunctionsSDKVersion encountered error:Cannot find module 'firebase-functions'
+Require stack:
+- /usr/local/lib/node_modules/firebase-tools/lib/deploy/functions/runtimes/node/versioning.js
+- /usr/local/lib/node_modules/firebase-tools/lib/deploy/functions/runtimes/node/index.js
+- /usr/local/lib/node_modules/firebase-tools/lib/deploy/functions/runtimes/index.js
+- /usr/local/lib/node_modules/firebase-tools/lib/gcp/cloudfunctions.js
+- /usr/local/lib/node_modules/firebase-tools/lib/deploy/functions/backend.js
+- /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorShared.js
+- /usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulator.js
+- /usr/local/lib/node_modules/firebase-tools/lib/emulator/controller.js
+- /usr/local/lib/node_modules/firebase-tools/lib/emulator/commandUtils.js
+- /usr/local/lib/node_modules/firebase-tools/lib/commands/database-get.js
+- /usr/local/lib/node_modules/firebase-tools/lib/commands/index.js
+- /usr/local/lib/node_modules/firebase-tools/lib/index.js
+- /usr/local/lib/node_modules/firebase-tools/lib/bin/firebase.js {"code":"MODULE_NOT_FOUND","requireStack":["/usr/local/lib/node_modules/firebase-tools/lib/deploy/functions/runtimes/node/versioning.js","/usr/local/lib/node_modules/firebase-tools/lib/deploy/functions/runtimes/node/index.js","/usr/local/lib/node_modules/firebase-tools/lib/deploy/functions/runtimes/index.js","/usr/local/lib/node_modules/firebase-tools/lib/gcp/cloudfunctions.js","/usr/local/lib/node_modules/firebase-tools/lib/deploy/functions/backend.js","/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorShared.js","/usr/local/lib/node_modules/firebase-tools/lib/emulator/functionsEmulator.js","/usr/local/lib/node_modules/firebase-tools/lib/emulator/controller.js","/usr/local/lib/node_modules/firebase-tools/lib/emulator/commandUtils.js","/usr/local/lib/node_modules/firebase-tools/lib/commands/database-get.js","/usr/local/lib/node_modules/firebase-tools/lib/commands/index.js","/usr/local/lib/node_modules/firebase-tools/lib/index.js","/usr/local/lib/node_modules/firebase-tools/lib/bin/firebase.js"]}
+[debug] [2023-02-25T19:26:10.907Z] checkFunctionsSDKVersion encountered error:Invalid Version:  {}
+[debug] [2023-02-25T19:26:10.907Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "firebase-admin": "^10.0.2",
+    "firebase-functions": "^3.18.0",
+    "nodemailer": "^6.8.0"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^0.2.0"
+  },
+  "private": true
+}
+[debug] [2023-02-25T19:26:10.907Z] Building nodejs source
+[debug] [2023-02-25T19:26:10.907Z] Could not parse firebase-functions version '' into semver. Falling back to parseTriggers.
+[info] ✔  functions: Loaded functions definitions from source: . {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: ."}}
+[debug] [2023-02-25T19:26:10.965Z] [worker-pool] addWorker(~shared~) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(~shared~)"}}
+[debug] [2023-02-25T19:26:10.965Z] [worker-pool] Adding worker with key ~shared~, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key ~shared~, total=1"}}
+[info] >  Starting inspector on 127.0.0.1:4500 failed: address already in use {"user":"Starting inspector on 127.0.0.1:4500 failed: address already in use","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m Starting inspector on 127.0.0.1:4500 failed: address already in use"}}
+[warn] ⚠  The Cloud Functions emulator requires the module "firebase-admin" to be installed. This package is in your package.json, but it's not available. You probably need to run "npm install" in your functions directory. {"metadata":{"emulator":{"name":"functions"},"message":"The Cloud Functions emulator requires the module \"firebase-admin\" to be installed. This package is in your package.json, but it's not available. You probably need to run \"npm install\" in your functions directory."}}
+[info] i  functions: Your functions could not be parsed due to an issue with your node_modules (see above) {"metadata":{"emulator":{"name":"functions"},"message":"Your functions could not be parsed due to an issue with your node_modules (see above)"}}
+[debug] [2023-02-25T19:26:11.386Z] [runtime-status] [24190] Functions runtime initialized. {"cwd":"/home/electric_eyes/resto+/restoP/softeat","node_version":"18.7.0"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [24190] Functions runtime initialized. {\"cwd\":\"/home/electric_eyes/resto+/restoP/softeat\",\"node_version\":\"18.7.0\"}"}}
+[debug] [2023-02-25T19:26:11.386Z] [runtime-status] [24190] Listening to port: /tmp/fire_emu_51e81136b6affd87.sock {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [24190] Listening to port: /tmp/fire_emu_51e81136b6affd87.sock"}}
+[debug] [2023-02-25T19:26:11.482Z] [worker-~shared~-7a63194f-57f1-4070-846e-938dfcd258aa]: IDLE {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~shared~-7a63194f-57f1-4070-846e-938dfcd258aa]: IDLE"}}
+[debug] [2023-02-25T19:26:11.485Z] >>> [apiv2][query] PUT http://127.0.0.1:9000/.settings/rules.json ns=psofteat-65478545498421319564-default-rtdb
+[debug] [2023-02-25T19:26:11.485Z] >>> [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json "{\n  \"rules\": {\n    \".read\": false,\n    \".write\":false \n  }\n}"
+[debug] [2023-02-25T19:26:11.664Z] 20:26:11.664 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO com.firebase.core.namespace.NamespaceActor - psofteat-65478545498421319564-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 88ms, init: 0ms
+ {"metadata":{"emulator":{"name":"database"},"message":"20:26:11.664 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO com.firebase.core.namespace.NamespaceActor - psofteat-65478545498421319564-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 88ms, init: 0ms\n"}}
+[debug] [2023-02-25T19:26:11.702Z] 20:26:11.702 [NamespaceSystem-blocking-namespace-operation-dispatcher-7] INFO com.firebase.core.namespace.StateManager - Namespace psofteat-65478545498421319564-default-rtdb status Active to Active
+ {"metadata":{"emulator":{"name":"database"},"message":"20:26:11.702 [NamespaceSystem-blocking-namespace-operation-dispatcher-7] INFO com.firebase.core.namespace.StateManager - Namespace psofteat-65478545498421319564-default-rtdb status Active to Active\n"}}
+[debug] [2023-02-25T19:26:11.731Z] <<< [apiv2][status] PUT http://127.0.0.1:9000/.settings/rules.json 200
+[debug] [2023-02-25T19:26:11.731Z] <<< [apiv2][body] PUT http://127.0.0.1:9000/.settings/rules.json {"status":"ok"}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┬─────────────────────────────────┐
+│ Emulator       │ Host:Port      │ View in Emulator UI             │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Authentication │ 127.0.0.1:9099 │ http://127.0.0.1:4000/auth      │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Functions      │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Firestore      │ 127.0.0.1:8080 │ http://127.0.0.1:4000/firestore │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Database       │ 127.0.0.1:9000 │ http://127.0.0.1:4000/database  │
+├────────────────┼────────────────┼─────────────────────────────────┤
+│ Storage        │ 127.0.0.1:9199 │ http://127.0.0.1:4000/storage   │
+└────────────────┴────────────────┴─────────────────────────────────┘
+  Emulator Hub running at 127.0.0.1:4400
+  Other reserved ports: 4500, 9150
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2023-02-25T19:26:17.170Z] 20:26:17.170 [FirebaseWorkerPool-1-3] WARN com.firebase.core.persistence.backend.dummy.EmulatorMetadataPersistence - Multiple projectIds are not recommended in single project mode. Requested 
+namespace psofteat-65478545498421319564, but the emulator is configured for psofteat-65478545498421319564-default-rtdb. To 
+opt-out of single project mode add/set the single_project_mode: false property in 
+the firebase.json emulators config. 
+ {"metadata":{"emulator":{"name":"database"},"message":"20:26:17.170 [FirebaseWorkerPool-1-3] WARN com.firebase.core.persistence.backend.dummy.EmulatorMetadataPersistence - Multiple projectIds are not recommended in single project mode. Requested \nnamespace psofteat-65478545498421319564, but the emulator is configured for psofteat-65478545498421319564-default-rtdb. To \nopt-out of single project mode add/set the single_project_mode: false property in \nthe firebase.json emulators config. \n"}}
+[debug] [2023-02-25T19:26:17.178Z] 20:26:17.175 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO com.firebase.core.namespace.NamespaceActor - psofteat-65478545498421319564 successfully activated FBKV (SurveyIdle(0)) wait: 3ms, init: 0ms
+ {"metadata":{"emulator":{"name":"database"},"message":"20:26:17.175 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO com.firebase.core.namespace.NamespaceActor - psofteat-65478545498421319564 successfully activated FBKV (SurveyIdle(0)) wait: 3ms, init: 0ms\n"}}
+[debug] [2023-02-25T19:26:17.345Z] Feb 25, 2023 8:26:17 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel
+INFO: Connected to new websocket client
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Feb 25, 2023 8:26:17 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel\nINFO: Connected to new websocket client\n"}}
+[debug] [2023-02-25T19:26:17.740Z] 20:26:17.739 [FirebaseWorkerPool-1-2] WARN com.firebase.core.persistence.backend.dummy.EmulatorMetadataPersistence - Multiple projectIds are not recommended in single project mode. Requested 
+namespace 127, but the emulator is configured for psofteat-65478545498421319564-default-rtdb,psofteat-65478545498421319564. To 
+opt-out of single project mode add/set the single_project_mode: false property in 
+the firebase.json emulators config. 
+ {"metadata":{"emulator":{"name":"database"},"message":"20:26:17.739 [FirebaseWorkerPool-1-2] WARN com.firebase.core.persistence.backend.dummy.EmulatorMetadataPersistence - Multiple projectIds are not recommended in single project mode. Requested \nnamespace 127, but the emulator is configured for psofteat-65478545498421319564-default-rtdb,psofteat-65478545498421319564. To \nopt-out of single project mode add/set the single_project_mode: false property in \nthe firebase.json emulators config. \n"}}
+[debug] [2023-02-25T19:26:17.745Z] 20:26:17.745 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO com.firebase.core.namespace.NamespaceActor - 127 successfully activated FBKV (SurveyIdle(0)) wait: 2ms, init: 0ms
+ {"metadata":{"emulator":{"name":"database"},"message":"20:26:17.745 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO com.firebase.core.namespace.NamespaceActor - 127 successfully activated FBKV (SurveyIdle(0)) wait: 2ms, init: 0ms\n"}}
+[debug] [2023-02-25T19:26:34.456Z] [work-queue] {"queuedWork":["/psofteat-65478545498421319564/us-central1/suppPlats-2023-02-25T19:26:34.456Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2023-02-25T19:26:34.456Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/psofteat-65478545498421319564/us-central1/suppPlats-2023-02-25T19:26:34.456Z"],"workRunningCount":1}
+[debug] [2023-02-25T19:26:34.457Z] Accepted request GET /psofteat-65478545498421319564/us-central1/suppPlats?prop=foodandboost_prop&restaurant=foodandboost_1&name=salade_césare&quantity=1 --> us-central1-suppPlats
+[debug] [2023-02-25T19:26:34.459Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2023-02-25T19:26:34.459Z] [functions] Got req.url=/psofteat-65478545498421319564/us-central1/suppPlats?prop=foodandboost_prop&restaurant=foodandboost_1&name=salade_césare&quantity=1, mapping to path=/?prop=foodandboost_prop&restaurant=foodandboost_1&name=salade_c%C3%A9sare&quantity=1 {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/psofteat-65478545498421319564/us-central1/suppPlats?prop=foodandboost_prop&restaurant=foodandboost_1&name=salade_césare&quantity=1, mapping to path=/?prop=foodandboost_prop&restaurant=foodandboost_1&name=salade_c%C3%A9sare&quantity=1"}}
+[debug] [2023-02-25T19:26:34.460Z] [worker-pool] submitRequest(triggerId=us-central1-suppPlats) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-suppPlats)"}}
+[debug] [2023-02-25T19:26:34.460Z] [worker-~shared~-52640fb3-b5b1-4aa1-af23-802a52204eaa]: BUSY {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~shared~-52640fb3-b5b1-4aa1-af23-802a52204eaa]: BUSY"}}
+[info] i  functions: Beginning execution of "suppPlats" {"metadata":{"emulator":{"name":"functions"},"message":"Beginning execution of \"suppPlats\""}}
+[info] >  ingredients { {"user":"ingredients {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m ingredients {"}}
+[info] >    carrote: { {"user":"  carrote: {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   carrote: {"}}
+[info] >      categorie_tva: 'produit alimentaire non conditionnée', {"user":"    categorie_tva: 'produit alimentaire non conditionnée',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     categorie_tva: 'produit alimentaire non conditionnée',"}}
+[info] >      cost: 1, {"user":"    cost: 1,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 1,"}}
+[info] >      cost_ttc: 0, {"user":"    cost_ttc: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 0,"}}
+[info] >      date_reception: '2023-01-20T12:36:28.000Z', {"user":"    date_reception: '2023-01-20T12:36:28.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-01-20T12:36:28.000Z',"}}
+[info] >      dlc: '2023-01-25T12:36:28.000Z', {"user":"    dlc: '2023-01-25T12:36:28.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     dlc: '2023-01-25T12:36:28.000Z',"}}
+[info] >      marge: 2, {"user":"    marge: 2,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     marge: 2,"}}
+[info] >      quantity: 0.6000000000000001, {"user":"    quantity: 0.6000000000000001,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 0.6000000000000001,"}}
+[info] >      quantity_unitaire: 5, {"user":"    quantity_unitaire: 5,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_unitaire: 5,"}}
+[info] >      taux_tva: 10, {"user":"    taux_tva: 10,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 10,"}}
+[info] >      unity: 'kg', {"user":"    unity: 'kg',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'kg',"}}
+[info] >      vrac: 'non' {"user":"    vrac: 'non'","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     vrac: 'non'"}}
+[info] >    }, {"user":"  },","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   },"}}
+[info] >    citron: { {"user":"  citron: {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   citron: {"}}
+[info] >      categorie_tva: 'produit alimentaire non conditionnée', {"user":"    categorie_tva: 'produit alimentaire non conditionnée',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     categorie_tva: 'produit alimentaire non conditionnée',"}}
+[info] >      cost: 4.5, {"user":"    cost: 4.5,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 4.5,"}}
+[info] >      cost_ttc: 0, {"user":"    cost_ttc: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 0,"}}
+[info] >      date_reception: '2023-02-04T09:02:01.000Z', {"user":"    date_reception: '2023-02-04T09:02:01.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-02-04T09:02:01.000Z',"}}
+[info] >      dlc: '2023-02-06T09:02:01.000Z', {"user":"    dlc: '2023-02-06T09:02:01.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     dlc: '2023-02-06T09:02:01.000Z',"}}
+[info] >      marge: 3, {"user":"    marge: 3,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     marge: 3,"}}
+[info] >      quantity: 9.9, {"user":"    quantity: 9.9,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 9.9,"}}
+[info] >      quantity_unitaire: 1, {"user":"    quantity_unitaire: 1,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_unitaire: 1,"}}
+[info] >      taux_tva: 10, {"user":"    taux_tva: 10,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 10,"}}
+[info] >      unity: 'kg', {"user":"    unity: 'kg',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'kg',"}}
+[info] >      vrac: 'non' {"user":"    vrac: 'non'","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     vrac: 'non'"}}
+[info] >    }, {"user":"  },","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   },"}}
+[info] >    courgette: { {"user":"  courgette: {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   courgette: {"}}
+[info] >      categorie_tva: 'produit alimentaire non conditionnée', {"user":"    categorie_tva: 'produit alimentaire non conditionnée',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     categorie_tva: 'produit alimentaire non conditionnée',"}}
+[info] >      cost: 12, {"user":"    cost: 12,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 12,"}}
+[info] >      cost_ttc: 0, {"user":"    cost_ttc: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 0,"}}
+[info] >      date_reception: '2023-01-20T12:32:25.000Z', {"user":"    date_reception: '2023-01-20T12:32:25.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-01-20T12:32:25.000Z',"}}
+[info] >      dlc: '2023-01-25T12:32:25.000Z', {"user":"    dlc: '2023-01-25T12:32:25.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     dlc: '2023-01-25T12:32:25.000Z',"}}
+[info] >      marge: 4, {"user":"    marge: 4,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     marge: 4,"}}
+[info] >      quantity: 11, {"user":"    quantity: 11,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 11,"}}
+[info] >      quantity_unitaire: 200, {"user":"    quantity_unitaire: 200,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_unitaire: 200,"}}
+[info] >      taux_tva: 10, {"user":"    taux_tva: 10,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 10,"}}
+[info] >      unity: 'g', {"user":"    unity: 'g',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'g',"}}
+[info] >      vrac: 'non' {"user":"    vrac: 'non'","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     vrac: 'non'"}}
+[info] >    }, {"user":"  },","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   },"}}
+[info] >    laitue: { {"user":"  laitue: {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   laitue: {"}}
+[info] >      categorie_tva: 'produit alimentaire non conditionnée', {"user":"    categorie_tva: 'produit alimentaire non conditionnée',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     categorie_tva: 'produit alimentaire non conditionnée',"}}
+[info] >      cost: 1.5, {"user":"    cost: 1.5,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 1.5,"}}
+[info] >      cost_ttc: 0, {"user":"    cost_ttc: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 0,"}}
+[info] >      date_reception: '2023-01-30T14:48:03.000Z', {"user":"    date_reception: '2023-01-30T14:48:03.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-01-30T14:48:03.000Z',"}}
+[info] >      dlc: '2023-02-06T14:48:03.000Z', {"user":"    dlc: '2023-02-06T14:48:03.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     dlc: '2023-02-06T14:48:03.000Z',"}}
+[info] >      marge: 1, {"user":"    marge: 1,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     marge: 1,"}}
+[info] >      quantity: 2, {"user":"    quantity: 2,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 2,"}}
+[info] >      quantity_unitaire: 150, {"user":"    quantity_unitaire: 150,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_unitaire: 150,"}}
+[info] >      taux_tva: 10, {"user":"    taux_tva: 10,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 10,"}}
+[info] >      unity: 'g', {"user":"    unity: 'g',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'g',"}}
+[info] >      vrac: 'non' {"user":"    vrac: 'non'","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     vrac: 'non'"}}
+[info] >    }, {"user":"  },","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   },"}}
+[info] >    oignon: { {"user":"  oignon: {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   oignon: {"}}
+[info] >      categorie_tva: 'produit alimentaire non conditionnée', {"user":"    categorie_tva: 'produit alimentaire non conditionnée',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     categorie_tva: 'produit alimentaire non conditionnée',"}}
+[info] >      cost: 1.5, {"user":"    cost: 1.5,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 1.5,"}}
+[info] >      cost_ttc: 0, {"user":"    cost_ttc: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 0,"}}
+[info] >      date_reception: '2023-02-04T11:54:51.000Z', {"user":"    date_reception: '2023-02-04T11:54:51.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-02-04T11:54:51.000Z',"}}
+[info] >      dlc: '2023-02-08T11:54:51.000Z', {"user":"    dlc: '2023-02-08T11:54:51.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     dlc: '2023-02-08T11:54:51.000Z',"}}
+[info] >      marge: 1, {"user":"    marge: 1,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     marge: 1,"}}
+[info] >      quantity: 3.6, {"user":"    quantity: 3.6,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 3.6,"}}
+[info] >      quantity_unitaire: 1, {"user":"    quantity_unitaire: 1,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_unitaire: 1,"}}
+[info] >      taux_tva: 10, {"user":"    taux_tva: 10,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 10,"}}
+[info] >      unity: 'kg', {"user":"    unity: 'kg',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'kg',"}}
+[info] >      vrac: 'non' {"user":"    vrac: 'non'","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     vrac: 'non'"}}
+[info] >    }, {"user":"  },","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   },"}}
+[info] >    origan: { {"user":"  origan: {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   origan: {"}}
+[info] >      categorie_tva: 'produit alimentaire non conditionnée', {"user":"    categorie_tva: 'produit alimentaire non conditionnée',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     categorie_tva: 'produit alimentaire non conditionnée',"}}
+[info] >      cost: 4, {"user":"    cost: 4,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 4,"}}
+[info] >      cost_ttc: 0, {"user":"    cost_ttc: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 0,"}}
+[info] >      date_reception: '2023-02-11T15:56:11.630Z', {"user":"    date_reception: '2023-02-11T15:56:11.630Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-02-11T15:56:11.630Z',"}}
+[info] >      dlc: '2023-08-30T14:56:11.630Z', {"user":"    dlc: '2023-08-30T14:56:11.630Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     dlc: '2023-08-30T14:56:11.630Z',"}}
+[info] >      marge: 0, {"user":"    marge: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     marge: 0,"}}
+[info] >      quantity: 0, {"user":"    quantity: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 0,"}}
+[info] >      quantity_unitaire: 1000, {"user":"    quantity_unitaire: 1000,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_unitaire: 1000,"}}
+[info] >      taux_tva: 10, {"user":"    taux_tva: 10,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 10,"}}
+[info] >      unity: 'g', {"user":"    unity: 'g',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'g',"}}
+[info] >      vrac: 'oui' {"user":"    vrac: 'oui'","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     vrac: 'oui'"}}
+[info] >    }, {"user":"  },","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   },"}}
+[info] >    pain_burger: { {"user":"  pain_burger: {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   pain_burger: {"}}
+[info] >      categorie_tva: 'produit alimentaire non conditionnée', {"user":"    categorie_tva: 'produit alimentaire non conditionnée',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     categorie_tva: 'produit alimentaire non conditionnée',"}}
+[info] >      cost: 1.5, {"user":"    cost: 1.5,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 1.5,"}}
+[info] >      cost_ttc: 0, {"user":"    cost_ttc: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 0,"}}
+[info] >      date_reception: '2023-02-08T21:25:04.631Z', {"user":"    date_reception: '2023-02-08T21:25:04.631Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-02-08T21:25:04.631Z',"}}
+[info] >      dlc: '2023-02-18T21:25:04.631Z', {"user":"    dlc: '2023-02-18T21:25:04.631Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     dlc: '2023-02-18T21:25:04.631Z',"}}
+[info] >      marge: 2, {"user":"    marge: 2,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     marge: 2,"}}
+[info] >      quantity: 10, {"user":"    quantity: 10,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 10,"}}
+[info] >      quantity_unitaire: 150, {"user":"    quantity_unitaire: 150,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_unitaire: 150,"}}
+[info] >      taux_tva: 10, {"user":"    taux_tva: 10,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 10,"}}
+[info] >      unity: 'g', {"user":"    unity: 'g',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'g',"}}
+[info] >      vrac: 'non' {"user":"    vrac: 'non'","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     vrac: 'non'"}}
+[info] >    }, {"user":"  },","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   },"}}
+[info] >    pepsi: { {"user":"  pepsi: {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   pepsi: {"}}
+[info] >      categorie_tva: 'boisson non alcholisée conditionnée', {"user":"    categorie_tva: 'boisson non alcholisée conditionnée',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     categorie_tva: 'boisson non alcholisée conditionnée',"}}
+[info] >      cost: 1.5, {"user":"    cost: 1.5,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 1.5,"}}
+[info] >      cost_ttc: 0, {"user":"    cost_ttc: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 0,"}}
+[info] >      date_reception: '2023-01-25T19:15:40.000Z', {"user":"    date_reception: '2023-01-25T19:15:40.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-01-25T19:15:40.000Z',"}}
+[info] >      dlc: '2023-08-13T17:15:40.000Z', {"user":"    dlc: '2023-08-13T17:15:40.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     dlc: '2023-08-13T17:15:40.000Z',"}}
+[info] >      marge: 5, {"user":"    marge: 5,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     marge: 5,"}}
+[info] >      quantity: 12, {"user":"    quantity: 12,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 12,"}}
+[info] >      quantity_unitaire: 50, {"user":"    quantity_unitaire: 50,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_unitaire: 50,"}}
+[info] >      taux_tva: 5.5, {"user":"    taux_tva: 5.5,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 5.5,"}}
+[info] >      unity: 'cl', {"user":"    unity: 'cl',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'cl',"}}
+[info] >      vrac: 'non' {"user":"    vrac: 'non'","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     vrac: 'non'"}}
+[info] >    }, {"user":"  },","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   },"}}
+[info] >    'pâtes_panzanni': { {"user":"  'pâtes_panzanni': {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   'pâtes_panzanni': {"}}
+[info] >      categorie_tva: 'produit alimentaire conditionnée', {"user":"    categorie_tva: 'produit alimentaire conditionnée',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     categorie_tva: 'produit alimentaire conditionnée',"}}
+[info] >      cost: 1.5, {"user":"    cost: 1.5,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 1.5,"}}
+[info] >      cost_ttc: 0, {"user":"    cost_ttc: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 0,"}}
+[info] >      date_reception: '2023-02-11T15:57:32.155Z', {"user":"    date_reception: '2023-02-11T15:57:32.155Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-02-11T15:57:32.155Z',"}}
+[info] >      dlc: '2023-05-22T14:57:32.155Z', {"user":"    dlc: '2023-05-22T14:57:32.155Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     dlc: '2023-05-22T14:57:32.155Z',"}}
+[info] >      marge: 0, {"user":"    marge: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     marge: 0,"}}
+[info] >      quantity: 2, {"user":"    quantity: 2,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 2,"}}
+[info] >      quantity_unitaire: 500, {"user":"    quantity_unitaire: 500,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_unitaire: 500,"}}
+[info] >      taux_tva: 5.5, {"user":"    taux_tva: 5.5,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 5.5,"}}
+[info] >      unity: 'g', {"user":"    unity: 'g',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'g',"}}
+[info] >      vrac: 'non' {"user":"    vrac: 'non'","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     vrac: 'non'"}}
+[info] >    }, {"user":"  },","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   },"}}
+[info] >    thym: { {"user":"  thym: {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   thym: {"}}
+[info] >      categorie_tva: 'produit alimentaire non conditionnée', {"user":"    categorie_tva: 'produit alimentaire non conditionnée',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     categorie_tva: 'produit alimentaire non conditionnée',"}}
+[info] >      cost: 1, {"user":"    cost: 1,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 1,"}}
+[info] >      cost_ttc: 0, {"user":"    cost_ttc: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 0,"}}
+[info] >      date_reception: '2023-02-04T09:02:32.000Z', {"user":"    date_reception: '2023-02-04T09:02:32.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-02-04T09:02:32.000Z',"}}
+[info] >      dlc: '2023-12-01T09:02:32.000Z', {"user":"    dlc: '2023-12-01T09:02:32.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     dlc: '2023-12-01T09:02:32.000Z',"}}
+[info] >      marge: 50, {"user":"    marge: 50,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     marge: 50,"}}
+[info] >      quantity: 0, {"user":"    quantity: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 0,"}}
+[info] >      quantity_unitaire: 200, {"user":"    quantity_unitaire: 200,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_unitaire: 200,"}}
+[info] >      taux_tva: 10, {"user":"    taux_tva: 10,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 10,"}}
+[info] >      unity: 'g', {"user":"    unity: 'g',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'g',"}}
+[info] >      vrac: 'oui', {"user":"    vrac: 'oui',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     vrac: 'oui',"}}
+[info] >      quantity_unity: 150 {"user":"    quantity_unity: 150","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_unity: 150"}}
+[info] >    }, {"user":"  },","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   },"}}
+[info] >    tomates: { {"user":"  tomates: {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   tomates: {"}}
+[info] >      categorie_tva: 'produit alimentaire non conditionnée', {"user":"    categorie_tva: 'produit alimentaire non conditionnée',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     categorie_tva: 'produit alimentaire non conditionnée',"}}
+[info] >      cost: 2, {"user":"    cost: 2,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 2,"}}
+[info] >      cost_ttc: 0, {"user":"    cost_ttc: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 0,"}}
+[info] >      date_reception: '2023-02-04T11:53:52.000Z', {"user":"    date_reception: '2023-02-04T11:53:52.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-02-04T11:53:52.000Z',"}}
+[info] >      dlc: '2023-02-06T11:53:52.000Z', {"user":"    dlc: '2023-02-06T11:53:52.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     dlc: '2023-02-06T11:53:52.000Z',"}}
+[info] >      marge: 2, {"user":"    marge: 2,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     marge: 2,"}}
+[info] >      quantity: 5, {"user":"    quantity: 5,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 5,"}}
+[info] >      quantity_unitaire: 1000, {"user":"    quantity_unitaire: 1000,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_unitaire: 1000,"}}
+[info] >      taux_tva: 10, {"user":"    taux_tva: 10,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 10,"}}
+[info] >      unity: 'g', {"user":"    unity: 'g',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'g',"}}
+[info] >      vrac: 'non' {"user":"    vrac: 'non'","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     vrac: 'non'"}}
+[info] >    }, {"user":"  },","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   },"}}
+[info] >    tropezienne: { {"user":"  tropezienne: {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   tropezienne: {"}}
+[info] >      categorie_tva: 'produit alimentaire conditionnée', {"user":"    categorie_tva: 'produit alimentaire conditionnée',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     categorie_tva: 'produit alimentaire conditionnée',"}}
+[info] >      cost: 3.5, {"user":"    cost: 3.5,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 3.5,"}}
+[info] >      cost_ttc: 0, {"user":"    cost_ttc: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 0,"}}
+[info] >      date_reception: '2023-01-19T21:08:51.000Z', {"user":"    date_reception: '2023-01-19T21:08:51.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-01-19T21:08:51.000Z',"}}
+[info] >      dlc: '2023-02-08T21:08:51.000Z', {"user":"    dlc: '2023-02-08T21:08:51.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     dlc: '2023-02-08T21:08:51.000Z',"}}
+[info] >      marge: 2, {"user":"    marge: 2,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     marge: 2,"}}
+[info] >      quantity: 1, {"user":"    quantity: 1,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 1,"}}
+[info] >      quantity_unitaire: 250, {"user":"    quantity_unitaire: 250,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_unitaire: 250,"}}
+[info] >      taux_tva: 5.5, {"user":"    taux_tva: 5.5,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 5.5,"}}
+[info] >      unity: 'g', {"user":"    unity: 'g',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'g',"}}
+[info] >      vrac: 'non' {"user":"    vrac: 'non'","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     vrac: 'non'"}}
+[info] >    } {"user":"  }","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   }"}}
+[info] >  } {"user":"}","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m }"}}
+[info] >  consommables { {"user":"consommables {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m consommables {"}}
+[info] >    boite_en_carton: { {"user":"  boite_en_carton: {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   boite_en_carton: {"}}
+[info] >      cost: 0.9090909090909091, {"user":"    cost: 0.9090909090909091,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 0.9090909090909091,"}}
+[info] >      cost_ttc: 11, {"user":"    cost_ttc: 11,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 11,"}}
+[info] >      date_reception: '2023-01-23T17:28:37.000Z', {"user":"    date_reception: '2023-01-23T17:28:37.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-01-23T17:28:37.000Z',"}}
+[info] >      quantity: 11, {"user":"    quantity: 11,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 11,"}}
+[info] >      taux_tva: 10, {"user":"    taux_tva: 10,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 10,"}}
+[info] >      unity: 'p' {"user":"    unity: 'p'","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'p'"}}
+[info] >    }, {"user":"  },","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   },"}}
+[info] >    "film_d'aluminium": { {"user":"  \"film_d'aluminium\": {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   \"film_d'aluminium\": {"}}
+[info] >      cost: 10, {"user":"    cost: 10,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 10,"}}
+[info] >      cost_ttc: 11, {"user":"    cost_ttc: 11,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 11,"}}
+[info] >      date_reception: '2023-01-23T17:37:36.000Z', {"user":"    date_reception: '2023-01-23T17:37:36.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-01-23T17:37:36.000Z',"}}
+[info] >      quantity: 2, {"user":"    quantity: 2,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 2,"}}
+[info] >      taux_tva: 10, {"user":"    taux_tva: 10,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 10,"}}
+[info] >      unity: 'mètre' {"user":"    unity: 'mètre'","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'mètre'"}}
+[info] >    }, {"user":"  },","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   },"}}
+[info] >    film_de_plastique: { {"user":"  film_de_plastique: {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   film_de_plastique: {"}}
+[info] >      cost: 1, {"user":"    cost: 1,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 1,"}}
+[info] >      cost_ttc: 1.5, {"user":"    cost_ttc: 1.5,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 1.5,"}}
+[info] >      date_reception: '2023-02-04T11:56:47.000Z', {"user":"    date_reception: '2023-02-04T11:56:47.000Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-02-04T11:56:47.000Z',"}}
+[info] >      quantity: 1, {"user":"    quantity: 1,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 1,"}}
+[info] >      taux_tva: 5, {"user":"    taux_tva: 5,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 5,"}}
+[info] >      unity: 'p' {"user":"    unity: 'p'","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'p'"}}
+[info] >    } {"user":"  }","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   }"}}
+[info] >  } {"user":"}","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m }"}}
+[info] >  preparations { {"user":"preparations {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m preparations {"}}
+[info] >    ratatouille: { {"user":"  ratatouille: {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   ratatouille: {"}}
+[info] >      base_ing: [ [Object], [Object], [Object] ], {"user":"    base_ing: [ [Object], [Object], [Object] ],","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     base_ing: [ [Object], [Object], [Object] ],"}}
+[info] >      categorie_tva: '', {"user":"    categorie_tva: '',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     categorie_tva: '',"}}
+[info] >      cost: 0, {"user":"    cost: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 0,"}}
+[info] >      cost_ttc: 0, {"user":"    cost_ttc: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 0,"}}
+[info] >      date_reception: '2023-01-31T18:15:23.504Z', {"user":"    date_reception: '2023-01-31T18:15:23.504Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-01-31T18:15:23.504Z',"}}
+[info] >      dlc: '2023-02-05T18:15:23.504Z', {"user":"    dlc: '2023-02-05T18:15:23.504Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     dlc: '2023-02-05T18:15:23.504Z',"}}
+[info] >      is_stock: true, {"user":"    is_stock: true,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     is_stock: true,"}}
+[info] >      marge: 1, {"user":"    marge: 1,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     marge: 1,"}}
+[info] >      quantity: 2, {"user":"    quantity: 2,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 2,"}}
+[info] >      quantity_after_prep: 0, {"user":"    quantity_after_prep: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_after_prep: 0,"}}
+[info] >      quantity_bef_prep: 5.2, {"user":"    quantity_bef_prep: 5.2,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_bef_prep: 5.2,"}}
+[info] >      quantity_unitaire: 5, {"user":"    quantity_unitaire: 5,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_unitaire: 5,"}}
+[info] >      taux_tva: 0, {"user":"    taux_tva: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 0,"}}
+[info] >      unity: 'p', {"user":"    unity: 'p',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'p',"}}
+[info] >      vrac: false {"user":"    vrac: false","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     vrac: false"}}
+[info] >    }, {"user":"  },","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   },"}}
+[info] >    sauce_bolognaise: { {"user":"  sauce_bolognaise: {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   sauce_bolognaise: {"}}
+[info] >      base_ing: [ [Object], [Object], [Object] ], {"user":"    base_ing: [ [Object], [Object], [Object] ],","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     base_ing: [ [Object], [Object], [Object] ],"}}
+[info] >      categorie_tva: 'produit alimentaire non conditionnée', {"user":"    categorie_tva: 'produit alimentaire non conditionnée',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     categorie_tva: 'produit alimentaire non conditionnée',"}}
+[info] >      cost: 0, {"user":"    cost: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost: 0,"}}
+[info] >      cost_ttc: 0, {"user":"    cost_ttc: 0,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     cost_ttc: 0,"}}
+[info] >      date_reception: '2023-01-27T13:28:45.849Z', {"user":"    date_reception: '2023-01-27T13:28:45.849Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     date_reception: '2023-01-27T13:28:45.849Z',"}}
+[info] >      dlc: '2023-01-28T13:28:46.602Z', {"user":"    dlc: '2023-01-28T13:28:46.602Z',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     dlc: '2023-01-28T13:28:46.602Z',"}}
+[info] >      is_stock: true, {"user":"    is_stock: true,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     is_stock: true,"}}
+[info] >      marge: 100, {"user":"    marge: 100,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     marge: 100,"}}
+[info] >      quantity: 4, {"user":"    quantity: 4,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity: 4,"}}
+[info] >      quantity_after_prep: 2, {"user":"    quantity_after_prep: 2,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_after_prep: 2,"}}
+[info] >      quantity_bef_prep: 510, {"user":"    quantity_bef_prep: 510,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_bef_prep: 510,"}}
+[info] >      quantity_unitaire: 250, {"user":"    quantity_unitaire: 250,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_unitaire: 250,"}}
+[info] >      taux_tva: 10, {"user":"    taux_tva: 10,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     taux_tva: 10,"}}
+[info] >      unity: 'g', {"user":"    unity: 'g',","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'g',"}}
+[info] >      vrac: false {"user":"    vrac: false","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     vrac: false"}}
+[info] >    }, {"user":"  },","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   },"}}
+[info] >    'sauce_césar': { {"user":"  'sauce_césar': {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   'sauce_césar': {"}}
+[info] >      base_ing: [ [Object], [Object], [Object] ], {"user":"    base_ing: [ [Object], [Object], [Object] ],","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     base_ing: [ [Object], [Object], [Object] ],"}}
+[info] >      consommables: [ [Object] ], {"user":"    consommables: [ [Object] ],","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     consommables: [ [Object] ],"}}
+[info] >      etapes: [ [Object] ], {"user":"    etapes: [ [Object] ],","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     etapes: [ [Object] ],"}}
+[info] >      is_stock: false, {"user":"    is_stock: false,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     is_stock: false,"}}
+[info] >      quantity_after_prep: 1, {"user":"    quantity_after_prep: 1,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_after_prep: 1,"}}
+[info] >      unity: 'p' {"user":"    unity: 'p'","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'p'"}}
+[info] >    }, {"user":"  },","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   },"}}
+[info] >    sauce_tomate: { {"user":"  sauce_tomate: {","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   sauce_tomate: {"}}
+[info] >      base_ing: [ [Object], [Object] ], {"user":"    base_ing: [ [Object], [Object] ],","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     base_ing: [ [Object], [Object] ],"}}
+[info] >      consommables: [ [Object] ], {"user":"    consommables: [ [Object] ],","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     consommables: [ [Object] ],"}}
+[info] >      etapes: [ [Object], [Object] ], {"user":"    etapes: [ [Object], [Object] ],","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     etapes: [ [Object], [Object] ],"}}
+[info] >      is_stock: false, {"user":"    is_stock: false,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     is_stock: false,"}}
+[info] >      quantity_after_prep: 600, {"user":"    quantity_after_prep: 600,","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     quantity_after_prep: 600,"}}
+[info] >      unity: 'g' {"user":"    unity: 'g'","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m     unity: 'g'"}}
+[info] >    } {"user":"  }","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m   }"}}
+[info] >  } {"user":"}","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m }"}}
+[debug] [2023-02-25T19:26:34.552Z] [worker-~shared~-52640fb3-b5b1-4aa1-af23-802a52204eaa]: IDLE {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~shared~-52640fb3-b5b1-4aa1-af23-802a52204eaa]: IDLE"}}
+[debug] [2023-02-25T19:26:34.552Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[info] i  functions: Finished "suppPlats" in 88.428383ms {"metadata":{"emulator":{"name":"functions"},"message":"Finished \"suppPlats\" in 88.428383ms"}}
