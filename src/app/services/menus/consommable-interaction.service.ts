@@ -11,12 +11,15 @@ export class ConsommableInteractionService {
 
   private db: Database;
   private consommable: Array<Cconsommable>;
-
   constructor(private ofApp: FirebaseApp){
     this.db = getDatabase(ofApp);
-    if((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-      // Point to the RTDB emulator running on localhost.
-      connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
+    if((location.hostname === "localhost") && (!FIREBASE_PROD) ) {
+      try {
+        connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
+      } catch (error) {
+        console.log(error);
+        
+      }
     } 
     this.consommable = [];
   }

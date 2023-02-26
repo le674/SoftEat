@@ -42,8 +42,12 @@ export class ProfilComponent implements OnInit {
     this.mobile = false;
     this.auth = getAuth(this.ofApp);
     if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-      // Point to the RTDB emulator running on localhost.
-      connectAuthEmulator(this.auth, FIREBASE_AUTH_EMULATOR_HOST);
+      try {
+         // Point to the RTDB emulator running on localhost.
+         connectAuthEmulator(this.auth, FIREBASE_AUTH_EMULATOR_HOST);
+      } catch (error) {
+        console.log(error);
+      }
     } 
   
     // Attention l'url doit contenir l'information concernant le restaurant et le proprietaire

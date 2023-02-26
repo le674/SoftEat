@@ -21,8 +21,13 @@ export class MenuInteractionService {
     private conso_service: ConsommableInteractionService, private plat_service: PlatsInteractionService) {
     this.db = getDatabase(ofApp);
     if((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-      // Point to the RTDB emulator running on localhost.
-      connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
+      try {
+       // Point to the RTDB emulator running on localhost.
+       connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port); 
+      } catch (error) {
+        console.log(error);
+        
+      }
     } 
     this.menus = [];
   }

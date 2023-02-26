@@ -13,7 +13,13 @@ export class RestaurantService {
     this.salary = 0;
     this.db = getDatabase(ofApp);
     if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-      connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
+      try {
+        connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
+      } catch (error) {
+        console.log(error);
+        
+      }
+      
     } 
   }
 

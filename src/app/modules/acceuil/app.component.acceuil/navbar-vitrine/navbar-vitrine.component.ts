@@ -22,8 +22,13 @@ const firebaseConfig = {
   const auth = getAuth(app);
 
   if((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-    // Point to the RTDB emulator running on localhost.
-    connectAuthEmulator(auth, FIREBASE_AUTH_EMULATOR_HOST);
+    try {
+        // Point to the RTDB emulator running on localhost.
+        connectAuthEmulator(auth, FIREBASE_AUTH_EMULATOR_HOST);  
+    } catch (error) {
+      console.log(error);
+      
+    }
   } 
 
 

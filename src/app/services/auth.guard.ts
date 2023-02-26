@@ -6,8 +6,12 @@ import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/var
 import { AuthentificationService } from './authentification.service';
 const auth = getAuth();
 if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-    // Point to the RTDB emulator running on localhost.
-    connectAuthEmulator(auth, FIREBASE_AUTH_EMULATOR_HOST);
+  try {
+   // Point to the RTDB emulator running on localhost.
+   connectAuthEmulator(auth, FIREBASE_AUTH_EMULATOR_HOST); 
+  } catch (error) {
+    console.log(error);
+  }
 } 
 
 @Injectable({

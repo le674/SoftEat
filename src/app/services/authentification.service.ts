@@ -29,8 +29,13 @@ export class AuthentificationService {
   private connecter:boolean;
   constructor(public router: Router){
     if((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-      // Point to the RTDB emulator running on localhost.
-      connectAuthEmulator(this.auth, FIREBASE_AUTH_EMULATOR_HOST);
+      try {
+         // Point to the RTDB emulator running on localhost.
+         connectAuthEmulator(this.auth, FIREBASE_AUTH_EMULATOR_HOST);
+      } catch (error) {
+        console.log(error);
+        
+      }
     } 
   
     this.connecter=false;

@@ -24,8 +24,13 @@ export class ModifMdpComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<ModifMdpComponent>, private ofApp: FirebaseApp, private _snackBar: MatSnackBar) {
     this.auth = getAuth(this.ofApp);
     if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-      // Point to the RTDB emulator running on localhost.
-      connectAuthEmulator(this.auth, FIREBASE_AUTH_EMULATOR_HOST);
+      try {
+         // Point to the RTDB emulator running on localhost.
+         connectAuthEmulator(this.auth, FIREBASE_AUTH_EMULATOR_HOST);
+      } catch (error) {
+        console.log(error);
+        
+      }
   } 
   
   }

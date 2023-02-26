@@ -10,7 +10,7 @@ const app = initializeApp(
     {
         apiKey: "AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo",
         authDomain: "psofteat-65478545498421319564.firebaseapp.com",
-        databaseURL: "http://127.0.0.1:9000/?ns=psofteat-65478545498421319564",
+        databaseURL: "http://softeat-serveur/?ns=psofteat-65478545498421319564",
         projectId: "psofteat-65478545498421319564",
         storageBucket: "psofteat-65478545498421319564.appspot.com",
         messagingSenderId: "135059251548",

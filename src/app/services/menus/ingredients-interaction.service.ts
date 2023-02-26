@@ -30,8 +30,16 @@ export class IngredientsInteractionService {
     this.db = getDatabase(ofApp);
     this.firestore = getFirestore(ofApp);
     if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-      connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
-      connectFirestoreEmulator(this.firestore, FIREBASE_FIRESTORE_EMULATOR_HOST.host, FIREBASE_FIRESTORE_EMULATOR_HOST.port);
+      try {
+        connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
+      } catch (error) {
+        
+      }
+      try {
+        connectFirestoreEmulator(this.firestore, FIREBASE_FIRESTORE_EMULATOR_HOST.host, FIREBASE_FIRESTORE_EMULATOR_HOST.port);  
+      }catch (error) {
+        
+      }
     } 
     this.ingredients = [];
     this.preparation = [];
