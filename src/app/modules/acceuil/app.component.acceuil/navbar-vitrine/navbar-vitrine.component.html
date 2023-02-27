@@ -9,7 +9,7 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <a id = "restaumatiqueT"class="navbar-brand">SoftEat</a>
+    <img src="/assets/images/SoftEat_Quadrichromie.png" alt="" id="logo">
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item active">
@@ -42,11 +42,11 @@
           <!--<a class="nav-link" (click)="clicConnexion()">Connexion</a>-->
         </li>
         <li class="nav-item" *ngIf="boutonConnexion == 1">
-          <button class="btn btn-outline-success" (click)="clicAutho()"type="submit">{{getNom()}}</button>
+          <button class="btn" id="entrer" (click)="clicAutho()"type="submit">{{getNom()}}</button>
 
         </li>
         <li class="nav-item" *ngIf="boutonConnexion == 1">
-          <button class="btn btn-outline-danger" (click) ="clicdeConnexion()" type="submit">deconnexion</button>
+          <button class="btn" id="deco" (click) ="clicdeConnexion()" type="submit">deconnexion</button>
         </li>
       </ul>
      

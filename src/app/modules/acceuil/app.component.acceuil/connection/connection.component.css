@@ -22,18 +22,18 @@
    }
    
    input[type ="mail"]{
-    color:green;
+    color:rgb(125, 181, 46);
     font-weight: 200;
    }
    input[type ="password"]{
-    color:green;
+    color:rgb(125, 181, 46);
 
    }  
    h3{
     font-weight: 500;
     opacity: .8;
     margin-bottom: 60px;
-    color: rgb(30, 148, 30);
+    color: rgb(125, 181, 46);
     font-size: 38px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
    }

@@ -7,7 +7,7 @@
     position:relative; top: 100px;margin-left:30%;font-family: 'Inter';font-size: 64px;color:rgba(0, 0, 0, 0.9)
 }
 #cardGeneral{
-    width: 40rem;height: 400px; background-color: rgb(248, 248, 248); border-color: rgb(8, 100, 8);
+    width: 40rem;height: 400px; background-color: rgb(248, 248, 248); border-color: rgb(125, 181, 46);
     
 }/*
 #petitBoutonCote{
@@ -15,7 +15,14 @@
 }*/
 
 
+.card-title{
+    color: rgb(125, 181, 46);
+    font-size: 32px;
+}
 
+.card-link{
+   color: rgb(125, 181, 46);
+}
 
 @media screen and (max-width: 600px) { 
     #divMobile{

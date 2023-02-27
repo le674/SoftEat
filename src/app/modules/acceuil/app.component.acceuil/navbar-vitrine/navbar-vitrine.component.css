@@ -1,13 +1,8 @@
-
-
-  #restaumatiqueT{
-    font-family: 'ABeeZee', sans-serif;
-    font-style: italic;
-    font-size: 38px;
-    
-    color : rgb(30, 148, 30);
-    
+  #logo{
+    height: 82px;
+    width: 168px;
   }
+
   li a:hover {
     font-weight: bold;
     
@@ -17,7 +12,7 @@
     content: '';
      display: block;
      height: 2px;
-     background: rgb(30, 148, 30);
+     background: rgb(125, 181, 46);
      transform: scale(0);
      transition: transform 0.2s ease-in-out;
   }
@@ -35,7 +30,7 @@ li {
 
   }
   #navbar_top{
-    background-color: rgb(255, 255, 255,0.8);margin-left: 10%;margin-top: 20px;
+    background-color: rgb(255, 255, 255,0.8);margin-left: 7%;margin-top: 20px;
     width: max-content;
     
   }
@@ -45,4 +40,34 @@ li {
       width: max-content;
       margin-left: 0%;
     }
+  }
+
+  #deco{
+    color: red;
+    background-color: white;
+    width: 300px;
+    height: auto;
+    font-size: larger;
+    border-radius: 3px;
+    border-color: red;
+  }
+  
+  #deco:hover{
+    color: white;
+    background-color: red;
+  }
+
+  #entrer{
+    color: rgb(125, 181, 46);
+    background-color: white;
+    width: 300px;
+    height: auto;
+    font-size: larger;
+    border-radius: 3px;
+    border-color: rgb(125, 181, 46, 0.5);
+  }
+  
+  #entrer:hover{
+    color: white;
+    background-color: rgb(125, 181, 46);
   }

@@ -1,22 +1,8 @@
-/*#fondD{
-
-    background-color: #FFFFFF;
-    border: 1px solid #A87311;
-    -moz-border-radius: 20px;
-            -webkit-border-radius: 20px;
-            -khtml-border-radius: 20px;
-            padding-top: 10px;
-            padding-left: 3px;
-            padding-right: 3px;
-            padding-bottom: 1500px;
-            background-image: url("src/assets/Accueil_fondDroit.png") ;
-   
-}*/
 #marque{
     font-family: 'ABeeZee', sans-serif;
     font-style: italic;
     font-size: 30px;
-    color : rgb(30, 148, 30);
+    color : rgb(125, 181, 46);
 }
 #conteneurPresentation{
 position: absolute;
@@ -89,8 +75,9 @@ color: #333333;
     left: 328px;
     top: 551px;
     /* Primary color */
-    background: #195A00;
+    background: rgb(125, 181, 46);
     border-radius: 6px;
+    border-color: rgb(125, 181, 46, 0.5);
     font-family: 'Inter';
     font-style: normal;
     
@@ -101,8 +88,8 @@ color: #333333;
     }
     #buttonF:hover{
         background-color: white;
-        border: 1px solid #195A00;
-        color: #195A00;
+        border: 1px solid rgb(125, 181, 46, 0.5);
+        color: rgb(125, 181, 46);
 
     }
     #buttonE{
@@ -124,7 +111,7 @@ color: #333333;
     top: 551px;
     
     /* Primary color */
-    border: 1px solid #195A00;
+    border: 1px solid rgb(125, 181, 46);
     border-radius: 6px;
     
     font-family: 'Inter';
@@ -132,11 +119,11 @@ color: #333333;
     font-weight: 700;
     font-size: 18px;
     line-height: 26px;
-    color: #195A00;
+    color: rgb(125, 181, 46);
     
     }
     #buttonE:hover{
-        background: #195A00;
+        background: rgb(125, 181, 46);
         color: white;
     }
     
