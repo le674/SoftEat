@@ -235,7 +235,7 @@ export class AddPreparationsComponent implements OnInit{
                 unity: result[index].unity,
                 cost: result[index].cost,
                 material_cost: result[index].cost_matiere,
-                vrac:"non",
+                vrac:result[index].vrac,
                 taux_tva: result[index].taux_tva,
                 marge: 0
               }

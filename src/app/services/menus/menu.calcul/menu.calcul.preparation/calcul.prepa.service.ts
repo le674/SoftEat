@@ -14,20 +14,19 @@ export class CalculPrepaService {
     this.prime_cost = 0;
   }
 
-  getCostMaterial(ings:Array<TIngredientBase>):Array<{nom:string, quantity:number, unity:string, cost:number,taux_tva:number, cost_matiere:number}>{
-    let ingredients:Array<{nom:string, quantity:number, unity:string, cost:number, taux_tva:number, cost_matiere:number}> = [];
+  getCostMaterial(ings:Array<TIngredientBase>):Array<{nom:string, quantity:number, unity:string, cost:number,taux_tva:number, cost_matiere:number, vrac:string}>{
+    let ingredients:Array<{nom:string, quantity:number, unity:string, cost:number, taux_tva:number, cost_matiere:number, vrac:string}> = [];
     ings.forEach((ing) => {
       let cost_matiere = ing.cost
-      if(!(ing.vrac === 'oui')){
-        cost_matiere = this.calcul_service.convertQuantity(ing.quantity, ing.unity)*(ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity));
-      }
+      cost_matiere = this.calcul_service.convertQuantity(ing.quantity, ing.unity)*(ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity));
       ingredients.push({
         nom: ing.name,
         quantity: ing.quantity,
         unity: ing.unity,
         cost: ing.cost,
         taux_tva: ing.taux_tva,
-        cost_matiere: this.ToCentime(cost_matiere)
+        cost_matiere: this.ToCentime(cost_matiere),
+        vrac: ing.vrac
       })
     })
     return ingredients
@@ -111,9 +110,10 @@ export class CalculPrepaService {
     }
   }
 
+  //  quand la quantitée finale est précise on applique le calcul normal de la valeur bouchère en revanche quand la quantitée finale 
+  // est exprimé en pièce alors le coût pour une préparation
   getValBouchFromBasIng(base: TIngredientBase[], quantity_aft_prep: number, unity_aft_prep:string): number {
     let ingredient_quantity:Array<number> = [];
-
     if (base.length === 0) {
       return 0;
     }
@@ -124,16 +124,12 @@ export class CalculPrepaService {
     // on fait la somme des coûts et des quantitées des ingrédients de base utilisées pour la préparation
     const moy_cost = base.map(ing => {
       let cost =  ing.cost
-      if(!(ing.vrac === 'oui')){
-         // on normalise le cout par la quantitée unitaire
-         cost = cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity);
-      }
+      // on normalise le cout par la quantitée unitaire
+      cost = cost*this.calcul_service.convertQuantity(ing.quantity, ing.unity)/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity);
       return cost
     }).reduce((cost, next_cost) => cost + next_cost) / base.length;
-    const moy_quantity = ingredient_quantity
-      .reduce((quantity, next_quantity) => Number(quantity) + Number(next_quantity)) / base.length;
-    const moy_total_cost = moy_cost * moy_quantity;
-    const square_final_cost = quantity_unity_act * quantity_unity_act;
+    const moy_total_cost = moy_cost;
+    const square_final_cost = quantity_unity_act * quantity_unity_act * ingredient_quantity.reduce((ing_prev, ing) => ing_prev + ing);
     if (square_final_cost !== 0) {
       return this.ToCentime(moy_total_cost / square_final_cost);
     }
