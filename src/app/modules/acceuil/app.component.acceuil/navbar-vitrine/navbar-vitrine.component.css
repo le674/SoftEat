@@ -57,7 +57,7 @@ li {
     background-color: red;
   }
 
-  #entrer{
+  .entrer{
     color: rgb(125, 181, 46);
     background-color: white;
     width: 300px;
@@ -67,7 +67,7 @@ li {
     border-color: rgb(125, 181, 46, 0.5);
   }
   
-  #entrer:hover{
+  .entrer:hover{
     color: white;
     background-color: rgb(125, 181, 46);
   }

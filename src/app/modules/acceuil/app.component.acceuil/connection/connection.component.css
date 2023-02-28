@@ -55,3 +55,17 @@
     margin-bottom:0px;
    }
    
+   #connection{
+      color: rgb(125, 181, 46);
+      background-color: white;
+      width: 300px;
+      height: auto;
+      font-size: larger;
+      border-radius: 3px;
+      border-color: rgb(125, 181, 46, 0.5);
+    }
+    
+    #connection:hover{
+      color: white;
+      background-color: rgb(125, 181, 46);
+    }

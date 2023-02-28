@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil information softeat</title>
+</head>
+<body>
+    <div class="mat-container">
+        <h1 mat-dialog-title>{{section}}</h1>
+        <div mat-dialog-content>
+            <p> {{message}} </p>
+            <mat-list *ngIf="aides" role="list">
+                <mat-list-item role="listitem">Alertes</mat-list-item>
+                <mat-list-item role="listitem">Profil</mat-list-item>
+                <mat-list-item role="listitem">Inventaire</mat-list-item>
+                <mat-list-item role="listitem">Recettes</mat-list-item>
+                <mat-list-item role="listitem">Analyse</mat-list-item>
+                <mat-list-item role="listitem">Comptabilitée</mat-list-item>
+                <mat-list-item role="listitem">Factures</mat-list-item>
+                <mat-list-item role="listitem">Ressources humaines</mat-list-item>
+                <mat-list-item role="listitem">Inventaire</mat-list-item>
+              </mat-list>
+        </div>  
+        <button class="btn" id="fermer" (click)="closePopup()">Fermer</button>
+    </div>
+</body>
+</html>

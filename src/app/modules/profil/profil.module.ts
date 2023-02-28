@@ -13,7 +13,8 @@ import { ModifMdpComponent } from './modif-mdp/modif-mdp.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { ModifMailComponent } from './modif-mail/modif-mail.component';
-import { ModifNumberComponent } from './modif-number/modif-number.component'; 
+import { ModifNumberComponent } from './modif-number/modif-number.component';
+import { InfoAppliComponent } from './info-appli/info-appli.component'; 
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { ModifNumberComponent } from './modif-number/modif-number.component';
     ProfilComponent,
     ModifMdpComponent,
     ModifMailComponent,
-    ModifNumberComponent
+    ModifNumberComponent,
+    InfoAppliComponent
   ],
   imports: [
     CommonModule,

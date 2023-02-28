@@ -1,4 +1,12 @@
 
+.fa-phone, .fa-envelope{
+    color: rgb(125, 181, 46);
+    margin-bottom: 10px;
+}
+
+.title{
+    color: rgb(125, 181, 46);
+}
 
 img{
     width: 185px;
@@ -8,10 +16,6 @@ img{
 body{
     display: flex;
     flex-direction: column;
-}
-
-p{
-    color: white;
 }
 
 button{
@@ -38,14 +42,6 @@ header{
    justify-content: space-between;
    flex-wrap: wrap;
    gap: 20px; 
-}
-.icon_soft_eat{
-    color:  white;
-    margin-left: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: start;
 }
 
 .pen_body{
@@ -78,9 +74,8 @@ header{
 #logo_section{
     margin-left: 30px;
     display:flex;
-    justify-content: center;
+    justify-content: space-between;
     flex-direction: column;
-
 }
 
 #a_propos_section{
@@ -94,7 +89,7 @@ header{
     justify-content: flex-start;
     flex-direction: column;
     margin-right: 30px;
-    margin-top: 73px;
+    margin-top: 15px;
 }
 
 #submit{
@@ -105,17 +100,17 @@ footer{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgb(125, 181, 46);
 }
 
-a{
-    color: white;
-    text-decoration: none;
+.link{
+    cursor: pointer;
+    color: black;
 }
 
-a:hover{
-    color: rgb(245, 245, 245);
+.link:hover {
+    color: rgb(120,120,120);
 }
+
 
 ul{
     list-style-type: none;
@@ -125,7 +120,6 @@ ul{
 
 h1, h2{
     font-family: 'Inter', sans-serif;
-    color: white;
 }
 
 .title{
@@ -133,12 +127,17 @@ h1, h2{
     font-weight: normal;
 }
 
+.formular{
+    margin-right: 10px;
+}
 .mat-stroked-button{
     color: rgb(125, 181, 46);
     background-color: white;
     height: 40px;
     min-width: 96px;
     margin: 0;
+    border-radius: 3px;
+    border-color: rgb(125, 181, 46, 0.5);
 }
 
 .mat-stroked-button:hover{
@@ -147,18 +146,6 @@ h1, h2{
 }
 
 
-/* Border */
-.mat-form-field-appearance-outline .mat-form-field-outline {
-    color: white;
-  }
-  /* Font color */
-input.mat-input-element {
-    color: white;
-}
-
-input{
-    color: white;
-}
 
 #first_filed{
     display: flex;
@@ -171,13 +158,15 @@ input{
     margin-bottom: 20px;
 }
 
-footer .form-control {
-    background-color: white;
-    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.1);
-    border: none;
-    resize: none;
-    color: rgb(125, 181, 46);
-    padding: 0.7em 1em;
+.contact {
+    margin-top: 20px;
+}
+
+.nous-contacter{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-around;
+    margin-top: 20px;
 }
 
 #action-buttons{
@@ -195,6 +184,8 @@ footer .form-control {
 }
 
 #deco_button{
+    border-radius: 3px;
+    border-color: red;
     color: red;
     background-color: white;
     height: 40px;

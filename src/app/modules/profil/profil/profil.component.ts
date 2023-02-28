@@ -10,6 +10,7 @@ import { User } from 'src/app/interfaces/user';
 import { MailServicesService } from 'src/app/services/mail-services.service';
 import { UserInteractionService } from 'src/app/services/user-interaction.service';
 import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { InfoAppliComponent } from '../info-appli/info-appli.component';
 import { ModifMailComponent } from '../modif-mail/modif-mail.component';
 import { ModifMdpComponent } from '../modif-mdp/modif-mdp.component';
 import { ModifNumberComponent } from '../modif-number/modif-number.component';
@@ -143,6 +144,73 @@ export class ProfilComponent implements OnInit {
       width: "300px",
     });
   }
+
+  openConcept():void{
+    const message = "SoftEat est une application d'aide à la gestion d'un restaurant," +
+    " les fonctionnalitées suivantes\n sont prisent en charge par l'application\n" + 
+    "1/ Gestion de l'inventaire et notifications en cas de rupture de stock\n" +
+    "2/ Affichage des fiches techniques et données concernant les plats et menus\n" +
+    "3/ Analyse du restaurant\n" +
+    "4/ Comptabilité\n" +
+    "5/ Gestion des factures, archivage et récupération des entrants\n" +
+    "6/ Gestion des ressources humaines \n" ;
+    const dialogRef = this.dialog.open(InfoAppliComponent, {
+      height: "500px",
+      width: "400px",
+      data : {
+        aides: false,
+        section: "Concept",
+        message: message
+      }
+    });
+  }
+
+  openInfo():void{
+    const message = "SoftEat n'est pas uniquement une solution qui souhaite vous faire gagner du temps et de l'argent," +
+    " avec SoftEat nous proposons un accompagnement pour chaque enseigne" +
+    " la maintenance de votre application, des formations, des conseils" +
+    " ainsi que des évolutions de l'application dont vous pouvez être acteurs.\n \n \n \n \n \n";
+    const dialogRef = this.dialog.open(InfoAppliComponent, {
+      height: "500px",
+      width: "400px",
+      data : {
+        aides: false,
+        section: "Qui sommes nous ?",
+        message: message
+      }
+    });
+  }
+
+  openChart():void{
+    const message = "1/ Les utilisateurs s'engage à ne pas utiliser l'application en dehors de leurs domaines de compétences\n" +
+    "2/ Les utilisateurs s'engage à communiquer des informations concernant leurs restaurant à SoftEat\n" +
+    "3/ SoftEat s'engage à protéger et rendre privée les informations concernant les différentes enseignes\n" +
+    "4/ SoftEat s'engage à ne pas exploiter les informations récoltés par l'application en dehors de celle-ci\n \n" ;
+    const dialogRef = this.dialog.open(InfoAppliComponent, {
+      height: "500px",
+      width: "400px",
+      data : {
+        aides: false,
+        section: "charte d'utilisation",
+        message: message
+      }
+    });
+  }
+
+  openHelp():void{
+    //const message = "Cliquer sur une section afin de bénéficier d'une aide concernant le fonctionnement de l'application";
+    const message = "en cours de création la documentation n'est pas encore disponible"
+    const dialogRef = this.dialog.open(InfoAppliComponent, {
+      height: "500px",
+      width: "400px",
+      data : {
+        aides: false,
+        section: "aide",
+        message: message
+      }
+    });
+  }
+
   clicdeConnexion(){
     const auth = getAuth(this.ofApp);
     auth.signOut();

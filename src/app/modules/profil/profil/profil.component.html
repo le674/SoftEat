@@ -110,50 +110,51 @@
                 </div>
             </mat-list>
         </div>
+        <p class="main_panel title contact">Nous contacter</p>
+        <mat-divider></mat-divider>
+        <div class="nous-contacter">
+            <div id="logo_section">
+                <div class="icon_soft_eat">
+                    <i class="fa-solid fa-phone"> </i>
+                    <p>07 82 21 76 90</p>
+                </div>
+    
+                <div id="mail" class="icon_soft_eat">
+                    <i class="fa-solid fa-envelope"></i>
+                    <p>softeat.contact@gmail.com</p>
+                </div>
+            </div>
+            <div id="a_propos_section">
+                <h1 class="title"> A propos </h1>
+                <ul>
+                    <li>
+                        <p class="link" (click)="openConcept()">concept</p>
+                    </li>
+                    <li>
+                        <p  class="link" (click)="openInfo()">qui sommes nous ?</p>
+                    </li>
+                    <li>
+                        <p  class="link" (click)="openChart()">charte d'utilisation</p>
+                    </li>
+                    <li>
+                        <p  class="link" (click)="openHelp()">aide</p>
+                    </li>
+                </ul>
+            </div>
+            <form (ngSubmit)="sendMessage()" id="contact_section" [formGroup]="contact_form" >
+                <fieldset id="first_filed" class="form-group">
+                    <h1 class="title formular"> Formulaire </h1>
+                    <input type="email" class="form-control" formControlName="sender" id="exampleInputEmail1" placeholder="entrer votre email">
+                </fieldset>
+                <fieldset class="form-group not_email">
+                    <textarea class="form-control"  formControlName="message" id="exampleMessage" placeholder="entrer le message ..."></textarea>
+                </fieldset>
+                <fieldset class="form-group text-xs-right not_email">
+                    <button type="submit" mat-stroked-button>Envoyer</button>
+                </fieldset>
+            </form>
+        </div>
     </main>
-    <footer>
-        <div id="logo_section">
-            <img src="/assets/images/SoftEat_nuance_blanc.png/" alt="">
-            <div class="icon_soft_eat">
-                <i class="fa-solid fa-phone"> </i>
-                <p>07 82 21 76 90</p>
-            </div>
-
-            <div id="mail" class="icon_soft_eat">
-                <i class="fa-solid fa-envelope"></i>
-                <p>SoftEat.contact@gmail.com</p>
-            </div>
-        </div>
-        <div id="a_propos_section">
-            <h1 class="title"> A propos </h1>
-            <ul>
-                <li>
-                    <a href="">concept</a>
-                </li>
-                <li>
-                    <a href="">qui sommes nous ?</a>
-                </li>
-                <li>
-                    <a href="">charte d'utilisation</a>
-                </li>
-                <li>
-                    <a href="">aide</a>
-                </li>
-            </ul>
-        </div>
-        <form (ngSubmit)="sendMessage()" id="contact_section" [formGroup]="contact_form" >
-            <fieldset id="first_filed" class="form-group">
-                <h1 class="title"> Nous contacter </h1>
-                <input type="email" class="form-control" formControlName="sender" id="exampleInputEmail1" placeholder="entrer votre email">
-            </fieldset>
-            <fieldset class="form-group not_email">
-                <textarea class="form-control"  formControlName="message" id="exampleMessage" placeholder="entrer le message ..."></textarea>
-            </fieldset>
-            <fieldset class="form-group text-xs-right not_email">
-                <button type="submit" mat-stroked-button>Envoyer</button>
-            </fieldset>
-        </form>
-    </footer>
 </body>
 
 </html>
