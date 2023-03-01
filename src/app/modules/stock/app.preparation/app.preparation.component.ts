@@ -91,6 +91,7 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
       withLatestFrom(this.service.getIngredientsPrepFromRestaurants())
     )
     this.req_merge_obs = merge_obs.subscribe(([ingBR, ingPREP]) => {
+      
       this.ingredients_table = ingBR;
       this.preparation_table = ingPREP;
       this.displayed_prep = [];

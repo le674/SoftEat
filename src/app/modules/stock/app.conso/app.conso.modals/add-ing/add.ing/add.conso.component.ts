@@ -24,11 +24,11 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
     cost_ttc: new FormControl(0),
     cost: new FormControl(0, Validators.required),
     marge: new FormControl(0, Validators.required)
-  })
-  @ViewChild('taux')
-  taux!: ElementRef;
+  });
+
   private readonly _mat_dialog_ref: MatDialogRef<AddConsoComponent>;
-  is_modif: boolean;
+  public is_modif: boolean;
+  public cost_ttc_val:number;
 
   constructor(public dialogRef: MatDialogRef<AddConsoComponent>,
     public calcul_service: CalculService, @Inject(MAT_DIALOG_DATA) public data: {
@@ -48,6 +48,7 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
     private _snackBar: MatSnackBar, private service_alertes:AlertesService ) {
     this._mat_dialog_ref = dialogRef;
     this.is_modif = this.data.is_modif;
+    this.cost_ttc_val = 0;
   }
 
   ngOnInit(): void {
@@ -101,7 +102,7 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
 
 
     if (this.add_cons_section.value["taux_tva"] !== undefined) {
-      new_conso.setTauxTva(Number(this.taux.nativeElement.value));
+      new_conso.setTauxTva(this.add_cons_section.value["taux_tva"]);
     }
 
     if (this.add_cons_section.value["quantity"] !== undefined) {
@@ -156,4 +157,21 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
     }
   }
 
+  setPrixTTCfHT(event:any){
+    let curr_cost = 0;
+    curr_cost = event.target.value;
+    const taux = this.add_cons_section.controls.taux_tva.value;
+    if(taux !== null){
+      curr_cost = Number(curr_cost);
+      this.cost_ttc_val =  this.calcul_service.getCostTtcFromTaux(taux, curr_cost);
+    }
+  }
+
+  setPrixTTC(event:any){
+    const taux = event.target.value;
+    const curr_cost = this.add_cons_section.controls.cost.value;
+    if(curr_cost!== null){
+      this.cost_ttc_val = this.calcul_service.getCostTtcFromTaux(taux, curr_cost);
+    }
+  }
 }

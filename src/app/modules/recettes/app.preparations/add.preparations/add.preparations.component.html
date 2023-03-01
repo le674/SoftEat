@@ -1,5 +1,5 @@
 <form [formGroup]="add_prepa_section" (ngSubmit)="changePreparation()">
-    <div class="selectSection">
+    <div *ngIf="!data.modification" class="selectSection">
         <p>Voulez-vous stocker la nouvelle préparation</p>
         <mat-radio-group aria-label="Selectionner une option">
             <mat-radio-button value="true" (click)="setTrue()">oui</mat-radio-button>

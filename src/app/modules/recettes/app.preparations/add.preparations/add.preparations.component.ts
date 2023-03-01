@@ -68,7 +68,8 @@ export class AddPreparationsComponent implements OnInit{
     consommables: Array<Consommable>,
     etapes: Array<Cetape>,
     unity:string,
-    quantity_after_prep:number
+    quantity_after_prep:number,
+    modification:boolean
     }, private preparation_service: PreparationInteractionService, private ingredient_service: IngredientsInteractionService,
     private prepa_service:CalculPrepaService, private conso_service:ConsommableInteractionService, private _snackBar: MatSnackBar) { 
     
@@ -85,7 +86,9 @@ export class AddPreparationsComponent implements OnInit{
     else{
       this.consommables = [];
     }
-
+    if(this.data.modification){
+      this.setTrue()
+    }
     this.is_stock = false;  
     this.base_ings = [];
     this.base_conso = [];
@@ -258,7 +261,7 @@ export class AddPreparationsComponent implements OnInit{
           }
 
           this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop, name_prepa.split(" ").join('_'),
-           this.etapes, this.base_ings, this.base_conso, this.after_prep ,this.is_stock).catch((e) => {
+           this.etapes, this.base_ings, this.base_conso, this.after_prep ,this.is_stock, this.data.modification).catch((e) => {
               console.log(e);
               this.etapes = [];
               this.base_conso = [];

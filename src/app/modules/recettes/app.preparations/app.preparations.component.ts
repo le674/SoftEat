@@ -78,7 +78,8 @@ export class AppPreparationsComponent implements OnInit {
         consommables: [],
         etapes: [],
         unity: "",
-        quantity_after_prep: 0
+        quantity_after_prep: 0,
+        modification: false
       }
     });
   }
@@ -98,7 +99,8 @@ export class AppPreparationsComponent implements OnInit {
         consommables: preparation.consommables,
         etapes: preparation.etapes,
         unity: preparation.unity,
-        quantity_after_prep: preparation.quantity_after_prep
+        quantity_after_prep: preparation.quantity_after_prep,
+        modification: true
       } 
     })
   }

@@ -10,7 +10,7 @@
         <p>Entrer le taux de tva : </p>
         <mat-form-field appearance="fill">
             <mat-label>Entrer la taux de TVA </mat-label>
-            <input #taux type="number" matInput formControlName="taux_tva">
+            <input (change)="setPrixTTC($event)" type="number" matInput formControlName="taux_tva">
         </mat-form-field>
     </div>
     <div class="section">
@@ -30,17 +30,17 @@
         </mat-form-field>
     </div>
     <div class="section">
-        <p>Entrer le coût TTC : </p>
-        <mat-form-field appearance="fill">
-            <mat-label>coût</mat-label>
-            <input type="number" matInput formControlName="cost_ttc">
-        </mat-form-field>
-    </div>
-    <div class="section">
         <p>Entrer le coût HT : </p>
         <mat-form-field appearance="fill">
             <mat-label>coût</mat-label>
-            <input type="number" matInput formControlName="cost">
+            <input type="number"  (change)="setPrixTTCfHT($event)" matInput formControlName="cost">
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p>Entrer le coût TTC : </p>
+        <mat-form-field appearance="fill">
+            <mat-label>coût</mat-label>
+            <input type="number"  matInput formControlName="cost_ttc" value="{{cost_ttc_val}}">
         </mat-form-field>
     </div>
     <div class="section">

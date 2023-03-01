@@ -93,6 +93,7 @@ export interface Consommable {
     "cost_ttc": number;
     "marge": number;
     "date_reception":Date;
+    "total_quantity":number;
 
     getNom(): string;
     setNom(nom: string | null): void;
@@ -100,6 +101,9 @@ export interface Consommable {
     setCost(cost: number | null): void;
     getCostTTC(): number;
     setCostTTC(cost: number | null): void;
+    getTotalQuantity():number;
+    setTotalQuantity(quantity:number):void;
+    getTotalQuantity():number;
     getTauxTva(): number;
     setTauxTva(taux: number | null): void;
     getQuantity(): number;
@@ -328,6 +332,7 @@ export class CIngredient implements Ingredient {
 
 export class Cconsommable implements Consommable {
     "quantity": number;
+    "total_quantity":number;
     "name": string;
     "cost": number;
     "unity": string;
@@ -371,7 +376,13 @@ export class Cconsommable implements Consommable {
         return this.quantity
     }
     setQuantity(quantity: number | null): void {
-        if (quantity !== null) this.quantity = quantity
+        if (quantity !== null) this.quantity = quantity;
+    }
+    setTotalQuantity(quantity:number):void{
+        this.total_quantity = quantity;
+    }
+    getTotalQuantity():number{
+        return this.total_quantity;
     }
     getUnity(): string {
         return this.unity

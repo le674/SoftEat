@@ -28,14 +28,16 @@ export class PreparationInteractionService {
 
   //on ajoute la préparation pour le stock et pour la fiche technique
   async setNewPreparation(restaurant:string,prop:string, name:string,etapes: Array<Cetape>,
-     ings: Array<TIngredientBase>, conso:Array<TConsoBase>, after_prepa:AfterPreparation, is_stock:boolean){
+     ings: Array<TIngredientBase>, conso:Array<TConsoBase>, after_prepa:AfterPreparation, is_stock:boolean, modification:boolean){
 
     let updates = {};
     const ref_db = ref(this.db);
     Object.assign(updates, {[`ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name}/consommables`]: conso});
     Object.assign(updates, {[`ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name}/base_ing`]: ings});
     Object.assign(updates, {[`ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name}/etapes`]:  etapes});
-    Object.assign(updates, {[`ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name}/is_stock`]:is_stock});
+    if(!modification){
+      Object.assign(updates, {[`ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name}/is_stock`]:is_stock});
+    }
     Object.assign(updates, {[`ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name}/quantity_after_prep`]:after_prepa.quantity});
     Object.assign(updates, {[`ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name}/unity`]:after_prepa.unity});
 
