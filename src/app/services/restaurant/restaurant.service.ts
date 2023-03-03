@@ -27,8 +27,9 @@ export class RestaurantService {
     let ref_db: DatabaseReference;
     const path = `restaurants/${prop}/${restaurant}/cuisiniee/salary`;
     ref_db = ref(this.db, path);
-    await get(child(ref_db, path)).then((salary) => {
+    await get(ref_db).then((salary) => {
       this.salary = salary.val()
+      console.log(this.salary);
     })
     return this.salary;
   }

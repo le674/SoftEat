@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
 
 @Component({
@@ -19,7 +20,7 @@ export class AddConfigueSalaryComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<AddConfigueSalaryComponent>, @Inject(MAT_DIALOG_DATA) public data:{
     restaurants:Array<string>
     prop:string
-    },private service_restaurant:RestaurantService) {
+    },private service_restaurant:RestaurantService, private _snackBar: MatSnackBar) {
       this.salary = 0; 
       this.restaurants = [];
     }
@@ -34,7 +35,12 @@ export class AddConfigueSalaryComponent implements OnInit {
     const restaurant = this.add_salary.controls.restaurant.value;
     if(salary !== null) this.salary = salary;
     if(restaurant !== null){
-      this.service_restaurant.setCuisinieSalary(this.data.prop, restaurant, this.salary);
+      this.service_restaurant.setCuisinieSalary(this.data.prop, restaurant, this.salary).then(() => {
+        this._snackBar.open(`ajout d'un salaire moyen des cuisiniés pour le restaurant ${restaurant}`, "fermer");
+      }).catch((error) => {
+        console.log(error);
+        this._snackBar.open(`nous ne sommes pas parvenu à ajouter un salairer pour le restaurant ${restaurant}`, "fermer");
+      });
     }
   }
 }

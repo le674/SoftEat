@@ -24,8 +24,22 @@ export class MenuCalculPlatsServiceService {
     if(plat.consommables !== null) consommables = plat.consommables;
     if(etapes !== null) etapes = plat.etapes;
     if(plat.preparations !== null){
-      prepa_etapes = plat.preparations.map((preparation) => preparation.etapes).flat();
-      prepa_consommables = plat.preparations.map((preparation) => preparation.consommables).flat();
+      prepa_etapes = plat.preparations.map((preparation) => {
+        if(preparation.etapes !== undefined){
+          return preparation.etapes
+        }
+        else{
+          return [];
+        }
+      }).flat();
+      prepa_consommables = plat.preparations.map((preparation) => {
+        if(preparation.consommables !== undefined){
+          return  preparation.consommables
+        }
+        else{
+          return [];
+        }
+      }).flat();
       prepa_ingredients = plat.preparations.map((preparation) => preparation.base_ing.map((ing) => {
         let ingredient:TIngredientBase = {
           name:ing.name,

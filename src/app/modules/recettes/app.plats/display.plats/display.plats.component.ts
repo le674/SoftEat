@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Cconsommable, Consommable, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cplat } from 'src/app/interfaces/plat';
@@ -98,7 +99,8 @@ export class DisplayPlatsComponent implements OnInit {
     consommables: Array<Consommable>,
     preparations: Array<Cpreparation>,
     plat: Cplat
-    },private prepa_service:CalculPrepaService,private plat_service:MenuCalculPlatsServiceService, private calcul_service:CalculService) {
+    },private prepa_service:CalculPrepaService,private plat_service:MenuCalculPlatsServiceService, private _snackBar: MatSnackBar,
+     private calcul_service:CalculService) {
       this.preparations = [];
       this.ingredients = [];
       this.consommables = [];
