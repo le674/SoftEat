@@ -203,6 +203,13 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit {
 
     if ((this.add_preparation.value["quantity"] !== undefined) && (this.add_preparation.value["quantity"] !== null)) {
       new_prepa.quantity = this.add_preparation.value["quantity"];
+      if(this.data.preparation.quantity !== undefined){
+        new_prepa.total_quantity = this.data.preparation.quantity;
+        if((this.data.preparation.quantity < this.add_preparation.value["quantity"]) || (!this.data.is_modif)){
+          new_prepa.total_quantity = this.add_preparation.value["quantity"];
+        } 
+      }
+      new_prepa.total_quantity = this.add_preparation.value["quantity"];
     }
 
     if ((this.add_preparation.value["quantity_unitary"] !== undefined) && (this.add_preparation.value["quantity_unitary"] !== null)) {

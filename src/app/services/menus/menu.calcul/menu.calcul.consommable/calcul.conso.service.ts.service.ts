@@ -49,7 +49,7 @@ export class CalculConsoServiceTsService {
       if(unity === 'cl') return 'cl (centilitre)';
       if(unity === 'p') return 'p (pièce)';
     }
-    return ''
+    return unity;
   }
 
 

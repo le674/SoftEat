@@ -104,7 +104,6 @@ export class AddPlatsComponent implements OnInit {
             quantity: new FormControl(ingredient.quantity),
             unity: new FormControl(ingredient.unity)
           })
-          to_add_grp.controls.unity.disable();
           this.getBaseIng().push(to_add_grp);
         })
       }
@@ -220,6 +219,8 @@ export class AddPlatsComponent implements OnInit {
   }
 
   getUnity(new_selection:MatSelectChange, category:string, index:number){
+    // la partie ingrédients n'est plus utilisé car ont veut pouvoir laisser le restaurateur choisir quelle 
+    // category il souhaite 
     if(category === 'ing'){
       const ingredients = this.full_lst_ings.filter((ingredient) => ingredient.name === (new_selection.value as string));
       if(index > this.unity_ing.length){
@@ -271,7 +272,6 @@ export class AddPlatsComponent implements OnInit {
       quantity: new FormControl(quantity),
       unity: new FormControl(unity)
     });
-    new_ing.controls.unity.disable();
     this.getBaseIng().push(new_ing);
   }
 

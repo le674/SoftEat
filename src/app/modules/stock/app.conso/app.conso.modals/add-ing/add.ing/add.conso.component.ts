@@ -107,6 +107,14 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
 
     if (this.add_cons_section.value["quantity"] !== undefined) {
       new_conso.setQuantity(this.add_cons_section.value["quantity"]);
+      if(this.add_cons_section.value["quantity"] !== null) {
+        new_conso.setTotalQuantity(this.add_cons_section.value["quantity"])
+        if(this.data.consommable.quantity !== undefined){
+          if((this.data.consommable.quantity < this.add_cons_section.value["quantity"]) || (!this.data.is_modif)){
+            new_conso.total_quantity =  this.add_cons_section.value["quantity"];
+          }
+        }
+      }
     }
 
     if (unity !== undefined) {

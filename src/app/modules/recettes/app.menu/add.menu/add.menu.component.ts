@@ -200,7 +200,6 @@ export class AddMenuComponent implements OnInit {
       quantity: new FormControl(quantity),
       unity: new FormControl(unity)
     });
-    new_ing.controls.unity.disable();
     this.getBaseIng().push(new_ing);
   }
 

@@ -141,6 +141,12 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
 
     if ((this.add_ing_section.value["quantity"] !== undefined) && (this.add_ing_section.value["quantity"] !== null)) {
       new_ing.quantity = this.add_ing_section.value["quantity"];
+      if(this.data.ingredient.quantity !== undefined){
+        new_ing.total_quantity = this.data.ingredient.quantity;
+        if((this.data.ingredient.quantity < this.add_ing_section.value["quantity"]) || (!this.data.is_modif)){
+          new_ing.total_quantity = this.add_ing_section.value["quantity"];
+        }
+      }
     }
 
     if ((this.add_ing_section.value["quantity_unitary"] !== undefined) && (this.add_ing_section.value["quantity_unitary"] !== null)) {

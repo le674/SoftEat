@@ -47,10 +47,6 @@ export class AddPreparationsComponent implements OnInit{
   private base_conso: Array<TConsoBase>;
   private etapes: Array<Cetape>;
   private after_prep:AfterPreparation = {quantity: 0, unity:""}; 
-  private bdd_conso: Array<TIngredientBase>;
-  private bdd_etapes: Array<TIngredientBase>;
-  private to_add:string;
-  private unity:string;
   
   @ViewChild('taux')
   taux!: ElementRef;
@@ -93,10 +89,6 @@ export class AddPreparationsComponent implements OnInit{
     this.base_ings = [];
     this.base_conso = [];
     this.etapes = [];
-    this.bdd_conso = [];
-    this.bdd_etapes = [];
-    this.to_add = "";
-    this.unity = "";
     this.unity_conso = [];
     this.unity_ing = [];
   }

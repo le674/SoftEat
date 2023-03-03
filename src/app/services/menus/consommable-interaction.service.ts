@@ -111,6 +111,7 @@ export class ConsommableInteractionService {
           unity: consommable.unity,
           cost_ttc: consommable.cost_ttc,
           date_reception: consommable.date_reception,
+          quantity_added: consommable.total_quantity
         },
         [path_lst_conso]:{
           taux_tva: consommable.taux_tva,

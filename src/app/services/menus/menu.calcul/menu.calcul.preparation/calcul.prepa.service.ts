@@ -54,7 +54,6 @@ export class CalculPrepaService {
       if(consommables !== null){
         if(consommables.length > 0){
           full_cost_quant_conso = consommables.map((conso) => {
-            debugger;
             let cost =  conso.cost*conso.quantity;
             return cost
           })

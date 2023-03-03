@@ -32,6 +32,7 @@ export interface Ingredient {
     "cost": number;
     "quantity": number;
     "quantity_unity": number;
+    "total_quantity": number;
     "unity": string;
     "date_reception":Date;
     "dlc": Date;
@@ -128,6 +129,7 @@ export class CIngredient implements Ingredient {
     "cost": number;
     "quantity": number;
     "quantity_unity": number;
+    "total_quantity": number;
     "unity": string;
     "date_reception":Date;
     "dlc": Date;

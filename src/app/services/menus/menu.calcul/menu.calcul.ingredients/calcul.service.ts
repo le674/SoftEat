@@ -122,7 +122,14 @@ export class CalculService {
     if(unity === 'mg') quantity = quantity * 0.0001;
     if(unity === 'ml') quantity = quantity * 0.001;
     if(unity === 'cl') quantity = quantity * 0.01;
-    if(unity === 'cm') quantity = quantity * 0.01
+    if(unity === 'cm') quantity = quantity * 0.01;
+    if(unity === 'c.c') quantity = quantity * 0.005;
+    if(unity === 'c.s') quantity = quantity * 0.015;
+    if(unity === 'noisette')  quantity = quantity * 0.005;
+    if(unity === 'noix')  quantity = quantity * 0.015;
+    if(unity === 'pince') quantity = quantity * 0.004;
+    if(unity === 'pointe') quantity = quantity * 0.005;
+    if(unity === 'verre') quantity = quantity * 0.2;
     return quantity;
   }
 
@@ -143,7 +150,7 @@ export class CalculService {
       if (unity === 'cl (centilitre)') return 'cl';
       if (unity === 'p') return 'p (pièce)';
     }
-    return ''
+    return unity
   }
 
 

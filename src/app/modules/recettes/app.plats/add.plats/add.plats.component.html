@@ -60,7 +60,7 @@
                 <ng-container [formGroupName]="i">
                      <mat-form-field appearance="fill">
                         <mat-label>Choisir l'ingrédients</mat-label>
-                        <mat-select (selectionChange)="getUnity($event, 'ing', i)" formControlName="name">
+                        <mat-select formControlName="name">
                              <mat-option *ngFor="let ingredient of full_lst_ings" [value]="ingredient.name">{{ingredient.name}}</mat-option>
                         </mat-select>
                      </mat-form-field>
@@ -70,7 +70,21 @@
                     </mat-form-field>
                     <mat-form-field appearance="fill">
                         <mat-label> unitée pour le plat </mat-label>
-                        <input matInput  formControlName="unity" value="{{unity_ing[i]}}">
+                        <mat-select formControlName="unity">
+                            <mat-option value="kg"> kg (kilogramme)</mat-option>
+                            <mat-option value="g"> g (grame)</mat-option>
+                            <mat-option value="L"> L (litre)</mat-option>
+                            <mat-option value="p"> p (pièce)</mat-option>
+                            <mat-option value="c.c"> cuillères à café</mat-option>
+                            <mat-option value="c.s"> cuillères à soupe</mat-option>
+                            <mat-option value="pince"> une pincée </mat-option>
+                            <mat-option value="pointe"> une pointe </mat-option>
+                            <mat-option value="noisette"> une noisette de beurre</mat-option>
+                            <mat-option value="noix"> une noix de beurre</mat-option>
+                            <mat-option value="verre"> un verre</mat-option>
+                            <mat-option value="ml"> ml (millilitre)</mat-option>
+                            <mat-option value="cl"> cl (centilitre)</mat-option>
+                        </mat-select>
                     </mat-form-field>
                 </ng-container>
             </div>

@@ -22,6 +22,7 @@ export interface Preparation {
     "cost": number;
     "quantity": number;
     "quantity_unity": number;
+    "total_quantity":number;
     "unity": string;
     "cost_ttc": number;
     "val_bouch": number;
@@ -62,6 +63,7 @@ export class Cpreparation implements Preparation {
     "cost": number;
     "quantity": number;
     "quantity_unity": number;
+    "total_quantity": number;
     "unity": string;
     "cost_ttc": number;
     "val_bouch": number;
@@ -98,7 +100,6 @@ export class Cpreparation implements Preparation {
         this.quantity_bef_prep = 0;
         this.quantity_after_prep = 0;
     }
-
 
     // permet d'initialiser certain attributs pour l'objet préparation lorsque celui-ci a des attributs null
     setDefautPrep() {
