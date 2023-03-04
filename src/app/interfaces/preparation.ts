@@ -24,6 +24,7 @@ export interface Preparation {
     "quantity_unity": number;
     "total_quantity":number;
     "unity": string;
+    "unity_unitary":string;
     "cost_ttc": number;
     "val_bouch": number;
     "base_ing":Array<{
@@ -65,9 +66,10 @@ export class Cpreparation implements Preparation {
     "quantity_unity": number;
     "total_quantity": number;
     "unity": string;
+    "unity_unitary":string;
     "cost_ttc": number;
     "val_bouch": number;
-    "base_ing": { name: string; quantity: number; quantity_unity: number; unity: string; cost: number; vrac: string; marge:number; }[];
+    "base_ing": { name: string; quantity: number; quantity_unity: number; unity: string; unity_unitary:string; cost: number; vrac: string; marge:number; }[];
     "marge": number;
     "vrac": string;
     "portions": number;

@@ -18,7 +18,7 @@ export class CalculPrepaService {
     let ingredients:Array<{nom:string, quantity:number, unity:string, cost:number, taux_tva:number, cost_matiere:number, vrac:string}> = [];
     ings.forEach((ing) => {
       let cost_matiere = ing.cost
-      cost_matiere = this.calcul_service.convertQuantity(ing.quantity, ing.unity)*(ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity));
+      cost_matiere = this.calcul_service.convertQuantity(ing.quantity, ing.unity)*(ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary));
       ingredients.push({
         nom: ing.name,
         quantity: ing.quantity,
@@ -45,7 +45,7 @@ export class CalculPrepaService {
           full_cost_quant_ing = ingredients.map((ing) => {
             // on normalise le cout par la quantitée unitaire
             let cost = ing.cost*this.calcul_service.convertQuantity(ing.quantity, ing.unity);
-            cost = cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity);
+            cost = cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary);
             return cost
           })
         }
@@ -138,7 +138,7 @@ export class CalculPrepaService {
       ing.quantity_unity = Number(ing.quantity_unity);
       ing.quantity = Number(ing.quantity);
       // on normalise le cout par la quantitée unitaire
-      cost = cost*this.calcul_service.convertQuantity(ing.quantity, ing.unity)/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity);
+      cost = cost*this.calcul_service.convertQuantity(ing.quantity, ing.unity)/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary);
       return cost
     }).reduce((cost, next_cost) => cost + next_cost);
     // si la quantitée après préparation est trop faible alors on recalcule le diviseur

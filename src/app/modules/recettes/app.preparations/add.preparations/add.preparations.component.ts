@@ -104,7 +104,12 @@ export class AddPreparationsComponent implements OnInit{
     if((this.data.ingredients !== null) && (this.data.ingredients !== undefined)){
       const current_inputs_ing = this.data.ingredients.length;
       tmp_data = this.data.ingredients.map((ing) => {
-        return {name: ing.name, quantity: ing.quantity, unity: ing.unity};
+        // ont prend en compte le cas où on modifie une préparation contenant un ingrédient pour lequel
+        // nous n'avons pas décider une unitée pour la préparation. Mais nous l'avons ajouté à l'inventaire
+        // exemple : huile 1 litre dans l'inventaire, 1 c.s dans la préparation.
+        let unity = ing.unity_unitary;
+        if(ing.unity !== undefined) unity = ing.unity;
+        return {name: ing.name, quantity: ing.quantity, unity: unity};
       })
       for (let index = 0; index < current_inputs_ing; index++) {
         const new_ing = this.formBuilder.group({
@@ -162,7 +167,7 @@ export class AddPreparationsComponent implements OnInit{
           
           base_ings.value.forEach((ing:Partial<{name:string | null, quantity:number | null, unity:string | null}>) => {
             let full_ing:TIngredientBase = {name:"", quantity:0,quantity_unity:0,
-            unity:"",cost:0,material_cost: 0, vrac:'non',taux_tva: 0,marge:0};
+            unity:"", unity_unitary: "",cost:0,material_cost: 0, vrac:'non',taux_tva: 0,marge:0};
             if((ing.name !== undefined) || (ing.name !== null)){
               full_ing.name = ing.name as string;
               if((ing.quantity !== undefined) || (ing.quantity !== null)){
@@ -170,6 +175,10 @@ export class AddPreparationsComponent implements OnInit{
               }
 
               if((ing.unity !== undefined) || (ing.unity !== null)){
+                // on ajout l'unitée à l'ingrédient qui est utilisé pour la préparation
+                // rappel : 
+                //. unity (unitée pour la préparation)
+                //. unity_unitary (unitée pour l'inventaire)
                 full_ing.unity =  ing.unity as string;
               } 
               this.base_ings.push(full_ing);
@@ -203,17 +212,24 @@ export class AddPreparationsComponent implements OnInit{
           // le problème c'est que là on supprime les quantitée que l'on à mit avant 
           this.base_ings.forEach((ingredient) => {
             const _ingredient = this.data.full_ingredients.find((ing) => ingredient.name === ing.name);
-            if(_ingredient?.quantity !== undefined){
-              _ingredient.quantity = ingredient.quantity;
-              ings.push(_ingredient);
+            if((ingredient.quantity !== undefined) && (ingredient.unity !== undefined)){
+              if(_ingredient?.quantity !== undefined){
+                _ingredient.quantity = ingredient.quantity;
+              }
+              if(_ingredient?.unity !== undefined){
+                _ingredient.unity = ingredient.unity;
+              }
+              if(_ingredient !== undefined) ings.push(_ingredient);
             }
           });
 
           this.base_conso.forEach((_consommable) => {
             const consommable = this.data.full_consommables.find((conso) => _consommable.name === conso.name);
-            if(consommable?.quantity !== undefined){
-              consommable.quantity = _consommable.quantity;
-              consos.push(consommable);
+            if(_consommable.quantity !== undefined){
+              if(consommable?.quantity !== undefined){
+                consommable.quantity = _consommable.quantity;
+                consos.push(consommable);
+              }
             }
           })
           let result = this.prepa_service.getCostMaterial(ings).filter((ing) => !(ing.nom === ""));
@@ -228,6 +244,7 @@ export class AddPreparationsComponent implements OnInit{
                 quantity: result[index].quantity,
                 quantity_unity: ings[index].quantity_unity,
                 unity: result[index].unity,
+                unity_unitary: ings[index].unity_unitary,
                 cost: result[index].cost,
                 material_cost: result[index].cost_matiere,
                 vrac:result[index].vrac,

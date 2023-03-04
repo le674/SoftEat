@@ -8,6 +8,7 @@ export type TIngredientBase = {
     quantity: number, 
     quantity_unity:number ,
     unity:string, 
+    unity_unitary: string,
     cost:number,
     material_cost:number,
     vrac:string,
@@ -34,6 +35,7 @@ export interface Ingredient {
     "quantity_unity": number;
     "total_quantity": number;
     "unity": string;
+    "unity_unitary":string;
     "date_reception":Date;
     "dlc": Date;
     "cost_ttc": number;
@@ -65,6 +67,8 @@ export interface Ingredient {
     setQuantityUniy(quantity: number | null): void;
     getUnity(): string;
     setUnity(unity: string | null): void;
+    getUnityUnitary():string;
+    setUnityUnitary(unity: string | null):void;
     getDlc(): Date;
     setDlc(val: Date | null): void;
     getDateReception(): Date;
@@ -131,6 +135,7 @@ export class CIngredient implements Ingredient {
     "quantity_unity": number;
     "total_quantity": number;
     "unity": string;
+    "unity_unitary":string;
     "date_reception":Date;
     "dlc": Date;
     "cost_ttc": number;
@@ -196,6 +201,7 @@ export class CIngredient implements Ingredient {
             name:this.nom,
             quantity: this.quantity,
             quantity_unity: this.quantity_unity,
+            unity_unitary: this.unity_unitary,
             unity: this.unity,
             cost: this.cost, 
             material_cost: 0,
@@ -295,6 +301,18 @@ export class CIngredient implements Ingredient {
     }
     setUnity(unity: string | null): void {
         if (unity !== null) this.unity = unity
+    }
+
+    getUnityUnitary(): string {
+       return this.unity_unitary;
+    }
+    setUnityUnitary(unity: string | null): void {
+        if(unity !== null) {
+            this.unity_unitary = unity;
+        }
+        else{
+            this.unity_unitary = "";
+        }
     }
 
     getRefrigiree(): boolean {

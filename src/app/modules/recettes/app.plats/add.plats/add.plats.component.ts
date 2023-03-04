@@ -99,10 +99,15 @@ export class AddPlatsComponent implements OnInit {
       }
       if((this.data.plat.ingredients !== null) && (this.data.plat.ingredients !== undefined)){
         this.data.plat.ingredients.forEach((ingredient) => {
+           // ont prend en compte le cas où on modifie une préparation contenant un ingrédient pour lequel
+           // nous n'avons pas décider une unitée pour la préparation. Mais nous l'avons ajouté à l'inventaire
+           // exemple : huile 1 litre dans l'inventaire, 1 c.s dans la préparation.
+          let unity = ingredient.unity_unitary;
+          if(ingredient.unity !== undefined) unity = ingredient.unity
           const to_add_grp = new FormGroup({
             name:new FormControl(ingredient.name),
             quantity: new FormControl(ingredient.quantity),
-            unity: new FormControl(ingredient.unity)
+            unity: new FormControl(unity)
           })
           this.getBaseIng().push(to_add_grp);
         })
@@ -166,14 +171,18 @@ export class AddPlatsComponent implements OnInit {
       plat.ingredients = this.data.full_ingredients.filter((base_ing) => base_ings.map((ing) => ing.name).includes(base_ing.name))
       // on ajoute la quantitée présente pour le plat entré dans le formulaire comme étant la quantitée 
       plat.ingredients.map((ingredient) => {
-        let quantity = 0;
-        const ingredients = base_ings.filter((base) => base.name === ingredient.name);
-        if(ingredients.length > 0){
-          if((ingredients[0].quantity !== null) && (ingredients[0].quantity !== undefined)){
-            quantity = ingredients[0].quantity
+        const _ingredient = base_ings.find((base) => base.name === ingredient.name);
+        if(_ingredient !== undefined){
+          if((_ingredient.quantity !== null) && (_ingredient.quantity !== undefined)){
+            ingredient.quantity = _ingredient.quantity;
+          }
+          else{
+            ingredient.quantity = 0;
+          }
+          if((_ingredient.unity !== null) && (_ingredient.unity !== undefined)){
+            ingredient.unity = _ingredient.unity;
           }
         }
-        ingredient.quantity = quantity;
         return ingredient
       }) 
     }
@@ -197,18 +206,21 @@ export class AddPlatsComponent implements OnInit {
         return etape_to_add;
       })
     }
+    // TO DO : Faire comme pour les ingrédients intégrer une unitée propre à la préparation
     if(this.add_plats_section.controls.base_prepa.value !== null){
       let base_prepa = this.add_plats_section.controls.base_prepa.value;
       plat.preparations = this.data.full_preparations.filter((preparation) => base_prepa.map((prepa) => prepa.name).includes(preparation.nom))
-                                                     .map((preparation) => { const first_prepa = base_prepa.find((prepa) => preparation.nom === prepa.name);
-                                                      if((first_prepa?.quantity !== null) && (first_prepa?.quantity !== undefined)){
-                                                        preparation.quantity = first_prepa.quantity; 
-                                                      }
-                                                      else{
-                                                        preparation.quantity = 0;
-                                                      }
-                                                      return preparation
-                                                    })
+                          .map((preparation) =>
+                          { 
+                              const first_prepa = base_prepa.find((prepa) => preparation.nom === prepa.name);
+                              if((first_prepa?.quantity !== null) && (first_prepa?.quantity !== undefined)){
+                                  preparation.quantity = first_prepa.quantity; 
+                                }
+                              else{
+                                  preparation.quantity = 0;
+                                }
+                            return preparation
+                          })
     }
     this.plat_interaction.setPlat(this.data.prop, this.data.restaurant, plat).finally(() => {
       this._snackBar.open(`le plat ${plat.nom} vient d'être ajouté`, "fermer")

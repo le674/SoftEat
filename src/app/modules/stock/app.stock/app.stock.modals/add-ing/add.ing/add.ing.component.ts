@@ -166,9 +166,8 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     }
 
     if (unity !== undefined) {
-      new_ing.unity = unity;
+      new_ing.unity_unitary = unity;
     }
-
 
     if ((this.add_ing_section.value["dlc"] !== undefined) && (this.add_ing_section.value["dlc"] !== null)) {
       new_ing.dlc.setHours(new_ing.dlc.getHours() + 24 * this.add_ing_section.value["dlc"])

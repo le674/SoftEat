@@ -64,6 +64,7 @@ export class IngredientsInteractionService {
           add_ingredient.setQuantity(ingredient.child("quantity").val());
           add_ingredient.setQuantityUniy(ingredient.child("quantity_unitaire").val());
           add_ingredient.setUnity(ingredient.child("unity").val());
+          add_ingredient.setUnityUnitary(ingredient.child("unity_unitary").val());
           add_ingredient.setCostTtc(ingredient.child("cost_ttc").val());
           add_ingredient.setDlc(ingredient.child("dlc").val());
           add_ingredient.setDateReception(ingredient.child("date_reception").val());
@@ -93,6 +94,7 @@ export class IngredientsInteractionService {
         add_preparation.quantity = preparation.child("quantity").val();
         add_preparation.quantity_unity = preparation.child("quantity_unitaire").val();
         add_preparation.unity = preparation.child("unity").val();
+        add_preparation.unity_unitary = preparation.child("unity_unitary").val();
         add_preparation.base_ing = preparation.child("base_ing").val();
         add_preparation.quantity_bef_prep = preparation.child("quantity_bef_prep").val();
         add_preparation.quantity_after_prep = preparation.child("quantity_after_prep").val();
@@ -129,6 +131,7 @@ export class IngredientsInteractionService {
             add_ingredient.setQuantity(ingredient.child("quantity").val());
             add_ingredient.setQuantityUniy(ingredient.child("quantity_unitaire").val());
             add_ingredient.setUnity(ingredient.child("unity").val());
+            add_ingredient.setUnityUnitary(ingredient.child("unity_unitary").val());
             add_ingredient.setCostTtc(ingredient.child("cost_ttc").val());
             add_ingredient.setDlc(ingredient.child("dlc").val());
             add_ingredient.setDateReception(ingredient.child("date_reception").val());
@@ -157,6 +160,7 @@ export class IngredientsInteractionService {
             add_preparation.quantity = preparation.child("quantity").val();
             add_preparation.quantity_unity = preparation.child("quantity_unitaire").val();
             add_preparation.unity = preparation.child("unity").val();
+            add_preparation.unity_unitary = preparation.child("unity_unitary").val();
             add_preparation.cost_ttc = preparation.child("cost_ttc").val();
             add_preparation.dlc = new Date(preparation.child("dlc").val());
             add_preparation.date_reception = new Date(preparation.child("date_reception").val());
@@ -192,6 +196,7 @@ export class IngredientsInteractionService {
             quantity: ingredient_quantity,
             quantity_unity: ingredient_bdd.child("quantity_unitaire").val(),
             unity: ingredient_bdd.child("unity").val(),
+            unity_unitary: ingredient_bdd.child("unity_unitary").val(),
             cost: ingredient_bdd.child("cost").val(),
             vrac: ingredient_bdd.child("vrac").val(),
             material_cost: ingredient_bdd.child("material_cost").val(),
@@ -252,6 +257,7 @@ export class IngredientsInteractionService {
              quantity_unitaire: preparation.quantity_unity,
              quantity_added: preparation.total_quantity,
              unity: preparation.unity,
+             unity_unitary: preparation.unity_unitary,
              base_ing: preparation.base_ing,
              quantity_after_prep: preparation.quantity_after_prep,
              quantity_bef_prep: preparation.quantity_bef_prep,
@@ -274,6 +280,7 @@ export class IngredientsInteractionService {
                  quantity: new_ing_aft_prepa[index].quantity,
                  quantity_unitaire: new_ing_aft_prepa[index].quantity_unity,
                  unity: new_ing_aft_prepa[index].unity,
+                 unity_untary: new_ing_aft_prepa[index].unity_unitary,
                  cost_ttc: new_ing_aft_prepa[index].cost_ttc,
                  date_reception: new_ing_aft_prepa[index].date_reception,
                  dlc: new_ing_aft_prepa[index].dlc,
@@ -300,6 +307,7 @@ export class IngredientsInteractionService {
           quantity: ingredient.quantity,
           quantity_unitaire: ingredient.quantity_unity,
           quantity_added: ingredient.total_quantity,
+          unity_unitary: ingredient.unity_unitary,
           unity: ingredient.unity,
           cost_ttc: ingredient.cost_ttc,
           date_reception: ingredient.date_reception,
@@ -311,6 +319,7 @@ export class IngredientsInteractionService {
           taux_tva: ingredient.taux_tva,
           cost: ingredient.cost,
           quantity_unitaire: ingredient.quantity_unity,
+          unity_unitary: ingredient.unity_unitary,
           unity: ingredient.unity,
           vrac: ingredient.vrac
         }
@@ -353,6 +362,7 @@ export class IngredientsInteractionService {
             quantity:0,
             quantity_unity: ing.child('quantity_unitaire').val(),
             unity: ing.child('unity').val(),
+            unity_unitary: ing.child('unity_unitary').val(),
             vrac: ing.child('vrac').val(),
             taux_tva: ing.child('taux_tva').val(), 
             material_cost: 0,

@@ -108,7 +108,7 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
           let ings = ingPREP[i].base_ing.filter((ing) => lst_base_ing.map((base) => base.nom).includes(ing.name));
           ings.map((ing, index: number) => {
 
-            ing.unity = lst_base_ing[index].unity;
+            ing.unity = lst_base_ing[index].unity_unitary;
             ing.cost = lst_base_ing[index].cost;
             ing.quantity_unity = lst_base_ing[index].quantity_unity;
           })
@@ -134,7 +134,7 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
           after_prep: ingPREP[i].quantity_after_prep,
           quantity: ingPREP[i].quantity,
           quantity_unity: ingPREP[i].quantity_unity,
-          unity: ingPREP[i].unity,
+          unity: ingPREP[i].unity_unitary,
           date_reception: ingPREP[i].date_reception.toLocaleString(),
           dlc: ingPREP[i].dlc.toLocaleString(),
           marge: ingPREP[i].marge,

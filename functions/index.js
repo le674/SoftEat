@@ -139,7 +139,7 @@ exports.suppPlats = functions.https.onRequest((req, res) => {
                         if ((_supp_ings !== null) && (_supp_ings !== undefined)) {
                             for (let _ingredient of _supp_ings) {
                                 // on récupère la quantitée /quantité unitée le nouveau coût à supprimer
-                                if (ingredient.vrac === 'oui') {
+                                if (ingredient.vrac === 'oui') {    
                                     ingredient.quantity_unity = ingredient.quantity_unitaire - _ingredient.quantity;
                                     // on recalcul le coût pour la nouvelle quantitée d'ingrédient en vrac
                                     ingredient.cost = ingredient.cost * _ingredient.quantity / ingredient.quantity_unitaire;

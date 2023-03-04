@@ -118,7 +118,7 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
             after_prep: 0,
             quantity: ingredient.quantity,
             quantity_unity: ingredient.quantity_unity,
-            unity: ingredient.unity,
+            unity: ingredient.unity_unitary,
             cuisinee: 'non',
             date_reception: ingredient.date_reception.toLocaleString(),
             dlc: ingredient.dlc.toLocaleString(),

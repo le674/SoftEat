@@ -66,6 +66,7 @@ export class PreparationInteractionService {
           preparation.etapes =  prepa.child('etapes').val();
           preparation.quantity_after_prep =  prepa.child('quantity_after_prep').val();
           preparation.unity = prepa.child('unity').val();
+          preparation.unity_unitary = prepa.child('unity_unitary').val();
           this.preparations.push(preparation);
         }
       })
