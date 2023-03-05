@@ -2,9 +2,6 @@
     color: rgb(125, 181, 46);
 }
 
-.fa-minus{
-    color: red;
-}
 
 .inputs-containers{
     display: flex;
@@ -25,7 +22,22 @@ p{
     display: block;
 }
 
-.mat-stroked-button{
+.supp_button{
+    color: red;
+    background-color: white;
+    height: 40px;
+    min-width: 18ch;
+    max-width: 200ch;
+    width: fit-content;
+    margin-left: 17px;
+}
+
+.supp_button:hover{
+    background-color: red;
+    color: white;
+}
+
+#add{
     color: rgb(125, 181, 46);
     background-color: white;
     height: 40px;
@@ -33,7 +45,7 @@ p{
     margin: 0;
 }
 
-.mat-stroked-button:hover{
+#add{
     background-color: rgb(125, 181, 46);
     color: white;
 }
@@ -44,6 +56,7 @@ p{
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    margin-bottom: 40px;
 }
 
 mat-form-field{

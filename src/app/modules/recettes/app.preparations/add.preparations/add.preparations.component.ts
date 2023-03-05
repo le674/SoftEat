@@ -376,16 +376,16 @@ export class AddPreparationsComponent implements OnInit{
     this.getEtapes().push(new_etape);
   }
 
-  suppInputIng(){
-    this.getBaseIng().removeAt(this.getBaseIng().length - 1);
+  suppInputIng(index:number){
+    this.getBaseIng().removeAt(index);
   }
 
-  suppInputConso(){
-    this.getBaseConso().removeAt(this.getBaseConso().length - 1);
+  suppInputConso(index:number){
+    this.getBaseConso().removeAt(index);
   }
 
-  suppInputEtape(){
-    this.getEtapes().removeAt(this.getEtapes().length - 1);
+  suppInputEtape(index:number){
+    this.getEtapes().removeAt(index);
   }
 
   getUnity(new_selection:MatSelectChange, category:string, index:number){

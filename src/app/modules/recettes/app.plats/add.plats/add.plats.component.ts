@@ -8,7 +8,9 @@ import { Cconsommable, Consommable, TIngredientBase } from 'src/app/interfaces/i
 import { Cplat, Plat } from 'src/app/interfaces/plat';
 import { Cpreparation } from 'src/app/interfaces/preparation';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 import { PlatsInteractionService } from 'src/app/services/menus/plats-interaction.service';
+import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
 
 @Component({
   selector: 'app-add.plats',
@@ -54,7 +56,7 @@ export class AddPlatsComponent implements OnInit {
   public boisson:boolean;
 
   constructor(public dialogRef: MatDialogRef<AddPlatsComponent>, public plat_interaction:PlatsInteractionService,
-     private formBuilder: FormBuilder, @Inject(MAT_DIALOG_DATA) public data:{
+    public prepa_interaction:CalculPrepaService, private formBuilder: FormBuilder, @Inject(MAT_DIALOG_DATA) public data:{
     prop:string,
     restaurant:string,
     full_ingredients: Array<TIngredientBase>,
@@ -168,7 +170,7 @@ export class AddPlatsComponent implements OnInit {
     }
     if(this.add_plats_section.controls.base_ing.value !==null){
       let base_ings = this.add_plats_section.controls.base_ing.value;
-      plat.ingredients = this.data.full_ingredients.filter((base_ing) => base_ings.map((ing) => ing.name).includes(base_ing.name))
+      plat.ingredients = this.data.full_ingredients.filter((base_ing) => base_ings.map((ing) => ing.name).includes(base_ing.name));
       // on ajoute la quantitée présente pour le plat entré dans le formulaire comme étant la quantitée 
       plat.ingredients.map((ingredient) => {
         const _ingredient = base_ings.find((base) => base.name === ingredient.name);
@@ -182,9 +184,13 @@ export class AddPlatsComponent implements OnInit {
           if((_ingredient.unity !== null) && (_ingredient.unity !== undefined)){
             ingredient.unity = _ingredient.unity;
           }
+          if((_ingredient.quantity !== undefined) && (_ingredient.quantity !== null)){
+            ingredient.material_cost = this.prepa_interaction.getOnlyCostMaterial(ingredient);
+          }
         }
         return ingredient
-      }) 
+      });
+      
     }
     if(this.add_plats_section.controls.base_conso.value !== null){
       let base_conso = this.add_plats_section.controls.base_conso.value;
@@ -354,20 +360,20 @@ export class AddPlatsComponent implements OnInit {
     this.getEtapes().push(new_etape);
   }
 
-  suppInputIng(){
-    this.getBaseIng().removeAt(this.getBaseIng().length - 1);
+  suppInputIng(index:number){
+    this.getBaseIng().removeAt(index);
   }
 
-  suppInputConso(){
-    this.getBaseConso().removeAt(this.getBaseConso().length - 1);
+  suppInputConso(index:number){
+    this.getBaseConso().removeAt(index);
   }
 
-  suppInputPrepa(){
-    this.getBasePrepa().removeAt(this.getBasePrepa().length - 1);
+  suppInputPrepa(index:number){
+    this.getBasePrepa().removeAt(index);
   }
 
-  suppInputEtape(){
-    this.getEtapes().removeAt(this.getEtapes().length - 1);
+  suppInputEtape(index:number){
+    this.getEtapes().removeAt(index);
   }
 
   getBaseIng(){

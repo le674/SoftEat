@@ -32,6 +32,12 @@ export class CalculPrepaService {
     return ingredients
   }
 
+  getOnlyCostMaterial(ing:TIngredientBase):number{
+    let cost_matiere = ing.cost
+    cost_matiere = this.calcul_service.convertQuantity(ing.quantity, ing.unity)*(ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary));
+    return this.ToCentime(cost_matiere);
+  }
+
   async getPrimCost(prop:string,restaurant:string, etapes: Array<Cetape>, ingredients: Array<TIngredientBase>,
      consommables: Array<Cconsommable>){
     await this.restau_service.getSalaryCuisiniee(prop, restaurant).then((salary) => {

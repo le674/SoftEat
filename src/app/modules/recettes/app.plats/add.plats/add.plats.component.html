@@ -87,16 +87,13 @@
                         </mat-select>
                     </mat-form-field>
                 </ng-container>
+                <button class="btn supp_button" (click)="suppInputIng(i)" mat-stroked-button>Suppression de l'ingrédient</button>
             </div>
         </ng-container>
         <div class="inputs-containers">
             <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'un ingrédient"
             aria-label="ajout d'un ingrédient" (click)="addInputIng()">
                 <i class="fa-regular fa-plus"></i>
-            </button>
-            <button mat-mini-fab type="button" id="supp_input_ing" color="white" matTooltip="supprimer un ingrédient"
-            aria-label="supprimer d'un ingrédient" (click)="suppInputIng()">
-                <i class="fa-regular fa-minus"></i>
             </button>
         </div>
     </div>
@@ -120,16 +117,13 @@
                         <input matInput  formControlName="unity" value="{{unity_conso[i]}}">
                     </mat-form-field>
                 </ng-container>
+                <button class="btn supp_button" (click)="suppInputConso(i)" mat-stroked-button>Suppression du consommable</button>
             </div>
         </ng-container>
         <div class="inputs-containers">
             <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'un consommable"
             aria-label="ajout d'un consommable" (click)="addInputConso()">
                 <i class="fa-regular fa-plus"></i>
-            </button>
-            <button mat-mini-fab type="button" id="supp_input_ing" color="white" matTooltip="supprimer un consommable"
-            aria-label="supprimer un cnsommable" (click)="suppInputConso()">
-                <i class="fa-regular fa-minus"></i>
             </button>
         </div>
     </div>
@@ -149,16 +143,13 @@
                         <input matInput type="number" formControlName="quantity">
                     </mat-form-field>
                 </ng-container>
+                <button class="btn supp_button" (click)="suppInputPrepa(i)" mat-stroked-button>Suppression de la préparation</button>
             </div>
         </ng-container>
         <div class="inputs-containers">
             <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'une préparation"
             aria-label="ajout d'une préparation" (click)="addInputPrepa()">
                 <i class="fa-regular fa-plus"></i>
-            </button>
-            <button mat-mini-fab type="button" id="supp_input_ing" color="white" matTooltip="supprimer une préparation"
-            aria-label="supprimer une préparation" (click)="suppInputPrepa()">
-                <i class="fa-regular fa-minus"></i>
             </button>
         </div>
     </div>
@@ -181,6 +172,7 @@
                         <input matInput type="number" formControlName="tmps">
                     </mat-form-field>
                 </ng-container>
+                <button class="btn supp_button" (click)="suppInputEtape(i)" mat-stroked-button>Suppression d'une étape</button>
             </div>
         </ng-container>
         <div class="inputs-containers">
@@ -188,11 +180,7 @@
             aria-label="ajout d'une étape" (click)="addInputEtape()">
                 <i class="fa-regular fa-plus"></i>
             </button>
-            <button mat-mini-fab type="button" id="supp_input_ing" color="white" matTooltip="supprimer une étape"
-            aria-label="supprimer d'une étape" (click)="suppInputEtape()">
-                <i class="fa-regular fa-minus"></i>
-            </button>
         </div>
     </div>
-    <button mat-stroked-button type="submit"> Ajouter </button>
+    <button mat-stroked-button id="add" type="submit"> Ajouter </button>
 </form>

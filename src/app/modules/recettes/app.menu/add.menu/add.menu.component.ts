@@ -242,16 +242,16 @@ export class AddMenuComponent implements OnInit {
     this.getBasePlat().push(new_plat);
   }
 
-  suppInputIng(){
-    this.getBaseIng().removeAt(this.getBaseIng().length - 1);
+  suppInputIng(index:number){
+    this.getBaseIng().removeAt(index);
   }
 
-  suppInputConso(){
-    this.getBaseConso().removeAt(this.getBaseConso().length - 1);
+  suppInputConso(index:number){
+    this.getBaseConso().removeAt(index);
   }
 
-  suppInputPlat(){
-    this.getBasePlat().removeAt(this.getBasePlat().length - 1);
+  suppInputPlat(index:number){
+    this.getBasePlat().removeAt(index);
   }
 
   getBaseIng(){
