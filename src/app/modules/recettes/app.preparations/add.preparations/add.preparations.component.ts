@@ -305,14 +305,12 @@ export class AddPreparationsComponent implements OnInit{
     let name = "";
     let quantity = 0;
     let unity = "";
-    let old = false;
     if(this.data.ingredients !== null){
       const ingredients = this.data.ingredients.map((ing) => {
         return {name: ing.name, quantity: ing.quantity, unity: ing.unity};
       })
       if(ings_length > 0){
         if(ingredients[ings_length] !== undefined){
-          old = !old;
           name = ingredients[ings_length].name;
           quantity = ingredients[ings_length].quantity;
           unity = ingredients[ings_length].unity; 
@@ -324,7 +322,6 @@ export class AddPreparationsComponent implements OnInit{
       quantity: new FormControl(quantity),
       unity: new FormControl(unity)
     });
-    if(old) new_ing.controls.unity.disable();
     this.getBaseIng().push(new_ing);
   }
 
@@ -333,14 +330,12 @@ export class AddPreparationsComponent implements OnInit{
     let name = "";
     let quantity = 0;
     let unity = "p";
-    let old = false;
     const consommable_length = this.getBaseConso().length;
     if(this.data.consommables !== null){
       const consommables =  this.data.consommables.map((conso) => {
         return {name: conso.name, quantity: conso.quantity, unity: conso.unity};
       }); 
       if((consommables[consommable_length] !== undefined) && (consommable_length > 0)){
-        old = !old;
         name = consommables[consommable_length].name;
         quantity = consommables[consommable_length].quantity;
         unity = consommables[consommable_length].unity;
@@ -351,7 +346,7 @@ export class AddPreparationsComponent implements OnInit{
       quantity: quantity,
       unity: unity
     });
-    if(old) new_conso.controls.unity.disable();
+    new_conso.controls.unity.disable();
     this.getBaseConso().push(new_conso);
   }
 

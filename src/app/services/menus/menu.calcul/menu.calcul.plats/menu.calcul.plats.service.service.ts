@@ -85,6 +85,47 @@ export class MenuCalculPlatsServiceService {
    return `${heure}h ${min}min ${sec}sec`
   }
 
+  getFullTheoTimeToSec(plat:Cplat):number{
+    let sum_time_prepa  = 0
+   const sum_time_plat = this.prepa_service.getFullTheoTimeSec(plat.etapes)
+   if(plat.preparations !== null){
+    sum_time_prepa = plat.preparations.map((preparation) => preparation.etapes
+      // s'assurer que lors de l'ajout d'une preparation ont a obligation d'ajouter un temps 
+      .map((etape) => etape.temps)
+      .reduce((prev_tmps, next_tmps) =>  prev_tmps + next_tmps))
+      .reduce((prev_prep_time, next_prep_time) => prev_prep_time + next_prep_time);
+   }
+   const full_time =  sum_time_plat + sum_time_prepa;
+   return full_time;
+  }
+
+
+  // convertion des secondes en chaine de caractère
+  SecToString(full_time:number){
+   const heure = Math.trunc(full_time/3600);
+   const min = Math.trunc(full_time%3600/60);
+   const sec = full_time%60;
+   return `${heure}h ${min}min ${sec}sec`
+  }
+  
+  // convertion de l'heure en seconde 
+  StringToSec(time_str:string){
+    let hour = 0;
+    let minute = 0;
+    let sec = 0;
+
+    let hours = time_str.match(/[0-9]+h/);
+    let minutes = time_str.match(/[0-9]+min/);
+    let seconds = time_str.match(/[0-9]+sec/);
+
+    if((hours !== null) && (minutes !== null) && (seconds !== null)){
+      hour = Number(hours[0].replace('h',''))*60*60;
+      minute = Number(minutes[0].replace('min',''))*60;
+      sec = Number(seconds[0].replace('sec', ''));
+    }
+    return hour + minute + sec;
+  }
+
   getPortionCost(plat:Cplat):number{
     let arr_ingredients: TIngredientBase[] = [];
     let prepa_ingredients:TIngredientBase[] = [];

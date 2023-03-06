@@ -21,6 +21,11 @@ export interface Plat{
     "prix":number;
     /* dépend de la catégorie appliquée*/
     "taux_tva":number;
+    "prime_cost":number;
+    "material_cost":number;
+    "portion_cost":number;
+    "material_ratio":number;
+    "temps":number;
 
     getType():string;
     setType(type:string):void;
@@ -56,6 +61,11 @@ export class Cplat implements Plat{
     "preparations": Cpreparation[];
     "prix": number;
     "taux_tva": number;
+    "prime_cost": number;
+    "material_cost": number;
+    "portion_cost": number;
+    "material_ratio": number;
+    "temps":number;
 
     constructor(){
         this.unity = '';
@@ -65,10 +75,17 @@ export class Cplat implements Plat{
         this.portions = 0;
         this.prix = 0;
         this.taux_tva = 0;
+        this.material_cost = 0;
+        this.portion_cost = 0;
+        this.material_ratio = 0;
+        this.prime_cost = 0;
+        this.temps = 0;
         this.ingredients = [];
         this.consommables = [];
         this.etapes = [];
+
     }
+
 
     getNom(): string {
         return this.nom
