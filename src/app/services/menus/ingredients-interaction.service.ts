@@ -249,26 +249,16 @@ export class IngredientsInteractionService {
          let prep_path = `${preparation.nom}`
          let brut_path = new_ing_aft_prepa?.map((ing) => ing.nom)
          let preparation_princ =  {
-           [prep_path]: {
-             categorie_tva: preparation.categorie_tva,
-             taux_tva: preparation.taux_tva,
-             cost: preparation.cost,
-             quantity: preparation.quantity,
-             quantity_unitaire: preparation.quantity_unity,
-             quantity_added: preparation.total_quantity,
-             unity: preparation.unity,
-             unity_unitary: preparation.unity_unitary,
-             base_ing: preparation.base_ing,
-             quantity_after_prep: preparation.quantity_after_prep,
-             quantity_bef_prep: preparation.quantity_bef_prep,
-             cost_ttc: preparation.cost_ttc,
-             date_reception: preparation.date_reception,
-             dlc: preparation.dlc,
-             marge: preparation.marge,
-             vrac: preparation.vrac,
-             is_stock:preparation.is_stock
+            [`${prep_path}/quantity`]:  preparation.quantity,
+            [`${prep_path}/quantity_unitaire`]: preparation.quantity_unity,
+            [`${prep_path}/quantity_added`]:preparation.total_quantity,
+            [`${prep_path}/date_reception`]: preparation.date_reception,
+            [`${prep_path}/dlc`]: preparation.dlc,
+            [`${prep_path}/marge`]: preparation.marge,
+            [`${prep_path}/vrac`]: preparation.vrac,
+            [`${prep_path}/is_stock`]: preparation.is_stock
            }
-         }
+         
          // si on reçoit des ingrédients brut à modifier 
          if(brut_path !== undefined && new_ing_aft_prepa !== null){
            brut_path.forEach((path, index:number) => {
@@ -279,8 +269,6 @@ export class IngredientsInteractionService {
                  cost:  new_ing_aft_prepa[index].cost,
                  quantity: new_ing_aft_prepa[index].quantity,
                  quantity_unitaire: new_ing_aft_prepa[index].quantity_unity,
-                 unity: new_ing_aft_prepa[index].unity,
-                 unity_untary: new_ing_aft_prepa[index].unity_unitary,
                  cost_ttc: new_ing_aft_prepa[index].cost_ttc,
                  date_reception: new_ing_aft_prepa[index].date_reception,
                  dlc: new_ing_aft_prepa[index].dlc,

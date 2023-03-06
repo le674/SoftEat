@@ -18,6 +18,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { AddConsoComponent } from './app.conso/app.conso.modals/add-ing/add.ing/add.conso.component';
 import { AppPreparationComponent } from './app.preparation/app.preparation.component';
 import { AppAddPreparationComponent } from './app.preparation/app.preparation.modals/app.add.preparation/app.add.preparation.component';
+import { AppHelpPreparationComponent } from './app.preparation/app.preparation.modals/app.help.preparation/app.help.preparation/app.help.preparation.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { AppAddPreparationComponent } from './app.preparation/app.preparation.mo
     AddIngComponent,
     AddConsoComponent,
     AppPreparationComponent,
-    AppAddPreparationComponent
+    AppAddPreparationComponent,
+    AppHelpPreparationComponent
   ],
   imports: [ 
     CommonModule,

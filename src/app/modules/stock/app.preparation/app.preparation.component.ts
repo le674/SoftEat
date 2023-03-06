@@ -11,6 +11,7 @@ import { Cpreparation } from 'src/app/interfaces/preparation';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AppAddPreparationComponent } from './app.preparation.modals/app.add.preparation/app.add.preparation.component';
+import { AppHelpPreparationComponent } from './app.preparation.modals/app.help.preparation/app.help.preparation/app.help.preparation.component';
 
 @Component({
   selector: 'app-prepa',
@@ -134,7 +135,7 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
           after_prep: ingPREP[i].quantity_after_prep,
           quantity: ingPREP[i].quantity,
           quantity_unity: ingPREP[i].quantity_unity,
-          unity: ingPREP[i].unity_unitary,
+          unity: ingPREP[i].unity,
           date_reception: ingPREP[i].date_reception.toLocaleString(),
           dlc: ingPREP[i].dlc.toLocaleString(),
           marge: ingPREP[i].marge,
@@ -153,27 +154,10 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     })
   }
 
-  OpenAddPrepaForm() {
-    const dialogRef = this.dialog.open(AppAddPreparationComponent, {
-      height: `${window.innerHeight}px`,
-      width: `${window.innerWidth - window.innerWidth / 15}px`,
-      data: {
-        restaurant: this.restaurant,
-        prop: this.prop,
-        is_modif: false,
-        ingredient: {
-          nom: "",
-          categorie: "",
-          quantity: 0,
-          quantity_unity: 0,
-          unity: "",
-          unitary_cost: 0,
-          dlc: 0,
-          date_reception: new Date(),
-          marge: 0,
-          vrac: 'non'
-        }
-      }
+  OpenHelp(){
+    const dialogRef = this.dialog.open(AppHelpPreparationComponent, {
+      height: `500px`,
+      width: `400px`,
     });
   }
 
@@ -211,8 +195,8 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     } 
 
     const dialogRef = this.dialog.open(AppAddPreparationComponent, {
-      height: `${window.innerHeight}px`,
-      width: `${window.innerWidth - window.innerWidth / 15}px`,
+      height: `700px`,
+      width: `900px`,
       data: {
         restaurant: this.restaurant,
         prop: this.prop,
@@ -255,8 +239,6 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     if (ele.cuisinee === 'oui') {
       is_prep = true
     }
-
-    console.log(ele.nom);
     this.service.removeIngInBdd(ele.nom.split('<br>').join('_'), this.prop, this.restaurant, true).then(() => {
       this._snackBar.open("l'ingrédient vient d'être supprimé de la base de donnée du restaurant", "fermer")
     }).catch(() => {

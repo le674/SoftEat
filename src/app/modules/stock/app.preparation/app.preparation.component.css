@@ -43,6 +43,15 @@ ul{
     color: white;
 }
 
+#help {
+    color: rgb(125, 181, 46);
+    background-color: white;
+}
+
+#help:hover{
+    background-color: rgb(125, 181, 46);
+    color: white;
+}
 
 #action-buttons{
     display: flex;

@@ -11,9 +11,8 @@
     <header>
         <h1> Préparations </h1>
         <div id="action-buttons">
-            <button mat-stroked-button (click)="OpenAddPrepaForm()">
-                <i class="fa-regular fa-plus"></i>
-                Ajouter une préparation
+            <button id="help" mat-mini-fab aria-label="aide" matTooltip="aide pour l'inventaire des préparations" (click)="OpenHelp()">
+                <i class="fa-solid fa-question"></i>
             </button>
         </div>
     </header>

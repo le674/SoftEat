@@ -69,14 +69,14 @@ export class AddPreparationsComponent implements OnInit{
     }, private preparation_service: PreparationInteractionService, private ingredient_service: IngredientsInteractionService,
     private prepa_service:CalculPrepaService, private conso_service:ConsommableInteractionService, private _snackBar: MatSnackBar) { 
     
-    if(this.data.ingredients !== null){
+    if(this.data.full_ingredients !== null){
       this.ingredients = this.data.full_ingredients;
     }
     else{
       this.ingredients = [];
     }
     
-    if(this.data.consommables !== null){
+    if(this.data.full_consommables !== null){
       this.consommables = this.data.full_consommables;
     }
     else{
