@@ -232,15 +232,18 @@ export class AddPlatsComponent implements OnInit {
     }
     plat.temps = this.plat_service.getFullTheoTimeToSec(plat as Cplat);
     plat.portion_cost = this.plat_service.getPortionCost(plat as Cplat);
-    plat.material_ratio = this.plat_service.getRatioMaterial(plat.portion_cost,plat as Cplat);
-    this.plat_service.getPrimCost(this.data.prop, this.data.restaurant, plat as Cplat).then((prime_cost) => plat.prime_cost = prime_cost);
-   
-
-    this.plat_interaction.setPlat(this.data.prop, this.data.restaurant, plat).finally(() => {
-      this._snackBar.open(`le plat ${plat.nom} vient d'être ajouté`, "fermer")
-    }).catch((e) => {
-      console.log(e);
-      this._snackBar.open(`le plat ${plat.nom} n'a pas pu être ajouté`, "fermer")
+    if(plat.portions !== undefined){
+      plat.material_ratio = this.plat_service.getRatioMaterial(plat.portion_cost,plat as Cplat);
+    }
+    const prime_cost_prom = this.plat_service.getPrimCost(this.data.prop, this.data.restaurant, plat as Cplat).then((prime_cost) => plat.prime_cost = prime_cost);
+    prime_cost_prom.then((prime_cost) => {
+      console.log(prime_cost);
+      this.plat_interaction.setPlat(this.data.prop, this.data.restaurant, plat).finally(() => {
+        this._snackBar.open(`le plat ${plat.nom} vient d'être ajouté`, "fermer")
+      }).catch((e) => {
+        console.log(e);
+        this._snackBar.open(`le plat ${plat.nom} n'a pas pu être ajouté`, "fermer")
+      });
     });
   }
 

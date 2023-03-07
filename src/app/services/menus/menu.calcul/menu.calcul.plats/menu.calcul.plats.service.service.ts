@@ -13,7 +13,6 @@ export class MenuCalculPlatsServiceService {
   constructor(private prepa_service:CalculPrepaService) { }
 
   getPrimCost(prop:string, restaurant:string,plat:Cplat):Promise<number>{
-
     let arr_ings:Array<TIngredientBase> = [];
     let consommables:Array<Cconsommable> = [];
     let etapes:Array<Cetape> = [];

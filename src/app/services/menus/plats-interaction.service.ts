@@ -49,6 +49,7 @@ export class PlatsInteractionService {
           categorie:plat.categorie,
           temps: plat.temps,
           portion_cost: plat.portion_cost,
+          prime_cost: plat.prime_cost,
           material_ratio: plat.material_ratio,
           ingredients:plat.ingredients,
           consommables:plat.consommables,
@@ -150,6 +151,10 @@ export class PlatsInteractionService {
           plat.etapes =  bdd_plat.child('etapes').val();
           plat.portions =  bdd_plat.child('portion').val();
           plat.prix =  bdd_plat.child('price').val();
+          plat.portion_cost =  bdd_plat.child('portion_cost').val();
+          plat.prime_cost =  bdd_plat.child('prime_cost').val();
+          plat.temps = bdd_plat.child('temps').val();
+          plat.material_ratio = bdd_plat.child('material_ratio').val();
           lst_plats.push(plat);
         }
       })

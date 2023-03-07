@@ -40,26 +40,37 @@ export class CalculPrepaService {
 
   async getPrimCost(prop:string,restaurant:string, etapes: Array<Cetape>, ingredients: Array<TIngredientBase>,
      consommables: Array<Cconsommable>){
-    await this.restau_service.getSalaryCuisiniee(prop, restaurant).then((salary) => {
-
+      let sum_cost_ing = 0;
+      let sum_cost_conso = 0;
       let second_salary = 0;
       let full_time = 0;
       let full_cost_quant_ing:Array<number> = [0];
       let full_cost_quant_conso:Array<number> = [0];
       if(ingredients !== null){
         if(ingredients.length > 0){
-          full_cost_quant_ing = ingredients.map((ing) => {
-            // on normalise le cout par la quantitée unitaire
-            let cost = ing.cost*this.calcul_service.convertQuantity(ing.quantity, ing.unity);
-            cost = cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary);
-            return cost
-          })
+          full_cost_quant_ing = ingredients
+                                .filter((ing) => (ing !== null) && (ing !== undefined))
+                                .filter((ing) => (ing.cost !== undefined) && (ing.cost !== null))
+                                .filter((ing) => (ing.quantity !== undefined) && (ing.quantity !== null))
+                                .filter((ing) => (ing.unity !== undefined) && (ing.unity !== null))
+                                .filter((ing) => (ing.quantity_unity !== undefined) && (ing.quantity_unity !== null))
+                                .map((ing) => {
+                                // on normalise le cout par la quantitée unitaire
+                                let cost = ing.cost*this.calcul_service.convertQuantity(ing.quantity, ing.unity);
+                                cost = cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary);
+                                return cost
+                            })
         }
-
       }
       if(consommables !== null){
         if(consommables.length > 0){
-          full_cost_quant_conso = consommables.map((conso) => {
+          console.log(consommables);
+          
+          full_cost_quant_conso = consommables
+                                  .filter((conso) => (conso !== null) && (conso !== undefined))
+                                  .filter((conso) => (conso.cost !== null) && (conso.cost !== undefined))
+                                  .filter((conso) => (conso.quantity !== null) && (conso.quantity !== undefined))
+                                  .map((conso) => {
             let cost =  conso.cost*conso.quantity;
             return cost
           })
@@ -67,11 +78,25 @@ export class CalculPrepaService {
       }
       if(etapes !== null){
         if(etapes.length > 0){
-          full_time = etapes.map((etape) => etape.temps).reduce((curr_tmps, next_tmps) => curr_tmps + next_tmps);
+          full_time = etapes
+                      .filter((etape) => (etape !== null) && (etape !== undefined))
+                      .filter((etape) => (etape.temps !== null) && (etape.temps !== undefined))
+                      .map((etape) => etape.temps)
+                      .reduce((curr_tmps, next_tmps) => curr_tmps + next_tmps);
         }
       }
-      const sum_cost_ing = full_cost_quant_ing.reduce((curr_cost, next_cost) => curr_cost + next_cost);
-      const sum_cost_conso = full_cost_quant_conso.reduce((curr_cost, next_cost) => curr_cost + next_cost);
+      console.log(full_cost_quant_conso);
+      console.log(full_cost_quant_ing);
+      
+      
+      if(full_cost_quant_ing.length > 0){
+        sum_cost_ing = full_cost_quant_ing.reduce((curr_cost, next_cost) => curr_cost + next_cost);
+      }
+      if(full_cost_quant_conso.length > 0){
+        sum_cost_conso = full_cost_quant_conso.reduce((curr_cost, next_cost) => curr_cost + next_cost)
+      }
+      this.prime_cost =  this.ToCentime(sum_cost_conso + sum_cost_ing);
+    await this.restau_service.getSalaryCuisiniee(prop, restaurant).then((salary) => {
       // 35 nombr d'heur travaillé par semaine en fonction du nombre de semaine dans un mois
       const mensuel_work_hour = 4.34524*35;
       if((salary !== null) && (salary !== undefined)){
@@ -82,8 +107,8 @@ export class CalculPrepaService {
         
       }
       
-      this.prime_cost = this.ToCentime(second_salary*full_time + sum_cost_conso + sum_cost_ing);
-    })
+      this.prime_cost = this.ToCentime(second_salary*full_time + this.prime_cost);
+    });
     return this.prime_cost;
   }
 

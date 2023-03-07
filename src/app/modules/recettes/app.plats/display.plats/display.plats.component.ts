@@ -99,7 +99,7 @@ export class DisplayPlatsComponent implements OnInit {
     consommables: Array<Consommable>,
     preparations: Array<Cpreparation>,
     plat: Cplat
-    },private prepa_service:CalculPrepaService,private plat_service:MenuCalculPlatsServiceService, private _snackBar: MatSnackBar,
+    }, private prepa_service:CalculPrepaService, private plat_service:MenuCalculPlatsServiceService, private _snackBar: MatSnackBar,
      private calcul_service:CalculService) {
       this.preparations = [];
       this.ingredients = [];
@@ -126,10 +126,26 @@ export class DisplayPlatsComponent implements OnInit {
 
   ngOnInit(): void {
     //ont récupère les préprations uniquement qui sont 
+
     this.tmps_prepa_theo = this.plat_service.getFullTheoTimeFromSec(this.data.plat);
-    this.portion_cost = this.plat_service.getPortionCost(this.data.plat);
-    this.material_ratio = this.plat_service.getRatioMaterial(this.portion_cost,this.data.plat);
-    this.plat_service.getPrimCost(this.data.prop, this.data.restaurant, this.data.plat).then((prime_cost) => this.prime_cost = prime_cost);
+    if(this.data.plat.portion_cost !== undefined){
+      this.portion_cost = this.data.plat.portion_cost;
+    }
+    else{
+      this.portion_cost = 0;
+    }
+    if(this.data.plat.material_ratio !== undefined){
+      this.material_ratio = this.data.plat.material_ratio
+    }
+    else{
+      this.material_ratio = 0;
+    }
+    if(this.data.plat.prime_cost !== undefined){
+      this.prime_cost = this.data.plat.prime_cost;
+    }
+    else{
+      this.prime_cost = 0;
+    }
     this.prix_ttc = this.calcul_service.getCostTtcFromTaux(this.data.plat.taux_tva, this.data.plat.prix);
 
     if(this.data.plat.preparations !== null){
