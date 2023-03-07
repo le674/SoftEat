@@ -8,6 +8,7 @@ import { Cconsommable, Consommable, TIngredientBase } from 'src/app/interfaces/i
 import { Cplat, Plat } from 'src/app/interfaces/plat';
 import { Cpreparation } from 'src/app/interfaces/preparation';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { MenuCalculPlatsServiceService } from 'src/app/services/menus/menu.calcul/menu.calcul.plats/menu.calcul.plats.service.service';
 import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 import { PlatsInteractionService } from 'src/app/services/menus/plats-interaction.service';
 import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
@@ -63,7 +64,7 @@ export class AddPlatsComponent implements OnInit {
     full_consommables: Array<Consommable>,
     full_preparations: Array<Cpreparation>,
     plat: Cplat
-    }, private _snackBar: MatSnackBar, private calcul_service:CalculService) {
+    }, private _snackBar: MatSnackBar, private plat_service:MenuCalculPlatsServiceService, private calcul_service:CalculService) {
     this.unity_conso = [];
     this.unity_ing = [];
     this.selected_ing = '';
@@ -150,6 +151,7 @@ export class AddPlatsComponent implements OnInit {
   
   changePlats():void{
     let plat:Plat = new Cplat();
+
     if(this.add_plats_section.controls.name.value !== null){
       plat.nom = this.add_plats_section.controls.name.value;
     }
@@ -228,6 +230,12 @@ export class AddPlatsComponent implements OnInit {
                             return preparation
                           })
     }
+    plat.temps = this.plat_service.getFullTheoTimeToSec(plat as Cplat);
+    plat.portion_cost = this.plat_service.getPortionCost(plat as Cplat);
+    plat.material_ratio = this.plat_service.getRatioMaterial(plat.portion_cost,plat as Cplat);
+    this.plat_service.getPrimCost(this.data.prop, this.data.restaurant, plat as Cplat).then((prime_cost) => plat.prime_cost = prime_cost);
+   
+
     this.plat_interaction.setPlat(this.data.prop, this.data.restaurant, plat).finally(() => {
       this._snackBar.open(`le plat ${plat.nom} vient d'être ajouté`, "fermer")
     }).catch((e) => {

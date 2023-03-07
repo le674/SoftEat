@@ -40,7 +40,9 @@ export class MenuCalculPlatsServiceService {
           return [];
         }
       }).flat();
-      prepa_ingredients = plat.preparations.map((preparation) => preparation.base_ing.map((ing) => {
+      prepa_ingredients = plat.preparations
+                          .filter((preparation) => preparation.base_ing !== undefined)
+                          .map((preparation) => preparation.base_ing.map((ing) => {
         let ingredient:TIngredientBase = {
           name:ing.name,
           quantity:ing.quantity,
@@ -87,16 +89,22 @@ export class MenuCalculPlatsServiceService {
 
   getFullTheoTimeToSec(plat:Cplat):number{
     let sum_time_prepa  = 0
-   const sum_time_plat = this.prepa_service.getFullTheoTimeSec(plat.etapes)
-   if(plat.preparations !== null){
-    sum_time_prepa = plat.preparations.map((preparation) => preparation.etapes
-      // s'assurer que lors de l'ajout d'une preparation ont a obligation d'ajouter un temps 
-      .map((etape) => etape.temps)
-      .reduce((prev_tmps, next_tmps) =>  prev_tmps + next_tmps))
-      .reduce((prev_prep_time, next_prep_time) => prev_prep_time + next_prep_time);
-   }
-   const full_time =  sum_time_plat + sum_time_prepa;
-   return full_time;
+    let sum_time_plat = 0;
+    if((plat.etapes !== undefined) &&(plat.etapes !== null)){
+      sum_time_plat = this.prepa_service.getFullTheoTimeSec(plat.etapes);
+    }
+    if(plat.preparations !== null){
+     sum_time_prepa = plat.preparations
+                          .filter((prepa) => (prepa !== undefined) && (prepa !== null))
+                          .map((preparation) => preparation.etapes
+                          // s'assurer que lors de l'ajout d'une preparation ont a obligation d'ajouter un temps 
+                          .map((etape) => etape.temps)
+                          .filter((temps) => (temps !== null) && (temps !== undefined))
+                          .reduce((prev_tmps, next_tmps) =>  prev_tmps + next_tmps))
+                          .reduce((prev_prep_time, next_prep_time) => prev_prep_time + next_prep_time);
+    }
+    const full_time =  sum_time_plat + sum_time_prepa;
+    return full_time;
   }
 
 
@@ -134,7 +142,9 @@ export class MenuCalculPlatsServiceService {
         plat.ingredients.forEach((ingredient) => arr_ingredients.push(ingredient))
       }
       if(plat.preparations !== null){
-        prepa_ingredients = plat.preparations.map((preparation) => preparation.base_ing.map((ing) => {
+        prepa_ingredients = plat.preparations
+                            .filter((prep) => (prep.base_ing !== null) && (prep.base_ing !== undefined))
+                            .map((preparation) => preparation.base_ing.map((ing) => {
           let ingredient:TIngredientBase = {
             name:ing.name,
             quantity:ing.quantity,
