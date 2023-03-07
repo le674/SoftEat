@@ -155,6 +155,8 @@ export class AddPreparationsComponent implements OnInit{
     let consos:Cconsommable[] = [];
     let ings:TIngredientBase[] = [];
     let to_add_preparation_name:string = "";
+    let tmps_prepa = 0;
+    let val_bouch = 0;
     const name_prepa = this.add_prepa_section.value.name
     if(name_prepa !== undefined){
       if(!this.data.names.includes(name_prepa)){
@@ -268,20 +270,29 @@ export class AddPreparationsComponent implements OnInit{
             this.after_prep.quantity = quantity_aft_prep;
             this.after_prep.unity = unity_aft_prep;
           }
-
-          this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop, name_prepa.split(" ").join('_'),
-           this.etapes, this.base_ings, this.base_conso, this.after_prep ,this.is_stock, this.data.modification).catch((e) => {
-              console.log(e);
-              this.etapes = [];
-              this.base_conso = [];
-              this.base_ings = [];
-              this._snackBar.open("nous ne somme pas parvenu à modifier la préparation veuillez contacter SoftEat");
-            }).finally(() => {
-              this.etapes = [];
-              this.base_conso = [];
-              this.base_ings = [];
-              this._snackBar.open("la préparation vient d'être ajouté", "fermer");
-            });
+          if((this.etapes !== null) && (this.etapes !== undefined)){
+            tmps_prepa =  this.prepa_service.getFullTheoTimeSec(this.etapes);
+          }
+          if((this.base_ings !== null) && (this.base_ings !== undefined)){
+            val_bouch = this.prepa_service.getValBouchFromBasIng(this.base_ings, this.after_prep.quantity, this.after_prep.unity);
+          }
+          this.prepa_service.getPrimCost(this.data.prop, this.data.restaurant,this.etapes, this.base_ings,
+            this.base_conso).then((prime_cost) => {
+              this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop, name_prepa.split(" ").join('_'),
+              this.etapes, this.base_ings, this.base_conso, this.after_prep,
+              this.is_stock, this.data.modification,  prime_cost, val_bouch, tmps_prepa).catch((e) => {
+                 console.log(e);
+                 this.etapes = [];
+                 this.base_conso = [];
+                 this.base_ings = [];
+                 this._snackBar.open("nous ne somme pas parvenu à modifier la préparation veuillez contacter SoftEat");
+               }).finally(() => {
+                 this.etapes = [];
+                 this.base_conso = [];
+                 this.base_ings = [];
+                 this._snackBar.open("la préparation vient d'être ajouté", "fermer");
+               });
+            })
         }
       }
     }  

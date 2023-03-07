@@ -28,7 +28,9 @@ export class PreparationInteractionService {
 
   //on ajoute la préparation pour le stock et pour la fiche technique
   async setNewPreparation(restaurant:string,prop:string, name:string,etapes: Array<Cetape>,
-     ings: Array<TIngredientBase>, conso:Array<TConsoBase>, after_prepa:AfterPreparation, is_stock:boolean, modification:boolean){
+     ings: Array<TIngredientBase>, conso:Array<TConsoBase>,
+     after_prepa:AfterPreparation, is_stock:boolean, modification:boolean,
+     prime_cost:number, val_bouch:number, tmps_prepa:number){
 
     let updates = {};
     const ref_db = ref(this.db);
@@ -40,6 +42,10 @@ export class PreparationInteractionService {
     }
     Object.assign(updates, {[`ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name}/quantity_after_prep`]:after_prepa.quantity});
     Object.assign(updates, {[`ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name}/unity`]:after_prepa.unity});
+    Object.assign(updates, {[`ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name}/prime_cost`]:prime_cost});
+    Object.assign(updates, {[`ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name}/val_bouch`]:val_bouch});
+    Object.assign(updates, {[`ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name}/temps`]:tmps_prepa});
+
 
     // même procédure pour la liste des préparations
     Object.assign(updates, {[`inventaire_${prop}_${restaurant}/${prop}/${restaurant}/preparations/${name}/consommables`]: conso});
@@ -47,7 +53,10 @@ export class PreparationInteractionService {
     Object.assign(updates, {[`inventaire_${prop}_${restaurant}/${prop}/${restaurant}/preparations/${name}/etapes`]: etapes});
     Object.assign(updates, {[`inventaire_${prop}_${restaurant}/${prop}/${restaurant}/preparations/${name}/quantity_after_prep`]:after_prepa.quantity});
     Object.assign(updates, {[`inventaire_${prop}_${restaurant}/${prop}/${restaurant}/preparations/${name}/unity`]:after_prepa.unity});
-  
+    Object.assign(updates, {[`inventaire_${prop}_${restaurant}/${prop}/${restaurant}/preparations/${name}/prime_cost`]:prime_cost});
+    Object.assign(updates, {[`inventaire_${prop}_${restaurant}/${prop}/${restaurant}/preparations/${name}/val_bouch`]:val_bouch});
+    Object.assign(updates, {[`inventaire_${prop}_${restaurant}/${prop}/${restaurant}/preparations/${name}/temps`]:tmps_prepa});
+
     await update(ref_db, updates);
   }
 

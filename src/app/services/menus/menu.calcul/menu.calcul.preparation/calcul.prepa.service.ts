@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Cetape } from 'src/app/interfaces/etape';
-import { Cconsommable, TIngredientBase } from 'src/app/interfaces/ingredient';
+import { Cconsommable, TConsoBase, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
 import { CalculService } from '../menu.calcul.ingredients/calcul.service';
 
@@ -39,7 +39,7 @@ export class CalculPrepaService {
   }
 
   async getPrimCost(prop:string,restaurant:string, etapes: Array<Cetape>, ingredients: Array<TIngredientBase>,
-     consommables: Array<Cconsommable>){
+     consommables: Array<Cconsommable> | Array<TConsoBase>){
       let sum_cost_ing = 0;
       let sum_cost_conso = 0;
       let second_salary = 0;
@@ -143,6 +143,32 @@ export class CalculPrepaService {
     }
   }
 
+  // convertion des secondes en chaine de caractère
+  SecToString(full_time:number){
+    const heure = Math.trunc(full_time/3600);
+    const min = Math.trunc(full_time%3600/60);
+    const sec = full_time%60;
+    return `${heure}h ${min}min ${sec}sec`
+   }
+   
+   // convertion de l'heure en seconde 
+   StringToSec(time_str:string){
+     let hour = 0;
+     let minute = 0;
+     let sec = 0;
+ 
+     let hours = time_str.match(/[0-9]+h/);
+     let minutes = time_str.match(/[0-9]+min/);
+     let seconds = time_str.match(/[0-9]+sec/);
+ 
+     if((hours !== null) && (minutes !== null) && (seconds !== null)){
+       hour = Number(hours[0].replace('h',''))*60*60;
+       minute = Number(minutes[0].replace('min',''))*60;
+       sec = Number(seconds[0].replace('sec', ''));
+     }
+     return hour + minute + sec;
+   }
+   
   //  quand la quantitée finale est précise on applique le calcul normal de la valeur bouchère en revanche quand la quantitée finale 
   // est exprimé en pièce alors le coût pour une préparation
   // on néglige les préparations qui ont une quantitée inférieure à 100g car alors ont divise le quotient

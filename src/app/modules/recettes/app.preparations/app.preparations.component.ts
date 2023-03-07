@@ -117,7 +117,10 @@ export class AppPreparationsComponent implements OnInit {
         consommables: preparation.consommables,
         etapes: preparation.etapes,
         unity: preparation.unity,
-        quantity_after_prep: preparation.quantity_after_prep
+        quantity_after_prep: preparation.quantity_after_prep,
+        val_bouch: preparation.val_bouch,
+        temps: preparation.temps,
+        prime_cost: preparation.prime_cost
       }
     })
   }

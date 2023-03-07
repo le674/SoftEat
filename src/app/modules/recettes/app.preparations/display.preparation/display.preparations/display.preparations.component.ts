@@ -79,7 +79,10 @@ export class DisplayPreparationsComponent implements OnInit {
     consommables: Array<Consommable>,
     etapes: Array<Cetape>,
     unity:string,
-    quantity_after_prep: number
+    quantity_after_prep: number,
+    val_bouch:number,
+    temps:number,
+    prime_cost:number
   }, private ingredient_service: IngredientsInteractionService,
    private prepa_service:CalculPrepaService, private restau_service:RestaurantService) { 
     this.page_number_conso = 0;
@@ -100,11 +103,9 @@ export class DisplayPreparationsComponent implements OnInit {
   ngOnInit(): void {
 
     this.name_prepa = this.data.name;
-    this.tmps_prepa =  this.prepa_service.getFullTheoTimeFromSec(this.data.etapes);
-    this.prepa_service.getPrimCost(this.data.prop, this.data.restaurant,this.data.etapes, this.data.ingredients,
-       this.data.consommables).then((prime_cost) =>  this.prime_cost = prime_cost);
-    
-    this.val_bouch = this.prepa_service.getValBouchFromBasIng(this.data.ingredients, this.data.quantity_after_prep, this.data.unity);
+    this.tmps_prepa = this.prepa_service.SecToString(this.data.temps);
+    this.prime_cost = this.data.prime_cost;
+    this.val_bouch = this.data.val_bouch;
 
     if(this.data.ingredients !== null){
       if(this.data.ingredients.length > 0){
