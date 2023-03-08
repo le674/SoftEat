@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { Auth, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { Router } from '@angular/router';
 import { ShortUser, User } from 'src/app/interfaces/user';
@@ -14,6 +14,7 @@ import { Visibles } from './app.configue.index';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { AddConfigueSalaryComponent } from './add.configue.salary/add.configue.salary.component';
+import { AddConfigueEmployeeComponent } from './add.configue.employee/add.configue.employee/add.configue.employee.component';
 
 @Component({
   selector: 'app-app.configue',
@@ -64,6 +65,7 @@ export class AppConfigueComponent implements OnInit{
   private curr_categorie: number;
 
   private roles: string[];
+  private auth:Auth;
   public statuts: string[];
 
   public visibles: Visibles = {
@@ -137,10 +139,10 @@ export class AppConfigueComponent implements OnInit{
     this.rest_max_length = 0;
     this.curr_categorie = 0;
     this.is_prop = false;
+    this.auth =  getAuth(this.ofApp);
   }
   ngOnInit(): void {
-    const auth = getAuth(this.ofApp);
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(this.auth, (user) => {
       if (user) {
         const prop_user = this.user_services.getProprietaireFromUsers(user.uid).then((name: string) => {
           this.proprietaire = name;
@@ -419,6 +421,17 @@ export class AppConfigueComponent implements OnInit{
     this._snackBar.open("vous avez bien modifier l'ultilisateur", "fermer")
   }
 
+  AddEmployee(){
+    this.dialog.open(AddConfigueEmployeeComponent, {
+      height: "500px",
+      width: "400px",
+      data: {
+        restaurants: this.restau_list.map((restau) => restau.id),
+        prop: this.proprietaire,
+        auth: this.auth
+      }
+    });
+  }
 
   addSalaryRestaurant(){
     this.dialog.open(AddConfigueSalaryComponent, {

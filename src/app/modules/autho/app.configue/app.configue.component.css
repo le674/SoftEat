@@ -93,17 +93,17 @@ body {
   background-color: rgb(125, 181, 46);
   color: white;
 }
-#acceuil{
+.acceuil{
   color: rgb(125, 181, 46);
   background-color: white;
-  width: 300px;
+  min-width: 300px;
   height: auto;
   font-size: larger;
   border-radius: 3px;
   border-color: rgb(125, 181, 46, 0.5);
 }
 
-#acceuil:hover{
+.acceuil:hover{
   color: white;
   background-color: rgb(125, 181, 46);
 }

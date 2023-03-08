@@ -13,7 +13,10 @@
     <img src="/assets/images/SoftEat_Quadrichromie.png" alt="">
     <ul>
       <li>
-        <button class="btn" (click)="clicAcceuil()"  id="acceuil" type="submit">acceuil</button>
+        <button class="btn acceuil" (click)="AddEmployee()"  type="submit">Ajouter un employé</button>
+      </li>
+      <li>
+        <button class="btn acceuil" (click)="clicAcceuil()"  type="submit">acceuil</button>
       </li>
       <li>
         <button class="btn" (click)="clicdeConnexion()" id="deco"
@@ -110,7 +113,7 @@
     </div>
   </main>
   <footer>
-    <button mat-stroked-button (click)="addSalaryRestaurant()">
+    <button mat-stroked-button class="acceuil" (click)="addSalaryRestaurant()">
       <i class="fa-regular fa-plus"></i>
       Ajouter le salaire moyen des cuisiniées
   </button>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page d'ajout d'un salaire moyen</title>
+</head>
+
+<body>
+    <form [formGroup]="add_employee" (ngSubmit)="addEmployee()">
+        <h1>Ajout d'un nouveau employé</h1>
+        <p>email du nouveau employé</p>
+        <mat-form-field class="example-full-width">
+            <mat-label>email</mat-label>
+            <input formControlName="mail" matInput placeholder="Ex. softeat.contact@gmail.com">
+            <mat-error *ngIf="add_employee.controls.mail.hasError('email')">
+                veuillez entrer une adresse mail valide 
+            </mat-error>
+        </mat-form-field>
+        <p>mot de passe du nouveau employé</p>
+        <mat-form-field class="example-full-width">
+            <mat-label>mot de passe</mat-label>
+            <input formControlName="mdp" matInput placeholder="Ex. test123">
+            <mat-error *ngIf="add_employee.controls.mdp.hasError('required')">
+                veuillez entrer un mot de passe de minimum 6 caractères
+            </mat-error>
+        </mat-form-field>
+        <button mat-stroked-button type="submit"> Ajouter </button>
+    </form>
+</body>
+
+</html>

@@ -17,12 +17,14 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { AddConfigueSalaryComponent } from './app.configue/add.configue.salary/add.configue.salary.component';
 import { MatInputModule } from '@angular/material/input';
+import { AddConfigueEmployeeComponent } from './app.configue/add.configue.employee/add.configue.employee/add.configue.employee.component';
 
 @NgModule({
   declarations: [
     AppAuthoComponent,
     AppConfigueComponent,
-    AddConfigueSalaryComponent
+    AddConfigueSalaryComponent,
+    AddConfigueEmployeeComponent
   ],
   imports: [ 
     CommonModule,
