@@ -107,14 +107,14 @@ export class User {
 
 
   remove_null(){
-    this.is_prop = false
     this.statut = {
       analyse: "",
       budget: "",
       facture: "",
       stock: "",
       planning: "",
-      alertes: ""
+      alertes: "",
+      is_prop:false
     }
   }
 

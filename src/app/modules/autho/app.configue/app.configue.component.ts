@@ -148,10 +148,8 @@ export class AppConfigueComponent implements OnInit{
         })
 
         const all_id = prop_user.then((name) => {
-          this.user_services.checkIsProp(user.uid, this.proprietaire).then((is_prop:boolean) => {
+          this.user_services.checkIsProp(user.uid, this.proprietaire).then((is_prop:boolean) => {     
             this.is_prop = is_prop;
-            console.log(this.is_prop);
-            
           })
           const all_id = this.user_services.getAllIdFromProp(name).then((props) => {
             return (props)
@@ -166,6 +164,7 @@ export class AppConfigueComponent implements OnInit{
               return (restau_list)
             })
             const employees = users.employee
+            
             for (let i = 0; i < employees.length; i++) {
                 let user = new User()
                 user.id = employees[i].id;

@@ -60,8 +60,9 @@ export class UserInteractionService{
           add_user.statut.facture = user.child("statut/facture").val();
           add_user.statut.stock = user.child("statut/stock").val();
           add_user.statut.planning = user.child("statut/planning").val();
-          add_user.is_prop = user.child(`statut/is_prop`).val();
+          add_user.statut.is_prop = user.child("statut/is_prop").val();
           add_user.to_roles();
+          
           this.prop_list.employee.push(add_user);
         })
      })
