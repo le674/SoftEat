@@ -3,6 +3,8 @@ import { Auth, createUserWithEmailAndPassword, updateCurrentUser } from 'firebas
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserInteractionService } from 'src/app/services/user-interaction.service';
+import { User } from 'src/app/interfaces/user';
 
 @Component({
   selector: 'app-add.configue.employee',
@@ -19,7 +21,7 @@ export class AddConfigueEmployeeComponent implements OnInit {
     restaurants:Array<string>
     prop:string
     auth:Auth
-    }) {
+    }, public user_service :UserInteractionService) {
      }
 
   ngOnInit(): void {
@@ -33,7 +35,14 @@ export class AddConfigueEmployeeComponent implements OnInit {
         if(user !== null){
           //ont crée le nouveau utilisateur puis on reconnecte le proprietaire 
           createUserWithEmailAndPassword(this.data.auth, this.add_employee.controls.mail.value, this.add_employee.controls.mdp.value).then((user_cred) => {
-            updateCurrentUser(this.data.auth,user);
+            updateCurrentUser(this.data.auth,user).then(() => {
+              let user:User = new User();
+              user.id = user_cred.user.uid;
+              user.email = this.add_employee.controls.mail.value as string;
+              this.user_service.setUser(this.data.prop,user).then(() => {
+                this.user_service.setUserInfo(this.data.prop,user)
+              });
+            });
           });
         }
       }
