@@ -131,12 +131,17 @@ export class CalculPrepaService {
   
   getFullTheoTimeSec(etapes: Array<Cetape>):number{
     if(etapes !== null){
-      let full_time_sec =  etapes.reduce((prev_etape:Cetape, suiv_etape:Cetape) => {
-        const tmp_etape = new Cetape();
-        tmp_etape.temps =  prev_etape.temps + suiv_etape.temps;
-        return tmp_etape
-      }).temps;
-      return full_time_sec;
+      if(etapes.length > 0){
+        let full_time_sec =  etapes.reduce((prev_etape:Cetape, suiv_etape:Cetape) => {
+          const tmp_etape = new Cetape();
+          tmp_etape.temps =  prev_etape.temps + suiv_etape.temps;
+          return tmp_etape
+        }).temps;
+        return full_time_sec;
+      }
+      else{
+        return 0;
+      }
     }
     else{
       return 0

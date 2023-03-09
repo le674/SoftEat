@@ -171,6 +171,9 @@ export class IngredientsInteractionService {
             add_preparation.quantity_bef_prep = preparation.child("quantity_after_prep").val();
             add_preparation.quantity_after_prep = preparation.child("quantity_after_prep").val();
             add_preparation.is_stock = preparation.child("is_stock").val();
+            add_preparation.prime_cost = preparation.child("prime_cost").val();
+            add_preparation.temps = preparation.child("temps").val();
+            add_preparation.val_bouch = preparation.child("val_bouch").val();
             this.preparation.push(add_preparation);
       })
     })

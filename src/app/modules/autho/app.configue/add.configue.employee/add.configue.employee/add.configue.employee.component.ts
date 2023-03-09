@@ -40,7 +40,14 @@ export class AddConfigueEmployeeComponent implements OnInit {
               user.id = user_cred.user.uid;
               user.email = this.add_employee.controls.mail.value as string;
               this.user_service.setUser(this.data.prop,user).then(() => {
-                this.user_service.setUserInfo(this.data.prop,user)
+                this.user_service.setUserInfo(this.data.prop,user).catch((e) => {
+                  console.log(e);
+                  this.dialogRef.close();
+                  this._snackBar.open("le nouvelle employé n'a pas été ajouté veuillez contacter softeat", "fermer")
+                }).finally(() => {
+                  this.dialogRef.close();
+                  this._snackBar.open("vous venez d'ajouter un nouveau employé", "fermer")
+                })
               });
             });
           });
