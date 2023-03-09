@@ -73,8 +73,7 @@ export class UserInteractionService {
     const ref_db = ref(this.db);
 
     await get(child(ref_db, `users/${uid}`)).then((user: any) => {
-      console.log(user);
-      console.log(uid);
+      
       if (user.exists()) {
         this.user.proprietaire = user.val().proprietaire;
       }
@@ -144,21 +143,25 @@ export class UserInteractionService {
     const ref_db = ref(this.db);
     const path_prop = `users/${prop}/${user.id}`
     const path_dico = `users/${user.id}`
-    let restaurants: Array<string> = [];
+    let restaurants: Array<{id:string, adresse:string}> = [];
     restaurants = user.restaurants.filter((restaurant) => (restaurant !== null) && (restaurant !== undefined))
-      .map((restaurant) => restaurant.id);
+      .map((restaurant) => {
+        return {id:restaurant.id, adresse: restaurant.adresse};
+      });
+    
     Object.assign(data_to_add, {
       [path_dico]: {
-        email: user.email
+        email: user.email,
+        proprietaire:prop
       },
       [path_prop]: {
         email: user.email,
         statut: user.statut,
-        restaurant: user.restaurants
+        restaurant: restaurants
       }
     })
 
-    for (let restaurant of restaurants) {
+    for (let restaurant of restaurants.map((restaurant) => restaurant.id)) {
       Object.assign(data_to_add, {
         [`resto_auth/${prop}/${restaurant}/${user.id}`]: user.email
       })
