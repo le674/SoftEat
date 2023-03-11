@@ -66,7 +66,7 @@ export class AppPreparationsComponent implements OnInit {
    this.prepa_names =  this.preparations.map(prepa => prepa.nom); 
    this.dialog.open(AddPreparationsComponent, {
       height: `${window.innerHeight}px`,
-      width: `${window.innerWidth - window.innerWidth/5}px`,
+      width: `900px`,
       data: {
         prop: this.prop,
         restaurant: this.restaurant,
@@ -87,7 +87,7 @@ export class AppPreparationsComponent implements OnInit {
   modifPreparation(preparation:Cpreparation):void {
     this.dialog.open(AddPreparationsComponent, {
       height: `${window.innerHeight}px`,
-      width: `${window.innerWidth - window.innerWidth/5}px`,
+      width: `900px`,
       data: {
         prop: this.prop,
         restaurant: this.restaurant,

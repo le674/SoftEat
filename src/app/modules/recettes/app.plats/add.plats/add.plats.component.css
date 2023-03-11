@@ -18,6 +18,12 @@ p{
     display: inline;
 }
 
+.title{
+    font-size: large;
+    font-weight: normal;
+    color: rgb(125, 181, 46);
+}
+
 #last{
     display: block;
 }
@@ -51,12 +57,17 @@ p{
 }
 
 
+.classic-field{
+    max-width: fit-content;
+}
 
 .old{
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 40px;
+    margin-left: 30px;
 }
 
 mat-form-field{
@@ -69,6 +80,12 @@ mat-form-field{
     margin-top: 5px;
     margin-bottom: 10px;
 }
+
+.time{
+    width: 70px;
+ }
+ 
+
 mat-radio-button{
   margin-right: 5px;
 }
@@ -103,4 +120,24 @@ mat-radio-button{
     display: flex;
     justify-content: flex-start;
     align-items: center;  
+    margin-top: 30px;
+}
+
+.full-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.container-content{
+    display: flex;
+}
+
+#time-form{
+    display: flex;
+}
+
+.col{
+    display: flex;
+    flex-direction: column;
 }

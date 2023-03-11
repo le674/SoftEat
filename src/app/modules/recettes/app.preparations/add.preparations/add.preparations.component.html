@@ -6,47 +6,55 @@
             <mat-radio-button value="false" (click)="setFalse()">non</mat-radio-button>
         </mat-radio-group>
     </div>
+    <p class="title">Entrer le nom de la nouvelle préparation</p>
     <div class="section">
-        <p>Entrer le nom de la nouvelle préparation : </p>
         <mat-form-field appearance="fill">
             <mat-label>Entrer le nom de la nouvelle préparation</mat-label>
             <input matInput formControlName="name" placeholder="Ex. sauce bolognaise">
         </mat-form-field>
     </div>
+    <p class="title">Quelles sont les ingrédients de base ?</p>
     <div class="section_fileds">
-        <p>Quelles sont les ingrédients de base ? <br> entrer la quantitée de l'ingrédient de base <br> utilisé pour la
-            préparation : </p>
         <ng-container formArrayName="base_ing">
             <div class="old" *ngFor="let item of add_prepa_section.controls.base_ing.controls;let i=index">
                 <ng-container [formGroupName]="i">
-                    <mat-form-field appearance="fill">
-                        <mat-label>Choisir l'ingrédient</mat-label>
-                        <mat-select (selectionChange)="getUnity($event, 'ing', i)" formControlName="name">
-                             <mat-option *ngFor="let ingredient of ingredients" [value]="ingredient.name">{{ingredient.name}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label> quantitée pour la préparation </mat-label>
-                        <input matInput type="number" formControlName="quantity">
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label>unitée</mat-label>
-                        <mat-select formControlName="unity">
-                            <mat-option value="kg"> kg (kilogramme)</mat-option>
-                            <mat-option value="g"> g (grame)</mat-option>
-                            <mat-option value="L"> L (litre)</mat-option>
-                            <mat-option value="p"> p (pièce)</mat-option>
-                            <mat-option value="c.c"> cuillères à café</mat-option>
-                            <mat-option value="c.s"> cuillères à soupe</mat-option>
-                            <mat-option value="pince"> une pincée </mat-option>
-                            <mat-option value="pointe"> une pointe </mat-option>
-                            <mat-option value="noisette"> une noisette de beurre</mat-option>
-                            <mat-option value="noix"> une noix de beurre</mat-option>
-                            <mat-option value="verre"> un verre</mat-option>
-                            <mat-option value="ml"> ml (millilitre)</mat-option>
-                            <mat-option value="cl"> cl (centilitre)</mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <div class="container-content">
+                        <div class="full-container">
+                            <p>nom</p>
+                            <p>quantitée</p>
+                            <p>unitée</p>
+                        </div>
+                        <div class="full-container">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Choisir l'ingrédient</mat-label>
+                                <mat-select (selectionChange)="getUnity($event, 'ing', i)" formControlName="name">
+                                     <mat-option *ngFor="let ingredient of ingredients" [value]="ingredient.name">{{ingredient.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field appearance="fill">
+                                <mat-label> quantitée pour la préparation </mat-label>
+                                <input matInput type="number" formControlName="quantity">
+                            </mat-form-field>
+                            <mat-form-field appearance="fill">
+                                <mat-label>unitée</mat-label>
+                                <mat-select formControlName="unity">
+                                    <mat-option value="kg"> kg (kilogramme)</mat-option>
+                                    <mat-option value="g"> g (grame)</mat-option>
+                                    <mat-option value="L"> L (litre)</mat-option>
+                                    <mat-option value="p"> p (pièce)</mat-option>
+                                    <mat-option value="c.c"> cuillères à café</mat-option>
+                                    <mat-option value="c.s"> cuillères à soupe</mat-option>
+                                    <mat-option value="pince"> une pincée </mat-option>
+                                    <mat-option value="pointe"> une pointe </mat-option>
+                                    <mat-option value="noisette"> une noisette de beurre</mat-option>
+                                    <mat-option value="noix"> une noix de beurre</mat-option>
+                                    <mat-option value="verre"> un verre</mat-option>
+                                    <mat-option value="ml"> ml (millilitre)</mat-option>
+                                    <mat-option value="cl"> cl (centilitre)</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
                 </ng-container>
                 <button class="btn supp_button" (click)="suppInputIng(i)" mat-stroked-button>Suppression de l' ingrédient</button>
             </div>
@@ -58,31 +66,39 @@
             </button>
         </div>
     </div>
+    <p class="title">Quelles sont les consommables ? </p>
     <div class="section_fileds">
-        <p>Quelles sont les consommables ? <br> entrer la quantitée, le nom et l'unitée <br> de consommables utilisés
-            pour la préparation : </p>
         <ng-container formArrayName="base_conso">
             <div class="old" *ngFor="let item of add_prepa_section.controls.base_conso.controls;let i=index">
                 <ng-container [formGroupName]="i">
-                    <mat-form-field appearance="fill">
-                        <mat-label>Choisir le consommable</mat-label>
-                        <mat-select (selectionChange)="getUnity($event, 'conso', i)" formControlName="name">
-                             <mat-option *ngFor="let consommable of consommables" [value]="consommable.name">{{consommable.name}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label> quantitée pour la préparation </mat-label>
-                        <input matInput type="number" formControlName="quantity">
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label>unitée</mat-label>
-                        <mat-select formControlName="unity">
-                            <mat-option value="kg"> kg (kilogramme) </mat-option>
-                            <mat-option value="mètre"> m (mètre) </mat-option>
-                            <mat-option value="p"> p (pièce) </mat-option>
-                            <mat-option value="L"> L (litre)</mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <div class="container-content">
+                        <div class="full-container">
+                            <p>nom</p>
+                            <p>quantitée</p>
+                            <p>unitée</p>
+                        </div>
+                        <div class="full-container">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Choisir le consommable</mat-label>
+                                <mat-select (selectionChange)="getUnity($event, 'conso', i)" formControlName="name">
+                                     <mat-option *ngFor="let consommable of consommables" [value]="consommable.name">{{consommable.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field appearance="fill">
+                                <mat-label> quantitée pour la préparation </mat-label>
+                                <input matInput type="number" formControlName="quantity">
+                            </mat-form-field>
+                            <mat-form-field appearance="fill">
+                                <mat-label>unitée</mat-label>
+                                <mat-select formControlName="unity">
+                                    <mat-option value="kg"> kg (kilogramme) </mat-option>
+                                    <mat-option value="mètre"> m (mètre) </mat-option>
+                                    <mat-option value="p"> p (pièce) </mat-option>
+                                    <mat-option value="L"> L (litre)</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
                 </ng-container>
                 <button class="btn supp_button" (click)="suppInputConso(i)" mat-stroked-button>Suppression du consommable</button>
             </div>
@@ -94,24 +110,48 @@
             </button>
         </div>
     </div>
+    <p class="title">Quelles sont les étapes ?</p>
     <div class="section_fileds">
-        <p>Quelles sont les étapes ? <br> entrer le nom, un commentaire et le temps de réalisation <br> des différentes
-            étapes pour réaliser la préparation : </p>
         <ng-container formArrayName="etapes">
             <div class="old" *ngFor="let item of add_prepa_section.controls.etapes.controls; let i = index">
                 <ng-container [formGroupName]="i">
-                    <mat-form-field appearance="fill">
-                        <mat-label>nom des étapes</mat-label>
-                        <input matInput formControlName="name" placeholder="Ex. création de la sauce salade">
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label> commentaire pour l'étape </mat-label>
-                        <input matInput formControlName="comm">
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label> temps de réalisation</mat-label>
-                        <input matInput type="number" formControlName="tmps">
-                    </mat-form-field>
+                    <div class="container-content">
+                        <div class="full-container">
+                            <p>nom</p>
+                            <p>commentaire</p>
+                            <p>temps de réalisation</p>
+                        </div>
+                        <div class="full-container">
+                            <mat-form-field appearance="fill">
+                                <mat-label>nom des étapes</mat-label>
+                                <input matInput formControlName="name" placeholder="Ex. création de la sauce salade">
+                             </mat-form-field>
+                             <mat-form-field appearance="fill">
+                                <mat-label> commentaire pour l'étape </mat-label>
+                                <input matInput formControlName="comm">
+                             </mat-form-field>
+                             <div id="time-form">
+                                <div class="col">
+                                    <mat-form-field class="time" appearance="fill">
+                                        <mat-label>heure</mat-label>
+                                        <input matInput type="number" formControlName="heure">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="time" appearance="fill">
+                                        <mat-label>minute</mat-label>
+                                        <input matInput type="number" formControlName="minute">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="time" appearance="fill">
+                                        <mat-label>seconde</mat-label>
+                                        <input matInput type="number" formControlName="seconde">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </ng-container>
                <button class="btn supp_button" (click)="suppInputEtape(i)" mat-stroked-button>Suppression d'une étape</button>
             </div>
@@ -123,25 +163,30 @@
             </button>
         </div>
     </div>
-    <div class="section">
-        <p>Entrer la quantitée après préparation: </p>
-        <mat-form-field appearance="fill">
-            <mat-label>Entrer la quantitée apès préparation</mat-label>
-            <input matInput type="number" formControlName="quantity_aft_prep" placeholder="Ex. 12">
-        </mat-form-field>
-    </div>
-
-    <div class="section">
-        <mat-form-field appearance="fill">
-            <mat-label>Entrer l'unitée de la préparation</mat-label>
-            <mat-select formControlName="unity">
-                <mat-option value="L">litre</mat-option>
-                <mat-option value="cl">centilitre</mat-option>
-                <mat-option value="g">gramme</mat-option>
-                <mat-option value="kg">kilogramme</mat-option>
-                <mat-option value="p">pièce</mat-option>
-            </mat-select>
-        </mat-form-field>
+    <p class="title">quantitée après préparation</p>
+    <div class="section_fileds">
+        <div class="container-content">
+            <div class="full-container">
+                <p>quantitée</p>
+                <p>unitée</p>
+            </div>
+            <div class="full-container">
+                <mat-form-field appearance="fill">
+                    <mat-label>Entrer la quantitée apès préparation</mat-label>
+                    <input matInput type="number" formControlName="quantity_aft_prep" placeholder="Ex. 12">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Entrer l'unitée de la préparation</mat-label>
+                    <mat-select formControlName="unity">
+                        <mat-option value="L">litre</mat-option>
+                        <mat-option value="cl">centilitre</mat-option>
+                        <mat-option value="g">gramme</mat-option>
+                        <mat-option value="kg">kilogramme</mat-option>
+                        <mat-option value="p">pièce</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
     </div>
     <button mat-stroked-button id="add" type="submit"> Ajouter </button>
 </form>

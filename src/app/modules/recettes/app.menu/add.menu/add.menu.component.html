@@ -1,51 +1,65 @@
 <form [formGroup]="add_menu_section" (ngSubmit)="changeMenu()">
-    <div class="section">
-        <p>Entrer le nom du nouveau menu : </p>
-        <mat-form-field appearance="fill">
-            <mat-label>Entrer le nom du nouveau menu</mat-label>
-            <input matInput formControlName="name" placeholder="Ex. filet aux fish">
-        </mat-form-field>
-    </div>
-    <div class="section">
-        <p>Entrer le prix du menu hors taxe: </p>
-        <mat-form-field appearance="fill">
-            <mat-label>Entrer le prix du menu</mat-label>
-            <input matInput type="number" formControlName="price" placeholder="Ex.8">
-        </mat-form-field>
-    </div>
+    <p class="title">Entrer des informations sur le menu</p>
     <div class="section_fileds">
-        <p>Quelles sont les ingrédients utilisées ? <br> entrer la quantitée de l'ingrédient<br> utilisé pour le menu : </p>
+        <div class="container-content"> 
+            <div class="full-container">
+                <p>entrer le nom du menu</p>
+                <p>entrer le prix du menu</p>
+            </div>
+            <div class="full-container">
+                <mat-form-field appearance="fill">
+                    <mat-label>Entrer le nom du nouveau menu</mat-label>
+                    <input matInput formControlName="name" placeholder="Ex. filet aux fish">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Entrer le prix du menu</mat-label>
+                    <input matInput type="number" formControlName="price" placeholder="Ex.8">
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+    <p class="title">Quelles sont les ingrédients utilisées ? </p>
+    <div class="section_fileds">
         <ng-container formArrayName="base_ing">
             <div class="old" *ngFor="let item of add_menu_section.controls.base_ing.controls;let i=index">
                 <ng-container [formGroupName]="i">
-                     <mat-form-field appearance="fill">
-                        <mat-label>Choisir l'ingrédients</mat-label>
-                        <mat-select (selectionChange)="getUnity($event, 'ing', i)" formControlName="name">
-                             <mat-option *ngFor="let ingredient of ingredients" [value]="ingredient.name">{{ingredient.name.split('_').join(' ')}}</mat-option>
-                        </mat-select>
-                     </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label> quantitée pour le plat </mat-label>
-                        <input matInput type="number" formControlName="quantity">
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label> unitée pour l'ingrédient </mat-label>
-                        <mat-select formControlName="unity">
-                            <mat-option value="kg"> kg (kilogramme)</mat-option>
-                            <mat-option value="g"> g (grame)</mat-option>
-                            <mat-option value="L"> L (litre)</mat-option>
-                            <mat-option value="p"> p (pièce)</mat-option>
-                            <mat-option value="c.c"> cuillères à café</mat-option>
-                            <mat-option value="c.s"> cuillères à soupe</mat-option>
-                            <mat-option value="pince"> une pincée </mat-option>
-                            <mat-option value="pointe"> une pointe </mat-option>
-                            <mat-option value="noisette"> une noisette de beurre</mat-option>
-                            <mat-option value="noix"> une noix de beurre</mat-option>
-                            <mat-option value="verre"> un verre</mat-option>
-                            <mat-option value="ml"> ml (millilitre)</mat-option>
-                            <mat-option value="cl"> cl (centilitre)</mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <div class="container-content">
+                        <div class="full-container">
+                            <p>nom de l'ingrédient</p>
+                            <p>quantitée de l'ingrédient</p>
+                            <p>unitée de l'ingrédient</p>
+                        </div>
+                        <div class="full-container">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Choisir l'ingrédients</mat-label>
+                                <mat-select (selectionChange)="getUnity($event, 'ing', i)" formControlName="name">
+                                     <mat-option *ngFor="let ingredient of ingredients" [value]="ingredient.name">{{ingredient.name.split('_').join(' ')}}</mat-option>
+                                </mat-select>
+                             </mat-form-field>
+                            <mat-form-field appearance="fill">
+                                <mat-label> quantitée pour le plat </mat-label>
+                                <input matInput type="number" formControlName="quantity">
+                            </mat-form-field>
+                            <mat-form-field appearance="fill">
+                                <mat-label> unitée pour l'ingrédient </mat-label>
+                                <mat-select formControlName="unity">
+                                    <mat-option value="kg"> kg (kilogramme)</mat-option>
+                                    <mat-option value="g"> g (grame)</mat-option>
+                                    <mat-option value="L"> L (litre)</mat-option>
+                                    <mat-option value="p"> p (pièce)</mat-option>
+                                    <mat-option value="c.c"> cuillères à café</mat-option>
+                                    <mat-option value="c.s"> cuillères à soupe</mat-option>
+                                    <mat-option value="pince"> une pincée </mat-option>
+                                    <mat-option value="pointe"> une pointe </mat-option>
+                                    <mat-option value="noisette"> une noisette de beurre</mat-option>
+                                    <mat-option value="noix"> une noix de beurre</mat-option>
+                                    <mat-option value="verre"> un verre</mat-option>
+                                    <mat-option value="ml"> ml (millilitre)</mat-option>
+                                    <mat-option value="cl"> cl (centilitre)</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
                 </ng-container>
                 <button class="btn supp_button" (click)="suppInputIng(i)" mat-stroked-button>Suppression de l'ingrédient</button>
             </div>
@@ -57,25 +71,34 @@
             </button>
         </div>
     </div>
+    <p class="title">Quelles sont les consommables  utilisée pour le menu ? </p>
     <div class="section_fileds">
-        <p>Quelles sont les consommables ? <br> entrer la quantitée, le nom et l'unitée <br> de consommables utilisés pour le menu : </p>
         <ng-container formArrayName="base_conso">
             <div class="old" *ngFor="let item of add_menu_section.controls.base_conso.controls;let i=index">
                 <ng-container [formGroupName]="i">
-                    <mat-form-field appearance="fill">
-                        <mat-label>Choisir le consommable</mat-label>
-                        <mat-select (selectionChange)="getUnity($event, 'conso', i)" formControlName="name">
-                             <mat-option *ngFor="let consommable of consommables" [value]="consommable.name">{{consommable.name.split('_').join(' ')}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label> quantitée pour le plat </mat-label>
-                        <input matInput type="number" formControlName="quantity">
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label> unitée pour le consommable </mat-label>
-                        <input matInput  formControlName="unity" value="{{unity_conso[i]}}">
-                    </mat-form-field>
+                    <div class="container-content">
+                        <div class="full-container">
+                            <p>nom du consommable</p>
+                            <p>quantitée du consommable</p>
+                            <p>unitée du consommable</p>
+                        </div>
+                        <div class="full-container">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Choisir le consommable</mat-label>
+                                <mat-select (selectionChange)="getUnity($event, 'conso', i)" formControlName="name">
+                                     <mat-option *ngFor="let consommable of consommables" [value]="consommable.name">{{consommable.name.split('_').join(' ')}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field appearance="fill">
+                                <mat-label> quantitée pour le plat </mat-label>
+                                <input matInput type="number" formControlName="quantity">
+                            </mat-form-field>
+                            <mat-form-field appearance="fill">
+                                <mat-label> unitée pour le consommable </mat-label>
+                                <input matInput  formControlName="unity" value="{{unity_conso[i]}}">
+                            </mat-form-field>
+                        </div>
+                    </div>
                 </ng-container>
                 <button class="btn supp_button" (click)="suppInputConso(i)" mat-stroked-button>Suppression du consommable</button>
             </div>
@@ -87,17 +110,24 @@
             </button>
         </div>
     </div>
+    <p class="title">Quelles sont les plats présent dans le menu ? </p>
     <div class="section_fileds">
-        <p>Quelles sont les plats ? <br> entrer la quantitée, le nom et l'unitée <br> de préparations utilisés pour le menu : </p>
         <ng-container formArrayName="base_plat">
             <div class="old" *ngFor="let item of add_menu_section.controls.base_plat.controls;let i=index">
                 <ng-container [formGroupName]="i">
-                    <mat-form-field appearance="fill">
-                        <mat-label>Choisir le plat</mat-label>
-                        <mat-select formControlName="name">
-                             <mat-option *ngFor="let plat of plats" [value]="plat.nom">{{plat.nom.split('_').join(' ')}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <div class="container-content">
+                        <div class="full-container">
+                            <p>nom du plat</p>
+                        </div>
+                        <div class="full-container">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Choisir le plat</mat-label>
+                                <mat-select formControlName="name">
+                                     <mat-option *ngFor="let plat of plats" [value]="plat.nom">{{plat.nom.split('_').join(' ')}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>   
                 </ng-container>
                 <button class="btn supp_button" (click)="suppInputPlat(i)" mat-stroked-button>Suppression du plat</button>
             </div>

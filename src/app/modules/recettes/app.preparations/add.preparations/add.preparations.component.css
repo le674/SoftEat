@@ -8,6 +8,12 @@
     flex-direction: column;
 }
 
+.title{
+    font-size: large;
+    font-weight: normal;
+    color: rgb(125, 181, 46);
+}
+
 .mat-mini-fab{
     color: white;
     margin-left: 20px;
@@ -19,6 +25,21 @@
     justify-content: space-between;
     margin-top: 5px;
     margin-bottom: 10px;
+}
+
+.full-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.container-content{
+    display: flex;
+}
+
+.col{
+    display: flex;
+    flex-direction: column;
 }
 
 p{
@@ -42,6 +63,10 @@ p{
     color: white;
 }
 
+#time-form{
+    display: flex;
+}
+
 .supp_button{
     color: red;
     background-color: white;
@@ -62,7 +87,13 @@ p{
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     margin-bottom: 40px;
+    margin-left: 30px;
+}
+
+.section{
+    margin-top: 30px;
 }
 
 mat-form-field{
@@ -79,24 +110,9 @@ mat-radio-button{
   margin-right: 5px;
 }
 
-.mat-select {
-    width: fit-content !important;
-    min-width: 100%;
-}
 
-::ng-deep .mat-form-field-infix {
-    min-width: 120px !important;
-    width: fit-content !important;
-}
-
-::ng-deep .mat-select .mat-select-value {
-    width: fit-content;
-    min-width: 18ch;
-    max-width: 200ch;
-}
-::ng-deep .mat-select .mat-select-placeholder {
-    width: fit-content;
-    min-width: 32ch;
+.time{
+   max-width: 70px;
 }
 
 .section {
@@ -109,5 +125,6 @@ mat-radio-button{
     display: flex;
     justify-content: flex-start;
     align-items: center;  
+    margin-top: 30px;
 }
 

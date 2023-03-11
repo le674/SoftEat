@@ -38,7 +38,9 @@ export class AddPreparationsComponent implements OnInit{
     etapes: new FormArray<FormGroup<{
       name:FormControl<string | null>,
       comm:FormControl<string | null>,
-      tmps:FormControl<number | null>
+      heure:FormControl<number | null>,
+      minute:FormControl<number | null>,
+      seconde:FormControl<number | null>
     }>>([]),
     quantity_aft_prep: new FormControl(0),
     unity: new FormControl("")
@@ -140,10 +142,13 @@ export class AddPreparationsComponent implements OnInit{
     if((this.data.etapes !== null) && (this.data.etapes !== undefined)){
       const current_inputs_etapes = this.data.etapes.length;
       for (let index = 0; index < current_inputs_etapes; index++) {
+        const times = this.prepa_service.SecToArray(this.data.etapes[index].temps);
         const new_etape = this.formBuilder.group({
           name: new FormControl(this.data.etapes[index].nom),
           comm: new FormControl(this.data.etapes[index].commentaire),
-          tmps: new FormControl(this.data.etapes[index].temps),
+          heure: new FormControl(times[0]),
+          minute: new FormControl(times[1]),
+          seconde: new FormControl(times[2])
         })
         this.getEtapes().push(new_etape);
       }
@@ -200,17 +205,32 @@ export class AddPreparationsComponent implements OnInit{
               this.base_conso.push(act_conso);
             } 
           })
-          etapes_prepa.value.forEach((etape:Partial<{name:string | null, comm:string | null, tmps:number | null}>) => {
-            if(etape.name !== undefined || (etape.name !== null)){
-              if((etape.tmps !== undefined) || (etape.tmps !== null)){
-                if((etape.comm === undefined) || (etape.comm === null)) etape.comm = "";
-                let add_etape = new Cetape();
-                add_etape.nom = (etape.name as string);
-                add_etape.temps = (etape.tmps as number);
-                add_etape.commentaire = (etape.comm as string); 
-                this.etapes.push(add_etape);
-              }
-            } 
+          etapes_prepa.value.forEach((etape:Partial<{name:string | null, comm:string | null,
+             heure:number | null, minute: number | null, seconde:number | null}>) => {
+             let _hours = 0;
+             let _minute = 0;
+             let _seconde = 0;
+             if((etape.heure !== undefined) && (etape.heure != null)){
+              _hours = etape.heure;
+             }
+             if((etape.minute !== undefined) && (etape.minute !== null)){
+              _minute = etape.minute;
+             }
+             if((etape.seconde !== undefined) && (etape.seconde !== null)){
+              _seconde = etape.seconde;
+             }
+             _hours = 3600*_hours;
+             _minute = 60*_minute;
+             _seconde = _seconde;
+             if(etape.name !== undefined || (etape.name !== null)){
+                 const tmps = _hours + _minute + _seconde;
+                 if((etape.comm === undefined) || (etape.comm === null)) etape.comm = "";
+                 let add_etape = new Cetape();
+                 add_etape.nom = (etape.name as string);
+                 add_etape.temps = tmps;
+                 add_etape.commentaire = (etape.comm as string); 
+                 this.etapes.push(add_etape);
+             } 
           });
           // le problème c'est que là on supprime les quantitée que l'on à mit avant 
           this.base_ings.forEach((ingredient) => {
@@ -365,20 +385,29 @@ export class AddPreparationsComponent implements OnInit{
   addInputEtape(){
     let name = "";
     let comm = "";
-    let tmps = 0;
+    let heure = 0;
+    let minute = 0;
+    let seconde = 0;
     const etape_length = this.getEtapes().length;
     const etapes = this.data.etapes;
     if(etapes !== null){
       if((etapes[etape_length] !== undefined) && (etape_length > 0)){
         name = etapes[etape_length].nom;
         if(etapes[etape_length].commentaire !== null) comm = etapes[etape_length].commentaire as string;
-        if(etapes[etape_length].temps !== null) tmps = etapes[etape_length].temps;
+        if(etapes[etape_length].temps !== null){
+          const times = this.prepa_service.SecToArray(etapes[etape_length].temps)
+          heure = times[0];
+          minute = times[1];
+          seconde = times[2];
+        }
       } 
     }
     const new_etape = this.formBuilder.group({
       name: new FormControl(name),
       comm: new FormControl(comm),
-      tmps: new FormControl(tmps),
+      heure: new FormControl(heure),
+      minute: new FormControl(minute),
+      seconde: new FormControl(seconde),
     });
     this.getEtapes().push(new_etape);
   }
@@ -443,7 +472,9 @@ export class AddPreparationsComponent implements OnInit{
     return this.add_prepa_section.get("etapes") as FormArray<FormGroup<{
       name:FormControl<string | null>,
       comm:FormControl<string | null>,
-      tmps:FormControl<number | null>
+      heure:FormControl<number | null>,
+      minute:FormControl<number | null>,
+      seconde:FormControl<number | null>
     }>>
   }
 

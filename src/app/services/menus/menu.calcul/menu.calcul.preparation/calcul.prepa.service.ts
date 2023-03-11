@@ -156,6 +156,15 @@ export class CalculPrepaService {
     return `${heure}h ${min}min ${sec}sec`
    }
    
+
+    // convertion des secondes en chaine de caractère
+  SecToArray(full_time:number){
+    const heure = Math.trunc(full_time/3600);
+    const min = Math.trunc(full_time%3600/60);
+    const sec = full_time%60;
+    return [heure, min, sec]
+   }
+   
    // convertion de l'heure en seconde 
    StringToSec(time_str:string){
      let hour = 0;

@@ -2,6 +2,17 @@
     color: rgb(125, 181, 46);
 }
 
+.inputs-containers{
+    display: flex;
+    flex-direction: column;
+}
+
+.title{
+    font-size: large;
+    font-weight: normal;
+    color: rgb(125, 181, 46);
+}
+
 .mat-mini-fab{
     color: white;
     margin-left: 20px;
@@ -50,8 +61,11 @@ p{
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     margin-bottom: 40px;
+    margin-left: 30px;
 }
+
 
 
 mat-form-field{
@@ -64,6 +78,11 @@ mat-form-field{
     margin-top: 5px;
     margin-bottom: 10px;
 }
+
+.time{
+    width: 70px;
+ }
+ 
 mat-radio-button{
   margin-right: 5px;
 }
@@ -98,6 +117,26 @@ mat-radio-button{
     display: flex;
     justify-content: flex-start;
     align-items: center;  
+    margin-top: 30px;
+}
+
+.full-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.container-content{
+    display: flex;
+}
+
+#time-form{
+    display: flex;
+}
+
+.col{
+    display: flex;
+    flex-direction: column;
 }
 
 .inputs-containers{

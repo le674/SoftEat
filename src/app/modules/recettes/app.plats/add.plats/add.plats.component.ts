@@ -51,7 +51,9 @@ export class AddPlatsComponent implements OnInit {
     etapes: new FormArray<FormGroup<{
       name:FormControl<string | null>,
       comm:FormControl<string | null>,
-      tmps:FormControl<number | null>
+      heure:FormControl<number | null>,
+      minute:FormControl<number | null>,
+      seconde:FormControl<number | null>
     }>>([]),
   });
   public boisson:boolean;
@@ -64,7 +66,8 @@ export class AddPlatsComponent implements OnInit {
     full_consommables: Array<Consommable>,
     full_preparations: Array<Cpreparation>,
     plat: Cplat
-    }, private _snackBar: MatSnackBar, private plat_service:MenuCalculPlatsServiceService, private calcul_service:CalculService) {
+    }, private _snackBar: MatSnackBar, private plat_service:MenuCalculPlatsServiceService,
+    private calcul_service:CalculService, private calcul_service_prepa:CalculPrepaService) {
     this.unity_conso = [];
     this.unity_ing = [];
     this.selected_ing = '';
@@ -128,10 +131,13 @@ export class AddPlatsComponent implements OnInit {
       }
       if((this.data.plat.etapes !== null) && (this.data.plat.etapes !== undefined)){
         this.data.plat.etapes.forEach((etape) => {
+          const time_array = this.calcul_service_prepa.SecToArray(etape.temps);
           const to_add_grp = new FormGroup({
             name:new FormControl(etape.nom),
             comm: new FormControl(etape.commentaire),
-            tmps: new FormControl(etape.temps)
+            heure: new FormControl(time_array[0]),
+            minute: new FormControl(time_array[1]),
+            seconde: new FormControl(time_array[2]),
           })
           this.getEtapes().push(to_add_grp);
         })
@@ -201,6 +207,9 @@ export class AddPlatsComponent implements OnInit {
     if(this.add_plats_section.controls.etapes.value !== null){
       let base_etapes = this.add_plats_section.controls.etapes.value;
       plat.etapes = base_etapes.map((etape) => {
+        let _heure = 0;
+        let _minute = 0;
+        let _seconde =  0;
         let etape_to_add = new Cetape()
         if((etape.name !== null) && (etape.name !== undefined)){
           etape_to_add.nom = etape.name;
@@ -208,9 +217,16 @@ export class AddPlatsComponent implements OnInit {
         if((etape.comm !== null) && (etape.comm !== undefined)){
           etape_to_add.commentaire = etape.comm;
         }
-        if((etape.tmps !== null) && (etape.tmps !== undefined)){
-          etape_to_add.temps = etape.tmps;
+        if((etape.heure !== null) && (etape.heure !== undefined)){
+          _heure = etape.heure * 3600;
         }
+        if((etape.minute !== null) && (etape.minute !== undefined)){
+          _minute = etape.minute * 60;
+        }
+        if((etape.seconde !== null) && (etape.seconde !== undefined)){
+          _seconde = etape.seconde;
+        }
+        etape_to_add.temps = _heure + _minute + _seconde;
         return etape_to_add;
       })
     }
@@ -351,7 +367,7 @@ export class AddPlatsComponent implements OnInit {
   addInputEtape(){
     let name = "";
     let comm = "";
-    let tmps = 0;
+    let tmps = [0,0,0];
     const etape_length = this.getEtapes().length;
     if(this.data.plat !== null){
       const etapes = this.data.plat.etapes;
@@ -359,14 +375,18 @@ export class AddPlatsComponent implements OnInit {
         if((etapes[etape_length] !== undefined) && (etapes.length > 0)){
           if(etapes[etape_length].nom !== null)  name = etapes[etape_length].nom as string;
           if(etapes[etape_length].commentaire !== null) comm = etapes[etape_length].commentaire as string;
-          if(etapes[etape_length].temps !== null) tmps = etapes[etape_length].temps;
+          if(etapes[etape_length].temps !== null){
+            tmps = this.calcul_service_prepa.SecToArray(etapes[etape_length].temps)
+          } 
         }
       }
     }
     const new_etape = this.formBuilder.group({
       name: new FormControl(name, Validators.required),
       comm: new FormControl(comm),
-      tmps: new FormControl(tmps)
+      heure: new FormControl(tmps[0]),
+      minute: new FormControl(tmps[1]),
+      seconde: new FormControl(tmps[2])
     });
     this.getEtapes().push(new_etape);
   }
@@ -413,7 +433,9 @@ export class AddPlatsComponent implements OnInit {
     return this.add_plats_section.get("etapes") as FormArray<FormGroup<{
       name:FormControl<string | null>,
       comm:FormControl<string | null>,
-      tmps:FormControl<number | null>
+      heure:FormControl<number | null>,
+      minute:FormControl<number | null>,
+      seconde:FormControl<number | null>,
     }>>
   }
 }
