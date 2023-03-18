@@ -14,7 +14,7 @@ import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.in
   templateUrl: './app.add.preparation.component.html',
   styleUrls: ['./app.add.preparation.component.css']
 })
-export class AppAddPreparationComponent implements OnInit, AfterContentInit {
+export class AppAddPreparationComponent implements OnInit, AfterContentInit, OnInit {
 
   /* public is_prep: boolean; */
   public is_vrac: boolean;
@@ -66,6 +66,7 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit {
   }
 
 
+
   ngAfterContentInit(): void {
 
     const unity = this.calcul_service.convertUnity(this.data.preparation.unity, true);
@@ -73,6 +74,7 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit {
     this.add_preparation.get("quantity_unitary")?.setValue(this.data.preparation.quantity_unity);
     this.add_preparation.get("unity")?.setValue(unity);
     this.add_preparation.get("quantity")?.setValue(this.data.preparation.quantity);
+
     // Si on récupère une date de limite de consommation négative on dépose zéro sinon on dépose la dlc
     if (this.data.preparation.dlc > 0) {
       this.add_preparation.get("dlc")?.setValue(this.data.preparation.dlc);
@@ -89,6 +91,16 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit {
   }
 
   ngOnInit(): void {
+    if(this.data.preparation.vrac !== undefined){
+      if(this.data.preparation.vrac === "oui"){
+        this.is_vrac = true;
+      }
+      else{
+        this.is_vrac = false;
+      }
+      // on adapte la quantitée affiché en fonction
+      this.clickRadioVrac(this.is_vrac)
+    }
   }
 
 

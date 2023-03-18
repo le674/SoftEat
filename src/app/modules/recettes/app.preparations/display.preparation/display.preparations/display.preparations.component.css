@@ -2,13 +2,33 @@ body {
     display: flex;
     flex-direction: column;
 }
+
 .section {
     margin-top: 20px;
 }
+
 p{
     padding-top: 16px;
     margin-left: 10px;
 }
+
+#help {
+    color: rgb(125, 181, 46);
+    background-color: white;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+#help:hover{
+    background-color: rgb(125, 181, 46);
+    color: white;
+}
+
+#top-border{
+    display: flex;
+    justify-content: space-between;
+}
+
 .indication{
     color: rgb(125, 181, 46);
 }
@@ -26,15 +46,19 @@ h2 {
 table{
     min-width: auto;
 }
+
 .name{
     max-width: 100px;
 }
+
 .comm-cells{
     min-width: 150px;
 }
+
 .other-cells{
     min-width: 100px;
 }
+
 table{
     width: 100%;
 }

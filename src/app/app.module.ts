@@ -17,6 +17,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { getAuth } from 'firebase/auth';
 import { provideAuth } from '@angular/fire/auth';
 import { RecettesModule } from './modules/recettes/recettes.module';
+import {MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR } from '@angular/material/radio';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,7 @@ import { RecettesModule } from './modules/recettes/recettes.module';
   imports: [
     AppDashboardModule,
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     //import des différent module propre à chacune des pages de l'application
     AppAlertesModule,

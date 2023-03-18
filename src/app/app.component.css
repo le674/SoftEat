@@ -1,0 +1,9 @@
+.mat-radio-button .mat-radio-inner-circle {
+    border-color: rgb(125, 181, 46);
+  }
+  
+  /* Définir la couleur de fond pour les boutons radio sélectionnés */
+  .mat-radio-button .mat-radio-checked .mat-radio-inner-circle {
+    background-color: rgb(125, 181, 46);
+  }
+  

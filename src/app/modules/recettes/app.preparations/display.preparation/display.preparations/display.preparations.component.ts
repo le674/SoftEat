@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Cetape } from 'src/app/interfaces/etape';
 import { Consommable, TIngredientBase } from 'src/app/interfaces/ingredient';
@@ -8,6 +9,7 @@ import { ConsommableInteractionService } from 'src/app/services/menus/consommabl
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
+import { RecetteHelpPreparationsComponent } from './display.preparations.modals/recette.help.preparations/recette.help.preparations.component';
 
 @Component({
   selector: 'app-display.preparations',
@@ -84,7 +86,8 @@ export class DisplayPreparationsComponent implements OnInit {
     temps:number,
     prime_cost:number
   }, private ingredient_service: IngredientsInteractionService,
-   private prepa_service:CalculPrepaService, private restau_service:RestaurantService) { 
+   private prepa_service:CalculPrepaService, private restau_service:RestaurantService,
+   public dialog: MatDialog, private _snackBar: MatSnackBar) { 
     this.page_number_conso = 0;
     this.page_number_etapes = 0;
     this.page_number_ings = 0;
@@ -171,4 +174,12 @@ export class DisplayPreparationsComponent implements OnInit {
     this.dataSource_ing.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
     
   }
+  
+  OpenHelp() {
+    const dialogRef = this.dialog.open(RecetteHelpPreparationsComponent, {
+      height: `630px`,
+      width: `400px`,
+    });
+  }
+
 }

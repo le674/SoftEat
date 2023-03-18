@@ -63,6 +63,16 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
 
 
   ngOnInit(): void {
+    if(this.data.ingredient.vrac !== undefined){
+      if(this.data.ingredient.vrac === "oui"){
+        this.is_vrac = true;
+      }
+      else{
+        this.is_vrac = false;
+      }
+      // on adapte la quantitée affiché en fonction
+      this.clickRadioVrac(this.is_vrac)
+    }
   }
 
 

@@ -1,1 +1,135 @@
-<p>app.factures works!</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Factures</h1>
+    <header>
+        <div id="all-buttons">
+            <div class="group-buttons">
+                <button mat-stroked-button>
+                    <i class="fa-solid fa-laptop-file"></i>
+                    Scanner la facture
+                </button>
+                <button mat-stroked-button>
+                    <i class="fa-regular fa-circle-down"></i>
+                    Archiver une facture
+                </button>
+            </div>
+            <div class="group-buttons">
+                <button mat-stroked-button>
+                    <i class="fa-solid fa-file-import"></i>
+                    Importer une image
+                </button>
+                <button mat-stroked-button>
+                    <i class="fa-solid fa-file-import"></i>
+                   Importer un pdf
+                </button>
+            </div>
+        </div>
+        <div id="select_area">
+            <label>Quel est le contenu de la facture scannée ?</label>
+            <mat-radio-group id="radio-group" aria-label="Select an option">
+                <mat-radio-button name="chose-select" value="ing" [checked] ="true">Ingrédients</mat-radio-button>
+                <mat-radio-button name="chose-select" value="conso">Autres</mat-radio-button>
+            </mat-radio-group>  
+        </div>
+    </header>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+            <!-- Position Column -->
+            <ng-container matColumnDef="nom">
+                <th mat-header-cell *matHeaderCellDef> nom </th>
+                <td mat-cell *matCellDef="let element">
+                    <div [innerHTML]="element.nom"></div>
+                </td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="categorie_tva">
+                <th mat-header-cell *matHeaderCellDef> catégorie <br> tva </th>
+                <td mat-cell *matCellDef="let element">
+                    <div [innerHTML]="element.categorie_tva"></div>
+                </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="quantity">
+                <th mat-header-cell *matHeaderCellDef> quantitée</th>
+                <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+            </ng-container>
+
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="quantity_unity">
+                <th mat-header-cell *matHeaderCellDef> quantitée <br> unitaire</th>
+                <td mat-cell *matCellDef="let element"> {{element.quantity_unity}} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="unity">
+                <th mat-header-cell *matHeaderCellDef> unitée</th>
+                <td mat-cell *matCellDef="let element"> {{element.unity}} </td>
+            </ng-container>
+
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="cost">
+                <th mat-header-cell *matHeaderCellDef> cout <br> unitaire <br> HT </th>
+                <td mat-cell *matCellDef="let element"> {{element.cost}} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="cost_ttc">
+                <th mat-header-cell *matHeaderCellDef> cout <br> unitaire <br> TTC </th>
+                <td mat-cell *matCellDef="let element"> {{element.cost_ttc}} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="date_reception">
+                <th mat-header-cell *matHeaderCellDef> date <br> de <br> réception</th>
+                <td mat-cell *matCellDef="let element"> {{element.date_reception}} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="dlc">
+                <th mat-header-cell *matHeaderCellDef> DLC</th>
+                <td mat-cell *matCellDef="let element"> {{element.dlc}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> actions </th>
+                <td id="validate" mat-cell *matCellDef="let element;let cell_index = index; ">
+                  <i class="fa-regular fa-trash action_table"></i>
+                  <i class="fa-regular fa-pen action_table"></i>
+                </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[6]"
+            (page)="pageChanged($event)"
+            [length]="ingredients_displayed_br.length"
+            showFirstLastButtons
+            aria-label="Selection page d'ingredients">
+        </mat-paginator>
+        <div class="group-buttons">
+            <button mat-stroked-button>
+                <i class="fa-solid fa-check"></i>
+                Valider l'ajout des ingrédients dans l'inventaire
+            </button>
+            <button id = "cancel_button" mat-stroked-button>
+                <i class="fa-solid fa-xmark"></i>
+                Annuler l'ajout des ingrédients dans l'inventaire
+            </button>
+        </div>
+</body>
+</html>

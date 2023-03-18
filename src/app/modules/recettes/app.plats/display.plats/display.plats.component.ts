@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,6 +9,7 @@ import { Cpreparation } from 'src/app/interfaces/preparation';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { MenuCalculPlatsServiceService } from 'src/app/services/menus/menu.calcul/menu.calcul.plats/menu.calcul.plats.service.service';
 import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
+import { RecetteHelpPlatsComponent } from './display.plats.modals/recette.help.plats/recette.help.plats.component';
 
 @Component({
   selector: 'app-display.plats',
@@ -100,7 +101,7 @@ export class DisplayPlatsComponent implements OnInit {
     preparations: Array<Cpreparation>,
     plat: Cplat
     }, private prepa_service:CalculPrepaService, private plat_service:MenuCalculPlatsServiceService, private _snackBar: MatSnackBar,
-     private calcul_service:CalculService) {
+     private calcul_service:CalculService,  public dialog: MatDialog) {
       this.preparations = [];
       this.ingredients = [];
       this.consommables = [];
@@ -241,5 +242,12 @@ export class DisplayPlatsComponent implements OnInit {
     this.page_number_ings = event.pageIndex;    
     this.dataSource_ing.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
     
+  }
+
+  OpenHelp() {
+    const dialogRef = this.dialog.open(RecetteHelpPlatsComponent, {
+      height: `900px`,
+      width: `400px`,
+  });
   }
 }

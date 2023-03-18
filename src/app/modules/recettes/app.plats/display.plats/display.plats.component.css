@@ -11,6 +11,23 @@ body {
     max-width: 70%;    
 }
 
+#help {
+    color: rgb(125, 181, 46);
+    background-color: white;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+#help:hover{
+    background-color: rgb(125, 181, 46);
+    color: white;
+}
+
+#border-top{
+    display: flex;
+    justify-content: space-between;
+}
+
 p{
     padding-top: 16px;
     margin-left: 10px;

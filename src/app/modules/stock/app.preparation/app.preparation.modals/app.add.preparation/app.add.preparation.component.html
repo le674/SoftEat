@@ -9,8 +9,8 @@
     <div class="selectSection">
         <p> Est-ce que la préparation est réalisé en vrac : </p>
         <mat-radio-group aria-label="SelectPrepa" id="is_cooked" formControlName="vrac">
-            <mat-radio-button (change)="clickRadioVrac(true)" value="oui">Oui</mat-radio-button>
-            <mat-radio-button (change)="clickRadioVrac(false)" value="non">Non</mat-radio-button>
+            <mat-radio-button [checked]="is_vrac" (change)="clickRadioVrac(true)" value="oui">Oui</mat-radio-button>
+            <mat-radio-button [checked]="!is_vrac"(change)="clickRadioVrac(false)" value="non">Non</mat-radio-button>
         </mat-radio-group>
     </div>
     <div class="section">

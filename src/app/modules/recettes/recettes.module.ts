@@ -25,6 +25,8 @@ import { AddPlatsComponent } from './app.plats/add.plats/add.plats.component';
 import { DisplayPlatsComponent } from './app.plats/display.plats/display.plats.component';
 import { DisplayMenuComponent } from './app.menu/display.menu/display.menu.component';
 import { MatListModule } from '@angular/material/list';
+import { RecetteHelpPreparationsComponent } from './app.preparations/display.preparation/display.preparations/display.preparations.modals/recette.help.preparations/recette.help.preparations.component';
+import { RecetteHelpPlatsComponent } from './app.plats/display.plats/display.plats.modals/recette.help.plats/recette.help.plats.component';
 
 
 
@@ -38,7 +40,9 @@ import { MatListModule } from '@angular/material/list';
    DisplayPreparationsComponent,
    AddPlatsComponent,
    DisplayPlatsComponent,
-   DisplayMenuComponent
+   DisplayMenuComponent,
+   RecetteHelpPreparationsComponent,
+   RecetteHelpPlatsComponent
   ],
   imports: [
     CommonModule,

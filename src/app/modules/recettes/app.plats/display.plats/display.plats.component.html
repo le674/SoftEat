@@ -7,8 +7,13 @@
     <title>Plats</title>
 </head>
 <body>
-    <div class="border">
+    <div id="border-top" class="border">
         <p> <span class="indication">Nom :</span> {{plat.nom.split('_').join(' ')}}</p>
+        <div id="action-buttons">
+            <button id="help" mat-mini-fab aria-label="aide" matTooltip="aide pour la fiche technique des plats" (click)="OpenHelp()">
+                <i class="fa-solid fa-question"></i>
+            </button>
+        </div>
     </div>
    
     <div class="section border">
