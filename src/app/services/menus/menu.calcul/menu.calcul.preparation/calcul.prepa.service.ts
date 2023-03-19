@@ -25,20 +25,15 @@ export class CalculPrepaService {
       // au restaurateur de voir si il préfère modifier l'unitée p par une autre unitée.
       // dans le cas d'ingrédient en vrac il ne faut pas que le restaurateur puisse choisir p dans les unitée pour son plat/préparation pour ses ingrédients 
       // dans la partie stock si le restaurateur choisit de faire du vrac en pièce exemple : quantitée unitaire 6 tomates -> unitée p -> 9€
-      // alors il vaut mieux remplir : quantitée unitaire de 1 -> unitée p -> cost 1.50 -> quantitée 6  
-      if(ing.unity !== "p"){
-        cost_matiere = this.calcul_service.convertQuantity(ing.quantity, ing.unity)*(ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary));
-      }
-      else{
-        cost_matiere = ing.quantity * ing.cost;
-      }
+      // alors il vaut mieux remplir : quantitée unitaire de 1 -> unitée p -> cost 1.50 -> quantitée 6 
+      cost_matiere = this.getOnlyCostMaterial(ing);
       ingredients.push({
         nom: ing.name,
         quantity: ing.quantity,
         unity: ing.unity,
         cost: ing.cost,
         taux_tva: ing.taux_tva,
-        cost_matiere: this.ToCentime(cost_matiere),
+        cost_matiere: cost_matiere,
         vrac: ing.vrac
       })
     })
@@ -46,14 +41,18 @@ export class CalculPrepaService {
   }
 
   getOnlyCostMaterial(ing:TIngredientBase):number{
-
     let cost_matiere = 0;
     // dans un premier temps ont calcule la quantitée pas par pièce dans un seconbd temps ont pren en compte l'unitée par pièce
-    if(ing.unity !== "p"){
-      cost_matiere = this.calcul_service.convertQuantity(ing.quantity, ing.unity)*(ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary));
-    }
+    if(ing.vrac === "oui"){
+      cost_matiere = ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary);
+    } 
     else{
-      cost_matiere = ing.quantity * ing.cost;
+      if(ing.unity !== "p" || ((ing.unity === "p") && (ing.unity_unitary === "p"))){
+        cost_matiere = this.calcul_service.convertQuantity(ing.quantity, ing.unity)*(ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary));
+      }
+      else{
+        cost_matiere = ing.quantity * ing.cost;
+      }
     }
    
     return this.ToCentime(cost_matiere);
@@ -77,8 +76,7 @@ export class CalculPrepaService {
                                 .filter((ing) => (ing.quantity_unity !== undefined) && (ing.quantity_unity !== null))
                                 .map((ing) => {
                                 // on normalise le cout par la quantitée unitaire
-                                let cost = ing.cost*this.calcul_service.convertQuantity(ing.quantity, ing.unity);
-                                cost = cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary);
+                                let cost = this.getOnlyCostMaterial(ing);
                                 return cost
                             })
         }
@@ -204,7 +202,7 @@ export class CalculPrepaService {
      return hour + minute + sec;
    }
    
-  //  quand la quantitée finale est précise on applique le calcul normal de la valeur bouchère en revanche quand la quantitée finale 
+  // quand la quantitée finale est précise on applique le calcul normal de la valeur bouchère en revanche quand la quantitée finale 
   // est exprimé en pièce alors le coût pour une préparation
   // on néglige les préparations qui ont une quantitée inférieure à 100g car alors ont divise le quotient
   // par une puissance de 10 de sorte à avoir une valeur bouchère de l'ordre de grandeur du total des coûts 
@@ -230,7 +228,7 @@ export class CalculPrepaService {
       ing.quantity_unity = Number(ing.quantity_unity);
       ing.quantity = Number(ing.quantity);
       // on normalise le cout par la quantitée unitaire
-      cost = cost*this.calcul_service.convertQuantity(ing.quantity, ing.unity)/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary);
+      cost = this.getOnlyCostMaterial(ing);
       return cost
     }).reduce((cost, next_cost) => cost + next_cost);
     // si la quantitée après préparation est trop faible alors on recalcule le diviseur
