@@ -24,6 +24,7 @@ export class DisplayPlatsComponent implements OnInit {
   public prix_ttc:number;
   public portion_cost:number;
   public material_ratio:number;
+  public recommendation_price:number;
   public displayedColumnsIng: string[] = ['nom', 'quantity', 'unity', 'cost', 'cost_matiere'];
   public displayedColumnsConso: string[] = ['nom', 'quantity', 'unity', 'cost'];
   public displayedColumnsEtape: string[] = ['nom', 'temps', 'commentaire'];
@@ -115,6 +116,7 @@ export class DisplayPlatsComponent implements OnInit {
       this.page_number_etapes = 0;
       this.page_number_ings = 0;
       this.page_number_prepa = 0;
+      this.recommendation_price = 0;
       this.displayed_ing = [];
       this.displayed_conso = [];
       this.displayed_etape = [];
@@ -129,8 +131,12 @@ export class DisplayPlatsComponent implements OnInit {
     //ont récupère les préprations uniquement qui sont 
 
     this.tmps_prepa_theo = this.plat_service.getFullTheoTimeFromSec(this.data.plat);
+  
+
     if(this.data.plat.portion_cost !== undefined){
       this.portion_cost = this.data.plat.portion_cost;
+      this.recommendation_price = this.plat_service.platsRecommendationStep1(this.portion_cost);
+      this.recommendation_price = this.calcul_service.getCostTtcFromTaux(this.data.plat.taux_tva, this.recommendation_price)
     }
     else{
       this.portion_cost = 0;

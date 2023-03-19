@@ -13,7 +13,9 @@ p{
 .indication{
     color: rgb(125, 181, 46);
 }
-
+.indication_algo{
+    color: rgb(148, 30, 148);
+}
 h1 {
     font-size: xx-large;
     color: rgb(125, 181, 46);

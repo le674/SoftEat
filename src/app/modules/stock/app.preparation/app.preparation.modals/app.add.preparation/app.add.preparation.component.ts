@@ -177,22 +177,6 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit, OnI
           this.data.preparation.base_ing, this.data.preparation.quantity, this.add_preparation.value["quantity"], this.is_vrac);
       } 
 
- /*    if (new_prepa.vrac) {
-      if (new_prepa.quantity_unity < new_prepa.marge) {
-        // alors on affiche une alerte
-        const nom = (new_prepa.nom === null) ? "" : new_prepa.nom;
-        const msg = "l'ingredient : ".concat(nom).concat(" arrive en rupture de stock.");
-        this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "SoftEat", "", "stock");
-      }
-    }
-    else {
-      if (new_prepa.quantity < new_prepa.marge) {
-        //alors on affiche une alerte 
-        const nom = (new_prepa.nom === null) ? "" : new_prepa.nom;
-        const msg = "l'ingredient ".concat(nom).concat(" arrive en rupture de stock.");
-        this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "stock");
-      }
-    } */
 
     if (this.add_preparation.valid) {
       this.service.setPreparationInBdd(new_prepa as Cpreparation, this.data.prop, this.data.restaurant, this.base_ings_prepa).then(() => {

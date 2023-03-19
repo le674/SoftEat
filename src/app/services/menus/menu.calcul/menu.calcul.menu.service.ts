@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Cmenu } from 'src/app/interfaces/menu';
+import { Plat } from 'src/app/interfaces/plat';
+import { CalculService } from './menu.calcul.ingredients/calcul.service';
+import { MenuCalculPlatsServiceService } from './menu.calcul.plats/menu.calcul.plats.service.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MenuCalculMenuService {
 
-  constructor() { }
+  constructor(private plat_service:MenuCalculPlatsServiceService, private calcul_service:CalculService) { }
 
   getTauxTvaVentilee(menu:Cmenu){
     const taux_plats = menu.plats.map((plat) => plat.prix*(plat.taux_tva/100));
@@ -32,6 +35,19 @@ export class MenuCalculMenuService {
     return (Math.round((taux_tot/price_sum)*10000)/10000)*100
   }
 
+  // pour le prix de la recommandation su menu on applique une réduction de 5 à 10 % naivement dans notre cas ont prend une réduciton de 
+  // 7.5%
+  getPriceMenuReco(plats: Plat[]): number {
+    const all_plats = plats.length;
+    const arr_reco = plats
+                    .filter((plat) => (plat.prix !== undefined))
+                    .map((plat) => this.calcul_service.getCostTtcFromTaux(plat.taux_tva,plat.prix));
+    if(all_plats > 0){
+      const moy_price = arr_reco.reduce((prev_num, next_num) => prev_num + next_num)/all_plats;
+      return this.plat_service.ToCentime(moy_price - moy_price*0.075)
+    }
+    return 0;
+  }
 
   getPriceTTC(price_ht:number,taux:number){
     return price_ht + price_ht*(taux/100);

@@ -5,6 +5,11 @@ body {
 .section {
     margin-top: 20px;
 }
+
+.border{
+    padding-right: 10px;
+}
+
 .final_section{
     display: flex;
     justify-content: space-between;
@@ -28,12 +33,22 @@ body {
     justify-content: space-between;
 }
 
+#price_section{
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
 p{
     padding-top: 16px;
     margin-left: 10px;
 }
 .indication{
     color: rgb(125, 181, 46);
+}
+.indication_algo{
+    color: rgb(148, 30, 148);
 }
 
 h2 {

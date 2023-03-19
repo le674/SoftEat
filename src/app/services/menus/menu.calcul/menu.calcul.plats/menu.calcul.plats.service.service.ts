@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Cetape } from 'src/app/interfaces/etape';
 import { Cconsommable, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cplat } from 'src/app/interfaces/plat';
-import { Cpreparation } from 'src/app/interfaces/preparation';
 import { CalculPrepaService } from '../menu.calcul.preparation/calcul.prepa.service';
 
 @Injectable({
@@ -176,6 +175,28 @@ export class MenuCalculPlatsServiceService {
   getRatioMaterial(portion_cost:number,plat:Cplat){
     const price_ht = plat.prix;
     return(Math.round(this.ToCentime(portion_cost/price_ht)*100))
+  }
+
+  // ont utilise la liste [5,4,3,2.5] qui sont les coefficient multiplicateur pour l'établissement du prix des plats
+  platsRecommendationStep1(portion_cost:number):number{
+    const coeff = this.listCoeffTarif()
+    if(portion_cost <= 2){
+      return portion_cost * coeff.fourth_tarif_coeff
+    }
+    if((portion_cost > 2) && (portion_cost <= 3)){
+      return portion_cost * coeff.third_tarif_coeff
+    } 
+    if((portion_cost > 3) && (portion_cost <= 4)){
+      return portion_cost * coeff.sec_tarif_coeff
+    } 
+    if(portion_cost > 4){
+      return portion_cost * coeff.fst_tarif_coeff
+    }
+    return 0
+  }
+
+  listCoeffTarif(){
+    return {fst_tarif_coeff: 2.5, sec_tarif_coeff: 3, third_tarif_coeff:4, fourth_tarif_coeff:5}
   }
 
   ToCentime(quantity:number):number{
