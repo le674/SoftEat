@@ -1,5 +1,6 @@
 import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -18,9 +19,9 @@ import { PreparationInteractionService } from 'src/app/services/menus/preparatio
   styleUrls: ['./add.preparations.component.css']
 })
 export class AddPreparationsComponent implements OnInit{
-  private is_stock:boolean;
   public unity_ing:Array<string>;
   public unity_conso:Array<string>;
+  public curr_ingredients_vrac:Array<number>;
   public ingredients: Array<TIngredientBase>;
   public consommables: Array<Cconsommable>;
   public add_prepa_section = new FormGroup({
@@ -49,6 +50,7 @@ export class AddPreparationsComponent implements OnInit{
   private base_conso: Array<TConsoBase>;
   private etapes: Array<Cetape>;
   private after_prep:AfterPreparation = {quantity: 0, unity:""}; 
+  private is_stock:boolean;
   
   @ViewChild('taux')
   taux!: ElementRef;
@@ -93,6 +95,7 @@ export class AddPreparationsComponent implements OnInit{
     this.etapes = [];
     this.unity_conso = [];
     this.unity_ing = [];
+    this.curr_ingredients_vrac = [];
   }
 
 
@@ -319,6 +322,16 @@ export class AddPreparationsComponent implements OnInit{
     }  
   }
 
+  // lorsque l'ingédient est un ingrédient en vrac ont enlève la possibilité de choisir pièce dans l'outils de séléction 
+  changeIng(ingredient: MatOptionSelectionChange<string>, i:number) {
+    let ing = this.ingredients.find((_ingredient) => _ingredient.name === ingredient.source.value);
+    if(ing !== undefined){
+      if(ing.vrac === "oui"){
+        this.curr_ingredients_vrac.push(i);
+      }
+    }
+  }
+
   setTrue(){
    this.is_stock = true;
   }
@@ -428,7 +441,7 @@ export class AddPreparationsComponent implements OnInit{
     if(category === 'ing'){
       const ingredient = this.ingredients.find((ingredient) => ingredient.name === (new_selection.value as string));
       if((this.getBaseIng().at(index) !== undefined) && (ingredient !== undefined)){
-        this.getBaseIng().at(index).controls.unity.setValue(ingredient.unity);
+        this.getBaseIng().at(index).controls.unity.setValue(ingredient.unity_unitary);
       }
     }
 

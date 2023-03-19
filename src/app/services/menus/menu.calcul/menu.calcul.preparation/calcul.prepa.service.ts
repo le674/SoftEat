@@ -17,8 +17,21 @@ export class CalculPrepaService {
   getCostMaterial(ings:Array<TIngredientBase>):Array<{nom:string, quantity:number, unity:string, cost:number,taux_tva:number, cost_matiere:number, vrac:string}>{
     let ingredients:Array<{nom:string, quantity:number, unity:string, cost:number, taux_tva:number, cost_matiere:number, vrac:string}> = [];
     ings.forEach((ing) => {
-      let cost_matiere = ing.cost
-      cost_matiere = this.calcul_service.convertQuantity(ing.quantity, ing.unity)*(ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary));
+      let cost_matiere = 0;
+      // on peut considérer les ingrédients sur plusieurs aspects
+      // 1. un ingrédient est définie par un prix unitaire et une quantitée pour le plat dans ce cas il suffit de faire prix * quantitée plat
+      // 2. un ingrédient est difinie plus précisément avec une unitée dans se cas c'est le calcul 1 qu'il faut faire
+      // à priorie lorsuq eon récupère les ingrédients des factures ont tombe souvent dan le cas 1. 
+      // au restaurateur de voir si il préfère modifier l'unitée p par une autre unitée.
+      // dans le cas d'ingrédient en vrac il ne faut pas que le restaurateur puisse choisir p dans les unitée pour son plat/préparation pour ses ingrédients 
+      // dans la partie stock si le restaurateur choisit de faire du vrac en pièce exemple : quantitée unitaire 6 tomates -> unitée p -> 9€
+      // alors il vaut mieux remplir : quantitée unitaire de 1 -> unitée p -> cost 1.50 -> quantitée 6  
+      if(ing.unity !== "p"){
+        cost_matiere = this.calcul_service.convertQuantity(ing.quantity, ing.unity)*(ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary));
+      }
+      else{
+        cost_matiere = ing.quantity * ing.cost;
+      }
       ingredients.push({
         nom: ing.name,
         quantity: ing.quantity,
@@ -33,8 +46,16 @@ export class CalculPrepaService {
   }
 
   getOnlyCostMaterial(ing:TIngredientBase):number{
-    let cost_matiere = ing.cost
-    cost_matiere = this.calcul_service.convertQuantity(ing.quantity, ing.unity)*(ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary));
+
+    let cost_matiere = 0;
+    // dans un premier temps ont calcule la quantitée pas par pièce dans un seconbd temps ont pren en compte l'unitée par pièce
+    if(ing.unity !== "p"){
+      cost_matiere = this.calcul_service.convertQuantity(ing.quantity, ing.unity)*(ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary));
+    }
+    else{
+      cost_matiere = ing.quantity * ing.cost;
+    }
+   
     return this.ToCentime(cost_matiere);
   }
 

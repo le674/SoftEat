@@ -68,8 +68,8 @@
                         <div class="full-container">
                             <mat-form-field appearance="fill">
                                 <mat-label>Choisir l'ingrédients</mat-label>
-                                <mat-select formControlName="name">
-                                     <mat-option *ngFor="let ingredient of full_lst_ings" [value]="ingredient.name">{{ingredient.name}}</mat-option>
+                                <mat-select (selectionChange)="getUnity($event, 'ing', i)" formControlName="name">
+                                     <mat-option (onSelectionChange)="changeIng($event, i)" *ngFor="let ingredient of full_lst_ings" [value]="ingredient.name">{{ingredient.name}}</mat-option>
                                 </mat-select>
                              </mat-form-field>
                             <mat-form-field appearance="fill">
@@ -82,7 +82,7 @@
                                     <mat-option value="kg"> kg (kilogramme)</mat-option>
                                     <mat-option value="g"> g (grame)</mat-option>
                                     <mat-option value="L"> L (litre)</mat-option>
-                                    <mat-option value="p"> p (pièce)</mat-option>
+                                    <mat-option *ngIf="!curr_ingredients_vrac.includes(i)" value="p"> p (pièce)</mat-option>
                                     <mat-option value="c.c"> cuillères à café</mat-option>
                                     <mat-option value="c.s"> cuillères à soupe</mat-option>
                                     <mat-option value="pince"> une pincée </mat-option>

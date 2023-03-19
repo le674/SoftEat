@@ -173,6 +173,14 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
 
     if ((this.add_ing_section.value["vrac"] !== undefined) && (this.add_ing_section.value["vrac"] !== null)) {
         new_ing.vrac = this.add_ing_section.value["vrac"]
+        // dans la partie stock si le restaurateur choisit de faire du vrac en pièce exemple : quantitée unitaire 6 tomates -> unitée p -> 9€
+        // alors il vaut mieux remplir : quantitée unitaire de 1 -> unitée p -> cost 1.50 -> quantitée 6  
+        if((unity === "p") && (new_ing.vrac === "oui")){
+          new_ing.vrac = "non";
+          new_ing.quantity = new_ing.quantity_unity;
+          new_ing.quantity_unity = 1;
+          new_ing.cost = new_ing.cost/new_ing.quantity;
+        }
     }
 
     if (unity !== undefined) {

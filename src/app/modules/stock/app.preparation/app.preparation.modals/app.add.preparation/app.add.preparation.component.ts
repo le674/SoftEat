@@ -154,14 +154,14 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit, OnI
       new_prepa.total_quantity = this.add_preparation.value["quantity"];
     }
 
-    if(this.add_preparation.controls.vrac.value !== null){
-      new_prepa.vrac = this.add_preparation.controls.vrac.value;
-    }
 
     if ((this.add_preparation.value["quantity_unitary"] !== undefined) && (this.add_preparation.value["quantity_unitary"] !== null)) {
       new_prepa.quantity_unity = this.add_preparation.value["quantity_unitary"];
     }
 
+    if(this.add_preparation.controls.vrac.value !== null){
+      new_prepa.vrac = this.add_preparation.controls.vrac.value;
+    }
 
     if ((this.add_preparation.value["dlc"] !== undefined) && (this.add_preparation.value["dlc"] !== null)) {
       new_prepa.dlc.setHours(new_prepa.dlc.getHours() + 24 * this.add_preparation.value["dlc"])

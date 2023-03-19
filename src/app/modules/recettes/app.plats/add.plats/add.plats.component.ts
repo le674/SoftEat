@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -19,6 +20,7 @@ import { PreparationInteractionService } from 'src/app/services/menus/preparatio
   styleUrls: ['./add.plats.component.css']
 })
 export class AddPlatsComponent implements OnInit {
+
   public unity_conso:Array<string>;
   public unity_ing:Array<string>;
   public full_lst_ings:Array<TIngredientBase>;
@@ -27,6 +29,7 @@ export class AddPlatsComponent implements OnInit {
   public selected_ing:string;
   public selected_conso:string;
   public selected_prepa:string;
+  public curr_ingredients_vrac:Array<number>;
   public add_plats_section = new FormGroup({
     name: new FormControl('', Validators.required),
     type: new FormControl('', Validators.required),
@@ -77,6 +80,7 @@ export class AddPlatsComponent implements OnInit {
     this.full_lst_ings = [];
     this.full_lst_prepa = [];
     this.boisson = false;
+    this.curr_ingredients_vrac = [];
    }
 
   ngOnInit(): void {
@@ -265,16 +269,14 @@ export class AddPlatsComponent implements OnInit {
 
   getUnity(new_selection:MatSelectChange, category:string, index:number){
     // la partie ingrédients n'est plus utilisé car ont veut pouvoir laisser le restaurateur choisir quelle 
-    // category il souhaite 
+    // categorie il souhaite 
     if(category === 'ing'){
-      const ingredients = this.full_lst_ings.filter((ingredient) => ingredient.name === (new_selection.value as string));
-      if(index > this.unity_ing.length){
-        if(ingredients.length > 0) this.unity_ing.push(ingredients[0].unity);
-      }
-      else{
-        if(ingredients.length > 0) this.unity_ing[index] = ingredients[0].unity;
+      const ingredient = this.full_lst_ings.find((ingredient) => ingredient.name === (new_selection.value as string));
+      if((this.getBaseIng().at(index) !== undefined) && (ingredient !== undefined)){
+        this.getBaseIng().at(index).controls.unity.setValue(ingredient.unity_unitary);
       }
     }
+
     if(category === 'conso'){
       const consommables = this.full_lst_conso.filter((consommable) => consommable.name === (new_selection.value) as string);
       if(index > this.unity_conso.length){
@@ -389,6 +391,19 @@ export class AddPlatsComponent implements OnInit {
       seconde: new FormControl(tmps[2])
     });
     this.getEtapes().push(new_etape);
+  }
+
+
+  
+
+  // lorsque l'ingédient est un ingrédient en vrac ont enlève la possibilité de choisir pièce dans l'outils de séléction 
+  changeIng(ingredient: MatOptionSelectionChange<string>, i:number) {
+    let ing = this.full_lst_ings.find((_ingredient) => _ingredient.name === ingredient.source.value);
+    if(ing !== undefined){
+      if(ing.vrac === "oui"){
+        this.curr_ingredients_vrac.push(i);
+      }
+    }
   }
 
   suppInputIng(index:number){
