@@ -22,6 +22,10 @@ h2{
     color: rgb(125, 181, 46);
 }
 
+.hiddenInput{
+    display: none;
+}
+
 #select_area{
     display: flex;
     justify-content: flex-start;

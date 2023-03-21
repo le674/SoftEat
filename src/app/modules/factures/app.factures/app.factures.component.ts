@@ -68,6 +68,13 @@ export class AppFacturesComponent implements OnInit {
     this.restaurant = user_info["restaurant"];
   }
 
+  getPdf($event: Event) {
+    
+  }
+  getImg($event: Event) {
+    
+  }
+
   modifIng(ele: {
     nom: string;
     categorie_tva: string;

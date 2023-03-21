@@ -21,11 +21,13 @@
                 </button>
             </div>
             <div class="group-buttons">
-                <button mat-stroked-button>
+                <input class="hiddenInput" #imgInput type="file" accept=".jpg, .png" (change)="getImg($event)">
+                <input class="hiddenInput" #pdfInput type="file" accept=".pdf" (change)="getPdf($event)">
+                <button mat-stroked-button type="button" (click)="imgInput.click()">
                     <i class="fa-solid fa-file-import"></i>
                     Importer une image
                 </button>
-                <button mat-stroked-button>
+                <button mat-stroked-button type="button" (click)="pdfInput.click()">
                     <i class="fa-solid fa-file-import"></i>
                    Importer un pdf
                 </button>
