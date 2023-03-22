@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, UrlTree } from '@angular/router';
 import { CIngredient } from 'src/app/interfaces/ingredient';
+import { FacturesService } from 'src/app/services/factures/factures.service';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { ModifIngComponent } from './app.factures.modif/modif.ing/modif.ing.component';
@@ -52,7 +53,7 @@ export class AppFacturesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(private service: IngredientsInteractionService, router: Router, 
-    public dialog: MatDialog, private calc_service: CalculService, private _snackBar:MatSnackBar) { 
+    public dialog: MatDialog, private calc_service: CalculService, private _snackBar:MatSnackBar,private service_facture:FacturesService) { 
     this.page_number = 0; 
     this.router = router;  
     this.ingredients_displayed_br = [];
@@ -68,11 +69,25 @@ export class AppFacturesComponent implements OnInit {
     this.restaurant = user_info["restaurant"];
   }
 
-  getPdf($event: Event) {
-    
+  getPdf(file_blob: any) {
+    if(file_blob.target !== undefined){
+      if((file_blob.target.files[0] !== null) && (file_blob.target.files[0] !== undefined)){
+        const pdf_file:File = file_blob.target.files[0];
+        const url_pdf = URL.createObjectURL(pdf_file);
+        this.service_facture.parseFacture(url_pdf);
+      }
+     // const url = URL.createObjectURL();
+    }
   }
-  getImg($event: Event) {
-    
+  getImg(file_blob: any) {
+    if(file_blob.target !== undefined){
+      if((file_blob.target.files[0] !== null) && (file_blob.target.files[0] !== undefined)){
+        const image_file:File = file_blob.target.files[0];
+        const url_img = URL.createObjectURL(image_file);
+        console.log(url_img);
+      }
+     // const url = URL.createObjectURL();
+    }
   }
 
   modifIng(ele: {
