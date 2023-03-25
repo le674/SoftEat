@@ -48,8 +48,36 @@ export class FacturesService {
     }
   }
 
+  // le but de cette fonction est de récupérer chacun des lignes du tableau 
+  async getLineTable(items :TextItem[]){
+    let all_lines_table:Array<Array<TextItem>> = [];
+    // on  récupère la coordonnée en y du header en utilisant name par exemple
+    let curr_pivot_y = this.colonne_factures_actual.name.transform[5];
+    // on calcul la distance entre cette coordonnée et l'ensemble des ordonnées des autres éléments de la facture
+    // on récupère uniquement celle qui sont supérieur à zéro car on veut la ligne du dessous
+    let dist_levels = items.map((item) => curr_pivot_y - item.transform[5]).filter((dist) => dist > 0);
+    //on applique un minimum sur les distance pour trouver la chaine de caractère exactement en dessous
+    let next_pivot_y = Math.min.apply(Math.min, dist_levels);
+    // ont récupère la liste des mots qui sont uniquement en dessous et pas le reste
+    let l_next = items.filter((item) =>  (curr_pivot_y - item.transform[5]) === next_pivot_y);
+    all_lines_table.push(l_next);
+    // ont récupère la distance entre les header et la première ligne
+    const first_line_gap = curr_pivot_y - next_pivot_y;
+    let curr_line_gap = first_line_gap;
+    // Ont réitère la procédure si dessus à chaque fois l'on recalcul la distance entre la ligne du dessous et celle du dessus 
+    // si à un moment cette distance diffère on en déduit que l'on est arrivé à la fin du tableau
+    while(first_line_gap === curr_line_gap) {
+        curr_pivot_y = next_pivot_y;
+        dist_levels = items.map((item) => curr_pivot_y - item.transform[5]).filter((dist) => dist > 0);
+        next_pivot_y = Math.min.apply(Math.min, dist_levels);
+        l_next = items.filter((item) =>  (curr_pivot_y - item.transform[5]) === next_pivot_y);
+        all_lines_table.push(l_next);
+        curr_line_gap = curr_pivot_y - next_pivot_y;
+    }
+  }
+
   // récupération du contenu du tableau au sein du pdf
-  async getTabContentPdf(items :(TextItem | TextMarkedContent)[]){
+  async getTabContentPdf(items :TextItem[]){
     await this.getColumnName(items).then(() => {
 
     });
@@ -88,12 +116,14 @@ export class FacturesService {
         Promise.all([getTextContentPromise, getDataPromise]).then(([textContent, data]) => {
           const textContentLength = textContent.items.length;
           const dataLength = data.length;
+          const init_item:TextItem = {str: "", dir: "", transform: [], width: 0, height: 0, fontName: "", hasEOL: false}
+          let text_items = textContent.items.filter((item) => ("str" in item)) as TextItem[];
           if (textContentLength === 0 && dataLength > 0) {
             console.log(`Page 1 contient ${dataLength} octets de données non textuelles`);
           } else {
             console.log(`Page 1 ne contient que du texte`);
           }
-          this.getTabContentPdf(textContent.items).then(() => {
+          this.getTabContentPdf(text_items).then(() => {
             return(textContent.items)
           });
         });
@@ -102,7 +132,7 @@ export class FacturesService {
   }
 
   // On récupère les noms des différentes colonnes composant le tableau ainsi que la position du header
-  async getColumnName(items :(TextItem | TextMarkedContent)[]){
+  async getColumnName(items :TextItem[]){
     const init_item:TextItem = {str: "", dir: "", transform: [], width: 0, height: 0, fontName: "", hasEOL: false}
     let text_items = items.filter((item) => ("str" in item)) as TextItem[];
     const name_col_dico = this.colonne_factures.name.filter((name) => name !== "description");
