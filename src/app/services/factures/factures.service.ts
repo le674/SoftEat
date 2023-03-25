@@ -33,12 +33,12 @@ export class FacturesService {
       hasEOL: false
     }
     this.colonne_factures = {
-      name: ["nom", "code", "description", "produits", "désignation"],
+      name: ["nom", "code", "nom/code" ,"description", "produits", "désignation"],
       description: ["description"],
-      price: ["prix unitaire", "pu", "montant dû", "prix à l'unité", "prix", "dû"],
+      price: ["prixunitaire", "pu", "puht" ,"montantdû", "prixàl'unité", "prix","prixunitaireht" ],
       quantitee: ["quantité", "qte", "qté"],
       tva: ["tva"],
-      total: ["total"]
+      total: ["total", "totalht", "prixtotalht"]
     }
     this.colonne_factures_actual = {
       name: init_item,
@@ -50,47 +50,9 @@ export class FacturesService {
 
   // récupération du contenu du tableau au sein du pdf
   async getTabContentPdf(items :(TextItem | TextMarkedContent)[]){
-    let text_items = items.filter((item) => ("str" in item)) as TextItem[];
-    const name_col_dico = this.colonne_factures.name.filter((name) => name !== "description");
-    // Dans un premier temps on récupère les colonne nom et description du tableau
-    const description = text_items.find((item) => item.str.toLowerCase() === "description")
-    const name_col = text_items.find((item) => name_col_dico.includes(item.str.toLowerCase()));
-    if(name_col !== undefined){
-      this.colonne_factures_actual.name = name_col;
-    }
-    if(description !== undefined){
-      this.colonne_factures_actual.description = description;
-    }
-    if((description === undefined) && (name_col === undefined)) throw "le tableau doit contenir au moin une colonne pour le nom des produits";
-   // On fait pareil pour les colonnes prix , quantitée, tva et total
-   //==============prix============ 
-   const price = text_items.find((item) => this.colonne_factures.price.includes(item.str.toLowerCase()));
-   if(price !== undefined){
-    this.colonne_factures_actual.price = price;
-   }
-   else{
-    throw "le tableau doit contenir au moin une colonne pour le prix des produits";
-   }
-   //==============quantitée============ 
-   const quantitee = text_items.find((item) => this.colonne_factures.quantitee.includes(item.str.toLowerCase()));
-   if(quantitee !== undefined){
-    this.colonne_factures_actual.quantitee = quantitee;
-   }
-   else{
-    throw "le tableau doit contenir au moin une colonne pour la quantitée des produits";
-   }
-   // ============tva===================
-   const tva = text_items.find((item) => this.colonne_factures.tva.includes(item.str.toLowerCase()));
-   if(tva !== undefined){
-    this.colonne_factures_actual.tva = tva;
-   }
-   // ============total===================
-   const total = text_items.find((item) => this.colonne_factures.total.includes(item.str.toLowerCase()));
-   if(total !== undefined){
-   this.colonne_factures_actual.total = total;
-   }
-   console.log(this.colonne_factures_actual);
-   
+    await this.getColumnName(items).then(() => {
+
+    });
   }
 
 
@@ -115,7 +77,7 @@ export class FacturesService {
     // ont inscrit le chemin vers le fichier pdf.worker
     //console.log(pdfjsLib.PDFWorker.workerSrc);
     //https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.4.456/pdf.worker.js
-    pdfjsLib.GlobalWorkerOptions.workerSrc =  "/assets/js/pdf.worker.js";
+    pdfjsLib.GlobalWorkerOptions.workerSrc =  "/assets/js/pdf.worker.min.js";
     console.log(url);
     const pdf_promise = pdfjsLib.getDocument(url).promise;
     pdf_promise.then((pdf_content) => {
@@ -138,4 +100,56 @@ export class FacturesService {
       })
     });
   }
+
+  // On récupère les noms des différentes colonnes composant le tableau ainsi que la position du header
+  async getColumnName(items :(TextItem | TextMarkedContent)[]){
+    const init_item:TextItem = {str: "", dir: "", transform: [], width: 0, height: 0, fontName: "", hasEOL: false}
+    let text_items = items.filter((item) => ("str" in item)) as TextItem[];
+    const name_col_dico = this.colonne_factures.name.filter((name) => name !== "description");
+    // Dans un premier temps on récupère les colonne nom et description du tableau
+    const description = text_items.find((item) => item.str.toLowerCase() === "description")
+    const name_col = text_items.find((item) => name_col_dico.includes(item.str.toLowerCase().split(" ").join("")));
+    if(name_col !== undefined){
+      this.colonne_factures_actual.name = name_col;
+      if(description !== undefined){
+        this.colonne_factures_actual.description = description;
+      }
+    }
+    else{
+      if(description !== undefined){
+        this.colonne_factures_actual.name = description;
+      }
+      else{
+        throw "le tableau doit contenir au moin une colonne pour le nom des produits";
+      }
+    }
+   // On fait pareil pour les colonnes prix , quantitée, tva et total
+   //==============prix============ 
+   const price = text_items.find((item) => this.colonne_factures.price.includes(item.str.toLowerCase().split(" ").join("")));
+   if(price !== undefined){
+    this.colonne_factures_actual.price = price;
+   }
+   else{
+    throw "le tableau doit contenir au moin une colonne pour le prix des produits";
+   }
+   //==============quantitée============ 
+   const quantitee = text_items.find((item) => this.colonne_factures.quantitee.includes(item.str.toLowerCase().split(" ").join("")));
+   if(quantitee !== undefined){
+    this.colonne_factures_actual.quantitee = quantitee;
+   }
+   else{
+    throw "le tableau doit contenir au moin une colonne pour la quantitée des produits";
+   }
+   // ============tva===================
+   const tva = text_items.find((item) => this.colonne_factures.tva.includes(item.str.toLowerCase().split(" ").join("")));
+   if(tva !== undefined){
+    this.colonne_factures_actual.tva = tva;
+   }
+   // ============total===================
+   const total = text_items.find((item) => this.colonne_factures.total.includes(item.str.toLowerCase().split(" ").join("")));
+   if(total !== undefined){
+   this.colonne_factures_actual.total = total;
+   }
+  }
+
 }

@@ -1,6 +1,6 @@
 
 body{
-    background: rgb(235, 235, 235);
+    background: white;
     height:100vh;
     width: auto;
 }
@@ -112,7 +112,7 @@ ul{
 main {
   height: 90%;
   width: auto;
-  background: rgb(245, 245, 245);
+  background: white;
 }
 
 

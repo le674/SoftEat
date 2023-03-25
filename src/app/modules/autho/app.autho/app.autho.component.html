@@ -17,11 +17,11 @@
         <img src="/assets/images/SoftEat_Quadrichromie.png" alt="">
         <ul>
             <li> 
-                <button class="btn" id="acceuil" (click)="clicAcceuil()" type="submit">acceuil</button>
+                <button class="btn" id="acceuil" (click)="clicAcceuil()" type="submit">Acceuil</button>
             </li>
             <li> 
                 <button class="btn" (click)="clicdeConnexion()" id="deco"
-                type="submit">deconnexion</button>
+                type="submit">Déconnexion</button>
             </li>
         </ul>
     </header>
@@ -29,7 +29,7 @@
         <div id="analyse-wrapper">
             <a *ngIf="is_confique" href="autho/configuration?new='true'" id="link_configure">
                 <button class="btn btn-outline-success" id="configurer" *ngIf="is_confique">
-                    configuration des restaurants
+                    Configuration des restaurants
                 </button>
             </a> 
             <button class="btn btn-outline-success" id="analyse" > Analyse des restaurants</button>
