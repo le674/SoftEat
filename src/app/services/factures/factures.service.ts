@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as pdfjsLib from 'pdfjs-dist';
-import { TextItem, TextMarkedContent } from 'pdfjs-dist/types/src/display/api';
+import { TextItem } from 'pdfjs-dist/types/src/display/api';
 @Injectable({
   providedIn: 'root'
 })
@@ -49,7 +49,11 @@ export class FacturesService {
   }
 
   // le but de cette fonction est de récupérer chacun des lignes du tableau 
+  // ATTENTION : dans le cas ou c'est same_length_line qui est la condition d'arrêt et que toute les 
+  // ligne ne sont pas a mm distance entre elle. Dans ce cas une ligne est ajouté à all_lines_table
+  // sans que celle ci soit une ligne du tableau 
   async getLineTable(items :TextItem[]){
+    let same_length_line = true;
     let all_lines_table:Array<Array<TextItem>> = [];
     // on  récupère la coordonnée en y du header en utilisant name par exemple
     let curr_pivot_y = this.colonne_factures_actual.name.transform[5];
@@ -57,29 +61,61 @@ export class FacturesService {
     // on récupère uniquement celle qui sont supérieur à zéro car on veut la ligne du dessous
     let dist_levels = items.map((item) => curr_pivot_y - item.transform[5]).filter((dist) => dist > 0);
     //on applique un minimum sur les distance pour trouver la chaine de caractère exactement en dessous
-    let next_pivot_y = Math.min.apply(Math.min, dist_levels);
+    const first_line_gap = Math.min.apply(Math.min, dist_levels);
     // ont récupère la liste des mots qui sont uniquement en dessous et pas le reste
-    let l_next = items.filter((item) =>  (curr_pivot_y - item.transform[5]) === next_pivot_y);
+    // on prend 10 pixel entre le mot et les autres mot de la ligne au cas ou les mots ne sont pas au mm niveau
+    let l_next = items.filter((item) =>  ((curr_pivot_y - item.transform[5]) < first_line_gap + 10) && ((curr_pivot_y - item.transform[5]) > first_line_gap - 10));
+    // on enlève l_next de la liste de mots
+    items = items.filter((item) => !l_next.includes(item));
     all_lines_table.push(l_next);
-    // ont récupère la distance entre les header et la première ligne
-    const first_line_gap = curr_pivot_y - next_pivot_y;
+    // ont récupère la distance entre les header et la première ligne (cette méthode ne marche pas forcément)
+    let next_pivot_y = curr_pivot_y - first_line_gap;
     let curr_line_gap = first_line_gap;
     // Ont réitère la procédure si dessus à chaque fois l'on recalcul la distance entre la ligne du dessous et celle du dessus 
-    // si à un moment cette distance diffère on en déduit que l'on est arrivé à la fin du tableau
-    while(first_line_gap === curr_line_gap) {
+    // si à un moment 
+    //1. cette distance diffère on en déduit que l'on est arrivé à la fin du tableau
+    //2. le nombre d'élément de la ligne suivante parsé différe du nombre d'élément des autres ligne
+    while((first_line_gap === curr_line_gap) || same_length_line) {
         curr_pivot_y = next_pivot_y;
         dist_levels = items.map((item) => curr_pivot_y - item.transform[5]).filter((dist) => dist > 0);
-        next_pivot_y = Math.min.apply(Math.min, dist_levels);
-        l_next = items.filter((item) =>  (curr_pivot_y - item.transform[5]) === next_pivot_y);
+        curr_line_gap = Math.min.apply(Math.min, dist_levels);
+        l_next = items.filter((item) =>  ((curr_pivot_y - item.transform[5]) < curr_line_gap + 10) && ((curr_pivot_y - item.transform[5]) > curr_line_gap - 10));
+        items = items.filter((item) => !l_next.includes(item));
         all_lines_table.push(l_next);
+        next_pivot_y = curr_pivot_y - curr_line_gap;
         curr_line_gap = curr_pivot_y - next_pivot_y;
+        //on fait une verification sur la taille de la ligne on s'assure pur cela que la ligne suivantes a autant de mot que la ligne précédente
+        // pour cela ont prend la ligne 0 et ont vérifie que chacune de nos lignes à le mm nombre d'éléments.
+        same_length_line = all_lines_table.map((line) => line.length)
+                                           .map((line_length) =>  line_length ===  all_lines_table[0].length)
+                                           .reduce((prev_bool, next_bool) => prev_bool && next_bool);
     }
+   return(all_lines_table);
+  }
+
+  // Ont détermine les valeurs pivot pour cela on regarde pour la ligne 1 par exemple la valeur (m0) tel que h1 (premier mot du header)
+  // vérifie xh1 - xm0 soit inférieur aux autre avec xmi := l'ensemble des abscisse des mots de la première ligne
+  // On fait pareil pour les autres lignes.
+  // Pour les p ligne on détermine systématiquement n pivots ont a donc une matrice p x n
+  async getAllPivots(items :TextItem[]){
+
+  }
+
+  //pour chacune des lignes de pivots on calcul la distance en x du pivot à chacun des autres mots de la ligne
+  //on contruit donc à nouveau une matrice m x n avec m qui est le nombre de mots de la ligne 
+  //pour la première ligne par exemple on determine  le minimum de cette matrice e_i0j0  
+  //donne mi00 -> colonne 0 
+  async rangeValInCol(){
+
   }
 
   // récupération du contenu du tableau au sein du pdf
   async getTabContentPdf(items :TextItem[]){
     await this.getColumnName(items).then(() => {
+      console.log(this.colonne_factures_actual);
+      this.getLineTable(items).then((lines:TextItem[][]) => {
 
+      })
     });
   }
 
