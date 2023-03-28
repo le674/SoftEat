@@ -97,24 +97,60 @@ export class FacturesService {
   // vérifie xh1 - xm0 soit inférieur aux autre avec xmi := l'ensemble des abscisse des mots de la première ligne
   // On fait pareil pour les autres lignes.
   // Pour les p ligne on détermine systématiquement n pivots ont a donc une matrice p x n
-  async getAllPivots(items :TextItem[]){
-
+  async getAllPivots(line :TextItem[]){
+    let des_col:number[] = [];
+    let tva_col:number[] = [];
+    let total_col:number[] = [];
+    let p_desc = undefined;
+    let p_tva = undefined;
+    let p_total = undefined;
+    let name_col = line.map((word) => Math.abs(word.transform[4] - this.colonne_factures_actual.name.transform[4]));
+    const p_name = line.find((word) => Math.abs(word.transform[4] - this.colonne_factures_actual.name.transform[4]) === Math.min(...name_col));
+    let price_col = line.map((word) => Math.abs(word.transform[4] - this.colonne_factures_actual.price.transform[4]));
+    const p_price = line.find((word) => Math.abs(word.transform[4] - this.colonne_factures_actual.price.transform[4])  === Math.min(...price_col));
+    let quant_col = line.map((word) => Math.abs(word.transform[4] - this.colonne_factures_actual.quantitee.transform[4]));
+    const p_quant = line.find((word) => Math.abs(word.transform[4] - this.colonne_factures_actual.quantitee.transform[4])  === Math.min(...quant_col));
+    if(this.colonne_factures_actual.description !== undefined){
+       const descriptions = this.colonne_factures_actual.description
+       des_col = line.map((word) => Math.abs( word.transform[4] - descriptions.transform[4]));
+       p_desc = line.find((word) => Math.abs( word.transform[4] - descriptions.transform[4]) === Math.min(...des_col));
+    } 
+    if(this.colonne_factures_actual.tva !== undefined){
+      const tva = this.colonne_factures_actual.tva
+      tva_col = line.map((word) => Math.abs(word.transform[4] - tva.transform[4]));
+      p_tva = line.filter((word) => Math.abs(word.transform[4] - tva.transform[4]) === Math.min(...tva_col));
+    }
+    if(this.colonne_factures_actual.total !== undefined){
+      const total = this.colonne_factures_actual.total
+      total_col = line.map((word) => Math.abs(word.transform[4] - total.transform[4]));
+      p_total = line.filter((word) => Math.abs(word.transform[4] - total.transform[4]) === Math.min(...total_col));
+    }
+    return {
+            p_name: p_name,
+            p_price: p_price,
+            p_desc: p_desc,
+            p_tva: p_tva,
+            p_quant: p_quant,
+            p_total: p_total
+          }
   }
 
   //pour chacune des lignes de pivots on calcul la distance en x du pivot à chacun des autres mots de la ligne
   //on contruit donc à nouveau une matrice m x n avec m qui est le nombre de mots de la ligne 
   //pour la première ligne par exemple on determine  le minimum de cette matrice e_i0j0  
   //donne mi00 -> colonne 0 
-  async rangeValInCol(){
+  async rangeValInCol(lines:TextItem[][]){
+    const parsed_doc = lines.map((line) => {
+      this.getAllPivots(line).then(() => {
 
+      })
+    })
   }
 
   // récupération du contenu du tableau au sein du pdf
   async getTabContentPdf(items :TextItem[]){
     await this.getColumnName(items).then(() => {
-      console.log(this.colonne_factures_actual);
       this.getLineTable(items).then((lines:TextItem[][]) => {
-
       })
     });
   }
