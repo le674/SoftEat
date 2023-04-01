@@ -22,7 +22,7 @@ export class FacturesService {
     quantitee: TextItem[],
     tva?:TextItem[],
     total?:TextItem[]
-  }
+  }[]
 
   private colonne_factures_pivot: {
     name:TextItem,
@@ -56,11 +56,11 @@ export class FacturesService {
       quantitee: init_item
 
     }
-    this.colonne_factures_actual = {
+    this.colonne_factures_actual = [{
       name: [],
       price: [],
       quantitee: []
-    };
+    }];
   }
 
   // le but de cette fonction est de récupérer chacun des lignes du tableau 
@@ -136,17 +136,10 @@ export class FacturesService {
       p_tva = line.find((word) => Math.abs(word.transform[4] - tva.transform[4]) === Math.min(...tva_col));
     }
     if(this.colonne_factures_pivot.total !== undefined){
-      const total = this.colonne_factures_pivot.total
+      const total = this.colonne_factures_pivot.total     
       total_col = line.map((word) => Math.abs(word.transform[4] - total.transform[4]));
       p_total = line.find((word) => Math.abs(word.transform[4] - total.transform[4]) === Math.min(...total_col));
     }
-    // ont intègre les pivot dans les liste contenant les différent mot pour chacune des colonnes
-    if(p_name !== undefined) this.colonne_factures_actual.name.push(p_name);
-    if(p_price !== undefined) this.colonne_factures_actual.price.push(p_price);
-    if((p_desc !== undefined) && (this.colonne_factures_actual.description !== undefined)) this.colonne_factures_actual.description.push(p_desc);
-    if((p_tva !== undefined) && (this.colonne_factures_actual.tva !== undefined)) this.colonne_factures_actual.tva.push(p_tva);
-    if((p_quant !== undefined) && (this.colonne_factures_actual.quantitee !== undefined)) this.colonne_factures_actual.quantitee.push(p_quant);
-    if((p_total !== undefined) && (this.colonne_factures_actual.total !== undefined)) this.colonne_factures_actual.total.push(p_total);
     return {
             name: p_name,
             price: p_price,
@@ -162,46 +155,58 @@ export class FacturesService {
   //pour la première ligne par exemple on determine  le minimum de cette matrice e_i0j0  
   //donne mi00 -> colonne 0 
   async rangeValInCol(lines:TextItem[][]){
-    lines.map((line) => {
+/*     console.log("actual col" ,this.colonne_factures_actual[0].name); */
+    for (let line_index = 0; line_index < lines.length; line_index++) {
+      let line = lines[line_index];
+      const line_length = line.length;
       const all_pivots = this.getAllPivots(line);
+   /*    console.log("line", line); */
+      let full_length = 0;
       let pivot:TextItem | undefined;
       let categories_min:TextItem | undefined;
       let all_columns: number[][] = [];
       let full_min:number;
-      let full_length = 3;
-      if(this.colonne_factures_actual.description !== undefined) full_length =  full_length + 1;
-      if(this.colonne_factures_actual.total !== undefined) full_length =  full_length + 1;
-      if(this.colonne_factures_actual.tva !== undefined) full_length =  full_length + 1;
-      console.log("ttttttttttttttttttttttttttttttttt");
-      console.log('all pivots',all_pivots);
+/*       console.log("line_length",line_length);
+      console.log("all pivot", all_pivots); */
       
-      while(full_length !==  line.length) {
+      //full_length !==  line.length
+      while(full_length !==  line_length) {
         for(let column of Object.keys(all_pivots)){
           pivot = all_pivots[column as keyof typeof all_pivots]
           if(pivot !== undefined){
-            all_columns.push(line.map((word) => Math.abs(word.transform[4] - (pivot as TextItem).transform[4]))
-                       .filter((dis_pivot) => dis_pivot !== 0));
+            all_columns.push(line.map((word) => Math.abs(word.transform[4] - (pivot as TextItem).transform[4])))
           }
-        }
-        full_min = Math.min(...all_columns.flat());    
-        console.log("min", full_min);
-         
+        } 
+        full_min = Math.min(...all_columns.flat());        
         for(let column of Object.keys(all_pivots)){
-          pivot = all_pivots[column as keyof typeof all_pivots];          
-          if(pivot !== undefined){
+/*        console.log("column", column);
+          console.log("line 2", line);    */ 
+          pivot = all_pivots[column as keyof typeof all_pivots]; 
+          if(pivot !== undefined){         
             categories_min = line.find((word) => Math.abs(word.transform[4] - (pivot as TextItem).transform[4]) === full_min);
-            line = line.filter((word) => Math.abs(word.transform[4] - (pivot as TextItem).transform[4]) === full_min);
-            console.log("categorie", categories_min);
-            
+/*        console.log("ele", categories_min); */
+            line = line.filter((word) => Math.abs(word.transform[4] - (pivot as TextItem).transform[4]) !== full_min);     
           }
           if(categories_min !== undefined){
-            this.colonne_factures_actual[column as keyof typeof all_pivots]?.push(categories_min);
+            console.log("categorie min", categories_min);
+            console.log("testttttttt", this.colonne_factures_actual[line_index]);
+                        
+            this.colonne_factures_actual[line_index][column as keyof typeof all_pivots]?.push(categories_min);
             full_length = full_length + 1;
+            console.log("full_length", full_length);
+            console.log("colonne facture actuel", this.colonne_factures_actual);
+            
           }
+          if(full_length === line_length) break;
         }
       }
-      console.log("ppppppppppppppppppppppppppppppp"); 
-    }); 
+      this.colonne_factures_actual.push({
+        name: [],
+        quantitee: [],
+        price: []
+      })
+     console.log(this.colonne_factures_actual);
+    }
   }
 
   // récupération du contenu du tableau au sein du pdf
@@ -285,9 +290,14 @@ export class FacturesService {
         throw "le tableau doit contenir au moin une colonne pour le nom des produits";
       }
     }
-   // On fait pareil pour les colonnes prix , quantitée, tva et total
+   // On fait pareil pour les colonnes prix , quantitée, tva et total on vérifie aussi que l'on est pas trop loin de name en coorrdonée y  
    //==============prix============ 
-   const price = text_items.find((item) => this.colonne_factures.price.includes(item.str.toLowerCase().split(" ").join("")));
+   const price = text_items.find((item) => {
+    const is_price = this.colonne_factures.price.includes(item.str.toLowerCase().split(" ").join(""));
+    const y_max_coord = item.transform[5] < (this.colonne_factures_pivot.name.transform[5] + 20);
+    const y_min_coord = (this.colonne_factures_pivot.name.transform[5] - 20) < item.transform[5];
+    return (is_price && y_max_coord && y_min_coord)
+   });
    if(price !== undefined){
     this.colonne_factures_pivot.price = price;
    }
@@ -295,7 +305,12 @@ export class FacturesService {
     throw "le tableau doit contenir au moin une colonne pour le prix des produits";
    }
    //==============quantitée============ 
-   const quantitee = text_items.find((item) => this.colonne_factures.quantitee.includes(item.str.toLowerCase().split(" ").join("")));
+   const quantitee = text_items.find((item) => {
+    const is_quant =  this.colonne_factures.quantitee.includes(item.str.toLowerCase().split(" ").join(""));
+    const y_max_coord = item.transform[5] < (this.colonne_factures_pivot.name.transform[5] + 20);
+    const y_min_coord = (this.colonne_factures_pivot.name.transform[5] - 20) < item.transform[5];
+    return (is_quant && y_max_coord && y_min_coord)
+   });
    if(quantitee !== undefined){
     this.colonne_factures_pivot.quantitee = quantitee;
    }
@@ -303,12 +318,22 @@ export class FacturesService {
     throw "le tableau doit contenir au moin une colonne pour la quantitée des produits";
    }
    // ============tva===================
-   const tva = text_items.find((item) => this.colonne_factures.tva.includes(item.str.toLowerCase().split(" ").join("")));
+   const tva = text_items.find((item) => {
+    const is_tva = this.colonne_factures.tva.includes(item.str.toLowerCase().split(" ").join(""));
+    const y_max_coord = item.transform[5] < (this.colonne_factures_pivot.name.transform[5] + 20);
+    const y_min_coord = (this.colonne_factures_pivot.name.transform[5] - 20) < item.transform[5];
+    return (is_tva && y_max_coord && y_min_coord)
+   })
    if(tva !== undefined){
     this.colonne_factures_pivot.tva = tva;
    }
    // ============total===================
-   const total = text_items.find((item) => this.colonne_factures.total.includes(item.str.toLowerCase().split(" ").join("")));
+   const total = text_items.find((item) => {
+    const is_tot = this.colonne_factures.total.includes(item.str.toLowerCase().split(" ").join(""));
+    const y_max_coord = item.transform[5] < (this.colonne_factures_pivot.name.transform[5] + 20);
+    const y_min_coord = (this.colonne_factures_pivot.name.transform[5] - 20) < item.transform[5];
+    return (is_tot && y_max_coord && y_min_coord)
+   });
    if(total !== undefined){
    this.colonne_factures_pivot.total = total;
    }
