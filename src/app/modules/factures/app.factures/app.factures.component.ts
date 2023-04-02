@@ -74,7 +74,9 @@ export class AppFacturesComponent implements OnInit {
       if((file_blob.target.files[0] !== null) && (file_blob.target.files[0] !== undefined)){
         const pdf_file:File = file_blob.target.files[0];
         const url_pdf = URL.createObjectURL(pdf_file);
-        this.service_facture.parseFacture(url_pdf);
+        this.service_facture.parseFacture(url_pdf).then((parsed_pdf) => {
+          console.log(parsed_pdf);
+        });
       }
      // const url = URL.createObjectURL();
     }

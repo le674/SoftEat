@@ -33,6 +33,8 @@ export class FacturesService {
     total?: TextItem
   }
 
+  private is_parsed: boolean = false;
+
   constructor() {
     const init_item: TextItem = {
       str: "",
@@ -109,6 +111,7 @@ export class FacturesService {
     return (all_lines_table);
   }
 
+
   // Ont détermine les valeurs pivot pour cela on regarde pour la ligne 1 par exemple la valeur (m0) tel que h1 (premier mot du header)
   // vérifie xh1 - xm0 soit inférieur aux autre avec xmi := l'ensemble des abscisse des mots de la première ligne
   // On fait pareil pour les autres lignes.
@@ -151,41 +154,110 @@ export class FacturesService {
     }
   }
 
+  // cette fonction permet de convertire un objet contenant chacun des mots rangé dans la bonne colonne 
+  //en les lignes à ajouter dans l'inventaire
+  convertColumnSetToPdf(column_set: {
+    name: TextItem[];
+    description?: TextItem[] | undefined;
+    price: TextItem[];
+    quantitee: TextItem[];
+    tva?: TextItem[] | undefined;
+    total?: TextItem[] | undefined;
+  }[]) {
+    return column_set.map((line) => {
+      console.log(line);
+      let parsed_pdf = {};
+      //On concatène tout les attributs nom des différents mots du pdf 
+      Object.assign(parsed_pdf, {
+        name: line.name.map((words) => words.str)
+                       .reduce((prev_word, next_word) => prev_word + next_word)
+      });
+      //On concatène tout les attributs prix des différents mots du pdf et quantitée ont fait de meme pour les attributs optionnels
+      Object.assign(parsed_pdf, {
+        price: Number(line.price.map((words) => words.str)
+          .reduce((prev_word, next_word) => prev_word + next_word)
+          .match("^[0-9]+"))
+      });
+      Object.assign(parsed_pdf, {
+        quantity: Number(line.quantitee.map((words) => words.str)
+          .reduce((prev_word, next_word) => prev_word + next_word)
+          .match("^[0-9]+"))
+      });
+      if (line.description !== undefined) {
+        Object.assign(parsed_pdf, {
+          description: line.description.map((words) => words.str)
+            .reduce((prev_word, next_word) => prev_word + next_word)
+        })
+      }
+      else{
+        Object.assign(parsed_pdf, {description: undefined})
+      }
+      if (line.tva !== undefined) {
+        Object.assign(parsed_pdf, {
+          tva: Number(line.tva.map((words) => words.str)
+            .reduce((prev_word, next_word) => prev_word + next_word)
+            .match("^[0-9]+"))
+        })
+      }
+      else{
+        Object.assign(parsed_pdf, {tva: undefined})
+      }
+      if (line.total !== undefined) {
+        Object.assign(parsed_pdf, {
+          total: Number(line.total.map((words) => words.str)
+            .reduce((prev_word, next_word) => prev_word + next_word)
+            .match("^[0-9]+"))
+        })
+      }
+      else{
+        Object.assign(parsed_pdf, {total: undefined})
+      }
+      return parsed_pdf as {
+        name: string;
+        description?: string | undefined;
+        price: number;
+        quantitee: number;
+        tva?: number | undefined;
+        total?: number | undefined;
+      }
+    })
+  }
+
   //pour chacune des lignes de pivots on calcul la distance en x du pivot à chacun des autres mots de la ligne
   //on contruit donc à nouveau une matrice m x n avec m qui est le nombre de mots de la ligne 
   //pour la première ligne par exemple on determine  le minimum de cette matrice e_i0j0  
   //donne mi00 -> colonne 0 
   async rangeValInCol(lines: TextItem[][]) {
-    // ont parcours l'ensemble des lignes du tableau
-    for(let line_index = 0; line_index < lines.length; line_index++) {
+    // On parcours l'ensemble des lignes du tableau
+    for (let line_index = 0; line_index < lines.length; line_index++) {
       let line = lines[line_index];
-      // on récupère le pivot pour la ligne associée
+      // On récupère le pivot pour la ligne associée
       const all_pivots = this.getAllPivots(line);
       let pivot: TextItem | undefined;
       let categories_min: TextItem | undefined;
       let all_columns: number[][] = [];
       let full_min: number;
       // On supprime les mot de la ligne pour les ranger dans les ensembles Nom, Quantitée, Description, ect...
-      while(line.length !== 0) {
+      while (line.length !== 0) {
         // pour chacune des colonne du tableau à priorie pivot sera toujours définie 
-        for(let column of Object.keys(all_pivots)) {
+        for (let column of Object.keys(all_pivots)) {
           pivot = all_pivots[column as keyof typeof all_pivots]
-          // Ont calcule une matrice l1 = (m00 - p0) ... (mn0 - p0), l2 = (m00 - p1) ... (mn0 - p1)
-          if(pivot !== undefined) {
+          // On calcule une matrice l1 = (m00 - p0) ... (mn0 - p0), l2 = (m00 - p1) ... (mn0 - p1)
+          if (pivot !== undefined) {
             all_columns.push(line.map((word) => Math.abs(word.transform[4] - (pivot as TextItem).transform[4])))
           }
         }
         // on détermine le minimum de cette matrice  c'est le minimum global min(l1, ..., ln) = eij
         // puis on range mi0 dans la colonne j 
         full_min = Math.min(...all_columns.flat());
-        for(let column of Object.keys(all_pivots)) {
+        for (let column of Object.keys(all_pivots)) {
           pivot = all_pivots[column as keyof typeof all_pivots];
-          if(pivot !== undefined) {
+          if (pivot !== undefined) {
             categories_min = line.find((word) => Math.abs(word.transform[4] - (pivot as TextItem).transform[4]) === full_min);
             line = line.filter((word) => word !== categories_min);
-            if(categories_min !== undefined) {
+            if (categories_min !== undefined) {
               this.colonne_factures_actual[line_index][column as keyof typeof all_pivots]?.push(categories_min);
-            } 
+            }
           }
         }
         // On n'oublie pas de remettre la matrice vide pour itérer la procédure
@@ -199,27 +271,30 @@ export class FacturesService {
         quantitee: [],
         price: []
       }
-      if(this.colonne_factures_pivot.description !== undefined){
-         Object.assign(to_add_colonne_factures, {description: []})
+      if (this.colonne_factures_pivot.description !== undefined) {
+        Object.assign(to_add_colonne_factures, { description: [] })
       }
-      if(this.colonne_factures_pivot.total !== undefined){
-        Object.assign(to_add_colonne_factures, {total: []})
+      if (this.colonne_factures_pivot.total !== undefined) {
+        Object.assign(to_add_colonne_factures, { total: [] })
       }
-      if(this.colonne_factures_pivot.tva !== undefined){
-        Object.assign(to_add_colonne_factures, {tva: []})
+      if (this.colonne_factures_pivot.tva !== undefined) {
+        Object.assign(to_add_colonne_factures, { tva: [] })
       }
       this.colonne_factures_actual.push(to_add_colonne_factures)
     }
+
+    return this.convertColumnSetToPdf(this.colonne_factures_actual);
   }
 
   // récupération du contenu du tableau au sein du pdf
   async getTabContentPdf(items: TextItem[]) {
-    await this.getColumnName(items).then(() => {
-      this.getLineTable(items).then((lines: TextItem[][]) => {
-        this.rangeValInCol(lines).then(() => {
-          console.log(this.colonne_factures_actual);
-        })
+    return this.getColumnName(items).then(() => {
+      const parse_line_promise = this.getLineTable(items).then((lines: TextItem[][]) => {
+        return this.rangeValInCol(lines).then((parsed_pdf) => {
+          return parsed_pdf;
+        });
       })
+      return parse_line_promise;
     });
   }
 
@@ -246,34 +321,32 @@ export class FacturesService {
     //console.log(pdfjsLib.PDFWorker.workerSrc);
     //https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.4.456/pdf.worker.js
     pdfjsLib.GlobalWorkerOptions.workerSrc = "/assets/js/pdf.worker.min.js";
-    console.log(url);
     const pdf_promise = pdfjsLib.getDocument(url).promise;
-    pdf_promise.then((pdf_content) => {
-      pdf_content.getPage(1).then((page) => {
+    return pdf_promise.then((pdf_content) => {
+      return pdf_content.getPage(1).then((page) => {
         console.log(page._pageInfo);
         const getTextContentPromise = page.getTextContent();
         const getDataPromise = pdf_content.getData();
-        Promise.all([getTextContentPromise, getDataPromise]).then(([textContent, data]) => {
+        const parsed_pdf_prom = Promise.all([getTextContentPromise, getDataPromise]).then(([textContent, data]) => {
           const textContentLength = textContent.items.length;
           const dataLength = data.length;
-          const init_item: TextItem = { str: "", dir: "", transform: [], width: 0, height: 0, fontName: "", hasEOL: false }
           let text_items = textContent.items.filter((item) => ("str" in item)) as TextItem[];
           if (textContentLength === 0 && dataLength > 0) {
             console.log(`Page 1 contient ${dataLength} octets de données non textuelles`);
           } else {
             console.log(`Page 1 ne contient que du texte`);
           }
-          this.getTabContentPdf(text_items).then(() => {
-            return (textContent.items)
+          return this.getTabContentPdf(text_items).then((parsed_pdf) => {
+            return parsed_pdf;
           });
         });
+        return parsed_pdf_prom;
       })
     });
   }
 
   // On récupère les noms des différentes colonnes composant le tableau ainsi que la position du header
   async getColumnName(items: TextItem[]) {
-    const init_item: TextItem = { str: "", dir: "", transform: [], width: 0, height: 0, fontName: "", hasEOL: false }
     let text_items = items.filter((item) => ("str" in item)) as TextItem[];
     const name_col_dico = this.colonne_factures.name.filter((name) => name !== "description");
     // Dans un premier temps on récupère les colonne nom et description du tableau
