@@ -62,7 +62,7 @@ export class FacturesService {
     this.colonne_factures_actual = [{
       name: [],
       price: [],
-      quantitee: []
+      quantitee: [],
     }];
   }
 
@@ -165,25 +165,30 @@ export class FacturesService {
     total?: TextItem[] | undefined;
   }[]) {
     return column_set.map((line) => {
-      console.log(line);
       let parsed_pdf = {};
       //On concatène tout les attributs nom des différents mots du pdf 
-      Object.assign(parsed_pdf, {
-        name: line.name.map((words) => words.str)
-                       .reduce((prev_word, next_word) => prev_word + next_word)
-      });
+      if((line.name.length > 0) && (line.name.length !== undefined)){
+        Object.assign(parsed_pdf, {
+          name: line.name.map((words) => words.str)
+                         .reduce((prev_word, next_word) => prev_word + next_word)
+        });
+      }
       //On concatène tout les attributs prix des différents mots du pdf et quantitée ont fait de meme pour les attributs optionnels
-      Object.assign(parsed_pdf, {
-        price: Number(line.price.map((words) => words.str)
-          .reduce((prev_word, next_word) => prev_word + next_word)
-          .match("^[0-9]+"))
-      });
-      Object.assign(parsed_pdf, {
-        quantity: Number(line.quantitee.map((words) => words.str)
-          .reduce((prev_word, next_word) => prev_word + next_word)
-          .match("^[0-9]+"))
-      });
-      if (line.description !== undefined) {
+      if((line.price.length > 0) && (line.price.length !== undefined)){
+        Object.assign(parsed_pdf, {
+          price: Number(line.price.map((words) => words.str)
+            .reduce((prev_word, next_word) => prev_word + next_word)
+            .match("^[0-9]+"))
+        });
+      }
+      if((line.quantitee.length > 0) && (line.quantitee.length !== undefined)){
+        Object.assign(parsed_pdf, {
+          quantity: Number(line.quantitee.map((words) => words.str)
+            .reduce((prev_word, next_word) => prev_word + next_word)
+            .match("^[0-9]+"))
+        });
+      }
+      if((line.description !== undefined) && (line.description.length > 0)) {
         Object.assign(parsed_pdf, {
           description: line.description.map((words) => words.str)
             .reduce((prev_word, next_word) => prev_word + next_word)
@@ -192,7 +197,7 @@ export class FacturesService {
       else{
         Object.assign(parsed_pdf, {description: undefined})
       }
-      if (line.tva !== undefined) {
+      if((line.tva !== undefined) && (line.tva.length > 0)){
         Object.assign(parsed_pdf, {
           tva: Number(line.tva.map((words) => words.str)
             .reduce((prev_word, next_word) => prev_word + next_word)
@@ -202,7 +207,7 @@ export class FacturesService {
       else{
         Object.assign(parsed_pdf, {tva: undefined})
       }
-      if (line.total !== undefined) {
+      if((line.total !== undefined) && (line.total.length > 0)) {
         Object.assign(parsed_pdf, {
           total: Number(line.total.map((words) => words.str)
             .reduce((prev_word, next_word) => prev_word + next_word)
@@ -228,6 +233,16 @@ export class FacturesService {
   //pour la première ligne par exemple on determine  le minimum de cette matrice e_i0j0  
   //donne mi00 -> colonne 0 
   async rangeValInCol(lines: TextItem[][]) {
+    //On initialise this.colonne_factures_actual en fonction de la présence ou non des colonnes tva, total, description 
+    if (this.colonne_factures_pivot.description !== undefined) {
+      Object.assign(this.colonne_factures_actual[0], { description: [] })
+    }
+    if (this.colonne_factures_pivot.total !== undefined) {
+      Object.assign(this.colonne_factures_actual[0], { total: [] })
+    }
+    if (this.colonne_factures_pivot.tva !== undefined) {
+      Object.assign(this.colonne_factures_actual[0], { tva: [] })
+    }
     // On parcours l'ensemble des lignes du tableau
     for (let line_index = 0; line_index < lines.length; line_index++) {
       let line = lines[line_index];
@@ -254,7 +269,7 @@ export class FacturesService {
           pivot = all_pivots[column as keyof typeof all_pivots];
           if (pivot !== undefined) {
             categories_min = line.find((word) => Math.abs(word.transform[4] - (pivot as TextItem).transform[4]) === full_min);
-            line = line.filter((word) => word !== categories_min);
+            line = line.filter((word) => word !== categories_min);           
             if (categories_min !== undefined) {
               this.colonne_factures_actual[line_index][column as keyof typeof all_pivots]?.push(categories_min);
             }
@@ -324,7 +339,6 @@ export class FacturesService {
     const pdf_promise = pdfjsLib.getDocument(url).promise;
     return pdf_promise.then((pdf_content) => {
       return pdf_content.getPage(1).then((page) => {
-        console.log(page._pageInfo);
         const getTextContentPromise = page.getTextContent();
         const getDataPromise = pdf_content.getData();
         const parsed_pdf_prom = Promise.all([getTextContentPromise, getDataPromise]).then(([textContent, data]) => {
@@ -337,6 +351,11 @@ export class FacturesService {
             console.log(`Page 1 ne contient que du texte`);
           }
           return this.getTabContentPdf(text_items).then((parsed_pdf) => {
+            this.colonne_factures_actual = [{
+              name: [],
+              price: [],
+              quantitee: [],
+            }];
             return parsed_pdf;
           });
         });
