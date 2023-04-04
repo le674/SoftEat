@@ -75,6 +75,21 @@ export class AppFacturesComponent implements OnInit {
         const pdf_file:File = file_blob.target.files[0];
         const url_pdf = URL.createObjectURL(pdf_file);
         this.service_facture.parseFacture(url_pdf).then((parsed_pdf) => {
+          for (let ingredient of parsed_pdf) {
+            const add_to_tab = {
+              nom: ingredient.name,
+              categorie_tva: "",
+              cost: 0,
+              cost_ttc: ingredient.price,
+              quantity: ingredient.quantity,
+              quantity_unity: 0,
+              unity: "",
+              date_reception: "",
+              dlc: ""
+            }
+            this.ingredients_displayed_br.push(add_to_tab);
+          }
+          this.dataSource.data = this.ingredients_displayed_br;
           console.log(parsed_pdf);
         });
       }

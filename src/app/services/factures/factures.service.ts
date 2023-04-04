@@ -9,7 +9,7 @@ export class FacturesService {
     name: Array<string>,
     description: Array<string>,
     price: Array<string>,
-    quantitee: Array<string>,
+    quantity: Array<string>,
     tva: Array<string>,
     total: Array<string>
   }
@@ -19,7 +19,7 @@ export class FacturesService {
     name: TextItem[],
     description?: TextItem[],
     price: TextItem[],
-    quantitee: TextItem[],
+    quantity: TextItem[],
     tva?: TextItem[],
     total?: TextItem[]
   }[]
@@ -28,7 +28,7 @@ export class FacturesService {
     name: TextItem,
     description?: TextItem,
     price: TextItem,
-    quantitee: TextItem,
+    quantity: TextItem,
     tva?: TextItem,
     total?: TextItem
   }
@@ -49,20 +49,20 @@ export class FacturesService {
       name: ["nom", "code", "nom/code", "description", "produits", "désignation"],
       description: ["description"],
       price: ["prixunitaire", "pu", "puht", "montantdû", "prixàl'unité", "prix", "prixunitaireht"],
-      quantitee: ["quantité", "qte", "qté"],
+      quantity: ["quantité", "qte", "qté"],
       tva: ["tva"],
       total: ["total", "totalht", "prixtotalht"]
     }
     this.colonne_factures_pivot = {
       name: init_item,
       price: init_item,
-      quantitee: init_item
+      quantity: init_item
 
     }
     this.colonne_factures_actual = [{
       name: [],
       price: [],
-      quantitee: [],
+      quantity: [],
     }];
   }
 
@@ -127,8 +127,8 @@ export class FacturesService {
     const p_name = line.find((word) => Math.abs(word.transform[4] - this.colonne_factures_pivot.name.transform[4]) === Math.min(...name_col));
     let price_col = line.map((word) => Math.abs(word.transform[4] - this.colonne_factures_pivot.price.transform[4]));
     const p_price = line.find((word) => Math.abs(word.transform[4] - this.colonne_factures_pivot.price.transform[4]) === Math.min(...price_col));
-    let quant_col = line.map((word) => Math.abs(word.transform[4] - this.colonne_factures_pivot.quantitee.transform[4]));
-    const p_quant = line.find((word) => Math.abs(word.transform[4] - this.colonne_factures_pivot.quantitee.transform[4]) === Math.min(...quant_col));
+    let quant_col = line.map((word) => Math.abs(word.transform[4] - this.colonne_factures_pivot.quantity.transform[4]));
+    const p_quant = line.find((word) => Math.abs(word.transform[4] - this.colonne_factures_pivot.quantity.transform[4]) === Math.min(...quant_col));
     if (this.colonne_factures_pivot.description !== undefined) {
       const descriptions = this.colonne_factures_pivot.description
       des_col = line.map((word) => Math.abs(word.transform[4] - descriptions.transform[4]));
@@ -149,7 +149,7 @@ export class FacturesService {
       price: p_price,
       description: p_desc,
       tva: p_tva,
-      quantitee: p_quant,
+      quantity: p_quant,
       total: p_total
     }
   }
@@ -160,7 +160,7 @@ export class FacturesService {
     name: TextItem[];
     description?: TextItem[] | undefined;
     price: TextItem[];
-    quantitee: TextItem[];
+    quantity: TextItem[];
     tva?: TextItem[] | undefined;
     total?: TextItem[] | undefined;
   }[]) {
@@ -181,9 +181,9 @@ export class FacturesService {
             .match("^[0-9]+"))
         });
       }
-      if((line.quantitee.length > 0) && (line.quantitee.length !== undefined)){
+      if((line.quantity.length > 0) && (line.quantity.length !== undefined)){
         Object.assign(parsed_pdf, {
-          quantity: Number(line.quantitee.map((words) => words.str)
+          quantity: Number(line.quantity.map((words) => words.str)
             .reduce((prev_word, next_word) => prev_word + next_word)
             .match("^[0-9]+"))
         });
@@ -221,7 +221,7 @@ export class FacturesService {
         name: string;
         description?: string | undefined;
         price: number;
-        quantitee: number;
+        quantity: number;
         tva?: number | undefined;
         total?: number | undefined;
       }
@@ -283,7 +283,7 @@ export class FacturesService {
       // on fait bien attention à ajouter les champs optionnel si il éxiste dans notre tableau
       let to_add_colonne_factures = {
         name: [],
-        quantitee: [],
+        quantity: [],
         price: []
       }
       if (this.colonne_factures_pivot.description !== undefined) {
@@ -304,7 +304,9 @@ export class FacturesService {
   // récupération du contenu du tableau au sein du pdf
   async getTabContentPdf(items: TextItem[]) {
     return this.getColumnName(items).then(() => {
+      console.log("nom des colonnes", this.colonne_factures_pivot);
       const parse_line_promise = this.getLineTable(items).then((lines: TextItem[][]) => {
+        console.log("lines", lines);
         return this.rangeValInCol(lines).then((parsed_pdf) => {
           return parsed_pdf;
         });
@@ -354,7 +356,7 @@ export class FacturesService {
             this.colonne_factures_actual = [{
               name: [],
               price: [],
-              quantitee: [],
+              quantity: [],
             }];
             return parsed_pdf;
           });
@@ -401,13 +403,13 @@ export class FacturesService {
     }
     //==============quantitée============ 
     const quantitee = text_items.find((item) => {
-      const is_quant = this.colonne_factures.quantitee.includes(item.str.toLowerCase().split(" ").join(""));
+      const is_quant = this.colonne_factures.quantity.includes(item.str.toLowerCase().split(" ").join(""));
       const y_max_coord = item.transform[5] < (this.colonne_factures_pivot.name.transform[5] + 20);
       const y_min_coord = (this.colonne_factures_pivot.name.transform[5] - 20) < item.transform[5];
       return (is_quant && y_max_coord && y_min_coord)
     });
     if (quantitee !== undefined) {
-      this.colonne_factures_pivot.quantitee = quantitee;
+      this.colonne_factures_pivot.quantity = quantitee;
     }
     else {
       throw "le tableau doit contenir au moin une colonne pour la quantitée des produits";
@@ -432,6 +434,8 @@ export class FacturesService {
     if (total !== undefined) {
       this.colonne_factures_pivot.total = total;
     }
+    console.log("colonne factures pivot",this.colonne_factures_pivot);
+    
   }
 
 }
