@@ -5,10 +5,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, UrlTree } from '@angular/router';
 import { CIngredient } from 'src/app/interfaces/ingredient';
-import { FacturesService } from 'src/app/services/factures/factures.service';
+import { FacturePdfService } from 'src/app/services/factures/facture_pdf/facture-pdf.service';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { ModifIngComponent } from './app.factures.modif/modif.ing/modif.ing.component';
+import { FactureImgService } from 'src/app/services/factures/facture_img/facture-img.service';
 
 @Component({
   selector: 'app-factures',
@@ -53,7 +54,8 @@ export class AppFacturesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(private service: IngredientsInteractionService, router: Router, 
-    public dialog: MatDialog, private calc_service: CalculService, private _snackBar:MatSnackBar,private service_facture:FacturesService) { 
+    public dialog: MatDialog, private calc_service: CalculService, private _snackBar:MatSnackBar,
+    private service_facture_pdf:FacturePdfService, private service_facture_img:FactureImgService) { 
     this.page_number = 0; 
     this.router = router;  
     this.ingredients_displayed_br = [];
@@ -74,7 +76,7 @@ export class AppFacturesComponent implements OnInit {
       if((file_blob.target.files[0] !== null) && (file_blob.target.files[0] !== undefined)){
         const pdf_file:File = file_blob.target.files[0];
         const url_pdf = URL.createObjectURL(pdf_file);
-        this.service_facture.parseFacture(url_pdf).then((parsed_pdf) => {
+        this.service_facture_pdf.parseFacture(url_pdf).then((parsed_pdf) => {
           for (let ingredient of parsed_pdf) {
             const add_to_tab = {
               nom: ingredient.name,
@@ -101,7 +103,9 @@ export class AppFacturesComponent implements OnInit {
       if((file_blob.target.files[0] !== null) && (file_blob.target.files[0] !== undefined)){
         const image_file:File = file_blob.target.files[0];
         const url_img = URL.createObjectURL(image_file);
-        console.log(url_img);
+        this.service_facture_img.parseFacturesImg(url_img).then(() => {
+          
+        })
       }
      // const url = URL.createObjectURL();
     }

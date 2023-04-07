@@ -4,7 +4,7 @@ import { TextItem } from 'pdfjs-dist/types/src/display/api';
 @Injectable({
   providedIn: 'root'
 })
-export class FacturesService {
+export class FacturePdfService {
   private colonne_factures: {
     name: Array<string>,
     description: Array<string>,
@@ -434,8 +434,6 @@ export class FacturesService {
     if (total !== undefined) {
       this.colonne_factures_pivot.total = total;
     }
-    console.log("colonne factures pivot",this.colonne_factures_pivot);
-    
+    console.log("colonne factures pivot",this.colonne_factures_pivot);  
   }
-
 }

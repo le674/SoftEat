@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FacturesService } from './factures.service';
+import { FactureImgService } from './facture-img.service';
 
-describe('FacturesService', () => {
-  let service: FacturesService;
+describe('FactureImgService', () => {
+  let service: FactureImgService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(FacturesService);
+    service = TestBed.inject(FactureImgService);
   });
 
   it('should be created', () => {
