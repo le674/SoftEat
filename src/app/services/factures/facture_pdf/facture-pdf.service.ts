@@ -33,8 +33,6 @@ export class FacturePdfService {
     total?: TextItem
   }
 
-  private is_parsed: boolean = false;
-
   constructor() {
     const init_item: TextItem = {
       str: "",
@@ -304,9 +302,7 @@ export class FacturePdfService {
   // récupération du contenu du tableau au sein du pdf
   async getTabContentPdf(items: TextItem[]) {
     return this.getColumnName(items).then(() => {
-      console.log("nom des colonnes", this.colonne_factures_pivot);
       const parse_line_promise = this.getLineTable(items).then((lines: TextItem[][]) => {
-        console.log("lines", lines);
         return this.rangeValInCol(lines).then((parsed_pdf) => {
           return parsed_pdf;
         });
