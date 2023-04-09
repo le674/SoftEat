@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { TextImg } from 'src/app/interfaces/text';
+import {TextShared } from 'src/app/interfaces/text';
 import * as Tesseract from 'tesseract.js';
+import { FactureSharedService } from '../facture_shared/facture-shared.service';
 
 
 @Injectable({
@@ -8,7 +9,7 @@ import * as Tesseract from 'tesseract.js';
 })
 export class FactureImgService {
   private output:Tesseract.OutputFormats;
-  private parsed_doc: TextImg[];
+  private parsed_doc: TextShared[];
   private colonne_factures: {
     name: Array<string>,
     description: Array<string>,
@@ -19,24 +20,24 @@ export class FactureImgService {
 
 
   private colonne_factures_actual: {
-    name: TextImg[],
-    description?: TextImg[],
-    price: TextImg[],
-    quantity: TextImg[],
-    tva?: TextImg[],
-    total?: TextImg[]
+    name: TextShared[],
+    description?: TextShared[],
+    price: TextShared[],
+    quantity: TextShared[],
+    tva?: TextShared[],
+    total?: TextShared[]
   }[]
 
   private colonne_factures_pivot: {
-    name: TextImg,
-    description?: TextImg,
-    price: TextImg,
-    quantity: TextImg,
-    tva?: TextImg,
-    total?: TextImg
+    name: TextShared,
+    description?: TextShared,
+    price: TextShared,
+    quantity: TextShared,
+    tva?: TextShared,
+    total?: TextShared
   }
 
-  constructor(){
+  constructor(private shared_service:FactureSharedService){
     this.output = {
       text: true,
       blocks: true,
@@ -52,7 +53,7 @@ export class FactureImgService {
       debug: false
     }
 
-    const init_item: TextImg = {
+    const init_item: TextShared = {
       text: "",
       coordinates: []
     }
@@ -78,6 +79,7 @@ export class FactureImgService {
   }
 
   //  On applique le même algorithme que pour les pdf
+  // Si rien n'est reconnu on retourne null
   async parseFacturesImg(url_img:string){
     const psm:Tesseract.PSM = Tesseract.PSM.SPARSE_TEXT;
     const Worker = await Tesseract.createWorker();
@@ -89,31 +91,45 @@ export class FactureImgService {
       preserve_interword_spaces: "1"
     })
     const { data: {blocks} } = await Worker.recognize(url_img, undefined, this.output);
-    if(blocks !== null){
-      const parsed_txt = this.getTextImg(blocks)
-      const tab_content = this.getTabContentImg(parsed_txt);
-    }
     Worker.terminate();
+    if(blocks !== null){
+      const parsed_txt = this.getTextShared(blocks)
+      const tab_content = this.getTabContentImg(parsed_txt);
+      return tab_content.then((parsed_pdf) => {
+          this.shared_service.colonne_factures_actual = [{
+            name: [],
+            price: [],
+            quantity: [],
+          }];
+          return parsed_pdf;
+      })
+    }
+    else{
+      return null;
+    }
   }
 
-  getTextImg(blocks:Tesseract.Block[]){
-    console.log("tttttttt");
-    
-    let items:TextImg[];
+  getTextShared(blocks:Tesseract.Block[]): TextShared[]{
+    let items:TextShared[];
     items = blocks.map((block) => {
-      const coordinates = [block.bbox.x0, block.bbox.x1, block.bbox.y0, block.bbox.y1];
+      const coordinates = [block.bbox.x0, block.bbox.y0];
       return {text: block.text.split('\n').join(""), coordinates: coordinates}
     });
     return items
   }
-  getTabContentImg(items_img:TextImg[]){
+  getTabContentImg(items_img:TextShared[]){
     this.getColumnNameImg(items_img);
-    console.log(this.colonne_factures_pivot);
-    
+    const parse_line_promise = this.shared_service.getLineTable(items_img, this.colonne_factures_pivot).then((lines: TextShared[][]) => {
+      return this.shared_service.rangeValInCol(lines, this.colonne_factures_pivot).then((parsed_pdf) => {
+        return parsed_pdf;
+      });
+    });
+    //const lines = this.getLinesTable()
+    return parse_line_promise;
   }
   // On récupère les noms des différentes colonnes composant le tableau ainsi que la position du header
   // l'idée c'est que lors de la récupération des colonnes
-  getColumnNameImg(items_img: TextImg[]){
+  getColumnNameImg(items_img: TextShared[]){
     const name_col_dico = this.colonne_factures.name.filter((name) => name !== "description");
     //Dans un premier temps on récupère les colonne nom et description du tableau
     const description = items_img.find((item) => this.testSimilarityCol(item.text.toLowerCase(),"description" ));
@@ -136,8 +152,8 @@ export class FactureImgService {
     }
     const price = items_img.find((item) => {
       const is_price = this.testSimilarityColArray(this.colonne_factures.price, item.text.toLowerCase().split(" ").join(""));
-      const y_max_coord =  item.coordinates[2] < (this.colonne_factures_pivot.name.coordinates[2] + 20);
-      const y_min_coord = (this.colonne_factures_pivot.name.coordinates[2] - 20) < item.coordinates[2];
+      const y_max_coord =  item.coordinates[1] < (this.colonne_factures_pivot.name.coordinates[1] + 20);
+      const y_min_coord = (this.colonne_factures_pivot.name.coordinates[1] - 20) < item.coordinates[1];
       return (is_price && y_max_coord && y_min_coord)
     });
     if (price !== undefined) {
@@ -148,8 +164,8 @@ export class FactureImgService {
     }
     const quantitee = items_img.find((item) => {
       const is_quant = this.testSimilarityColArray(this.colonne_factures.quantity, item.text.toLowerCase().split(" ").join(""));
-      const y_max_coord = item.coordinates[2] < (this.colonne_factures_pivot.name.coordinates[2] + 20);
-      const y_min_coord = (this.colonne_factures_pivot.name.coordinates[2] - 20) < item.coordinates[2];
+      const y_max_coord = item.coordinates[1] < (this.colonne_factures_pivot.name.coordinates[1] + 20);
+      const y_min_coord = (this.colonne_factures_pivot.name.coordinates[1] - 20) < item.coordinates[1];
       return (is_quant && y_max_coord && y_min_coord)
     });
     if (quantitee !== undefined) {
@@ -161,8 +177,8 @@ export class FactureImgService {
     // ============tva===================
     const tva = items_img.find((item) => {
       const is_tva =  this.testSimilarityColArray(this.colonne_factures.tva, item.text.toLowerCase().split(" ").join(""));
-      const y_max_coord = item.coordinates[2] < (this.colonne_factures_pivot.name.coordinates[2] + 20);
-      const y_min_coord = (this.colonne_factures_pivot.name.coordinates[2] - 20) < item.coordinates[2];
+      const y_max_coord = item.coordinates[1] < (this.colonne_factures_pivot.name.coordinates[1] + 20);
+      const y_min_coord = (this.colonne_factures_pivot.name.coordinates[1] - 20) < item.coordinates[1];
       return (is_tva && y_max_coord && y_min_coord)
     })
     if (tva !== undefined) {

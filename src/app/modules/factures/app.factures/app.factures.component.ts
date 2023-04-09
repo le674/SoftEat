@@ -103,8 +103,8 @@ export class AppFacturesComponent implements OnInit {
       if((file_blob.target.files[0] !== null) && (file_blob.target.files[0] !== undefined)){
         const image_file:File = file_blob.target.files[0];
         const url_img = URL.createObjectURL(image_file);
-        this.service_facture_img.parseFacturesImg(url_img).then(() => {
-          
+        this.service_facture_img.parseFacturesImg(url_img).then((parsed_img) => {
+            console.log(parsed_img);
         })
       }
      // const url = URL.createObjectURL();
