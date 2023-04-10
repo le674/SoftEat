@@ -91,9 +91,12 @@ export class FactureImgService {
       preserve_interword_spaces: "1"
     })
     const { data: {blocks} } = await Worker.recognize(url_img, undefined, this.output);
+    console.log(blocks);
     Worker.terminate();
     if(blocks !== null){
       const parsed_txt = this.getTextShared(blocks)
+      console.log("parsed text",parsed_txt);
+      
       const tab_content = this.getTabContentImg(parsed_txt);
       return tab_content.then((parsed_pdf) => {
           this.shared_service.colonne_factures_actual = [{
@@ -111,8 +114,9 @@ export class FactureImgService {
 
   getTextShared(blocks:Tesseract.Block[]): TextShared[]{
     let items:TextShared[];
+    const max_height =  this.getImageMaxHeight(blocks)
     items = blocks.map((block) => {
-      const coordinates = [block.bbox.x0, block.bbox.y0];
+      const coordinates = [block.bbox.x0, max_height - block.bbox.y0];
       return {text: block.text.split('\n').join(""), coordinates: coordinates}
     });
     return items
@@ -133,8 +137,6 @@ export class FactureImgService {
     const name_col_dico = this.colonne_factures.name.filter((name) => name !== "description");
     //Dans un premier temps on récupère les colonne nom et description du tableau
     const description = items_img.find((item) => this.testSimilarityCol(item.text.toLowerCase(),"description" ));
-    console.log(name_col_dico);
-    console.log(items_img.map((item) =>item.text));
     const name_col = items_img.find((item) => this.testSimilarityColArray(name_col_dico,item.text.toLowerCase().split(" ").join("")));
     if (name_col !== undefined) {
       this.colonne_factures_pivot.name = name_col;
@@ -219,6 +221,11 @@ export class FactureImgService {
   testSimilarityColArray(words:string[], _word:string){
     return words.map((character) => this.testSimilarityCol(character, _word))
          .reduce((is_same, is_next_same) => is_same || is_next_same);  
+  }
+
+  getImageMaxHeight(document:Tesseract.Block[]){
+  let y_coords = document.map((word) => word.bbox.y0);
+  return 2*Math.max(...y_coords);
   }
 
 

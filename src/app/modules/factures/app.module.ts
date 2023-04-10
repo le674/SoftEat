@@ -7,13 +7,15 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatRadioModule, MAT_RADIO_DEFAULT_OPTIONS } from '@angular/material/radio';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatRadioModule} from '@angular/material/radio';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { FactureLoadComponent } from './app.factures/app.factures.load/facture-load/facture-load.component';
 
 @NgModule({
   declarations: [
     AppFacturesComponent,
-    AppArchiComponent
+    AppArchiComponent,
+    FactureLoadComponent
   ],
   imports: [
     MatButtonModule,
@@ -22,6 +24,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatTableModule,
     MatDialogModule,
     MatSnackBarModule,
+    MatProgressSpinnerModule,
     CommonModule 
   ],
   exports: [

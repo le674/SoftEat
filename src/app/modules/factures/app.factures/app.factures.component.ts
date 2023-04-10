@@ -10,6 +10,7 @@ import { IngredientsInteractionService } from 'src/app/services/menus/ingredient
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { ModifIngComponent } from './app.factures.modif/modif.ing/modif.ing.component';
 import { FactureImgService } from 'src/app/services/factures/facture_img/facture-img.service';
+import { FactureLoadComponent } from './app.factures.load/facture-load/facture-load.component';
 
 @Component({
   selector: 'app-factures',
@@ -92,7 +93,6 @@ export class AppFacturesComponent implements OnInit {
             this.ingredients_displayed_br.push(add_to_tab);
           }
           this.dataSource.data = this.ingredients_displayed_br;
-          console.log(parsed_pdf);
         });
       }
      // const url = URL.createObjectURL();
@@ -103,11 +103,15 @@ export class AppFacturesComponent implements OnInit {
       if((file_blob.target.files[0] !== null) && (file_blob.target.files[0] !== undefined)){
         const image_file:File = file_blob.target.files[0];
         const url_img = URL.createObjectURL(image_file);
-        this.service_facture_img.parseFacturesImg(url_img).then((parsed_img) => {
-            console.log(parsed_img);
+        const dialog_ref = this.dialog.open(FactureLoadComponent,{
+          height: "400px",
+          width: "400px",
+          data: {
+            url: url_img,
+            type: "image"
+          }
         })
       }
-     // const url = URL.createObjectURL();
     }
   }
 
@@ -189,8 +193,6 @@ export class AppFacturesComponent implements OnInit {
     if (ele.cuisinee === 'oui') {
       is_prep = true
     }
-
-    console.log(ele.nom);
     this.service.removeIngInBdd(ele.nom.split('<br>').join('_'), this.prop, this.restaurant, is_prep).then(() => {
       this._snackBar.open("l'ingrédient vient d'être supprimé de la base de donnée du restaurant", "fermer")
     }).catch(() => {

@@ -1,0 +1,13 @@
+body{
+    display: contents;
+}
+
+#first-container{
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+}
+
+#spinner-container{
+    margin-top: 60px;
+}

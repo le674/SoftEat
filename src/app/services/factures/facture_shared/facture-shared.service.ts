@@ -39,6 +39,7 @@ export class FactureSharedService {
     tva?: TextShared;
     total?: TextShared;
 }) { 
+  
     let same_length_line = true;
     let all_lines_table: Array<Array<TextShared>> = [];
     // on  récupère la coordonnée en y du header en utilisant name par exemple
