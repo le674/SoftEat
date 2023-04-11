@@ -6,6 +6,8 @@ import { connectAuthEmulator, getAuth, onAuthStateChanged, User } from 'firebase
 import { initializeApp } from 'firebase/app';
 import { Router } from '@angular/router';
 import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { MatDialog } from '@angular/material/dialog';
+import { ContactComponent } from '../contact/contact.component';
 const firebaseConfig = {
   apiKey: "AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo",
   authDomain: "psofteat-65478545498421319564.firebaseapp.com",
@@ -45,8 +47,7 @@ export class NavbarVitrineComponent implements OnInit {
   @Output() public numPanel = new EventEmitter(); 
    boutonConnexion= 0;
   
-  constructor(public authService: AuthentificationService, public router: Router
-    ){
+  constructor(public authService: AuthentificationService, public router: Router, public dialog: MatDialog){
       auth.updateCurrentUser;
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -81,10 +82,12 @@ export class NavbarVitrineComponent implements OnInit {
   }
   ngOnInit(): void {
   }
-  
- 
-  
-
+  clicContact() {
+    const dialogRef = this.dialog.open(ContactComponent, {
+      width: '350px',
+      height: '370px'
+    });
+  }
   clicConnexion(){
   this.numPanel.emit(1);  
   

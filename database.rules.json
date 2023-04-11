@@ -1,6 +1,34 @@
 {
   "rules": {
-    ".read": false,
-    ".write":false 
+    "users": {
+      ".read": "true",
+      ".write": "true"
+    },
+    "$node": {
+      "$propId": {
+        "$restoId": {
+          ".read": "!($node == 'users') && root.child('resto_auth').child($propId).child($restoId).hasChild(auth.uid) === true",
+          ".write": "!($node == 'users') && root.child('resto_auth').child($propId).child($restoId).hasChild(auth.uid) === true"
+        }
+      }
+    },
+    "restaurants": {
+      "$propId": {
+        ".read": "root.child('resto_auth').child($propId).hasChild(auth.uid) === true",
+        ".write": "root.child('resto_auth').child($propId).hasChild(auth.uid) === true"
+      }
+    },
+    "resto_auth": {
+      "$propId": {
+        "all_resto_auth": {
+          ".read": "data.hasChild(auth.uid) === true",
+          ".write": "data.hasChild(auth.uid) === true"
+        },
+        "$restoId": {
+          ".read": "data.hasChild(auth.uid) === true",
+          ".write": "data.hasChild(auth.uid) === true"
+        }
+      }
+    }
   }
 }
