@@ -18,9 +18,6 @@
         ".git",
         "firebase-debug.log",
         "firebase-debug.*.log"
-      ],
-      "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint"
       ]
     }
   ],
@@ -55,5 +52,19 @@
   },
   "storage": {
     "rules": "storage.rules"
+  },
+  "hosting": {
+    "public": "dist/resto-p",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   }
 }

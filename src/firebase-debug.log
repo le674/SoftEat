@@ -1,0 +1,25 @@
+[debug] [2023-04-11T09:26:29.363Z] ----------------------------------------------------------------------
+[debug] [2023-04-11T09:26:29.365Z] Command:       /usr/local/bin/node /usr/local/bin/firebase init
+[debug] [2023-04-11T09:26:29.366Z] CLI Version:   11.19.0
+[debug] [2023-04-11T09:26:29.366Z] Platform:      linux
+[debug] [2023-04-11T09:26:29.366Z] Node Version:  v18.7.0
+[debug] [2023-04-11T09:26:29.366Z] Time:          Tue Apr 11 2023 11:26:29 GMT+0200 (heure d’été d’Europe centrale)
+[debug] [2023-04-11T09:26:29.366Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-04-11T09:26:29.412Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-04-11T09:26:29.412Z] > authorizing via signed-in user (softeat.contact@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/electric_eyes/softeat
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+

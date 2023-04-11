@@ -1,5 +1,4 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
-import { initializeApp } from 'firebase/app';
 import { AuthentificationService } from "../../../../services/authentification.service";
 
 @Component({
