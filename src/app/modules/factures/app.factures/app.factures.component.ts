@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
@@ -8,9 +8,10 @@ import { CIngredient } from 'src/app/interfaces/ingredient';
 import { FacturePdfService } from 'src/app/services/factures/facture_pdf/facture-pdf.service';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
-import { ModifIngComponent } from './app.factures.modif/modif.ing/modif.ing.component';
 import { FactureImgService } from 'src/app/services/factures/facture_img/facture-img.service';
 import { FactureLoadComponent } from './app.factures.load/facture-load/facture-load.component';
+import { AddIngComponent } from '../../stock/app.stock/app.stock.modals/add-ing/add.ing/add.ing.component';
+import { ModifIngComponent } from './app.factures.modif/modif.ing/modif.ing.component';
 
 @Component({
   selector: 'app-factures',
@@ -18,7 +19,6 @@ import { FactureLoadComponent } from './app.factures.load/facture-load/facture-l
   styleUrls: ['./app.factures.component.css']
 })
 export class AppFacturesComponent implements OnInit {
-
   private prop: string;
   private restaurant: string;
   private router:Router;
@@ -36,6 +36,19 @@ export class AppFacturesComponent implements OnInit {
     date_reception: string;
     dlc: string;
   }>;
+
+  public ingredients_displayed_br_tmp: Array<{
+    nom: string;
+    categorie_tva: string;
+    cost: number;
+    cost_ttc: number;
+    quantity: number;
+    quantity_unity: number;
+    unity: string;
+    date_reception: string;
+    dlc: string;
+  }>;
+
 
   public dataSource: MatTableDataSource<{
     nom: string;
@@ -60,6 +73,7 @@ export class AppFacturesComponent implements OnInit {
     this.page_number = 0; 
     this.router = router;  
     this.ingredients_displayed_br = [];
+    this.ingredients_displayed_br_tmp = [];
     this.prop = "";
     this.restaurant = "";
     this.dataSource = new MatTableDataSource(this.ingredients_displayed_br);
@@ -73,6 +87,7 @@ export class AppFacturesComponent implements OnInit {
   }
 
   getPdf(file_blob: any) {
+
     if(file_blob.target !== undefined){
       if((file_blob.target.files[0] !== null) && (file_blob.target.files[0] !== undefined)){
         const pdf_file:File = file_blob.target.files[0];
@@ -92,6 +107,7 @@ export class AppFacturesComponent implements OnInit {
             }
             this.ingredients_displayed_br.push(add_to_tab);
           }
+          this.ingredients_displayed_br_tmp = this.ingredients_displayed_br;
           this.dataSource.data = this.ingredients_displayed_br;
         });
       }
@@ -115,6 +131,11 @@ export class AppFacturesComponent implements OnInit {
     }
   }
 
+  revertModif(event:MouseEvent) {
+   this.ingredients_displayed_br = this.ingredients_displayed_br_tmp;
+   this.dataSource.data =  this.ingredients_displayed_br_tmp;
+  }
+
   modifIng(ele: {
     nom: string;
     categorie_tva: string;
@@ -128,19 +149,51 @@ export class AppFacturesComponent implements OnInit {
     vrac: string;
     date_reception: string;
   }) {
+    let dlc = null;
     let res_dlc = 0;
     let var_base_ing: Array<{ name: string; quantity_unity: number; quantity: number; unity: string; cost: number }> = [];
-    const dlc = this.calc_service.stringToDate(ele.dlc);
-    if (ele.date_reception !== undefined) {
-      const date_reception = this.calc_service.stringToDate(ele.date_reception);
-      res_dlc = (dlc.getTime() - date_reception.getTime()) / (1000 * 60 * 60 * 24)
+    if((ele.dlc !== undefined) && (ele.dlc !== "")){
+     dlc = this.calc_service.stringToDate(ele.dlc);
     }
 
+    if ((ele.date_reception !== undefined) && (ele.date_reception !== "")) {
+      const date_reception = this.calc_service.stringToDate(ele.date_reception);
+      if(dlc !== null){
+        res_dlc = (dlc.getTime() - date_reception.getTime()) / (1000 * 60 * 60 * 24)
+      }
+    }
 
-    ele.nom = ele.nom.split('<br>').join('_')
-    ele.categorie_tva = ele.categorie_tva.split('<br>').join(' ')
+    if(ele.nom !== undefined){
+      ele.nom = ele.nom.split('<br>').join('_')
+    }
+    else{
+      ele.nom = "";
+    }
+    if(ele.categorie_tva !== undefined){
+      ele.categorie_tva = ele.categorie_tva.split('<br>').join(' ')
+    }
+    else{
+      ele.categorie_tva = "";
+    }
+    if(ele.quantity === undefined){
+      ele.quantity = 0;
+    }
+    if(ele.quantity_unity === undefined){
+      ele.quantity_unity = 0;
+    }
+    if(ele.cost === undefined){
+      ele.cost = 0;
+    }
+    if(ele.date_reception === undefined){
+      ele.date_reception = ""
+    }
+    if(ele.marge === undefined){
+      ele.marge = 0;
+    }
+    if(ele.vrac === undefined){
+      ele.vrac = "non";
+    }
     let ingredient = new CIngredient(this.calc_service, this.service)
-
     ingredient.nom = ele.nom;
     ingredient.categorie_tva = ele.categorie_tva;
     ingredient.cost = ele.cost;
@@ -171,7 +224,9 @@ export class AppFacturesComponent implements OnInit {
         }
       }
     });
+    dialogRef.componentInstance.myEvent.subscribe((ingredient:CIngredient) => {
 
+    })
   }
 
   suppIng(ele: {
@@ -193,15 +248,13 @@ export class AppFacturesComponent implements OnInit {
     if (ele.cuisinee === 'oui') {
       is_prep = true
     }
-    this.service.removeIngInBdd(ele.nom.split('<br>').join('_'), this.prop, this.restaurant, is_prep).then(() => {
-      this._snackBar.open("l'ingrédient vient d'être supprimé de la base de donnée du restaurant", "fermer")
-    }).catch(() => {
-      this._snackBar.open("l'ingrédient n'a pas pu être supprimé de la base de donnée du restaurant", "fermer")
-    });
-
     //on regénère la datasource 
-    this.ingredients_displayed_br = this.ingredients_displayed_br.filter((ingredient) => ingredient.nom !== ele.nom.split('<br>').join('_'));
-
+    if(ele.nom === undefined){
+      this.ingredients_displayed_br = this.ingredients_displayed_br.filter((ingredient) => ingredient.nom !== undefined);
+    }
+    else{
+      this.ingredients_displayed_br = this.ingredients_displayed_br.filter((ingredient) => ingredient.nom !== ele.nom.split('<br>').join('_'));
+    }
     const supp_event = new PageEvent();
     supp_event.length = this.ingredients_displayed_br.length;
     supp_event.pageSize = 6

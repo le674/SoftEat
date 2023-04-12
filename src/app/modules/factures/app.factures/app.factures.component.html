@@ -108,8 +108,8 @@
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> actions </th>
                 <td id="validate" mat-cell *matCellDef="let element;let cell_index = index; ">
-                  <i class="fa-regular fa-trash action_table"></i>
-                  <i class="fa-regular fa-pen action_table"></i>
+                  <i class="fa-regular fa-trash action_table" (click)="suppIng(element)"></i>
+                  <i class="fa-regular fa-pen action_table" (click)="modifIng(element)"></i>
                 </td>
             </ng-container>
 
@@ -128,9 +128,9 @@
                 <i class="fa-solid fa-check"></i>
                 Valider l'ajout des ingrédients dans l'inventaire
             </button>
-            <button id = "cancel_button" mat-stroked-button>
+            <button id = "cancel_button" (click)="revertModif($event)" mat-stroked-button>
                 <i class="fa-solid fa-xmark"></i>
-                Annuler l'ajout des ingrédients dans l'inventaire
+                Annuler les modifications et suppressions réalisées
             </button>
         </div>
 </body>

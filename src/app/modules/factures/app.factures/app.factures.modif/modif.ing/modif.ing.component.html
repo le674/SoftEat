@@ -1,1 +1,84 @@
-<p>modif.ing works!</p>
+<form [formGroup]="add_ing_section" (ngSubmit)="changeIngredient()">
+    <div class="section">
+        <p>Entrer le nom du nouveau ingrédient : </p>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer le nom du nouveau ingrédient</mat-label>
+            <input matInput formControlName="name" placeholder="Ex. asperge">
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p>Entrer la catégorie ou le taux de tva : </p>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer la catégorie TVA</mat-label>
+            <mat-select formControlName="name_tva" (selectionChange)="addTaux($event)">
+                <mat-option value="produit alimentaire conditionnée"> produit alimentaire conditionnée </mat-option>
+                <mat-option value="produit alimentaire non conditionnée"> produit alimentaire non conditionnée </mat-option>
+                <mat-option value="boisson non alcholisée conditionnée"> boisson conditionnée non alcholisée </mat-option>
+                <mat-option value="boisson non alcholisée non conditionnée"> boisson non conditionnée non alcholisée </mat-option>
+                <mat-option value="boisson alcholisée"> boisson alcholisée </mat-option>
+                <mat-option value="pain"> pain </mat-option>
+                <mat-option value="pâtisserie"> pâtisserie </mat-option>
+                <mat-option value="fruit de mer coquillage fermés"> fruit de mer coquillage fermé</mat-option>
+                <mat-option value="fruit de mer coquillage ouvert"> fruit de mer coquillage ouvert</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer la taux de TVA </mat-label>
+            <input #taux type="number" matInput formControlName="taux_tva">
+        </mat-form-field>
+    </div>
+    <div class="selectSection">
+        <p> Est-ce que l'ingrédient est acheté en vrac : </p>
+        <mat-radio-group aria-label="SelectPrepa" id="is_cooked"  formControlName="vrac">
+            <mat-radio-button [checked]="is_vrac" (change)="clickRadioVrac(true)" value="oui">Oui</mat-radio-button>
+            <mat-radio-button [checked]="!is_vrac" (change)="clickRadioVrac(false)" value="non">Non</mat-radio-button>
+        </mat-radio-group>
+    </div>
+    <div class="section">
+        <mat-form-field appearance="fill" *ngIf="!is_vrac">
+            <mat-label>Entrer la quantitée </mat-label>
+            <input type="number" matInput formControlName="quantity">
+            <mat-error *ngIf="add_ing_section.controls['quantity']?.hasError('impossibleSize')">
+                pas assez d'ingrédient de base pour une telle quantitée de préparation    
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p> Entrer la quantitée par unitée et le coût de l'ingrédient : </p>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer la quantitée unitaire </mat-label>
+            <input type="number" matInput formControlName="quantity_unitary">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer l'unitée </mat-label>
+            <mat-select formControlName="unity">
+                <mat-option value="kg (kilogramme)"> kg (kilogramme) </mat-option>
+                <mat-option value="g (grame)"> g (grame) </mat-option>
+                <mat-option value="L (litre)"> L (litre)</mat-option>
+                <mat-option value="ml (millilitre)"> ml (millilitre)</mat-option>
+                <mat-option value="cl (centilitre)"> cl (centilitre)</mat-option>
+                <mat-option value="dl (decilitre)"> dl (decilitre)</mat-option>
+                <mat-option value="p (pièce)"> p (pièce) </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>coût unitaire </mat-label>
+            <input type="number" matInput formControlName="unitary_cost">
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p>Entrer la date limte de consomation en jours : </p>
+        <mat-form-field appearance="fill">
+            <mat-label>date limite de consommation en jours </mat-label>
+            <input type="number" matInput formControlName="dlc">
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p>Entrer une marge avant signalisation d'un réapprovisionnement: </p>
+        <mat-form-field appearance="fill">
+            <mat-label>marge </mat-label>
+            <input type="number" matInput formControlName="marge">
+        </mat-form-field>
+    </div>
+    <button mat-stroked-button type="submit"> Modifier </button>
+</form>

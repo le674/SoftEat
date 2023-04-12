@@ -13,3 +13,4 @@ export class FonctionnaliteComponent implements OnInit {
   }
 
 }
+

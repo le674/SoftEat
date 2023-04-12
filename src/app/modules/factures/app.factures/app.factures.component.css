@@ -70,6 +70,38 @@ h2{
     color: white;
 }
 
+.mat-stroked-button{
+    color: rgb(125, 181, 46);
+    background-color: white;
+    height: 40px;
+    min-width: 96px;
+    margin: 0;
+}
+
+#action-buttons{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.action_table{
+    border:1px solid;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.fa-pen:hover{
+    color: white;
+    background-color: rgb(125, 181, 46);
+}
+
+.fa-trash:hover{
+    color: white;
+    background-color: red;
+}
+.fa-trash{
+    margin-right: 3px;
+}
+
 #all-buttons{
     display: flex;
     justify-content: space-between;
