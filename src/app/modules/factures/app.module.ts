@@ -15,7 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatOptionModule } from '@angular/material/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModifIngComponent } from './app.factures/app.factures.modif/modif.ing/modif.ing.component';
 import { CIngredient } from 'src/app/interfaces/ingredient';
 
@@ -28,6 +28,7 @@ import { CIngredient } from 'src/app/interfaces/ingredient';
   ],
   imports: [
     MatFormFieldModule,
+    FormsModule,
     MatSelectModule,
     MatInputModule,
     MatTooltipModule,

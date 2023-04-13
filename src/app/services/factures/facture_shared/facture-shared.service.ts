@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
 import { TextItem } from 'pdfjs-dist/types/src/display/api';
 import { CIngredient } from 'src/app/interfaces/ingredient';
 import { TextImg, TextShared } from 'src/app/interfaces/text';
+import { IngredientsInteractionService } from '../../menus/ingredients-interaction.service';
+import { CalculService } from '../../menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +21,7 @@ export class FactureSharedService {
     total?: TextShared[]
   }[]
 
-  constructor() {
+  constructor(private ingredient_services:IngredientsInteractionService, private calcul_service:CalculService) {
     this.colonne_factures_actual = [{
       name: [],
       price: [],
@@ -302,7 +304,64 @@ export class FactureSharedService {
     return items.map((item) => this.convertTextItemToTextShared(item));
   }
 
-  convertParsedLstToIngs():Array<CIngredient>{
-    return []
+  async convertParsedLstToIngs(parsed_pdf: {
+    name: string;
+    description?: string | undefined;
+    price: number;
+    quantity: number;
+    tva?: number | undefined;
+    total?: number | undefined;
+}[], prop:string, restaurant:string):Promise<Array<CIngredient>>{
+    const _ingredients: Array<CIngredient> = [];
+    const ingredients = await this.ingredient_services.getIngredientsBrFromRestaurantsPROM(prop, restaurant);
+    for(let _ingredient of parsed_pdf){
+      // Nous ne prennons pas en considération les aliments qui n'ont pas de nom
+      if(_ingredient.name === undefined) continue;
+      // Nous récupèrons les ingrédients depuis la base de donnée qui ont le même nom que ceux présent lors du parsing du pdf
+      const name = _ingredient.name.trim().toLowerCase();
+      const ingredient = ingredients.find((ingredient) => ingredient.nom === name.split(" ").join("_"));
+      // Si il y'en a aucun ont ajoute les nouveau ingrédients sinon ont compare par rapport aux anciens 
+      if(ingredient !== undefined){
+        //On recalcule les quantitée avec les ingrédients scannés, deux cas comme d'habitude lorsque l'ingrédients est en vrac ou non  
+        if(ingredient.vrac === "oui"){
+          ingredient.quantity_unity = ingredient.quantity_unity + _ingredient.quantity;
+          ingredient.total_quantity = ingredient.total_quantity + _ingredient.quantity;
+        }
+        else{
+          ingredient.quantity = ingredient.quantity + _ingredient.quantity;
+          ingredient.total_quantity = ingredient.total_quantity + _ingredient.quantity;
+        }
+        //On fait la moyenne des cout si ceux-ci ont changé
+        ingredient.cost_ttc = (ingredient.cost_ttc + _ingredient.price)/2
+        if(typeof ingredient.dlc === "string"){
+          ingredient.dlc = new Date(ingredient.dlc); 
+        }
+        if(typeof ingredient.date_reception === "string"){
+          ingredient.date_reception = new Date(ingredient.date_reception);
+        }
+        _ingredients.push(ingredient);
+      }
+      else{
+        const new_ingredient = new CIngredient(this.calcul_service, this.ingredient_services);
+        const name = _ingredient.name.trim().toLowerCase();
+        new_ingredient.nom = name.split(" ").join("_");
+        new_ingredient.quantity = _ingredient.quantity;
+        new_ingredient.total_quantity = _ingredient.quantity;
+        new_ingredient.quantity_unity = 1;
+        new_ingredient.unity_unitary = "p (pièce)";
+        new_ingredient.unity = "";
+        new_ingredient.cost_ttc = _ingredient.price;
+        new_ingredient.date_reception = new Date();
+        new_ingredient.dlc = new Date();
+        new_ingredient.marge = 0;
+        new_ingredient.vrac = "non";
+        new_ingredient.categorie_tva = "";
+        if(_ingredient.tva !== undefined){
+          new_ingredient.taux_tva = _ingredient.tva;
+        }
+        _ingredients.push(new_ingredient);
+      }
+    }
+    return _ingredients;
   }
 }

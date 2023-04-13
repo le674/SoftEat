@@ -120,13 +120,11 @@ export class ModifIngComponent implements OnInit {
   changeIngredient() {
     let ingredient = new CIngredient(this.calcul_service, this.service);
     if(this.add_ing_section.controls.name.value !== null){
-      ingredient.nom = this.add_ing_section.controls.name.value;
+      const name =  this.add_ing_section.controls.name.value.trim()
+      ingredient.nom = name.split(" ").join("_");
     }
     if(this.add_ing_section.controls.name_tva.value !== null){
-      ingredient.categorie_restaurant = this.add_ing_section.controls.name_tva.value;
-    }
-    if(this.add_ing_section.controls.name_tva.value !== null){
-      ingredient.categorie_restaurant = this.add_ing_section.controls.name_tva.value;
+      ingredient.categorie_tva = this.add_ing_section.controls.name_tva.value;
     }
     if(this.add_ing_section.controls.taux_tva.value !== null){
       ingredient.taux_tva = this.add_ing_section.controls.taux_tva.value;
@@ -134,11 +132,14 @@ export class ModifIngComponent implements OnInit {
     if(this.add_ing_section.controls.quantity.value !== null){
       ingredient.quantity = this.add_ing_section.controls.quantity.value;
     }
+    if(this.add_ing_section.controls.quantity.value !== null){
+      ingredient.total_quantity = this.add_ing_section.controls.quantity.value;
+    }
     if(this.add_ing_section.controls.quantity_unitary.value !== null){
       ingredient.quantity_unity = this.add_ing_section.controls.quantity_unitary.value;
     }
     if(this.add_ing_section.controls.unity.value !== null){
-      ingredient.unity = this.add_ing_section.controls.unity.value;
+      ingredient.unity_unitary = this.add_ing_section.controls.unity.value;
     }
     if(this.add_ing_section.controls.unitary_cost.value !== null){
       ingredient.cost_ttc = this.add_ing_section.controls.unitary_cost.value

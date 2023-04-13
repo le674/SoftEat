@@ -284,7 +284,7 @@ export class IngredientsInteractionService {
          await update(ref_db, preparation_princ)
   }
 
-  async setIngInBdd(ingredient: CIngredient, prop:string, restaurant:string, is_prep:boolean){
+  async setIngInBdd(ingredient: CIngredient, prop:string, restaurant:string){
     let ref_db: DatabaseReference;
     const path_ings = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/${ingredient.nom}/`;
     const path_lst_ings = `inventaire_${prop}_${restaurant}/${prop}/${restaurant}/ingredients/${ingredient.nom}/`;

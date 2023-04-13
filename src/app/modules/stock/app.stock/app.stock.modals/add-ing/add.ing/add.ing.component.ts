@@ -213,7 +213,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
 
     if (this.add_ing_section.valid) {
 
-        this.service.setIngInBdd(new_ing as CIngredient, this.data.prop, this.data.restaurant, false).then(() => {
+        this.service.setIngInBdd(new_ing as CIngredient, this.data.prop, this.data.restaurant).then(() => {
           if (this.is_modif) {
             this._snackBar.open("l'ingrédient vient d'être modifié dans la base de donnée du restaurant", "fermer");
           }

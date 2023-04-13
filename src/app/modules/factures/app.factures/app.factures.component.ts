@@ -26,6 +26,7 @@ export class AppFacturesComponent implements OnInit {
   private url: UrlTree;
   private page_number: number;
 
+  private ingredients_br: Array<CIngredient>;
   public ingredients_displayed_br: Array<{
     nom: string;
     categorie_tva: string;
@@ -80,6 +81,7 @@ export class AppFacturesComponent implements OnInit {
     this.restaurant = "";
     this.dataSource = new MatTableDataSource(this.ingredients_displayed_br);
     this.url = this.router.parseUrl(this.router.url);
+    this.ingredients_br = [];
   }
 
   ngOnInit(): void {
@@ -95,23 +97,26 @@ export class AppFacturesComponent implements OnInit {
         const pdf_file:File = file_blob.target.files[0];
         const url_pdf = URL.createObjectURL(pdf_file);
         this.service_facture_pdf.parseFacture(url_pdf).then((parsed_pdf) => {
-          let ingredients = this.service_factue_shared.convertParsedLstToIngs(parsed_pdf)
-          for (let ingredient of ingredients) {
-            const add_to_tab = {
-              nom: ingredient.nom,
-              categorie_tva: ingredient.categorie_tva,
-              cost: ingredient.cost,
-              cost_ttc: ingredient.cost_ttc, // si le cout a changé dans la nouvelle facture ont calcule un cout moyen 
-              quantity: ingredient.quantity,
-              quantity_unity: ingredient.quantity_unity,
-              unity: ingredient.unity,
-              date_reception: ingredient.date_reception.toDateString(),
-              dlc: ingredient.dlc.toDateString()
+          let p_ingredients = this.service_factue_shared.convertParsedLstToIngs(parsed_pdf, this.prop, this.restaurant)
+          p_ingredients.then((ingredients) => {
+            this.ingredients_br = ingredients;
+            for (let ingredient of ingredients) {
+              const add_to_tab = {
+                nom: ingredient.nom.split('_').join(" "),
+                categorie_tva: ingredient.categorie_tva,
+                cost: ingredient.cost,
+                cost_ttc: ingredient.cost_ttc, // si le cout a changé dans la nouvelle facture ont calcule un cout moyen 
+                quantity: ingredient.quantity,
+                quantity_unity: ingredient.quantity_unity,
+                unity: ingredient.unity_unitary,
+                date_reception: ingredient.date_reception.toLocaleString(),
+                dlc: ingredient.dlc.toLocaleString()
+              }
+              this.ingredients_displayed_br.push(add_to_tab);
             }
-            this.ingredients_displayed_br.push(add_to_tab);
-          }
-          this.ingredients_displayed_br_tmp = this.ingredients_displayed_br;
-          this.dataSource.data = this.ingredients_displayed_br;
+            this.ingredients_displayed_br_tmp = this.ingredients_displayed_br;
+            this.dataSource.data = this.ingredients_displayed_br;
+          })
         });
       }
      // const url = URL.createObjectURL();
@@ -167,13 +172,13 @@ export class AppFacturesComponent implements OnInit {
     }
 
     if(ele.nom !== undefined){
-      ele.nom = ele.nom.split('<br>').join('_')
+      ele.nom = ele.nom;
     }
     else{
       ele.nom = "";
     }
     if(ele.categorie_tva !== undefined){
-      ele.categorie_tva = ele.categorie_tva.split('<br>').join(' ')
+      ele.categorie_tva = ele.categorie_tva;
     }
     else{
       ele.categorie_tva = "";
@@ -211,24 +216,37 @@ export class AppFacturesComponent implements OnInit {
         prop: this.prop,
         is_modif: true,
         ingredient: {
-          /* cuisinee: ele.cuisinee, */
           nom: ele.nom,
           categorie: ele.categorie_tva,
           quantity: ele.quantity,
           quantity_unity: ele.quantity_unity,
           unity: ele.unity,
-          unitary_cost: ele.cost,
+          unitary_cost: ele.cost_ttc,
           dlc: res_dlc,
           date_reception: ele.date_reception,
           base_ing: var_base_ing,
-         /*  quantity_after_prep: ele.after_prep, */
           marge: ele.marge,
           vrac: ele.vrac
         }
       }
     });
     dialogRef.componentInstance.myEvent.subscribe((ingredient:CIngredient) => {
-
+       this.ingredients_br = this.ingredients_br.filter((_ingredient) => _ingredient.nom !== ingredient.nom);
+       let _ingredients = this.ingredients_displayed_br.filter((_ingredient) => ingredient.nom.split("_").join(" ") !== _ingredient.nom);
+       this.ingredients_br.push(ingredient);
+       _ingredients.push({
+        nom: ingredient.nom.split("_").join(" "),
+        categorie_tva: ingredient.categorie_tva,
+        cost: ingredient.cost,
+        cost_ttc: ingredient.cost_ttc,
+        quantity: ingredient.quantity,
+        quantity_unity: ingredient.quantity_unity,
+        unity: ingredient.unity,
+        date_reception: ingredient.date_reception.toLocaleString(),
+        dlc: ingredient.dlc.toLocaleString()
+       });
+       this.ingredients_displayed_br = _ingredients;
+       this.dataSource.data =  this.ingredients_displayed_br;
     })
   }
 
@@ -254,14 +272,37 @@ export class AppFacturesComponent implements OnInit {
     //on regénère la datasource 
     if(ele.nom === undefined){
       this.ingredients_displayed_br = this.ingredients_displayed_br.filter((ingredient) => ingredient.nom !== undefined);
+      this.ingredients_br = this.ingredients_br.filter((ingredient) => ingredient.nom !== undefined);
     }
     else{
-      this.ingredients_displayed_br = this.ingredients_displayed_br.filter((ingredient) => ingredient.nom !== ele.nom.split('<br>').join('_'));
+      const name = ele.nom;
+      this.ingredients_displayed_br = this.ingredients_displayed_br.filter((ingredient) => ingredient.nom !== name);
+      this.ingredients_br = this.ingredients_br.filter((ingredient) => ingredient.nom !== name.split(" ").join("_"));
     }
     const supp_event = new PageEvent();
     supp_event.length = this.ingredients_displayed_br.length;
     supp_event.pageSize = 6
     this.pageChangedFirst(supp_event);
+  }
+
+  addIngredients($event: MouseEvent) {
+   let is_added = true;
+   for(let ingredient of this.ingredients_br){
+    this.service.setIngInBdd(ingredient,this.prop, this.restaurant).catch((e) => {
+      is_added = false;
+      console.log(e);
+    }).then(() => {
+      this.ingredients_br = [];
+      this.ingredients_displayed_br = [];
+      this.dataSource.data = this.ingredients_displayed_br;
+    });
+   }
+   if(!is_added){
+    this._snackBar.open("les ingrédients n'ont pas pu être ajouté à la base de donnée veuilliez contacter SoftEat", "fermer");
+   }
+   else{
+    this._snackBar.open("les ingrédients viennent d'être ajoutés à la base de donnée", "fermer");
+   }
   }
 
   pageChanged(event: PageEvent) {

@@ -199,6 +199,5 @@ export class FacturePdfService {
     if (total !== undefined) {
       this.colonne_factures_pivot.total = total;
     }
-    console.log("colonne factures pivot",this.colonne_factures_pivot);  
   }
 }
