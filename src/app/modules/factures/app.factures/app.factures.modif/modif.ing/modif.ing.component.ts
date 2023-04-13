@@ -22,7 +22,6 @@ export class ModifIngComponent implements OnInit {
     quantity_unitary: new FormControl(0, Validators.required),
     unity: new FormControl('', Validators.required),
     unitary_cost: new FormControl(0, Validators.required),
-    dlc: new FormControl(0, Validators.required),
     marge: new FormControl(0, Validators.required),
     vrac: new FormControl('', Validators.required),
   })
@@ -83,10 +82,6 @@ export class ModifIngComponent implements OnInit {
     this.add_ing_section.get("unity")?.setValue(unity);
     this.add_ing_section.get("quantity")?.setValue(this.data.ingredient.quantity);
     this.add_ing_section.get("unitary_cost")?.setValue(this.data.ingredient.unitary_cost);
-    // Si on récupère une date de limite de consommatin négative on dépose 0 sinon on dépose la dlc
-    if (this.data.ingredient.dlc > 0) {
-      this.add_ing_section.get("dlc")?.setValue(this.data.ingredient.dlc);
-    }
 
     if ((this.data.ingredient.marge > 0) && (this.data.ingredient.marge !== undefined)) {
       this.add_ing_section.get("marge")?.setValue(this.data.ingredient.marge);
@@ -124,7 +119,35 @@ export class ModifIngComponent implements OnInit {
   }
   changeIngredient() {
     let ingredient = new CIngredient(this.calcul_service, this.service);
-    if(this.add_ing_section.controls.dlc !== null){
+    if(this.add_ing_section.controls.name.value !== null){
+      ingredient.nom = this.add_ing_section.controls.name.value;
+    }
+    if(this.add_ing_section.controls.name_tva.value !== null){
+      ingredient.categorie_restaurant = this.add_ing_section.controls.name_tva.value;
+    }
+    if(this.add_ing_section.controls.name_tva.value !== null){
+      ingredient.categorie_restaurant = this.add_ing_section.controls.name_tva.value;
+    }
+    if(this.add_ing_section.controls.taux_tva.value !== null){
+      ingredient.taux_tva = this.add_ing_section.controls.taux_tva.value;
+    }
+    if(this.add_ing_section.controls.quantity.value !== null){
+      ingredient.quantity = this.add_ing_section.controls.quantity.value;
+    }
+    if(this.add_ing_section.controls.quantity_unitary.value !== null){
+      ingredient.quantity_unity = this.add_ing_section.controls.quantity_unitary.value;
+    }
+    if(this.add_ing_section.controls.unity.value !== null){
+      ingredient.unity = this.add_ing_section.controls.unity.value;
+    }
+    if(this.add_ing_section.controls.unitary_cost.value !== null){
+      ingredient.cost_ttc = this.add_ing_section.controls.unitary_cost.value
+    }
+    if(this.add_ing_section.controls.marge.value !== null){
+      ingredient.marge = this.add_ing_section.controls.marge.value;
+    }
+    if(this.add_ing_section.controls.vrac.value !== null){
+      ingredient.vrac = this.add_ing_section.controls.vrac.value;
     }
     this.myEvent.emit(ingredient);
     this.dialogRef.close();

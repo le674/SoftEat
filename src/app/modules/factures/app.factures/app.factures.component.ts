@@ -12,6 +12,7 @@ import { FactureImgService } from 'src/app/services/factures/facture_img/facture
 import { FactureLoadComponent } from './app.factures.load/facture-load/facture-load.component';
 import { AddIngComponent } from '../../stock/app.stock/app.stock.modals/add-ing/add.ing/add.ing.component';
 import { ModifIngComponent } from './app.factures.modif/modif.ing/modif.ing.component';
+import { FactureSharedService } from 'src/app/services/factures/facture_shared/facture-shared.service';
 
 @Component({
   selector: 'app-factures',
@@ -69,7 +70,8 @@ export class AppFacturesComponent implements OnInit {
 
   constructor(private service: IngredientsInteractionService, router: Router, 
     public dialog: MatDialog, private calc_service: CalculService, private _snackBar:MatSnackBar,
-    private service_facture_pdf:FacturePdfService, private service_facture_img:FactureImgService) { 
+    private service_facture_pdf:FacturePdfService, private service_facture_img:FactureImgService,
+    private service_factue_shared:FactureSharedService) { 
     this.page_number = 0; 
     this.router = router;  
     this.ingredients_displayed_br = [];
@@ -93,17 +95,18 @@ export class AppFacturesComponent implements OnInit {
         const pdf_file:File = file_blob.target.files[0];
         const url_pdf = URL.createObjectURL(pdf_file);
         this.service_facture_pdf.parseFacture(url_pdf).then((parsed_pdf) => {
-          for (let ingredient of parsed_pdf) {
+          let ingredients = this.service_factue_shared.convertParsedLstToIngs(parsed_pdf)
+          for (let ingredient of ingredients) {
             const add_to_tab = {
-              nom: ingredient.name,
-              categorie_tva: "",
-              cost: 0,
-              cost_ttc: ingredient.price,
+              nom: ingredient.nom,
+              categorie_tva: ingredient.categorie_tva,
+              cost: ingredient.cost,
+              cost_ttc: ingredient.cost_ttc, // si le cout a changé dans la nouvelle facture ont calcule un cout moyen 
               quantity: ingredient.quantity,
-              quantity_unity: 0,
-              unity: "",
-              date_reception: "",
-              dlc: ""
+              quantity_unity: ingredient.quantity_unity,
+              unity: ingredient.unity,
+              date_reception: ingredient.date_reception.toDateString(),
+              dlc: ingredient.dlc.toDateString()
             }
             this.ingredients_displayed_br.push(add_to_tab);
           }

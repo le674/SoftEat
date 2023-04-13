@@ -2,6 +2,7 @@
 // la différence réside dans le fait que pour 
 import { Injectable } from '@angular/core';
 import { TextItem } from 'pdfjs-dist/types/src/display/api';
+import { CIngredient } from 'src/app/interfaces/ingredient';
 import { TextImg, TextShared } from 'src/app/interfaces/text';
 
 @Injectable({
@@ -299,5 +300,9 @@ export class FactureSharedService {
   }
   convertTextItemToTextSharedLst(items: TextItem[]):TextShared[]{
     return items.map((item) => this.convertTextItemToTextShared(item));
+  }
+
+  convertParsedLstToIngs():Array<CIngredient>{
+    return []
   }
 }
