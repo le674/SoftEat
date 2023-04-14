@@ -71,7 +71,7 @@ export class AppMenuComponent implements OnInit, AfterViewInit {
   addMenu():void{
 
     const dialogRef = this.dialog.open(AddMenuComponent, {
-      height: `${window.innerHeight - window.innerWidth / 5}px`,
+      height: `${window.innerHeight - window.innerWidth / 10}px`,
       width: `${window.innerWidth - window.innerWidth / 10}px`,
       data:{
         prop: this.prop,

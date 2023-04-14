@@ -1,22 +1,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=ABeeZee&family=Inter&display=swap" rel="stylesheet"> 
-
-
- 
+<link href="https://fonts.googleapis.com/css2?family=ABeeZee&family=Inter&display=swap" rel="stylesheet">  
 <nav class="navbar navbar-expand-lg  fixed-top"  id="navbar_top" >
   <div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+    <button #toogler class="navbar-toggler" (click)="hideImage(img)" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <img src="/assets/images/SoftEat_Quadrichromie.png" alt="" id="logo">
+    <img #img src="/assets/images/SoftEat_Quadrichromie.png" alt="" id="logo">
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item active">
-          <a class="nav-link" (click) = "clicHome()" id ="souligneVert">Accueil <span class="sr-only"></span></a>
+          <a class="nav-link" (click) = "clicHome(toogler)" id ="souligneVert">Accueil <span class="sr-only"></span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" (click)="clicFonctionnalite()" id ="souligneVert">Fonctionnalités</a>
+          <a class="nav-link" (click)="clicFonctionnalite(toogler)" id ="souligneVert">Fonctionnalités</a>
         </li>
    <!--      <li class="nav-item">
           <a class="nav-link" (click)="clicTarif()" id ="souligneVert">Tarif</a>
@@ -25,7 +22,7 @@
           <a class="nav-link" (click)="clicPropos()" id ="souligneVert">A propos</a>
         </li> -->
         <li class="nav-item">
-          <a class="nav-link" (click)="clicContact()" id ="souligneVert">Nous contacter</a>
+          <a class="nav-link" (click)="clicContact(toogler)" id ="souligneVert">Nous contacter</a>
         </li>
         
    <!--      <li class="nav-item dropdown">
@@ -38,7 +35,7 @@
           </ul>
         </li> -->
         <li class="nav-item" *ngIf="boutonConnexion == 0">
-          <button class="btn entrer" (click)="clicConnexion()"type="submit">{{getNom()}}</button>
+          <button class="btn entrer" (click)="clicConnexion(toogler)"type="submit">{{getNom()}}</button>
           <!--<a class="nav-link" (click)="clicConnexion()">Connexion</a>-->
         </li>
         <li class="nav-item" *ngIf="boutonConnexion == 1">

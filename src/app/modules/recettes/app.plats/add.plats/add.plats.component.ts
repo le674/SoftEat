@@ -453,4 +453,7 @@ export class AddPlatsComponent implements OnInit {
       seconde:FormControl<number | null>,
     }>>
   }
+  closePopup(click:MouseEvent){
+    this.dialogRef.close();
+  }
 }

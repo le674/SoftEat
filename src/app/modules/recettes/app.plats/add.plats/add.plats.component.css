@@ -1,14 +1,34 @@
+/* croix de fermeture de la fenêtre */
+.close-fab{
+    background-color: white;
+    color: red;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+.close-fab:hover{
+    background-color: red;
+    color: white;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+#close-section{
+    display: flex;
+    justify-content: flex-end;
+}
+.inputs-containers-close{
+    display: flex;
+    justify-content: flex-end;
+}
+
 .fa-plus{
     color: rgb(125, 181, 46);
 }
-
-
 .inputs-containers{
     display: flex;
     flex-direction: column;
 }
 
-.mat-mini-fab{
+.plus-fab{
     color: white;
     margin-left: 20px;
     margin-bottom: 20px;

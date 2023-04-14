@@ -1,3 +1,9 @@
+<div class="inputs-containers-close" id="close-section">
+    <button (click)="closePopup($event)" class="close-fab" mat-mini-fab type="button" id="close_popup" color="white" matTooltip="fermer la fenêtre"
+    aria-label="close popup">
+    <i class="fa-regular fa-xmark"></i>
+    </button>
+</div>
 <form [formGroup]="add_plats_section" (ngSubmit)="changePlats()">
     <p class="title">Entrer des information sur le plat</p>
     <div class="section_fileds">
@@ -101,7 +107,7 @@
             </div>
         </ng-container>
         <div class="inputs-containers">
-            <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'un ingrédient"
+            <button mat-mini-fab class="plus-fab" type="button" id="add_input_conso" color="white" matTooltip="ajout d'un ingrédient"
             aria-label="ajout d'un ingrédient" (click)="addInputIng()">
                 <i class="fa-regular fa-plus"></i>
             </button>
@@ -140,7 +146,7 @@
             </div>
         </ng-container>
         <div class="inputs-containers">
-            <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'un consommable"
+            <button mat-mini-fab class="plus-fab" type="button" id="add_input_conso" color="white" matTooltip="ajout d'un consommable"
             aria-label="ajout d'un consommable" (click)="addInputConso()">
                 <i class="fa-regular fa-plus"></i>
             </button>
@@ -175,7 +181,7 @@
             </div>
         </ng-container>
         <div class="inputs-containers">
-            <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'une préparation"
+            <button mat-mini-fab class="plus-fab" type="button" id="add_input_conso" color="white" matTooltip="ajout d'une préparation"
             aria-label="ajout d'une préparation" (click)="addInputPrepa()">
                 <i class="fa-regular fa-plus"></i>
             </button>
@@ -228,7 +234,7 @@
             </div>
         </ng-container>
         <div class="inputs-containers">
-            <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'une étape"
+            <button mat-mini-fab class="plus-fab" type="button" id="add_input_conso" color="white" matTooltip="ajout d'une étape"
             aria-label="ajout d'une étape" (click)="addInputEtape()">
                 <i class="fa-regular fa-plus"></i>
             </button>

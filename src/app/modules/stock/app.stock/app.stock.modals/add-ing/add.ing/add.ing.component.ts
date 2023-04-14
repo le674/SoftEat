@@ -252,4 +252,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     this.taux.nativeElement.value = taux;
 
   }
+  closePopup(click:MouseEvent) {
+    this._mat_dialog_ref.close();
+  }
 }

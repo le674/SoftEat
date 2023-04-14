@@ -192,7 +192,6 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     ingredient.cost = ele.cost;
     ingredient.quantity = ele.quantity;
     ingredient.quantity_unity = ele.quantity_unity;
-
     const dialogRef = this.dialog.open(AddIngComponent, {
       height: `${window.innerHeight}px`,
       width: `${window.innerWidth - window.innerWidth / 15}px`,
@@ -218,7 +217,7 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     });
-
+   
   }
 
   suppIng(ele: {
@@ -240,8 +239,6 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     if (ele.cuisinee === 'oui') {
       is_prep = true
     }
-
-    console.log(ele.nom);
     this.service.removeIngInBdd(ele.nom.split('<br>').join('_'), this.prop, this.restaurant, is_prep).then(() => {
       this._snackBar.open("l'ingrédient vient d'être supprimé de la base de donnée du restaurant", "fermer")
     }).catch(() => {

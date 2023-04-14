@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Cmenu } from 'src/app/interfaces/menu';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { MenuCalculMenuService } from 'src/app/services/menus/menu.calcul/menu.calcul.menu.service';
@@ -25,7 +25,8 @@ export class DisplayMenuComponent implements OnInit {
     restaurant: string,
     name: string,
     menu:Cmenu
-  }, private menu_service:MenuCalculMenuService,private calcul_service:CalculService) {
+  }, public dialogRef: MatDialogRef<DisplayMenuComponent>,
+   private menu_service:MenuCalculMenuService,private calcul_service:CalculService) {
     this.desserts = [];
     this.plats = [];
     this.entrees = [];
@@ -55,5 +56,7 @@ export class DisplayMenuComponent implements OnInit {
     })
     this.price_reco = this.menu_service.getPriceMenuReco(this.data.menu.plats);
   }
-
+  closePopup($event: MouseEvent) {
+    this.dialogRef.close();
+  }
 }

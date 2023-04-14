@@ -1,11 +1,36 @@
+/* croix de fermeture de la fenêtre */
+.close-fab{
+    background-color: white;
+    color: red;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+.close-fab:hover{
+    background-color: red;
+    color: white;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+#close-section{
+    display: flex;
+    justify-content: flex-end;
+}
+.inputs-containers-close{
+    display: flex;
+    justify-content: flex-end;
+}
+/* ajout des différents ingrédients */
 .fa-plus{
     color: rgb(125, 181, 46);
 }
-
-
 .inputs-containers{
     display: flex;
     flex-direction: column;
+}
+.plus-fab{
+    color: white;
+    margin-left: 20px;
+    margin-bottom: 20px;
 }
 
 .title{
@@ -13,13 +38,6 @@
     font-weight: normal;
     color: rgb(125, 181, 46);
 }
-
-.mat-mini-fab{
-    color: white;
-    margin-left: 20px;
-    margin-bottom: 20px;
-}
-
 .selectSection{
     display: flex;
     justify-content: space-between;

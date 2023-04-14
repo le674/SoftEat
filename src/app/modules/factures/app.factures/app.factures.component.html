@@ -35,7 +35,7 @@
         </div>
         <div id="select_area">
             <label>Quel est le contenu de la facture scannée ?</label>
-            <mat-radio-group id="radio-group" aria-label="Select an option">
+            <mat-radio-group id="radio-group" aria-label="Select an option" (change)="radioChange($event)">
                 <mat-radio-button name="chose-select" value="ing" [checked] ="true">Ingrédients</mat-radio-button>
                 <mat-radio-button name="chose-select" value="conso">Autres</mat-radio-button>
             </mat-radio-group>  

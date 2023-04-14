@@ -1,11 +1,9 @@
-<!-- <div class="selectSection">
-    <p>l'ingrédient a-t-il été préparé en salle ?</p>
-    <mat-radio-group aria-label="SelectPrepa" id="is_cooked">
-        <mat-radio-button (change)="clickRadio(true)" value="oui">Oui</mat-radio-button>
-        <mat-radio-button (change)="clickRadio(false)" value="non">Non</mat-radio-button>
-        <mat-radio-button (change)="clickRadio(false)" value="aucune">Ne pas préciser</mat-radio-button>
-    </mat-radio-group>
-</div> -->
+<div class="inputs-containers">
+    <button (click)="closePopup($event)" mat-mini-fab type="button" id="close_popup" color="white" matTooltip="fermer la fenêtre"
+    aria-label="close popup">
+    <i class="fa-regular fa-xmark"></i>
+    </button>
+</div>
 <form [formGroup]="add_ing_section" (ngSubmit)="changeIngredient()">
     <div class="section">
         <p>Entrer le nom du nouveau ingrédient : </p>
@@ -88,34 +86,5 @@
             <input type="number" matInput formControlName="marge">
         </mat-form-field>
     </div>
-   <!--  <div id="prepa"  *ngIf="is_prep">
-        <div class="section">
-            <p>Quelles sont les ingrédients de base, <br> entrer la  quantitée de l'ingrédient de base utilisé pour la préparation : </p>
-            <div  id="old_ing" *ngFor="let index of index_inputs">
-                <mat-form-field appearance="fill">
-                    <mat-label>nom de l'ingrédient</mat-label>
-                    <input #ing_names_prep matInput  formArrayName="names_base_ing" placeholder="Ex. Pizza">
-                  </mat-form-field>
-                <mat-form-field appearance="fill">
-                    <mat-label> quantitée total avant préparation </mat-label>
-                    <input #quantity_bef_prep type="number" matInput formArrayName="quantity_bef_prep">
-                </mat-form-field>
-                <mat-form-field appearance="fill">
-                    <mat-label> unitée de l'ingrédient </mat-label>
-                    <input #unity_base matInput formControlName="unity_base">
-                </mat-form-field>
-            </div>
-            <button mat-mini-fab type="button" id="add_input" color="white" matTooltip="ajout d'un ingrédient" aria-label="ajout d'un ingrédient" (click)="addInput()">
-                <i class="fa-regular fa-plus"></i>
-            </button>
-        </div>
-        <div class="section">
-            <p id="last">Entrer la quantitée obtenu pour cette ingrédient : </p>
-            <mat-form-field appearance="fill">
-                <mat-label> quantitée total après préparation </mat-label>
-                <input type="number" matInput formControlName="quantity_after_prep">
-            </mat-form-field>
-        </div>
-    </div> -->
     <button mat-stroked-button type="submit"> Ajouter </button>
 </form>

@@ -13,6 +13,7 @@ import { FactureLoadComponent } from './app.factures.load/facture-load/facture-l
 import { AddIngComponent } from '../../stock/app.stock/app.stock.modals/add-ing/add.ing/add.ing.component';
 import { ModifIngComponent } from './app.factures.modif/modif.ing/modif.ing.component';
 import { FactureSharedService } from 'src/app/services/factures/facture_shared/facture-shared.service';
+import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
   selector: 'app-factures',
@@ -25,6 +26,7 @@ export class AppFacturesComponent implements OnInit {
   private router:Router;
   private url: UrlTree;
   private page_number: number;
+  private ingredient:boolean;
 
   private ingredients_br: Array<CIngredient>;
   public ingredients_displayed_br: Array<{
@@ -82,6 +84,7 @@ export class AppFacturesComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.ingredients_displayed_br);
     this.url = this.router.parseUrl(this.router.url);
     this.ingredients_br = [];
+    this.ingredient = true;
   }
 
   ngOnInit(): void {
@@ -286,22 +289,24 @@ export class AppFacturesComponent implements OnInit {
   }
 
   addIngredients($event: MouseEvent) {
-   let is_added = true;
-   for(let ingredient of this.ingredients_br){
-    this.service.setIngInBdd(ingredient,this.prop, this.restaurant).catch((e) => {
-      is_added = false;
-      console.log(e);
-    }).then(() => {
-      this.ingredients_br = [];
-      this.ingredients_displayed_br = [];
-      this.dataSource.data = this.ingredients_displayed_br;
-    });
-   }
-   if(!is_added){
-    this._snackBar.open("les ingrédients n'ont pas pu être ajouté à la base de donnée veuilliez contacter SoftEat", "fermer");
-   }
-   else{
-    this._snackBar.open("les ingrédients viennent d'être ajoutés à la base de donnée", "fermer");
+   if(this.ingredient){
+    let is_added = true;
+    for(let ingredient of this.ingredients_br){
+      this.service.setIngInBdd(ingredient,this.prop, this.restaurant).catch((e) => {
+        is_added = false;
+        console.log(e);
+      }).then(() => {
+        this.ingredients_br = [];
+        this.ingredients_displayed_br = [];
+        this.dataSource.data = this.ingredients_displayed_br;
+      });
+     }
+     if(!is_added){
+      this._snackBar.open("les ingrédients n'ont pas pu être ajouté à la base de donnée veuilliez contacter SoftEat", "fermer");
+     }
+     else{
+      this._snackBar.open("les ingrédients viennent d'être ajoutés à la base de donnée", "fermer");
+     }
    }
   }
 
@@ -316,5 +321,13 @@ export class AppFacturesComponent implements OnInit {
     this.page_number = 0;
     this.dataSource.data = datasource.splice(0, event.pageSize);
     this.paginator.firstPage();
+  }
+  radioChange(event:MatRadioChange){
+    if(event.value === "ing"){
+      this.ingredient = true;
+    }
+    else{
+      this.ingredient = false;
+    }
   }
 }

@@ -284,5 +284,7 @@ export class AddMenuComponent implements OnInit {
       name: FormControl<string | null>
     }>>
   }
-
+  closePopup($event: MouseEvent) {
+    this.dialogRef.close();
+  }
 }

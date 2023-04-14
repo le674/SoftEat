@@ -1,14 +1,22 @@
-i{
-    color: rgb(125, 181, 46);
-}
 
+
+/* croix de fermeture de la fenêtre */
 .mat-mini-fab{
+    background-color: white;
+    color: red;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+.mat-mini-fab:hover{
+    background-color: red;
     color: white;
     margin-left: 20px;
     margin-bottom: 20px;
 }
-
-
+.inputs-containers{
+    display: flex;
+    justify-content: flex-end;
+}
 
 p{
     display: inline;

@@ -1,3 +1,9 @@
+<div class="inputs-containers-close" id="close-section">
+    <button (click)="closePopup($event)" class="close-fab" mat-mini-fab type="button" id="close_popup" color="white" matTooltip="fermer la fenêtre"
+    aria-label="close popup">
+    <i class="fa-regular fa-xmark"></i>
+    </button>
+</div>
 <form [formGroup]="add_menu_section" (ngSubmit)="changeMenu()">
     <p class="title">Entrer des informations sur le menu</p>
     <div class="section_fileds">
@@ -65,7 +71,7 @@
             </div>
         </ng-container>
         <div class="inputs-containers">
-            <button mat-mini-fab type="button" id="add_input_ing" color="white" matTooltip="ajout d'un ingrédient"
+            <button mat-mini-fab class="plus-fab" type="button" id="add_input_ing" color="white" matTooltip="ajout d'un ingrédient"
             aria-label="ajout d'un ingrédient" (click)="addInputIng()">
                 <i class="fa-regular fa-plus"></i>
             </button>
@@ -104,7 +110,7 @@
             </div>
         </ng-container>
         <div class="inputs-containers">
-            <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'un consommable"
+            <button mat-mini-fab class="plus-fab" type="button" id="add_input_conso" color="white" matTooltip="ajout d'un consommable"
             aria-label="ajout d'un consommable" (click)="addInputConso()">
                 <i class="fa-regular fa-plus"></i>
             </button>
@@ -133,7 +139,7 @@
             </div>
         </ng-container>
         <div class="inputs-containers">
-            <button mat-mini-fab type="button" id="add_input_conso" color="white" matTooltip="ajout d'un consommable"
+            <button mat-mini-fab class="plus-fab" type="button" id="add_input_conso" color="white" matTooltip="ajout d'un consommable"
             aria-label="ajout d'un consommable" (click)="addInputPlat()">
                 <i class="fa-regular fa-plus"></i>
             </button>

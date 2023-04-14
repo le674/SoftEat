@@ -14,26 +14,33 @@
 
 <body>
     <header>
-        <img src="/assets/images/SoftEat_Quadrichromie.png" alt="">
-        <ul>
-            <li> 
-                <button class="btn" id="acceuil" (click)="clicAcceuil()" type="submit">Acceuil</button>
+        <div id="navigationx">
+            <img src="/assets/images/SoftEat_Quadrichromie.png" alt="">
+            <div>
+                <ul>
+                    <li>
+                        <button class="btn" id="acceuil" (click)="clicAcceuil()" type="submit">Acceuil</button>
+                    </li>
+                    <li>
+                        <button class="btn" (click)="clicdeConnexion()" id="deco" type="submit">Déconnexion</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ul id="configuration">
+            <li>
+                <a *ngIf="is_confique" href="autho/configuration?new='true'" id="link_configure">
+                    <button class="btn btn-outline-success" id="configurer" *ngIf="is_confique">
+                        Configuration des restaurants
+                    </button>
+                </a>
             </li>
-            <li> 
-                <button class="btn" (click)="clicdeConnexion()" id="deco"
-                type="submit">Déconnexion</button>
+            <li>
+                <button class="btn btn-outline-success" id="analyse"> Analyse des restaurants</button>
             </li>
         </ul>
     </header>
     <main>
-        <div id="analyse-wrapper">
-            <a *ngIf="is_confique" href="autho/configuration?new='true'" id="link_configure">
-                <button class="btn btn-outline-success" id="configurer" *ngIf="is_confique">
-                    Configuration des restaurants
-                </button>
-            </a> 
-            <button class="btn btn-outline-success" id="analyse" > Analyse des restaurants</button>
-        </div>
         <div class="container-fluid" id="card_number">
             <div #widgetsContent class="row card-deck-scrollable flex-nowrap scroll-right">
                 <div class="tourcard" *ngFor="let restaurant of restaurants_only">
@@ -49,11 +56,13 @@
                             <span class="description">{{restaurant.adresse}}</span>
                         </figcaption>
                         <div class="tourbtn">
-                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="restaurantNavigate(restaurant.id, proprietaire)">
-                              <br>  <i class="fa-solid fa-utensils"></i> <br> Accéder
+                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer"
+                                (click)="restaurantNavigate(restaurant.id, proprietaire)">
+                                <br> <i class="fa-solid fa-utensils"></i> <br> Accéder
                             </a>
-                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="openDialog(restaurant, $event)">
-                                <br>  <i class="fa-solid fa-trash"> </i> <br> Supprimer
+                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer"
+                                (click)="openDialog(restaurant, $event)">
+                                <br> <i class="fa-solid fa-trash"> </i> <br> Supprimer
                             </a>
                         </div>
                     </figure>
@@ -71,12 +80,13 @@
                             <span class="description">Cliquer pour ajouter un restaurant</span>
                         </figcaption>
                         <div class="tourbtn">
-                            <a *ngIf="is_confique" class="btn btn-sm" target="_blank" rel="noreferrer" (click)="openFormular($event)">
+                            <a *ngIf="is_confique" class="btn btn-sm" target="_blank" rel="noreferrer"
+                                (click)="openFormular($event)">
                                 <i class="fa-solid fa-plus"></i> <br> Ajouter
                             </a>
                         </div>
                     </figure>
-                </div>               
+                </div>
             </div>
         </div>
     </main>

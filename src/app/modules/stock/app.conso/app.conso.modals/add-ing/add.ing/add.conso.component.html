@@ -1,3 +1,9 @@
+<div class="inputs-containers">
+    <button (click)="closePopup($event)" mat-mini-fab type="button" id="close_popup" color="white" matTooltip="fermer la fenêtre"
+    aria-label="close popup">
+    <i class="fa-regular fa-xmark"></i>
+    </button>
+</div>
 <form [formGroup]="add_cons_section" (ngSubmit)="changeConsommable()">
     <div class="section">
         <p>Entrer le nom du nouveau ingrédient : </p>

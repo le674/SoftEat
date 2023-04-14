@@ -490,5 +490,7 @@ export class AddPreparationsComponent implements OnInit{
       seconde:FormControl<number | null>
     }>>
   }
-
+  closePopup(click:MouseEvent){
+    this.dialogRef.close();
+  }
 }

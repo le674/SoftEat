@@ -42,6 +42,10 @@ ul{
     background-color: rgb(125, 181, 46);
     color: white;
 }
+.mat-table{
+    font-size: 14px;
+    overflow-x: auto;
+}
 #action-buttons{
     display: flex;
     justify-content: flex-end;

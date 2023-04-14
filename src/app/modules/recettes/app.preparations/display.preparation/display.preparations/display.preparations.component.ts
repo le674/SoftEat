@@ -181,5 +181,7 @@ export class DisplayPreparationsComponent implements OnInit {
       width: `400px`,
     });
   }
-
+  closePopup(click:MouseEvent){
+    this.dialogRef.close();
+  }
 }

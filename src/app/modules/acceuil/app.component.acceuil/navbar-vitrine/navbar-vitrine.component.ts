@@ -82,15 +82,21 @@ export class NavbarVitrineComponent implements OnInit {
   }
   ngOnInit(): void {
   }
-  clicContact() {
+  clicContact(toogler: HTMLButtonElement) {
     const dialogRef = this.dialog.open(ContactComponent, {
       width: '350px',
       height: '370px'
     });
+    if(window.matchMedia("(max-width: 990px)").matches){
+      toogler.click();
+    }
   }
-  clicConnexion(){
-  this.numPanel.emit(1);  
-  
+  clicConnexion(toogler: HTMLButtonElement){
+    this.numPanel.emit(1);  
+    
+    if(window.matchMedia("(max-width: 990px)").matches){
+      toogler.click();
+    }
   }
   clicAutho(){
     
@@ -101,9 +107,12 @@ export class NavbarVitrineComponent implements OnInit {
     
     window.location.reload();
   }
-  clicHome(){
+  clicHome(toogler: HTMLButtonElement){
     this.numPanel.emit(2);  
     window.scrollTo({top:0, behavior: 'smooth'});
+    if(window.matchMedia("(max-width: 990px)").matches){
+      toogler.click();
+    }
   }
   clicTarif(){
     this.numPanel.emit(2);  
@@ -113,15 +122,22 @@ export class NavbarVitrineComponent implements OnInit {
   }
   clicPropos(){
     this.numPanel.emit(2);  
-
     var element = document.querySelector("#propos");
     element?.scrollIntoView();
   }
-  clicFonctionnalite(){
+  clicFonctionnalite(toogler: HTMLButtonElement){
     var element = document.querySelector("#divMobile");
-
     this.numPanel.emit(2)  
     element?.scrollIntoView();
+    if(window.matchMedia("(max-width: 990px)").matches){
+      toogler.click();
+    }
+  }
+  hideImage(image: HTMLImageElement) { 
+    console.log("test");
+    if(window.matchMedia("(max-width: 990px)").matches){
+      image.remove() 
+    }
   }
 }
 

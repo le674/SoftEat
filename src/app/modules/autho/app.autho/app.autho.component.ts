@@ -100,10 +100,10 @@ export class AppAuthoComponent implements OnInit {
     });
   }
   restaurantNavigate(restaurant:string, proprietaire:string){
-    
     const dashboard = this.router.createUrlTree(["/dashboard"],{ queryParams: { restaurant: restaurant, prop: proprietaire}})
     this.url =  this.serealizer.serialize(dashboard)
     window.location.href = this.url
   }
+  
 }
 

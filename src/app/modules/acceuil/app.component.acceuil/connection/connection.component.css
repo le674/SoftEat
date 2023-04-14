@@ -5,7 +5,8 @@
    }
    form{
     margin-top: 250px;
-    margin-left:20%;
+    margin-left:10%;
+    margin-right: 10%;
     background: rgba(255, 255, 255, 0.1);
     width: max-content;
     padding: 2rem;
@@ -69,3 +70,27 @@
       color: white;
       background-color: rgb(125, 181, 46);
     }
+
+    @media screen and (max-width: 375px) { 
+     form{
+      margin-left: 0%;
+     }
+    }
+
+    @media screen and (max-width: 1150px) { 
+      form{
+       margin-left: 30%;
+      }
+     }
+     @media screen and (max-width: 800px) { 
+      form{
+       margin-left: 15%;
+      }
+     }
+
+    @media screen and (max-width: 414px) { 
+      form{
+       margin-left: 5%;
+      }
+     }
+ 

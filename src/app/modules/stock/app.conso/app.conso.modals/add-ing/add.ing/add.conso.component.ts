@@ -14,8 +14,6 @@ import { AlertesService } from 'src/app/services/alertes/alertes.service';
   styleUrls: ['./add.conso.component.css']
 })
 export class AddConsoComponent implements OnInit, AfterContentInit{
-
-
   public add_cons_section = new FormGroup({
     name: new FormControl('', Validators.required),
     taux_tva: new FormControl(0),
@@ -181,5 +179,8 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
     if(curr_cost!== null){
       this.cost_ttc_val = this.calcul_service.getCostTtcFromTaux(taux, curr_cost);
     }
+  }
+  closePopup($event: MouseEvent) {
+    this._mat_dialog_ref.close();
   }
 }

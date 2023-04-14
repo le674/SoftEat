@@ -7,6 +7,12 @@
     <title>Plats</title>
 </head>
 <body>
+    <div class="inputs-containers-close" id="close-section">
+        <button (click)="closePopup($event)" class="close-fab" mat-mini-fab type="button" id="close_popup" color="white" matTooltip="fermer la fenêtre"
+        aria-label="close popup">
+        <i class="fa-regular fa-xmark"></i>
+        </button>
+    </div>
     <div id="border-top" class="border">
         <p> <span class="indication">Nom :</span> {{plat.nom.split('_').join(' ')}}</p>
         <div id="action-buttons">
