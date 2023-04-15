@@ -19,6 +19,7 @@ import { AddConsoComponent } from './app.conso/app.conso.modals/add-ing/add.ing/
 import { AppPreparationComponent } from './app.preparation/app.preparation.component';
 import { AppAddPreparationComponent } from './app.preparation/app.preparation.modals/app.add.preparation/app.add.preparation.component';
 import { AppHelpPreparationComponent } from './app.preparation/app.preparation.modals/app.help.preparation/app.help.preparation/app.help.preparation.component';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { AppHelpPreparationComponent } from './app.preparation/app.preparation.m
     MatTooltipModule,
     MatPaginatorModule,
     MatTableModule,
+    MatListModule,
     MatSnackBarModule
    ],
   exports: [

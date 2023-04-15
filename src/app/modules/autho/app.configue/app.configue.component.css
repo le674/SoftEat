@@ -54,6 +54,10 @@ body {
     text-align: center;
  }
 
+ .accordion-body{
+  display: flex;
+  justify-content: center;
+}
  /*édition du tableau */
 .mat-row {
   height: auto;
@@ -76,10 +80,6 @@ body {
     justify-content:center;
 }
 
-.accordion-body{
-  display: flex;
-  justify-content: center;
-}
 
 .mat-stroked-button{
   color: rgb(125, 181, 46);

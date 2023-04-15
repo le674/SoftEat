@@ -69,3 +69,28 @@ ul{
 .fa-trash{
     margin-right: 3px;
 }
+
+.accordion-item {
+    margin-top: 1%;
+ }
+
+ .accordion-button{
+    color: rgb(125, 181, 46);
+    text-align: center;
+    display:block;
+ }
+
+ .accordion-body{
+  display: flex;
+  justify-content: space-between;
+}
+.collapse-section{
+    display: flex;
+    justify-content: space-between;
+}
+#modif-section{
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+}

@@ -10,6 +10,7 @@ import { CIngredient } from 'src/app/interfaces/ingredient';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.component';
+import { Visibles } from '../../autho/app.configue/app.configue.index';
 
 @Component({
   selector: 'app-stock',
@@ -18,6 +19,7 @@ import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.comp
 })
 export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  public windows_screen_mobile:boolean;
   public displayedColumns: string[] = ['nom', 'categorie_tva', 'quantity', 'quantity_unity',
     'unity', 'cost', 'cost_ttc', 'date_reception', 'dlc', 'actions'];
   public dataSource: MatTableDataSource<{
@@ -30,6 +32,8 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     unity: string,
     date_reception: string;
     dlc: string;
+    marge:number;
+    vrac:string;
   }>;
 
   public ingredients_displayed_br: Array<{
@@ -42,18 +46,10 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     unity: string;
     date_reception: string;
     dlc: string;
+    marge:number;
+    vrac:string;
   }>;
-  public ingredients_displayed_prep: Array<{
-    nom: string;
-    categorie_tva: string;
-    cost: number;
-    cost_ttc: number;
-    quantity: number;
-    quantity_unity: number;
-    unity: string;
-    date_reception: string;
-    dlc: string;
-  }>;
+
   private page_number: number;
   private router: Router;
   private ingredient_table: Array<CIngredient>;
@@ -63,6 +59,8 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
   private restaurant: string;
   private req_ingredients_brt!: Unsubscribe;
   private req_merge_obs!: Subscription
+  public visibles: Array<boolean>;
+  
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
@@ -74,9 +72,10 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     this.router = router;
     this.ingredient_table = [];
     this.ingredients_displayed_br = [];
-    this.ingredients_displayed_prep = [];
     this.dataSource = new MatTableDataSource(this.ingredients_displayed_br);
     this.url = this.router.parseUrl(this.router.url);
+    this.windows_screen_mobile = false
+    this.visibles = [];
   }
 
   ngAfterViewInit(): void {
@@ -126,6 +125,7 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
             vrac: ingredient.vrac
           };
           this.ingredients_displayed_br.push(row_ingredient);
+          this.visibles.push(false);
           if (i === ingBR.length - 1) {
             const first_event = new PageEvent();
             first_event.length = ingBR.length;
@@ -135,6 +135,9 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       }
     })
+    if(window.innerWidth < 768){
+      this.windows_screen_mobile = true;
+    }
   }
 
   OpenAddIngForm() {
@@ -225,46 +228,51 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     categorie_tva: string;
     cost: number;
     cost_ttc: number;
-    val_bouch: number;
-    bef_prep: number;
-    after_prep: number;
     quantity: number;
     quantity_unity: number;
     unity: string;
-    cuisinee: string;
     date_reception: string;
     dlc: string;
   }) {
-    let is_prep = false
-    if (ele.cuisinee === 'oui') {
-      is_prep = true
-    }
-    this.service.removeIngInBdd(ele.nom.split('<br>').join('_'), this.prop, this.restaurant, is_prep).then(() => {
+
+    this.service.removeIngInBdd(ele.nom.split('<br>').join('_'), this.prop, this.restaurant, false).then(() => {
       this._snackBar.open("l'ingrédient vient d'être supprimé de la base de donnée du restaurant", "fermer")
     }).catch(() => {
       this._snackBar.open("l'ingrédient n'a pas pu être supprimé de la base de donnée du restaurant", "fermer")
     });
 
     //on regénère la datasource 
+    const is_same =  this.ingredients_displayed_br.map((ingredient) => ingredient.nom !== ele.nom.split('<br>').join('_'));
     this.ingredients_displayed_br = this.ingredients_displayed_br.filter((ingredient) => ingredient.nom !== ele.nom.split('<br>').join('_'));
-    this.ingredients_displayed_prep = this.ingredients_displayed_prep.filter((ingredient) => ingredient.nom !== ele.nom.split('<br>').join('_'));
-
+    this.visibles = this.visibles.filter((is_visible,index_vis) => is_same[index_vis]);
     const supp_event = new PageEvent();
-    supp_event.length = this.ingredients_displayed_prep.length + this.ingredients_displayed_br.length;
+    supp_event.length = this.ingredients_displayed_br.length;
     supp_event.pageSize = 6
     this.pageChangedFirst(supp_event);
   }
 
   pageChanged(event: PageEvent) {
-    let datasource = [... this.ingredients_displayed_br.concat(this.ingredients_displayed_prep)];
+    let datasource = [... this.ingredients_displayed_br];
     this.page_number = event.pageIndex;
     this.dataSource.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
   }
 
   pageChangedFirst(event: PageEvent) {
-    let datasource = [... this.ingredients_displayed_br.concat(this.ingredients_displayed_prep)];
+    let datasource = [... this.ingredients_displayed_br];
     this.page_number = 0;
     this.dataSource.data = datasource.splice(0, event.pageSize);
-    this.paginator.firstPage();
+    if(this.paginator !== undefined){
+      this.paginator.firstPage();
+    }
   }
+  // Gestion de l'accordéon
+
+  getVisible(i: number):boolean{
+    return this.visibles[i];
+  }
+
+  changeArrow(arrow_index: number) {
+    this.visibles[arrow_index] = !this.visibles[arrow_index];
+  }
+
 }
