@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/auth';
-import {Subscription, withLatestFrom } from 'rxjs';
+import { Subscription, withLatestFrom } from 'rxjs';
 import { CIngredient } from 'src/app/interfaces/ingredient';
 import { Cpreparation } from 'src/app/interfaces/preparation';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
@@ -20,6 +20,9 @@ import { AppHelpPreparationComponent } from './app.preparation.modals/app.help.p
 })
 export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  public windows_screen_mobile: boolean;
+  public size: string;
+  public visibles: Array<boolean>;
   public displayedColumns: string[] = ['nom', 'categorie_tva', 'quantity', 'quantity_unity',
     'unity', 'cost', 'cost_ttc', 'date_reception', 'dlc', 'actions'];
   public dataSource: MatTableDataSource<{
@@ -32,6 +35,9 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     unity: string,
     date_reception: string;
     dlc: string;
+    marge: number;
+    vrac: string;
+    after_prep: number
   }>;
 
   public displayed_prep: Array<{
@@ -44,6 +50,9 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     unity: string;
     date_reception: string;
     dlc: string;
+    marge: number;
+    vrac: string;
+    after_prep: number
   }>;
   private page_number: number;
   private router: Router;
@@ -69,6 +78,9 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     this.displayed_prep = [];
     this.dataSource = new MatTableDataSource(this.displayed_prep);
     this.url = this.router.parseUrl(this.router.url);
+    this.windows_screen_mobile = false
+    this.visibles = [];
+    this.size = "";
   }
 
   ngAfterViewInit(): void {
@@ -92,7 +104,7 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
       withLatestFrom(this.service.getIngredientsPrepFromRestaurants())
     )
     this.req_merge_obs = merge_obs.subscribe(([ingBR, ingPREP]) => {
-      
+
       this.ingredients_table = ingBR;
       this.preparation_table = ingPREP;
       this.displayed_prep = [];
@@ -141,7 +153,7 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
           marge: ingPREP[i].marge,
           vrac: ingPREP[i].vrac
         };
-        if(ingPREP[i].is_stock){
+        if (ingPREP[i].is_stock) {
           this.displayed_prep.push(row_ingredient);
         }
         if (i === ingPREP.length - 1) {
@@ -152,9 +164,27 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
         }
       }
     })
+    if ((window.innerWidth < 768)) {
+      this.windows_screen_mobile = true;
+    }
+    if ((window.innerWidth < 768) && (window.innerWidth > 600)) {
+      this.size = "w-50 p-3" // Largeur maximale pour les écrans plus petits que 768px
+    }
+    if ((window.innerWidth < 600) && (window.innerWidth > 480)) {
+      this.size = "w-35 p-3"
+    }
+    if ((window.innerWidth < 480) && (window.innerWidth > 414)) {
+      this.size = "w-30 p-auto"
+    }
+    if ((window.innerWidth < 414) && (window.innerWidth > 375)) {
+      this.size = "w-25 p-auto"
+    }
+    if ((window.innerWidth < 375) && (window.innerWidth > 320)) {
+      this.size = "w-10 p-auto"
+    }
   }
 
-  OpenHelp(){
+  OpenHelp() {
     const dialogRef = this.dialog.open(AppHelpPreparationComponent, {
       height: `500px`,
       width: `400px`,
@@ -186,13 +216,13 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
 
     ele.nom = ele.nom.split('<br>').join('_');
     ele.categorie_tva = ele.categorie_tva.split('<br>').join(' ');
-    const base_ings = this.preparation_table.filter((ingredient) => ingredient.nom === ele.nom) 
+    const base_ings = this.preparation_table.filter((ingredient) => ingredient.nom === ele.nom)
     // TO DO remplacer les window.alert
     // On récupère les ingrédients de bases que l'on envoie 
     if (base_ings.length > 1) window.alert('attention plusieurs ingrésient en base de donnée pour l ingrédient modifié (on prend le premier), contctez SoftEat');
     if (base_ings.length === 1) {
       var_base_ing = base_ings[0].base_ing;
-    } 
+    }
 
     const dialogRef = this.dialog.open(AppAddPreparationComponent, {
       height: `700px`,
@@ -211,7 +241,7 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
           date_reception: ele.date_reception,
           base_ing: var_base_ing,
           not_prep: this.ingredients_table,
-          quantity_after_prep: ele.after_prep, 
+          quantity_after_prep: ele.after_prep,
           marge: ele.marge,
           vrac: ele.vrac
         }
@@ -225,20 +255,13 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     categorie_tva: string;
     cost: number;
     cost_ttc: number;
-    val_bouch: number;
-    bef_prep: number;
     after_prep: number;
     quantity: number;
     quantity_unity: number;
     unity: string;
-    cuisinee: string;
     date_reception: string;
     dlc: string;
   }) {
-    let is_prep = false
-    if (ele.cuisinee === 'oui') {
-      is_prep = true
-    }
     this.service.removeIngInBdd(ele.nom.split('<br>').join('_'), this.prop, this.restaurant, true).then(() => {
       this._snackBar.open("l'ingrédient vient d'être supprimé de la base de donnée du restaurant", "fermer")
     }).catch(() => {
@@ -257,6 +280,33 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     this.page_number = 0;
     this.dataSource.data = datasource.splice(0, event.pageSize);
     this.paginator.firstPage();
+  }
+  // Gestion de l'accordéon
+
+  getVisible(i: number):boolean{
+    return this.visibles[i];
+  }
+
+  changeArrow(arrow_index: number) {
+    this.visibles[arrow_index] = !this.visibles[arrow_index];
+  }
+  accordeonMaxWidth(): any {
+    if((window.innerWidth < 768) && (window.innerWidth > 600)) {
+      return 500; // Largeur maximale pour les écrans plus petits que 768px
+    } 
+    if((window.innerWidth < 600) && (window.innerWidth > 480)){
+      return 380;
+    }
+    if((window.innerWidth < 480) && (window.innerWidth > 414)){
+      return 314;
+    }
+    if((window.innerWidth < 414) && (window.innerWidth > 375)){
+      return 275;
+    }
+    if((window.innerWidth < 375) && (window.innerWidth > 320)){
+      return 220;
+    }
+    return window.innerWidth - 100;
   }
 }
 

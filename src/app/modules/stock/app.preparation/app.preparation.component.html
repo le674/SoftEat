@@ -18,7 +18,7 @@
     </header>
     <main>
         <h2>Données</h2>
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <table *ngIf="!windows_screen_mobile" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
             <!--- Note that these columns can be defined in any order.
                   The actual rendered columns are set as a property on the row definition" -->
@@ -95,12 +95,48 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-        <mat-paginator [pageSizeOptions]="[6]"
+        <mat-paginator *ngIf="!windows_screen_mobile" [pageSizeOptions]="[6]"
             (page)="pageChanged($event)"
             [length]="displayed_prep.length"
             showFirstLastButtons
             aria-label="Selection page d'une preparation">
         </mat-paginator>
+
+        <div *ngIf="windows_screen_mobile" #accordeon class="accordion" [ngStyle]="{'max-width.px': accordeonMaxWidth()}">
+            <div class="accordion-item" *ngFor="let preparation of displayed_prep; let i = index;">
+              <h2 class="accordion-header" [id]="'heading_' + preparation.nom.split('\<br>').join('_')">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  [attr.data-bs-target]="'#collapse_' +  preparation.nom.split('\<br>').join('_')" [attr.aria-controls]="'collapse_' +  preparation.nom.split('\<br>').join('_')"
+                  (click)="changeArrow(i)">
+                  <div class="collapse-section">
+                    <p>{{preparation.nom.split("\<br>").join(" ")}}</p>
+                    <i [ngClass]="getVisible(i) ? 'fa-regular fa-angle-down' : 'fa-regular fa-angle-up'"></i>
+                  </div>
+                </button>
+              </h2>
+              <div [id]="'collapse_' + preparation.nom.split('\<br>').join('_')" class="accordion-collapse collapse"
+                [attr.aria-labelledby]="'heading_' + preparation.nom.split('\<br>').join('_')" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <div>
+                    <mat-list role="list">
+                        <mat-list-item role="listitem">Catégorie de tva : <br> {{preparation.categorie_tva.split("\<br>").join(" ")}}</mat-list-item>
+                        <mat-list-item role="listitem">Quantitée : <br> {{preparation.quantity}}</mat-list-item>
+                        <mat-list-item role="listitem">Quantitée unitaire : <br> {{preparation.quantity_unity}}</mat-list-item>
+                        <mat-list-item role="listitem">Unitée: <br> {{preparation.unity}}</mat-list-item>
+                        <mat-list-item role="listitem">Coût unitaire HT: <br> {{preparation.cost}}</mat-list-item>
+                        <mat-list-item role="listitem">Coût unitaire TTC: <br> {{preparation.cost_ttc}}</mat-list-item>
+                        <mat-list-item role="listitem">date de récéption: <br> {{preparation.date_reception}}</mat-list-item>
+                        <mat-list-item role="listitem">date limite de consommation: <br> {{preparation.dlc}}</mat-list-item>
+                    </mat-list>
+                    <div id="modif-section">
+                        <i class="fa-regular fa-trash action_table" (click)="suppPrepa(preparation)"></i>
+                        <i class="fa-regular fa-pen action_table" (click)="modifPrepa(preparation)"></i>  
+                    </div>                    
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>  
     </main>
 
 </body>

@@ -19,7 +19,7 @@
     </header>
     <main>
         <h2>Données</h2>
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <table *ngIf="!windows_screen_mobile" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
             <!--- Note that these columns can be defined in any order.
                   The actual rendered columns are set as a property on the row definition" -->
@@ -75,14 +75,45 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-        <mat-paginator [pageSizeOptions]="[6]"
+        <mat-paginator *ngIf="!windows_screen_mobile" [pageSizeOptions]="[6]"
             (page)="pageChanged($event)"
             [length]="consommable_displayed.length"
             showFirstLastButtons
             aria-label="Selection page d'ingredients">
         </mat-paginator>
     </main>
-
+    <div *ngIf="windows_screen_mobile" #accordeon class="accordion" [ngStyle]="{'max-width.px': accordeonMaxWidth()}">
+        <div class="accordion-item" *ngFor="let consommable of consommable_displayed; let i = index;">
+          <h2 class="accordion-header" [id]="'heading_' + consommable.nom.split('\<br>').join('_').split('\'').join('_')">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              [attr.data-bs-target]="'#collapse_' +  consommable.nom.split('\<br>').join('_').split('\'').join('_')" [attr.aria-controls]="'collapse_' +  consommable.nom.split('\<br>').join('_').split('\'').join('_')"
+              (click)="changeArrow(i)">
+              <div class="collapse-section">
+                <p>{{consommable.nom.split("\<br>").join(" ").split('\'').join('_')}}</p>
+                <i [ngClass]="getVisible(i) ? 'fa-regular fa-angle-down' : 'fa-regular fa-angle-up'"></i>
+              </div>
+            </button>
+          </h2>
+          <div [id]="'collapse_' + consommable.nom.split('\<br>').join('_').split('\'').join('_')" class="accordion-collapse collapse"
+            [attr.aria-labelledby]="'heading_' + consommable.nom.split('\<br>').join('_').split('\'').join('_')" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <div>
+                <mat-list role="list">
+                    <mat-list-item role="listitem">Quantitée : <br> {{consommable.quantity}}</mat-list-item>
+                    <mat-list-item role="listitem">Unitée: <br> {{consommable.unity}}</mat-list-item>
+                    <mat-list-item role="listitem">Coût unitaire HT: <br> {{consommable.cost}}</mat-list-item>
+                    <mat-list-item role="listitem">Coût unitaire TTC: <br> {{consommable.cost_ttc}}</mat-list-item>
+                    <mat-list-item role="listitem">date de récéption: <br> {{consommable.date_reception}}</mat-list-item>
+                </mat-list>
+                <div id="modif-section">
+                    <i class="fa-regular fa-trash action_table" (click)="suppConso(consommable)"></i>
+                    <i class="fa-regular fa-pen action_table" (click)="modifConso(consommable)"></i>  
+                </div>                    
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>  
 </body>
 
 </html>

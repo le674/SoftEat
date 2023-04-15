@@ -17,11 +17,12 @@ import { Visibles } from '../../autho/app.configue/app.configue.index';
   templateUrl: './app.stock.component.html',
   styleUrls: ['./app.stock.component.css']
 })
-export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AppStockComponent implements OnInit, OnDestroy{
 
   public windows_screen_mobile:boolean;
   public displayedColumns: string[] = ['nom', 'categorie_tva', 'quantity', 'quantity_unity',
     'unity', 'cost', 'cost_ttc', 'date_reception', 'dlc', 'actions'];
+  public size:string;
   public dataSource: MatTableDataSource<{
     nom: string;
     categorie_tva: string;
@@ -74,12 +75,14 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
     this.ingredients_displayed_br = [];
     this.dataSource = new MatTableDataSource(this.ingredients_displayed_br);
     this.url = this.router.parseUrl(this.router.url);
-    this.windows_screen_mobile = false
     this.visibles = [];
-  }
-
-  ngAfterViewInit(): void {
-
+    this.size = "";
+    if((window.innerWidth < 768)){
+      this.windows_screen_mobile = true;
+    }
+    else{
+      this.windows_screen_mobile = false
+    }
   }
 
   ngOnDestroy(): void {
@@ -135,9 +138,6 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       }
     })
-    if(window.innerWidth < 768){
-      this.windows_screen_mobile = true;
-    }
   }
 
   OpenAddIngForm() {
@@ -274,5 +274,22 @@ export class AppStockComponent implements OnInit, OnDestroy, AfterViewInit {
   changeArrow(arrow_index: number) {
     this.visibles[arrow_index] = !this.visibles[arrow_index];
   }
-
+  accordeonMaxWidth(): any {
+    if((window.innerWidth < 768) && (window.innerWidth > 600)) {
+      return 500; // Largeur maximale pour les écrans plus petits que 768px
+    } 
+    if((window.innerWidth < 600) && (window.innerWidth > 480)){
+      return 380;
+    }
+    if((window.innerWidth < 480) && (window.innerWidth > 414)){
+      return 314;
+    }
+    if((window.innerWidth < 414) && (window.innerWidth > 375)){
+      return 275;
+    }
+    if((window.innerWidth < 375) && (window.innerWidth > 320)){
+      return 220;
+    }
+    return window.innerWidth - 100;
+  }
 }

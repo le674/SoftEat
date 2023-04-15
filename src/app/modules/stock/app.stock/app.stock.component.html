@@ -102,7 +102,7 @@
             showFirstLastButtons
             aria-label="Selection page d'ingredients">
         </mat-paginator>
-        <div *ngIf="windows_screen_mobile" #accordeon class="accordion w-100 p-3" >
+        <div *ngIf="windows_screen_mobile" #accordeon [ngStyle]="{'max-width.px': accordeonMaxWidth()}" class="accordion">
             <div class="accordion-item" *ngFor="let ingredient of ingredients_displayed_br; let i = index;">
               <h2 class="accordion-header" [id]="'heading_' + ingredient.nom.split('\<br>').join('_')">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -119,14 +119,14 @@
                 <div class="accordion-body">
                   <div>
                     <mat-list role="list">
-                        <mat-list-item role="listitem">Catégorie de tva : {{ingredient.categorie_tva.split("\<br>").join(" ")}}</mat-list-item>
-                        <mat-list-item role="listitem">Quantitée : {{ingredient.quantity}}</mat-list-item>
-                        <mat-list-item role="listitem">Quantitée unitaire : {{ingredient.quantity_unity}}</mat-list-item>
-                        <mat-list-item role="listitem">Unitée: {{ingredient.unity}}</mat-list-item>
-                        <mat-list-item role="listitem">Coût unitaire HT: {{ingredient.cost}}</mat-list-item>
-                        <mat-list-item role="listitem">Coût unitaire TTC: : {{ingredient.cost_ttc}}</mat-list-item>
-                        <mat-list-item role="listitem">date de récéption : {{ingredient.date_reception}}</mat-list-item>
-                        <mat-list-item role="listitem">date limite de consommation: {{ingredient.dlc}}</mat-list-item>
+                        <mat-list-item role="listitem">Catégorie de tva : <br> {{ingredient.categorie_tva.split("\<br>").join(" ")}}</mat-list-item>
+                        <mat-list-item role="listitem">Quantitée : <br> {{ingredient.quantity}}</mat-list-item>
+                        <mat-list-item role="listitem">Quantitée unitaire : <br> {{ingredient.quantity_unity}}</mat-list-item>
+                        <mat-list-item role="listitem">Unitée: <br> {{ingredient.unity}}</mat-list-item>
+                        <mat-list-item role="listitem">Coût unitaire HT: <br> {{ingredient.cost}}</mat-list-item>
+                        <mat-list-item role="listitem">Coût unitaire TTC: <br> {{ingredient.cost_ttc}}</mat-list-item>
+                        <mat-list-item role="listitem">date de récéption: <br> {{ingredient.date_reception}}</mat-list-item>
+                        <mat-list-item role="listitem">date limite de consommation: <br> {{ingredient.dlc}}</mat-list-item>
                     </mat-list>
                     <div id="modif-section">
                         <i class="fa-regular fa-trash action_table" (click)="suppIng(ingredient)"></i>

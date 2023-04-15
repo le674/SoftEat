@@ -36,7 +36,10 @@ export class AppConsoComponent implements OnInit {
     date_reception: string;
     marge: number;
   }>;
-
+  public windows_screen_mobile:boolean;
+  public size:string;
+  // cette liste ne converne que les mobiles et est vaut false si l'accordéon n'est pas déroulé true sinon 
+  public visibles: Array<boolean>;
   private page_number: number;
   private router: Router;
   private consommable_table: Array<Cconsommable>;
@@ -52,6 +55,9 @@ export class AppConsoComponent implements OnInit {
     this.router = router;
     this.consommable_table = [];
     this.consommable_displayed = [];
+    this.windows_screen_mobile = false
+    this.visibles = [];
+    this.size = "";
     this.dataSource = new MatTableDataSource(this.consommable_displayed);
     this.url = this.router.parseUrl(this.router.url);
   }
@@ -84,6 +90,7 @@ ngOnInit(): void{
             marge: consommables[i].marge
           };
           this.consommable_displayed.push(row_consommable);
+          this.visibles.push(false);
           if(i === consommables.length - 1){
             this.consommable_table = consommables;
             this.dataSource.data = this.consommable_displayed;
@@ -95,6 +102,24 @@ ngOnInit(): void{
       first_event.pageSize = 6
       first_event.pageIndex = 0
       this.pageChanged(first_event);
+      if((window.innerWidth < 768)){
+        this.windows_screen_mobile = true;
+      }
+      if((window.innerWidth < 768) && (window.innerWidth > 600)) {
+        this.size = "w-50 p-3" // Largeur maximale pour les écrans plus petits que 768px
+      } 
+      if((window.innerWidth < 600) && (window.innerWidth > 480)){
+        this.size = "w-35 p-3"
+      }
+      if((window.innerWidth < 480) && (window.innerWidth > 414)){
+        this.size = "w-30 p-auto"
+      }
+      if((window.innerWidth < 414) && (window.innerWidth > 375)){
+        this.size = "w-25 p-auto"
+      }
+      if((window.innerWidth < 375) && (window.innerWidth > 320)){
+        this.size = "w-10 p-auto"
+      }
   }
 
     
@@ -166,16 +191,16 @@ ngOnInit(): void{
     date_reception: string;
   }){
     let is_prep = false
-
-    console.log(ele.nom);
     this.service.removeConsoInBdd(ele.nom.split('<br>').join('_'), this.prop, this.restaurant).then(() => {
       this._snackBar.open("l'ingrédient vient d'être supprimé de la base de donnée du restaurant", "fermer")
     }).catch(() => {
       this._snackBar.open("l'ingrédient n'a pas pu être supprimé de la base de donnée du restaurant", "fermer")
     });
 
-    //on regénère la datasource 
+    //on regénère la datasource
+    const is_same =  this.consommable_displayed.map((consommable) => consommable.nom !== ele.nom.split('<br>').join('_')); 
     this.consommable_displayed = this.consommable_displayed.filter((consommable) => consommable.nom !== ele.nom.split('<br>').join('_')); 
+    this.visibles = this.visibles.filter((is_visible,index_vis) => is_same[index_vis]);
     const supp_event = new PageEvent();
                   supp_event.length = this.consommable_displayed.length
                   supp_event.pageSize = 6
@@ -189,7 +214,32 @@ ngOnInit(): void{
     this.page_number = event.pageIndex;    
     this.dataSource.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
   }
+   // Gestion de l'accordéon
+   getVisible(i: number):boolean{
+    return this.visibles[i];
+  }
 
+  changeArrow(arrow_index: number) {
+    this.visibles[arrow_index] = !this.visibles[arrow_index];
+  }
+  accordeonMaxWidth(): any {
+    if((window.innerWidth < 768) && (window.innerWidth > 600)) {
+      return 500; // Largeur maximale pour les écrans plus petits que 768px
+    } 
+    if((window.innerWidth < 600) && (window.innerWidth > 480)){
+      return 380;
+    }
+    if((window.innerWidth < 480) && (window.innerWidth > 414)){
+      return 314;
+    }
+    if((window.innerWidth < 414) && (window.innerWidth > 375)){
+      return 275;
+    }
+    if((window.innerWidth < 375) && (window.innerWidth > 320)){
+      return 220;
+    }
+    return window.innerWidth - 100;
+  }
 }
 
 

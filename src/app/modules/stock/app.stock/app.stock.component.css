@@ -3,7 +3,6 @@ body{
     justify-content: flex-start;
     flex-direction: column;
 }
-
 main{
     margin-top: 50px;
     padding: 0px;
@@ -11,25 +10,21 @@ main{
     justify-content:flex-start;
     flex-direction: column;
 }
-
 h1{
     margin-top: 50px;
     font-weight: normal;
     color: rgb(125, 181, 46);
 }
-
 h2{
     font-size: larger;
     font-weight: normal;
     color: rgb(125, 181, 46);
 }
-
 ul{
     list-style-type: none;
     padding: 0px;
     margin: 0px;
 }
-
 .mat-stroked-button{
     color: rgb(125, 181, 46);
     background-color: white;
@@ -37,7 +32,6 @@ ul{
     min-width: 96px;
     margin: 0;
 }
-
 .mat-stroked-button:hover{
     background-color: rgb(125, 181, 46);
     color: white;
@@ -50,18 +44,15 @@ ul{
     display: flex;
     justify-content: flex-end;
 }
-
 .action_table{
     border:1px solid;
     padding: 5px;
     cursor: pointer;
 }
-
 .fa-pen:hover{
     color: white;
     background-color: rgb(125, 181, 46);
 }
-
 .fa-trash:hover{
     color: white;
     background-color: red;
@@ -69,18 +60,16 @@ ul{
 .fa-trash{
     margin-right: 3px;
 }
-
 .accordion-item {
     margin-top: 1%;
  }
-
- .accordion-button{
+.accordion-button{
     color: rgb(125, 181, 46);
     text-align: center;
     display:block;
  }
 
- .accordion-body{
+.accordion-body{
   display: flex;
   justify-content: space-between;
 }
@@ -93,4 +82,7 @@ ul{
     justify-content: flex-end;
     flex-wrap: wrap;
     gap: 20px;
+}
+.mat-list-item{
+    margin-bottom: 10px;
 }
