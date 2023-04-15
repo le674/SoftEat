@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterContentInit, AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatTabGroup } from '@angular/material/tabs';
 import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/auth';
 import { first, Subscription } from 'rxjs';
@@ -10,12 +11,10 @@ import { AlertesService } from 'src/app/services/alertes/alertes.service';
   templateUrl: './app.alertes.component.html',
   styleUrls: ['./app.alertes.component.css']
 })
-export class AppAlertesComponent implements OnInit, OnDestroy {
-
+export class AppAlertesComponent implements OnInit, OnDestroy{
   public toasts_stock:Array<CAlerte>;
   public toast_num:number;
   public date_time:string;
-
   private router: Router;
   private url: UrlTree;
   private prop:string;
@@ -35,6 +34,7 @@ export class AppAlertesComponent implements OnInit, OnDestroy {
     this.date_time = "";
     this.alerte_subscription = new Subscription();
   }
+
   ngOnDestroy(): void {
     this.alerte_subscription.unsubscribe();
     this.stock_unsubscribe();
@@ -46,13 +46,11 @@ export class AppAlertesComponent implements OnInit, OnDestroy {
     let user_info = this.url.queryParams;
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];
-    this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "stock").then((num) => {
-      
+    this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "stock").then((num) => {   
       this.stock_unsubscribe = this.alerte_service.getLastPAlertesBDD(this.prop, this.restaurant, num, "stock");
     })
 
     this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "conso").then((num) =>{
-
       this.conso_unsubscribe = this.alerte_service.getLastPAlertesBDD(this.prop, this.restaurant, num, "conso");
     })
 
@@ -67,13 +65,29 @@ export class AppAlertesComponent implements OnInit, OnDestroy {
       }
     })
   }
-
   markReadStock(toast:CAlerte):void{
     toast.read = true;
     this.alerte_service.getPPakageNumber(this.prop, this.restaurant, 'stock').then((p_number:number) => {
 
       this.alerte_service.updateAlerte(this.prop, this.restaurant, toast,'stock', p_number);
     })
+  }  
+  tabMaxWidth() {
+    if((window.innerWidth < 768) && (window.innerWidth > 600)) {
+      return 500; // Largeur maximale pour les écrans plus petits que 768px
+    } 
+    if((window.innerWidth < 600) && (window.innerWidth > 480)){
+      return 380;
+    }
+    if((window.innerWidth < 480) && (window.innerWidth > 414)){
+      return 314;
+    }
+    if((window.innerWidth < 414) && (window.innerWidth > 375)){
+      return 275;
+    }
+    if((window.innerWidth < 375) && (window.innerWidth > 320)){
+      return 220;
+    }
+    return window.innerWidth - 100;
   }
-
 }

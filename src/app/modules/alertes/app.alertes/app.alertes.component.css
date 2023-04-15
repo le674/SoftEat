@@ -2,7 +2,9 @@ mat-tab-group{
     margin-top: 50px;
     width: 100%;
 }
-
+.mat-table {
+    width: 100%;
+}
 ul{
     margin-top: 20px;
 }
@@ -48,3 +50,12 @@ ul{
     background-color:  rgb(125, 181, 46);
     color: white;
 }
+@media screen and (max-width: 1200px) {
+    .d-flex{
+        margin-top: 60px;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }  
+}
+ 
