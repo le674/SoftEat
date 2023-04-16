@@ -15,6 +15,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { AddConfigueSalaryComponent } from './add.configue.salary/add.configue.salary.component';
 import { AddConfigueEmployeeComponent } from './add.configue.employee/add.configue.employee/add.configue.employee.component';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MobileUserDataComponent } from './mobile.user.data/mobile.user.data/mobile.user.data.component';
 
 @Component({
   selector: 'app-app.configue',
@@ -29,6 +31,10 @@ export class AppConfigueComponent implements OnInit{
   public restau_list: Array<Restaurant>;
 
   private users: Array<User>;
+  // prop_user est semblable à curr_user cependant prop_user contient 
+  //pas uniquement les restaurants (prop_user.restaurants) et roles(prop_user.roles) assigné à 
+  //l'utilisateur x mais tout les restaurant et tout les roles
+  
   private curr_user: {
     user0: Array<User>,
     user1: Array<User>,
@@ -78,6 +84,7 @@ export class AppConfigueComponent implements OnInit{
     index_7: true
   };
   public is_prop:boolean;
+  public windows_screen_mobile: boolean;
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -92,7 +99,7 @@ export class AppConfigueComponent implements OnInit{
   options_write!: QueryList<MatOption>
 
   constructor(public dialog: MatDialog, private service: InteractionRestaurantService, private user_services: UserInteractionService,
-    private ofApp: FirebaseApp, private router: Router,  private _snackBar: MatSnackBar) {
+    private ofApp: FirebaseApp, private router: Router,  private _snackBar: MatSnackBar, private _bottomSheet: MatBottomSheet) {
     this.prop_user = [];
     this.users = [];
     this.display_columns = ["id", "email", "restaurants", "read_right", "write_right", "validation"];
@@ -139,7 +146,11 @@ export class AppConfigueComponent implements OnInit{
     this.rest_max_length = 0;
     this.curr_categorie = 0;
     this.is_prop = false;
+    this.windows_screen_mobile = false;
     this.auth =  getAuth(this.ofApp);
+    if ((window.innerWidth < 1020)) {
+      this.windows_screen_mobile = true;
+    }
   }
   ngOnInit(): void {
     onAuthStateChanged(this.auth, (user) => {
@@ -256,6 +267,8 @@ export class AppConfigueComponent implements OnInit{
     }
   }
 
+  // cette fonction permet de récupérer les restaurant pour un utilisateur filtre les options du select et séléctionne les restaurant
+  // sur lequelle l'utilisateur est attribué
   get_restaurant(event: boolean, index: number, categorie:number) {
     if (event) {
       let cum_length_pages = 0;
@@ -275,18 +288,18 @@ export class AppConfigueComponent implements OnInit{
             const max_length = this.rest_max_length * (prev_index + 1) + cum_length_pages*this.rest_max_length
             return (restaurants.includes(option.value) && (index_opt >= min_length) && (index_opt < max_length))
           })
-
           options.forEach((option) => {
             option.select()
           })
-
         }
       }
     }
   }
 
+  // permet de séléctionner les droits en écriture pour un utilisateur lors de l'ouverture de la liste déroulante
   get_read_right(event: boolean, index: number,  categorie:number) {
     if (event) {
+      // on récupère l'utilisateur de la liste
       let cum_length_pages = 0;
       this.curr_categorie = categorie
       //modifier si la taille de la pagination change 
@@ -299,25 +312,29 @@ export class AppConfigueComponent implements OnInit{
       let user = this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
       let i = 0;
       if (user) {
+        // on supprime la propriété is_propr de user
         delete user.statut.is_prop
+        // on filtre les statut pour ne récupérer que ceux qui sont lié à l'utilisateur danzs le tableau
         let options = this.options_read.filter((option: MatOption, index_opt: number) => {
           const min_length = 6* (prev_index + cum_length_pages)
           const max_length = 6* (prev_index + cum_length_pages + 1)
           return ((index_opt >= min_length) && (index_opt < max_length))
         })
         if(user.is_prop){
+          // si l'utilisateur est un propriétaire 
           options_list.push(options.at(0))
         }
         for(let key in user.statut){
+          // on vérifie pour chacun des role de l'utilisateur si celui-ci inclue r (lecture)
           const role = user.statut[key as keyof typeof user.statut] as string
           if(typeof role === "string"){
             if(role.includes('r')){
-              console.log("options", options_list);
               options_list.push(options.at(i))
             }
           }
           i = i + 1 
         }
+        // on séléctionne les options correspondantes 
         options_list.forEach((option) => {
           option?.select()
         })
@@ -365,15 +382,18 @@ export class AppConfigueComponent implements OnInit{
   }
 
   set_restaurants(event:MatSelectChange, index:number,  categorie:number){
-    index = 6 * this.page_number + index
+    // ici ont récupère l'ensemble des restaurants selectionnés
     const restaurants = event.value
+    // ici ont récupère l'utilisateur
+    index = 6 * this.page_number + index
     let user = this.curr_user["user" +  this.curr_categorie as keyof typeof this.curr_user].at(index);
-    
     if(user?.restaurants !== undefined){
-      user.restaurants.forEach((restaurant:Restaurant, index:number) => {
+/*       user.restaurants.forEach((restaurant:Restaurant, index:number) => {
+        // on enlève dans les restaureants utilisateurs tout les restaurants qui ne sont pas séléctionné
+        //les restaurants sont conv
         restaurants.filter((restaurant: {id: any;}) => (restaurant !== restaurant.id))
       })
-      
+       */
       user.restaurants = [];
 
       for(let restaurant of restaurants){
@@ -400,9 +420,12 @@ export class AppConfigueComponent implements OnInit{
     user?.setStatus(new_rights, "w"); 
   }
 
-  modif_right(index:number,  categorie:number) {
+  //permet de modifier l'employé dans la base de donnée
+  modifEmployee(index:number,  categorie:number) {
+    //On récupère l'utilisateur à partir du tableau   
     index = 6*this.page_number + index
     let user =this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
+    // Cette étape avant l'ajout de l'utilisateur est la abse de données permet de s'assurer que les restaurants sont unique 
     const restaurant_ids = user?.restaurants.map((restaurant) => restaurant.id)
     const unique_restau = Array.from(new Set(restaurant_ids))
     let filter_user = user?.restaurants.filter((restaurant) => {
@@ -413,7 +436,7 @@ export class AppConfigueComponent implements OnInit{
         return false
       }
     })
-
+    //On ajoute l'utilisateur à la base de donnée  
     if(user !== undefined){
       if(filter_user != undefined) user.restaurants = filter_user
       this.user_services.setUser(this.proprietaire, user)
@@ -421,6 +444,16 @@ export class AppConfigueComponent implements OnInit{
     this._snackBar.open("vous avez bien modifier l'ultilisateur", "fermer")
   }
 
+  //Récupération des datasource en fonction des différentes catégorie 
+  //data0 -> Ajouter des employés au restaurant 
+  //data1 -> Cuisinier
+  //...
+  //data6 -> Propriétaire
+  getDataSource(index:number){
+    return this.dataSource[('data' + index) as keyof typeof this.dataSource]
+  }
+
+  //Permet d'ajouter un employé à la base de donnée 
   AddEmployee(){
     this.dialog.open(AddConfigueEmployeeComponent, {
       height: "500px",
@@ -433,6 +466,7 @@ export class AppConfigueComponent implements OnInit{
     });
   }
 
+  //Ajoute un salaire moyen pour l'ensemble des employés en sélctionnant une catégorie 
   addSalaryRestaurant(){
     this.dialog.open(AddConfigueSalaryComponent, {
       height: "500px",
@@ -444,26 +478,36 @@ export class AppConfigueComponent implements OnInit{
     });
   }
 
+  //Déconnexion de l'utilisateur à l'application 
   clicdeConnexion() {
     const auth = getAuth(this.ofApp);
     auth.signOut();
     window.location.reload();
   }
 
+  //Retour à la page d'acceuil 
   clicAcceuil() {
     this.router.navigate(['']);
   }
 
-  getDataSource(index:number){
-    return this.dataSource[('data' + index) as keyof typeof this.dataSource]
+  //=============================================== mobile adaptation ====================================================== 
+  getUsers(index_user: number): any {
+   return this.curr_user[("user" + index_user) as keyof typeof this.curr_user];
   }
-
+  changeUserInfo(user: User) {
+    this._bottomSheet.open(MobileUserDataComponent, {
+      data:{
+        user:user,
+        prop_user: this.prop_user,
+        is_prop: this.is_prop,
+        proprietaire:this.proprietaire
+      }
+    })
+  }
   getVisible(visibles: Visibles, i: number):boolean{
     return this.visibles[('index_' + (i + 1)) as keyof typeof this.visibles]
   }
-
   changeArrow(arrow_index: number) {
-
     if ((this.visibles.index_1 === true) && (arrow_index === 0)) {
       this.visibles.index_1 = false;
     }

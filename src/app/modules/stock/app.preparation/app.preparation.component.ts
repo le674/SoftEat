@@ -78,7 +78,7 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     this.displayed_prep = [];
     this.dataSource = new MatTableDataSource(this.displayed_prep);
     this.url = this.router.parseUrl(this.router.url);
-    this.windows_screen_mobile = false
+    this.windows_screen_mobile = false;
     this.visibles = [];
     this.size = "";
   }

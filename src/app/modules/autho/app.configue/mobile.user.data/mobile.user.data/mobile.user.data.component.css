@@ -1,0 +1,11 @@
+.h2{
+    font-family: 'Inter', sans-serif;
+    font-size: larger;
+    color: rgb(125, 181, 46);
+}
+#form{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}

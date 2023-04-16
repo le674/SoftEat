@@ -122,3 +122,14 @@ body {
   color: white;
   background-color: red;
 }
+
+@media screen and (max-width: 1140px) { 
+  header{
+    display: contents;
+  }
+}
+@media screen and (max-width: 650px) { 
+  ul{
+    justify-content: center;
+  }
+ }

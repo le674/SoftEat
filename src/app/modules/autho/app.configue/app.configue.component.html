@@ -19,8 +19,7 @@
         <button class="btn acceuil" (click)="clicAcceuil()"  type="submit">Acceuil</button>
       </li>
       <li>
-        <button class="btn" (click)="clicdeConnexion()" id="deco"
-          type="submit">Déconnexion</button>
+        <button class="btn" (click)="clicdeConnexion()" id="deco" type="submit">Déconnexion</button>
       </li>
     </ul>
   </header>
@@ -40,7 +39,7 @@
           [attr.aria-labelledby]="'heading_' + statut.split(' ')[0]" data-bs-parent="#accordionExample">
           <div class="accordion-body">
             <div>
-              <table #table mat-table [dataSource]="getDataSource(i)" class="mat-elevation-z8">
+              <table *ngIf="!windows_screen_mobile" #table mat-table [dataSource]="getDataSource(i)" class="mat-elevation-z8">
                 <!-- ID Column -->
                 <ng-container matColumnDef="id">
                   <th mat-header-cell *matHeaderCellDef> Token </th>
@@ -96,21 +95,28 @@
                 <ng-container matColumnDef="validation">
                   <th mat-header-cell *matHeaderCellDef> cliquer pour valider </th>
                   <td id="validate" mat-cell *matCellDef="let element;let cell_index = index; ">
-                    <i class="fa-regular fa-pen" id="form_right" type="submit" (click)="modif_right(cell_index, i)"></i>
+                    <i class="fa-regular fa-pen" id="form_right" type="submit" (click)="modifEmployee(cell_index, i)"></i>
                   </td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="display_columns"></tr>
                 <tr mat-row *matRowDef="let row; columns: display_columns;"></tr>
               </table>
-              <mat-paginator #paginator (page)="pageChanged($event, i)" [length]="prop_user.length" [pageSizeOptions]="[6]"
+              <mat-paginator *ngIf="!windows_screen_mobile" #paginator (page)="pageChanged($event, i)" [length]="prop_user.length" [pageSizeOptions]="[6]"
                 showFirstLastButtons>
               </mat-paginator>
+              <ng-container *ngIf='windows_screen_mobile'>
+                <mat-action-list *ngFor="let user of getUsers(i)">     
+                  <button mat-list-item class="main_panel" (click)="changeUserInfo(user)">
+                    {{user.email}}
+                  </button>
+               </mat-action-list>
+              </ng-container>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div>  
   </main>
   <footer>
     <button mat-stroked-button class="acceuil" (click)="addSalaryRestaurant()">

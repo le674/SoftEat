@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="form">
+      <h1 class="h2"> Restaurants </h1>
+      <mat-form-field appearance="fill">
+        <mat-label>restaurants</mat-label>
+        <mat-select (selectionChange)="set_restaurants($event)" (openedChange)="get_restaurant()" multiple>
+          <mat-option [disabled]="!is_prop" #options *ngFor="let restau of restaurants"
+            [value]="restau">{{restau}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <h1 class="h2">Droits lecture</h1>
+      <mat-form-field appearance="fill">
+        <mat-label>droits</mat-label>
+        <mat-select (selectionChange)="set_right($event, 'r')" (openedChange)="get_right('r')" multiple>
+          <mat-option #options_read *ngFor="let right of roles" [value]="right">{{right}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <h1 class="h2">Droits écriture</h1>
+      <mat-form-field appearance="fill">
+        <mat-label>droits</mat-label>
+        <mat-select (selectionChange)="set_right($event, 'w')" (openedChange)="get_right('w')" multiple>
+          <mat-option #options_write *ngFor="let right of roles" [value]="right">{{right}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-stroked-button class="acceuil" (click)="modifEmployee()">Modifier l'employé</button>
+    </div>
+  </body>
+</html>
