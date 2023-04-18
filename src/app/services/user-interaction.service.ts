@@ -139,6 +139,7 @@ export class UserInteractionService {
   }
 
   async setUser(prop: string, user: User) {
+    
     let data_to_add = {};
     const ref_db = ref(this.db);
     const path_prop = `users/${prop}/${user.id}`
@@ -148,7 +149,6 @@ export class UserInteractionService {
       .map((restaurant) => {
         return {id:restaurant.id, adresse: restaurant.adresse};
       });
-    
     Object.assign(data_to_add, {
       [path_dico]: {
         email: user.email,
@@ -160,7 +160,6 @@ export class UserInteractionService {
         restaurant: restaurants
       }
     })
-
     for (let restaurant of restaurants.map((restaurant) => restaurant.id)) {
       Object.assign(data_to_add, {
         [`resto_auth/${prop}/${restaurant}/${user.id}`]: user.email

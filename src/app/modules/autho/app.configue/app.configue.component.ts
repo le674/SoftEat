@@ -17,6 +17,7 @@ import { AddConfigueSalaryComponent } from './add.configue.salary/add.configue.s
 import { AddConfigueEmployeeComponent } from './add.configue.employee/add.configue.employee/add.configue.employee.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MobileUserDataComponent } from './mobile.user.data/mobile.user.data/mobile.user.data.component';
+import { CommonService } from 'src/app/services/common/common.service';
 
 @Component({
   selector: 'app-app.configue',
@@ -99,7 +100,8 @@ export class AppConfigueComponent implements OnInit{
   options_write!: QueryList<MatOption>
 
   constructor(public dialog: MatDialog, private service: InteractionRestaurantService, private user_services: UserInteractionService,
-    private ofApp: FirebaseApp, private router: Router,  private _snackBar: MatSnackBar, private _bottomSheet: MatBottomSheet) {
+    private ofApp: FirebaseApp, private router: Router,  private _snackBar: MatSnackBar,
+    private _bottomSheet: MatBottomSheet, public mobile_service:CommonService) {
     this.prop_user = [];
     this.users = [];
     this.display_columns = ["id", "email", "restaurants", "read_right", "write_right", "validation"];
@@ -146,11 +148,8 @@ export class AppConfigueComponent implements OnInit{
     this.rest_max_length = 0;
     this.curr_categorie = 0;
     this.is_prop = false;
-    this.windows_screen_mobile = false;
+    this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("user");
     this.auth =  getAuth(this.ofApp);
-    if ((window.innerWidth < 1020)) {
-      this.windows_screen_mobile = true;
-    }
   }
   ngOnInit(): void {
     onAuthStateChanged(this.auth, (user) => {

@@ -70,27 +70,4 @@
       color: white;
       background-color: rgb(125, 181, 46);
     }
-
-    @media screen and (max-width: 375px) { 
-     form{
-      margin-left: 0%;
-     }
-    }
-
-    @media screen and (max-width: 1150px) { 
-      form{
-       margin-left: 30%;
-      }
-     }
-     @media screen and (max-width: 800px) { 
-      form{
-       margin-left: 15%;
-      }
-     }
-
-    @media screen and (max-width: 414px) { 
-      form{
-       margin-left: 5%;
-      }
-     }
  

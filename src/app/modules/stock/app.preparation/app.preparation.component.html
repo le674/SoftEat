@@ -102,7 +102,7 @@
             aria-label="Selection page d'une preparation">
         </mat-paginator>
 
-        <div *ngIf="windows_screen_mobile" #accordeon class="accordion" [ngStyle]="{'max-width.px': accordeonMaxWidth()}">
+        <div *ngIf="windows_screen_mobile" #accordeon class="accordion" [ngStyle]="{'max-width.px': this.mobile_service.accordeonMaxWidth()}">
             <div class="accordion-item" *ngFor="let preparation of displayed_prep; let i = index;">
               <h2 class="accordion-header" [id]="'heading_' + preparation.nom.split('\<br>').join('_')">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"

@@ -11,7 +11,7 @@
     <header>
         <div id="all-buttons">
             <div class="group-buttons">
-                <button mat-stroked-button>
+                <button *ngIf="!windows_screen_mobile" mat-stroked-button>
                     <i class="fa-solid fa-laptop-file"></i>
                     Scanner la facture
                 </button>
@@ -41,7 +41,7 @@
             </mat-radio-group>  
         </div>
     </header>
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <table  *ngIf="!windows_screen_mobile" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
             <!--- Note that these columns can be defined in any order.
                   The actual rendered columns are set as a property on the row definition" -->
 
@@ -115,20 +115,55 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-        <mat-paginator [pageSizeOptions]="[6]"
+        <mat-paginator  *ngIf="!windows_screen_mobile" [pageSizeOptions]="[6]"
             (page)="pageChanged($event)"
             [length]="ingredients_displayed_br.length"
             showFirstLastButtons
             aria-label="Selection page d'ingredients">
         </mat-paginator>
+        <div *ngIf="windows_screen_mobile" #accordeon class="accordion" [ngStyle]="{'max-width.px': this.mobile_service.accordeonMaxWidth()}">
+            <div class="accordion-item" *ngFor="let ingredient of ingredients_displayed_br; let i = index;">
+              <h2 class="accordion-header" [id]="'heading_' + ingredient.nom.split(' ').join('_').split('\'').join('_')">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  [attr.data-bs-target]="'#collapse_' +  ingredient.nom.split(' ').join('_').split('\'').join('_')" [attr.aria-controls]="'collapse_' +  ingredient.nom.split(' ').join('_').split('\'').join('_')"
+                  (click)="changeArrow(i)">
+                  <div class="collapse-section">
+                    <p>{{ingredient.nom.split(" ").join(" ").split('\'').join('_')}}</p>
+                    <i [ngClass]="getVisible(i) ? 'fa-regular fa-angle-down' : 'fa-regular fa-angle-up'"></i>
+                  </div>
+                </button>
+              </h2>
+              <div [id]="'collapse_' + ingredient.nom.split(' ').join('_').split('\'').join('_')" class="accordion-collapse collapse"
+                [attr.aria-labelledby]="'heading_' + ingredient.nom.split(' ').join('_').split('\'').join('_')" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <div>
+                    <mat-list role="list">
+                        <mat-list-item role="listitem">Catégorie de tva : <br> {{ingredient.categorie_tva.split(" ").join(" ")}}</mat-list-item>
+                        <mat-list-item role="listitem">Quantitée : <br> {{ingredient.quantity}}</mat-list-item>
+                        <mat-list-item role="listitem">Quantitée unitaire : <br> {{ingredient.quantity_unity}}</mat-list-item>
+                        <mat-list-item role="listitem">Unitée: <br> {{ingredient.unity}}</mat-list-item>
+                        <mat-list-item role="listitem">Coût unitaire HT: <br> {{ingredient.cost}}</mat-list-item>
+                        <mat-list-item role="listitem">Coût unitaire TTC: <br> {{ingredient.cost_ttc}}</mat-list-item>
+                        <mat-list-item role="listitem">date de récéption: <br> {{ingredient.date_reception}}</mat-list-item>
+                        <mat-list-item role="listitem">date limite de consommation: <br> {{ingredient.dlc}}</mat-list-item>
+                    </mat-list>
+                    <div id="modif-section">
+                        <i class="fa-regular fa-trash action_table" (click)="suppIng(ingredient)"></i>
+                        <i class="fa-regular fa-pen action_table" (click)="modifIng(ingredient)"></i>  
+                    </div>                    
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div> 
         <div class="group-buttons">
             <button mat-stroked-button (click)="addIngredients($event)">
                 <i class="fa-solid fa-check"></i>
-                Valider l'ajout des ingrédients dans l'inventaire
+                Ajout dans l'inventaire
             </button>
             <button id = "cancel_button" (click)="revertModif($event)" mat-stroked-button>
                 <i class="fa-solid fa-xmark"></i>
-                Annuler les modifications et suppressions réalisées
+                Annuler les modifications
             </button>
         </div>
 </body>

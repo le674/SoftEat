@@ -11,6 +11,7 @@ import { IngredientsInteractionService } from 'src/app/services/menus/ingredient
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.component';
 import { Visibles } from '../../autho/app.configue/app.configue.index';
+import { CommonService } from 'src/app/services/common/common.service';
 
 @Component({
   selector: 'app-stock',
@@ -66,7 +67,7 @@ export class AppStockComponent implements OnInit, OnDestroy{
 
 
   constructor(private service: IngredientsInteractionService, private calc_service: CalculService,
-    router: Router, public dialog: MatDialog, private _snackBar: MatSnackBar) {
+    router: Router, public dialog: MatDialog, private _snackBar: MatSnackBar, public mobile_service:CommonService) {
     this.page_number = 1;
     this.prop = "";
     this.restaurant = "";
@@ -77,12 +78,7 @@ export class AppStockComponent implements OnInit, OnDestroy{
     this.url = this.router.parseUrl(this.router.url);
     this.visibles = [];
     this.size = "";
-    if((window.innerWidth < 768)){
-      this.windows_screen_mobile = true;
-    }
-    else{
-      this.windows_screen_mobile = false
-    }
+    this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("ing");
   }
 
   ngOnDestroy(): void {
@@ -273,23 +269,5 @@ export class AppStockComponent implements OnInit, OnDestroy{
 
   changeArrow(arrow_index: number) {
     this.visibles[arrow_index] = !this.visibles[arrow_index];
-  }
-  accordeonMaxWidth(): any {
-    if((window.innerWidth < 768) && (window.innerWidth > 600)) {
-      return 500; // Largeur maximale pour les écrans plus petits que 768px
-    } 
-    if((window.innerWidth < 600) && (window.innerWidth > 480)){
-      return 380;
-    }
-    if((window.innerWidth < 480) && (window.innerWidth > 414)){
-      return 314;
-    }
-    if((window.innerWidth < 414) && (window.innerWidth > 375)){
-      return 275;
-    }
-    if((window.innerWidth < 375) && (window.innerWidth > 320)){
-      return 220;
-    }
-    return window.innerWidth - 100;
   }
 }

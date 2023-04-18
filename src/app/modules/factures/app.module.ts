@@ -18,6 +18,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModifIngComponent } from './app.factures/app.factures.modif/modif.ing/modif.ing.component';
 import { CIngredient } from 'src/app/interfaces/ingredient';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { CIngredient } from 'src/app/interfaces/ingredient';
     MatFormFieldModule,
     FormsModule,
     MatSelectModule,
+    MatListModule,
     MatInputModule,
     MatTooltipModule,
     MatButtonModule,

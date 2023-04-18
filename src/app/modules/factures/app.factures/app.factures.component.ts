@@ -14,6 +14,8 @@ import { AddIngComponent } from '../../stock/app.stock/app.stock.modals/add-ing/
 import { ModifIngComponent } from './app.factures.modif/modif.ing/modif.ing.component';
 import { FactureSharedService } from 'src/app/services/factures/facture_shared/facture-shared.service';
 import { MatRadioChange } from '@angular/material/radio';
+import { CommonService } from 'src/app/services/common/common.service';
+import { Visibles } from '../../autho/app.configue/app.configue.index';
 
 @Component({
   selector: 'app-factures',
@@ -27,8 +29,9 @@ export class AppFacturesComponent implements OnInit {
   private url: UrlTree;
   private page_number: number;
   private ingredient:boolean;
-
   private ingredients_br: Array<CIngredient>;
+
+  
   public ingredients_displayed_br: Array<{
     nom: string;
     categorie_tva: string;
@@ -39,8 +42,9 @@ export class AppFacturesComponent implements OnInit {
     unity: string;
     date_reception: string;
     dlc: string;
+    marge:number;
+    vrac:string;
   }>;
-
   public ingredients_displayed_br_tmp: Array<{
     nom: string;
     categorie_tva: string;
@@ -51,9 +55,9 @@ export class AppFacturesComponent implements OnInit {
     unity: string;
     date_reception: string;
     dlc: string;
+    marge:number;
+    vrac:string;
   }>;
-
-
   public dataSource: MatTableDataSource<{
     nom: string;
     categorie_tva: string;
@@ -64,8 +68,20 @@ export class AppFacturesComponent implements OnInit {
     unity: string,
     date_reception: string;
     dlc: string;
+    marge:number;
+    vrac:string;
   }>;
-  
+  public windows_screen_mobile: boolean;
+  public visibles: Visibles = {
+    index_1: true,
+    index_2: true,
+    index_3: true,
+    index_4: true,
+    index_5: true,
+    index_6: true,
+    index_7: true
+  };
+
   displayedColumns: string[] = ['nom', 'categorie_tva', 'quantity', 'quantity_unity',
   'unity', 'cost', 'cost_ttc', 'date_reception', 'dlc', 'actions'];
   
@@ -74,7 +90,7 @@ export class AppFacturesComponent implements OnInit {
   constructor(private service: IngredientsInteractionService, router: Router, 
     public dialog: MatDialog, private calc_service: CalculService, private _snackBar:MatSnackBar,
     private service_facture_pdf:FacturePdfService, private service_facture_img:FactureImgService,
-    private service_factue_shared:FactureSharedService) { 
+    private service_factue_shared:FactureSharedService, public mobile_service:CommonService) { 
     this.page_number = 0; 
     this.router = router;  
     this.ingredients_displayed_br = [];
@@ -85,6 +101,7 @@ export class AppFacturesComponent implements OnInit {
     this.url = this.router.parseUrl(this.router.url);
     this.ingredients_br = [];
     this.ingredient = true;
+    this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("ing");
   }
 
   ngOnInit(): void {
@@ -113,7 +130,9 @@ export class AppFacturesComponent implements OnInit {
                 quantity_unity: ingredient.quantity_unity,
                 unity: ingredient.unity_unitary,
                 date_reception: ingredient.date_reception.toLocaleString(),
-                dlc: ingredient.dlc.toLocaleString()
+                dlc: ingredient.dlc.toLocaleString(),
+                marge: ingredient.marge,
+                vrac: ingredient.vrac
               }
               this.ingredients_displayed_br.push(add_to_tab);
             }
@@ -246,7 +265,9 @@ export class AppFacturesComponent implements OnInit {
         quantity_unity: ingredient.quantity_unity,
         unity: ingredient.unity,
         date_reception: ingredient.date_reception.toLocaleString(),
-        dlc: ingredient.dlc.toLocaleString()
+        dlc: ingredient.dlc.toLocaleString(),
+        marge: ingredient.marge,
+        vrac: ingredient.vrac
        });
        this.ingredients_displayed_br = _ingredients;
        this.dataSource.data =  this.ingredients_displayed_br;
@@ -258,20 +279,15 @@ export class AppFacturesComponent implements OnInit {
     categorie_tva: string;
     cost: number;
     cost_ttc: number;
-    val_bouch: number;
-    bef_prep: number;
-    after_prep: number;
     quantity: number;
     quantity_unity: number;
     unity: string;
-    cuisinee: string;
     date_reception: string;
     dlc: string;
+    marge: number;
+    vrac:string
   }) {
     let is_prep = false
-    if (ele.cuisinee === 'oui') {
-      is_prep = true
-    }
     //on regénère la datasource 
     if(ele.nom === undefined){
       this.ingredients_displayed_br = this.ingredients_displayed_br.filter((ingredient) => ingredient.nom !== undefined);
@@ -330,4 +346,50 @@ export class AppFacturesComponent implements OnInit {
       this.ingredient = false;
     }
   }
+
+  // adaptation mobile 
+  getVisible(i: number):boolean{
+    return this.visibles[('index_' + (i + 1)) as keyof typeof this.visibles]
+  }
+  changeArrow(arrow_index: number) {
+    if ((this.visibles.index_1 === true) && (arrow_index === 0)) {
+      this.visibles.index_1 = false;
+    }
+    else {
+      this.visibles.index_1 = true;
+    }
+
+    if (this.visibles.index_2 === true && (arrow_index === 1)) {
+      this.visibles.index_2 = false;
+    }
+    else {
+      this.visibles.index_2 = true;
+    }
+
+    if (this.visibles.index_3 === true && (arrow_index === 2)) {
+      this.visibles.index_3 = false;
+    }
+    else {
+      this.visibles.index_3 = true;
+    }
+
+    if (this.visibles.index_4 === true && (arrow_index === 3)) {
+      this.visibles.index_4 = false;
+    }
+    else {
+      this.visibles.index_4 = true;
+    }
+
+    if (this.visibles.index_5 === true && (arrow_index === 4)) {
+      this.visibles.index_5 = false;
+    }
+    else {
+      this.visibles.index_5 = true;
+    }
+
+    if (this.visibles.index_6 === true && (arrow_index === 5)) {
+      this.visibles.index_6 = false;
+    }
+  }
+  
 }

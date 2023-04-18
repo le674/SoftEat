@@ -8,6 +8,7 @@ import { Cconsommable } from 'src/app/interfaces/ingredient';
 import { ConsommableInteractionService } from 'src/app/services/menus/consommable-interaction.service';
 import { CalculConsoServiceTsService } from 'src/app/services/menus/menu.calcul/menu.calcul.consommable/calcul.conso.service.ts.service';
 import { AddConsoComponent } from './app.conso.modals/add-ing/add.ing/add.conso.component';
+import { CommonService } from 'src/app/services/common/common.service';
 
 @Component({
   selector: 'app-conso',
@@ -48,7 +49,7 @@ export class AppConsoComponent implements OnInit {
   private restaurant:string;
 
   constructor(private service:ConsommableInteractionService, private calc_service:CalculConsoServiceTsService,
-    router: Router, public dialog: MatDialog,  private _snackBar: MatSnackBar) { 
+    router: Router, public dialog: MatDialog,  private _snackBar: MatSnackBar, public mobile_service:CommonService) { 
     this.page_number = 1;
     this.prop = "";
     this.restaurant = "";
@@ -102,24 +103,7 @@ ngOnInit(): void{
       first_event.pageSize = 6
       first_event.pageIndex = 0
       this.pageChanged(first_event);
-      if((window.innerWidth < 768)){
-        this.windows_screen_mobile = true;
-      }
-      if((window.innerWidth < 768) && (window.innerWidth > 600)) {
-        this.size = "w-50 p-3" // Largeur maximale pour les écrans plus petits que 768px
-      } 
-      if((window.innerWidth < 600) && (window.innerWidth > 480)){
-        this.size = "w-35 p-3"
-      }
-      if((window.innerWidth < 480) && (window.innerWidth > 414)){
-        this.size = "w-30 p-auto"
-      }
-      if((window.innerWidth < 414) && (window.innerWidth > 375)){
-        this.size = "w-25 p-auto"
-      }
-      if((window.innerWidth < 375) && (window.innerWidth > 320)){
-        this.size = "w-10 p-auto"
-      }
+      this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("conso");
   }
 
     
@@ -221,24 +205,6 @@ ngOnInit(): void{
 
   changeArrow(arrow_index: number) {
     this.visibles[arrow_index] = !this.visibles[arrow_index];
-  }
-  accordeonMaxWidth(): any {
-    if((window.innerWidth < 768) && (window.innerWidth > 600)) {
-      return 500; // Largeur maximale pour les écrans plus petits que 768px
-    } 
-    if((window.innerWidth < 600) && (window.innerWidth > 480)){
-      return 380;
-    }
-    if((window.innerWidth < 480) && (window.innerWidth > 414)){
-      return 314;
-    }
-    if((window.innerWidth < 414) && (window.innerWidth > 375)){
-      return 275;
-    }
-    if((window.innerWidth < 375) && (window.innerWidth > 320)){
-      return 220;
-    }
-    return window.innerWidth - 100;
   }
 }
 

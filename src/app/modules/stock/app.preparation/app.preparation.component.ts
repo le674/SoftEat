@@ -12,6 +12,7 @@ import { IngredientsInteractionService } from 'src/app/services/menus/ingredient
 import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AppAddPreparationComponent } from './app.preparation.modals/app.add.preparation/app.add.preparation.component';
 import { AppHelpPreparationComponent } from './app.preparation.modals/app.help.preparation/app.help.preparation/app.help.preparation.component';
+import { CommonService } from 'src/app/services/common/common.service';
 
 @Component({
   selector: 'app-prepa',
@@ -21,7 +22,6 @@ import { AppHelpPreparationComponent } from './app.preparation.modals/app.help.p
 export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public windows_screen_mobile: boolean;
-  public size: string;
   public visibles: Array<boolean>;
   public displayedColumns: string[] = ['nom', 'categorie_tva', 'quantity', 'quantity_unity',
     'unity', 'cost', 'cost_ttc', 'date_reception', 'dlc', 'actions'];
@@ -68,7 +68,7 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
 
 
   constructor(private service: IngredientsInteractionService, private calc_service: CalculService,
-    router: Router, public dialog: MatDialog, private _snackBar: MatSnackBar) {
+    router: Router, public dialog: MatDialog, private _snackBar: MatSnackBar, public mobile_service:CommonService) {
     this.page_number = 1;
     this.prop = "";
     this.restaurant = "";
@@ -80,7 +80,6 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     this.url = this.router.parseUrl(this.router.url);
     this.windows_screen_mobile = false;
     this.visibles = [];
-    this.size = "";
   }
 
   ngAfterViewInit(): void {
@@ -164,24 +163,7 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
         }
       }
     })
-    if ((window.innerWidth < 768)) {
-      this.windows_screen_mobile = true;
-    }
-    if ((window.innerWidth < 768) && (window.innerWidth > 600)) {
-      this.size = "w-50 p-3" // Largeur maximale pour les écrans plus petits que 768px
-    }
-    if ((window.innerWidth < 600) && (window.innerWidth > 480)) {
-      this.size = "w-35 p-3"
-    }
-    if ((window.innerWidth < 480) && (window.innerWidth > 414)) {
-      this.size = "w-30 p-auto"
-    }
-    if ((window.innerWidth < 414) && (window.innerWidth > 375)) {
-      this.size = "w-25 p-auto"
-    }
-    if ((window.innerWidth < 375) && (window.innerWidth > 320)) {
-      this.size = "w-10 p-auto"
-    }
+    this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("prepa");
   }
 
   OpenHelp() {
@@ -279,34 +261,16 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     let datasource = [... this.displayed_prep];
     this.page_number = 0;
     this.dataSource.data = datasource.splice(0, event.pageSize);
-    this.paginator.firstPage();
+    if(this.paginator !== undefined){
+      this.paginator.firstPage();
+    }
   }
   // Gestion de l'accordéon
-
   getVisible(i: number):boolean{
     return this.visibles[i];
   }
-
   changeArrow(arrow_index: number) {
     this.visibles[arrow_index] = !this.visibles[arrow_index];
-  }
-  accordeonMaxWidth(): any {
-    if((window.innerWidth < 768) && (window.innerWidth > 600)) {
-      return 500; // Largeur maximale pour les écrans plus petits que 768px
-    } 
-    if((window.innerWidth < 600) && (window.innerWidth > 480)){
-      return 380;
-    }
-    if((window.innerWidth < 480) && (window.innerWidth > 414)){
-      return 314;
-    }
-    if((window.innerWidth < 414) && (window.innerWidth > 375)){
-      return 275;
-    }
-    if((window.innerWidth < 375) && (window.innerWidth > 320)){
-      return 220;
-    }
-    return window.innerWidth - 100;
   }
 }
 
