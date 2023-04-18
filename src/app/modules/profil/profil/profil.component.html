@@ -35,125 +35,169 @@
     <main>
         <p class="main_panel title">Informations</p>
         <mat-divider></mat-divider>
-        <div id="first_liste">
-            <mat-list *ngIf='mobile'>
-                <div class="items_liste">
-                    <mat-list-item class="main_panel">Nom</mat-list-item>
-                    <mat-list-item class="main_panel">Prénom</mat-list-item>
-                    <mat-list-item class="main_panel">Enseigne</mat-list-item>
-                    <mat-list-item class="main_panel">Adresse mail</mat-list-item>
-                    <mat-list-item class="main_panel">Numéro</mat-list-item>
-                    <mat-list-item class="main_panel">Restaurants</mat-list-item>
-                    <mat-list-item class="main_panel">Droits</mat-list-item>
-                </div>
-            </mat-list>
-            <mat-list>
-                <div class="items_liste">
-                    <mat-list-item>
-                        <p class="main_panel">{{user_db.name}}</p>
-                    </mat-list-item>
-                    <mat-list-item class="main_panel">
-                        <p class="main_panel">{{user_db.surname}}</p>
-                    </mat-list-item>
-                    <mat-list-item class="main_panel">{{enseigne}}</mat-list-item>
-                    <mat-list-item class="main_panel">
-                        <p class="main_panel email_mob">{{user_db.email}}</p>
-                    </mat-list-item>
-                    <mat-list-item class="main_panel">
-                        <p class="main_panel email_mob">{{user_db.numero}}</p>
-                    </mat-list-item>
-                    <mat-list-item class="main_panel">
-                        <mat-form-field appearance="outline">
-                            <mat-label>droits d'accès (r : lecture, w : écriture)</mat-label>
-                            <mat-select>
-                                <mat-option *ngFor="let droit of user_db.statut | keyvalue">
-                                    {{droit.key}} : {{droit.value}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </mat-list-item>
-                    <mat-list-item class="main_panel">
-                        <mat-form-field appearance="outline">
-                            <mat-label>mes restaurants</mat-label> 
-                            <mat-select>
-                                <mat-option *ngFor="let restaurant of user_db.restaurants">
-                                    {{restaurant.id}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </mat-list-item>
-                </div>
-            </mat-list>
-            <mat-list>
-                <div class="items_liste">
-                    <mat-list-item class="main_panel">
-                        <i class="fa-regular fa-pen pen_body disable"></i>
-                    </mat-list-item>
-                    <mat-list-item class="main_panel">
-                        <i class="fa-regular fa-pen pen_body disable"></i>
-                    </mat-list-item>
-                    <mat-list-item class="main_panel">
-                        <i class="fa-regular fa-pen pen_body disable"></i>
-                    </mat-list-item>
-                    <mat-list-item class="main_panel">
-                        <i class="fa-regular pen_body fa-pen" (click)="openMail()"></i>
-                    </mat-list-item>
-                    <mat-list-item class="main_panel">
-                        <i class="fa-regular pen_body fa-pen" (click)="openNumber()"></i>
-                    </mat-list-item>
-                    <mat-list-item class="main_panel">
-                        <i class="fa-regular fa-pen pen_body disable"></i>
-                    </mat-list-item>
-                    <mat-list-item class="main_panel">
-                        <i class="fa-regular fa-pen pen_body disable"></i>
-                    </mat-list-item>
-                </div>
-            </mat-list>
-        </div>
+        <ng-container id="information-section">
+            <div id="first_liste" *ngIf='!not_mobile'>
+                <mat-list>
+                    <div class="items_liste">
+                        <mat-list-item class="main_panel">Nom</mat-list-item>
+                        <mat-list-item class="main_panel">Prénom</mat-list-item>
+                        <mat-list-item class="main_panel">Enseigne</mat-list-item>
+                        <mat-list-item class="main_panel">Adresse mail</mat-list-item>
+                        <mat-list-item class="main_panel">Numéro</mat-list-item>
+                        <mat-list-item class="main_panel">Restaurants</mat-list-item>
+                        <mat-list-item class="main_panel">Droits</mat-list-item>
+                    </div>
+                </mat-list>
+                <mat-list>
+                    <div class="items_liste">
+                        <mat-list-item>
+                            <p class="main_panel">{{user_db.name}}</p>
+                        </mat-list-item>
+                        <mat-list-item class="main_panel">
+                            <p class="main_panel">{{user_db.surname}}</p>
+                        </mat-list-item>
+                        <mat-list-item class="main_panel">{{enseigne}}</mat-list-item>
+                        <mat-list-item class="main_panel">
+                            <p class="main_panel email_mob">{{user_db.email}}</p>
+                        </mat-list-item>
+                        <mat-list-item class="main_panel">
+                            <p class="main_panel email_mob">{{user_db.numero}}</p>
+                        </mat-list-item>
+                        <mat-list-item class="main_panel">
+                            <mat-form-field appearance="outline">
+                                <mat-label>droits d'accès (r : lecture, w : écriture)</mat-label>
+                                <mat-select>
+                                    <mat-option *ngFor="let droit of user_db.statut | keyvalue">
+                                        {{droit.key}} : {{droit.value}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-list-item>
+                        <mat-list-item class="main_panel">
+                            <mat-form-field appearance="outline">
+                                <mat-label>mes restaurants</mat-label> 
+                                <mat-select>
+                                    <mat-option *ngFor="let restaurant of user_db.restaurants">
+                                        {{restaurant.id}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-list-item>
+                    </div>
+                </mat-list>
+                <mat-list>
+                    <div class="items_liste">
+                        <mat-list-item class="main_panel">
+                            <i class="fa-regular fa-pen pen_body disable"></i>
+                        </mat-list-item>
+                        <mat-list-item class="main_panel">
+                            <i class="fa-regular fa-pen pen_body disable"></i>
+                        </mat-list-item>
+                        <mat-list-item class="main_panel">
+                            <i class="fa-regular fa-pen pen_body disable"></i>
+                        </mat-list-item>
+                        <mat-list-item class="main_panel">
+                            <i class="fa-regular pen_body fa-pen" (click)="openMail()"></i>
+                        </mat-list-item>
+                        <mat-list-item class="main_panel">
+                            <i class="fa-regular pen_body fa-pen" (click)="openNumber()"></i>
+                        </mat-list-item>
+                        <mat-list-item class="main_panel">
+                            <i class="fa-regular fa-pen pen_body disable"></i>
+                        </mat-list-item>
+                        <mat-list-item class="main_panel">
+                            <i class="fa-regular fa-pen pen_body disable"></i>
+                        </mat-list-item>
+                    </div>
+                </mat-list>
+            </div>
+            <div id="first_liste_mobile" *ngIf='not_mobile'>
+                <mat-list>
+                        <mat-list-item class="sub-title">Nom</mat-list-item>
+                        <mat-list-item>{{user_db.name}}</mat-list-item>
+                        <mat-list-item class="sub-title">Prénom</mat-list-item>
+                        <mat-list-item>{{user_db.surname}}</mat-list-item>
+                        <mat-list-item class="sub-title">Enseigne</mat-list-item>
+                        <mat-list-item>{{enseigne}}</mat-list-item>
+                        <mat-list-item class="sub-title">Adresse mail</mat-list-item>
+                        <mat-list-item>{{user_db.email}}</mat-list-item>
+                        <mat-list-item class="sub-title">Numéro</mat-list-item>
+                        <mat-list-item>{{user_db.numero}}</mat-list-item>
+                        <mat-list-item class="sub-title selector-item">Droits</mat-list-item>
+                        <mat-list-item>
+                            <span matListItemLine> 
+                            <mat-form-field appearance="outline">
+                                    <mat-label>droits d'accès (r : lecture, w : écriture)</mat-label>
+                                    <mat-select>
+                                        <mat-option *ngFor="let droit of user_db.statut | keyvalue">
+                                            {{droit.key}} : {{droit.value}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </span>
+                        </mat-list-item>
+                        <mat-list-item class="sub-title selector-item">Restaurants</mat-list-item>
+                        <mat-list-item class="main_panel">
+                            <span matListItemLine>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>mes restaurants</mat-label> 
+                                    <mat-select>
+                                        <mat-option *ngFor="let restaurant of user_db.restaurants">
+                                            {{restaurant.id}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </span>
+                        </mat-list-item>
+                </mat-list>
+            </div>
+        </ng-container>
         <p class="main_panel title contact">Nous contacter</p>
         <mat-divider></mat-divider>
-        <div class="nous-contacter">
-            <div id="logo_section">
-                <div class="icon_soft_eat">
-                    <i class="fa-solid fa-phone"> </i>
-                    <p>07 82 21 76 90</p>
+        <ng-container id="contact-section">
+            <div class="nous-contacter">
+                <div id="logo_section">
+                    <div class="icon_soft_eat">
+                        <i class="fa-solid fa-phone"> </i>
+                        <p>07 82 21 76 90</p>
+                    </div>
+        
+                    <div id="mail" class="icon_soft_eat">
+                        <i class="fa-solid fa-envelope"></i>
+                        <p>softeat.contact@gmail.com</p>
+                    </div>
                 </div>
-    
-                <div id="mail" class="icon_soft_eat">
-                    <i class="fa-solid fa-envelope"></i>
-                    <p>softeat.contact@gmail.com</p>
+                <div id="a_propos_section">
+                    <h1 class="title"> A propos </h1>
+                    <ul>
+                        <li>
+                            <p class="link" (click)="openConcept()">concept</p>
+                        </li>
+                        <li>
+                            <p  class="link" (click)="openInfo()">qui sommes nous ?</p>
+                        </li>
+                        <li>
+                            <p  class="link" (click)="openChart()">charte d'utilisation</p>
+                        </li>
+                        <li>
+                            <p  class="link" (click)="openHelp()">aide</p>
+                        </li>
+                    </ul>
                 </div>
+                <form (ngSubmit)="sendMessage()" id="contact_section" [formGroup]="contact_form" >
+                    <fieldset id="first_filed" class="form-group">
+                        <h1 class="title formular"> Formulaire </h1>
+                        <input type="email" class="form-control" formControlName="sender" id="exampleInputEmail1" placeholder="entrer votre email">
+                    </fieldset>
+                    <fieldset class="form-group not_email">
+                        <textarea class="form-control"  formControlName="message" id="exampleMessage" placeholder="entrer le message ..."></textarea>
+                    </fieldset>
+                    <fieldset class="form-group text-xs-right not_email">
+                        <button type="submit" mat-stroked-button>Envoyer</button>
+                    </fieldset>
+                </form>
             </div>
-            <div id="a_propos_section">
-                <h1 class="title"> A propos </h1>
-                <ul>
-                    <li>
-                        <p class="link" (click)="openConcept()">concept</p>
-                    </li>
-                    <li>
-                        <p  class="link" (click)="openInfo()">qui sommes nous ?</p>
-                    </li>
-                    <li>
-                        <p  class="link" (click)="openChart()">charte d'utilisation</p>
-                    </li>
-                    <li>
-                        <p  class="link" (click)="openHelp()">aide</p>
-                    </li>
-                </ul>
-            </div>
-            <form (ngSubmit)="sendMessage()" id="contact_section" [formGroup]="contact_form" >
-                <fieldset id="first_filed" class="form-group">
-                    <h1 class="title formular"> Formulaire </h1>
-                    <input type="email" class="form-control" formControlName="sender" id="exampleInputEmail1" placeholder="entrer votre email">
-                </fieldset>
-                <fieldset class="form-group not_email">
-                    <textarea class="form-control"  formControlName="message" id="exampleMessage" placeholder="entrer le message ..."></textarea>
-                </fieldset>
-                <fieldset class="form-group text-xs-right not_email">
-                    <button type="submit" mat-stroked-button>Envoyer</button>
-                </fieldset>
-            </form>
-        </div>
+        </ng-container>
     </main>
 </body>
 

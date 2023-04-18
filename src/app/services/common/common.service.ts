@@ -15,6 +15,9 @@ export class CommonService {
     if((type === "ing") && (window.innerWidth < 876)){
       return true;
     }
+    if((type === "mobile") && (window.innerWidth < 1040)){
+      return true;
+    }
     return false;
   }
   accordeonMaxWidth(): any {

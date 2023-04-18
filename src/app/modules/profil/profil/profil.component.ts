@@ -14,6 +14,7 @@ import { InfoAppliComponent } from '../info-appli/info-appli.component';
 import { ModifMailComponent } from '../modif-mail/modif-mail.component';
 import { ModifMdpComponent } from '../modif-mdp/modif-mdp.component';
 import { ModifNumberComponent } from '../modif-number/modif-number.component';
+import { CommonService } from 'src/app/services/common/common.service';
 
 @Component({
   selector: 'app-profil',
@@ -28,19 +29,20 @@ export class ProfilComponent implements OnInit {
   public user_db: User;
   public enseigne:string;
   public restaurants: string;
-  public mobile: boolean;
+  public not_mobile: boolean;
   public contact_form = new FormGroup({
     sender: new FormControl('', Validators.required),
     message: new FormControl('', Validators.required)
   })
 
   constructor(private ofApp: FirebaseApp, router: Router, private service:UserInteractionService,
-     private mail_service:MailServicesService,public dialog: MatDialog, private _snackBar: MatSnackBar) { 
+     private mail_service:MailServicesService,public dialog: MatDialog,
+     private _snackBar: MatSnackBar, public mobile_service:CommonService) { 
     this.router = router;
     this.user_db = new User()
     this.enseigne = "";
     this.restaurants = "";
-    this.mobile = false;
+    this.not_mobile = false;
     this.auth = getAuth(this.ofApp);
     if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
       try {
@@ -80,9 +82,9 @@ export class ProfilComponent implements OnInit {
         })
       }
     })
-    if (window.screen.width > 1040) { // 768px portrait
-      this.mobile = true;
-    }
+    this.not_mobile = this.mobile_service.getMobileBreakpoint("mobile");
+    console.log(this.not_mobile);
+    
   }
 
   suppCompte(){
