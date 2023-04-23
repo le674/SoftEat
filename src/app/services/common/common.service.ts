@@ -9,10 +9,13 @@ export class CommonService {
 
   // l'argument type dépend du tbaleau que l'on souhaite transformer 
   getMobileBreakpoint(type:string):boolean{
-    if ((window.innerWidth < 768) && (type !== "ing")) {
+    if((type === "ing") && (window.innerWidth < 876)){
       return true;
     }
-    if((type === "ing") && (window.innerWidth < 876)){
+    if((type === "prepa") && (window.innerWidth < 876)){
+      return true;
+    }
+    if((type === "conso") && (window.innerWidth < 876)){
       return true;
     }
     if((type === "mobile") && (window.innerWidth < 1040)){

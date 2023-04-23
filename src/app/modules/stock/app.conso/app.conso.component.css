@@ -87,3 +87,8 @@ ul{
 .mat-list-item{
     margin-bottom: 10px;
 }
+.categorie{
+    font-size: medium;
+    font-weight: bolder;
+    color: rgb(125, 181, 46);
+}

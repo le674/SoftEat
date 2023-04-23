@@ -28,59 +28,83 @@ body {
     display: flex;
     justify-content: flex-end;
 }
-
 p{
     padding-top: 16px;
     margin-left: 10px;
 }
-
 #help {
     color: rgb(125, 181, 46);
     background-color: white;
     margin-right: 10px;
     margin-top: 10px;
 }
-
 #help:hover{
     background-color: rgb(125, 181, 46);
     color: white;
 }
-
 #top-border{
     display: flex;
     justify-content: space-between;
 }
-
 .indication{
     color: rgb(125, 181, 46);
 }
-
 h2 {
     font-size: larger;
     color: rgb(125, 181, 46);
-    margin-bottom: 35px;
 }
-
 .mat-grid-tile-content{
     justify-content: flex-start;
 }
-
 table{
     min-width: auto;
 }
-
 .name{
     max-width: 100px;
 }
-
 .comm-cells{
     min-width: 150px;
 }
-
 .other-cells{
     min-width: 100px;
 }
-
 table{
     width: 100%;
+}
+/* mobile */
+.accordion-item {
+    margin-top: 1%;
+ }
+.accordion-button{
+    color: rgb(125, 181, 46);
+    text-align: center;
+    display:block;
+ }
+
+.accordion-body{
+  display: flex;
+  justify-content: space-between;
+}
+.collapse-section{
+    display: flex;
+    justify-content: space-between;
+}
+#modif-section{
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.categorie{
+    font-size: medium;
+    font-weight: bolder;
+    color: rgb(125, 181, 46);
+}
+@media screen and (max-width: 600px) { 
+    .final_section{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        max-width: 70%;    
+    }
 }

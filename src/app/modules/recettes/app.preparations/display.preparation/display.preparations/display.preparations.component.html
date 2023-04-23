@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Preparation</title>
 </head>
+
 <body>
     <div class="inputs-containers-close" id="close-section">
-        <button (click)="closePopup($event)" class="close-fab" mat-mini-fab type="button" id="close_popup" color="white" matTooltip="fermer la fenêtre"
-        aria-label="close popup">
-        <i class="fa-regular fa-xmark"></i>
+        <button (click)="closePopup($event)" class="close-fab" mat-mini-fab type="button" id="close_popup" color="white"
+            matTooltip="fermer la fenêtre" aria-label="close popup">
+            <i class="fa-regular fa-xmark"></i>
         </button>
     </div>
     <div id="top-border" class="border">
         <p> <span class="indication">Nom :</span> {{name_prepa}}</p>
         <div id="action-buttons">
-            <button id="help" mat-mini-fab aria-label="aide" matTooltip="aide pour la fiche technique des préparations" (click)="OpenHelp()">
+            <button id="help" mat-mini-fab aria-label="aide" matTooltip="aide pour la fiche technique des préparations"
+                (click)="OpenHelp()">
                 <i class="fa-solid fa-question"></i>
             </button>
         </div>
     </div>
-   
+
     <div class="section border">
         <p> <span class="indication">Temps de préparation théorique :</span> {{tmps_prepa}}</p>
         <p> <span class="indication">Prime cost :</span> {{prime_cost}} </p>
@@ -34,7 +37,7 @@
         <div class="row">
             <div class="col">
                 <h2>Ingrédients</h2>
-                <table mat-table [dataSource]="dataSource_ing" class="mat-elevation-z8">
+                <table *ngIf="!windows_screen_mobile" mat-table [dataSource]="dataSource_ing" class="mat-elevation-z8">
                     <ng-container matColumnDef="nom">
                         <th class="name" mat-header-cell *matHeaderCellDef> nom </th>
                         <td class="name" mat-cell *matCellDef="let element"> {{element.name}}</td>
@@ -58,19 +61,63 @@
                     <tr mat-header-row *matHeaderRowDef="displayedColumnsIng"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumnsIng;"></tr>
                 </table>
-                <mat-paginator #paginatoring [pageSizeOptions]="[1]"
-                    (page)="pageChangedInv($event)"
-                    [length]="displayed_ing.length"
-                    showFirstLastButtons
+                <mat-paginator *ngIf="!windows_screen_mobile" #paginatoring [pageSizeOptions]="[1]"
+                    (page)="pageChangedInv($event)" [length]="displayed_ing.length" showFirstLastButtons
                     aria-label="Selection page d'une preparation">
                 </mat-paginator>
             </div>
-            <div class="col"></div>
+            <div *ngIf="!windows_screen_mobile" class="col"> </div>
+            <div *ngIf="windows_screen_mobile" #accordeon
+                [ngStyle]="{'max-width.px': this.mobile_service.accordeonMaxWidth()}" class="accordion">
+                <div class="accordion-item" *ngFor="let ingredient of displayed_ing; let i = index;">
+                    <h2 class="accordion-header" [id]="'heading_' + ingredient.name.split('\<br>').join('_')">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            [attr.data-bs-target]="'#collapse_' +  ingredient.name.split('\<br>').join('_')"
+                            [attr.aria-controls]="'collapse_' +  ingredient.name.split('\<br>').join('_')"
+                            (click)="changeArrow(i, 1)">
+                            <div class="collapse-section">
+                                <p>{{ingredient.name.split("_").join(" ")}}</p>
+                                <i [ngClass]="getVisible(i, 1) ? 'fa-regular fa-angle-down' : 'fa-regular fa-angle-up'"></i>
+                            </div>
+                        </button>
+                    </h2>
+                    <div [id]="'collapse_' + ingredient.name.split('\<br>').join('_')"
+                        class="accordion-collapse collapse"
+                        [attr.aria-labelledby]="'heading_' + ingredient.name.split('\<br>').join('_')"
+                        data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <div>
+                                <mat-list role="list">
+                                    <mat-list-item role="listitem">
+                                        <span class="categorie">Quantitée</span>
+                                    </mat-list-item>
+                                    <mat-list-item role="listitem">
+                                        {{ingredient.quantity}} {{ingredient.unity}}
+                                    </mat-list-item>
+                                    <mat-list-item role="listitem">
+                                        <span class="categorie">Coût unitaire HT</span>
+                                    </mat-list-item>
+                                    <mat-list-item role="listitem">
+                                        <span>{{ingredient.cost}}</span>
+                                    </mat-list-item>
+                                    <mat-list-item role="listitem">
+                                        <span class="categorie">Coût matière</span>
+                                    </mat-list-item>
+                                    <mat-list-item role="listitem">
+                                        <span>{{ingredient.cost_matiere}}</span>
+                                    </mat-list-item>
+                                </mat-list>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col">
                 <h2>Consommables</h2>
-                <table mat-table [dataSource]="dataSource_conso" class="mat-elevation-z8">
+                <table *ngIf="!windows_screen_mobile" mat-table [dataSource]="dataSource_conso"
+                    class="mat-elevation-z8">
                     <ng-container matColumnDef="nom">
                         <th class="name" mat-header-cell *matHeaderCellDef> nom </th>
                         <td class="name" mat-cell *matCellDef="let element"> {{element.name}} </td>
@@ -90,16 +137,54 @@
                     <tr mat-header-row *matHeaderRowDef="displayedColumnsConso"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumnsConso;"></tr>
                 </table>
-                <mat-paginator #paginatorconso [pageSizeOptions]="[1]"
-                    (page)="pageChangedConso($event)"
-                    [length]="displayed_conso.length"
-                    showFirstLastButtons
+                <mat-paginator *ngIf="!windows_screen_mobile" #paginatorconso [pageSizeOptions]="[1]"
+                    (page)="pageChangedConso($event)" [length]="displayed_conso.length" showFirstLastButtons
                     aria-label="Selection page d'une preparation">
                 </mat-paginator>
             </div>
+            <div *ngIf="windows_screen_mobile" #accordeon
+            [ngStyle]="{'max-width.px': this.mobile_service.accordeonMaxWidth()}" class="accordion">
+            <div class="accordion-item" *ngFor="let consommable of displayed_conso; let i = index;">
+                <h2 class="accordion-header" [id]="'heading_' + consommable.name.split('\<br>').join('_')">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        [attr.data-bs-target]="'#collapse_' +  consommable.name.split('\<br>').join('_')"
+                        [attr.aria-controls]="'collapse_' + consommable.name.split('\<br>').join('_')"
+                        (click)="changeArrow(i, 2)">
+                        <div class="collapse-section">
+                            <p>{{consommable.name.split("\<br>").join(" ")}}</p>
+                            <i [ngClass]="getVisible(i, 2) ? 'fa-regular fa-angle-down' : 'fa-regular fa-angle-up'"></i>
+                        </div>
+                    </button>
+                </h2>
+                <div [id]="'collapse_' + consommable.name.split('\<br>').join('_')"
+                    class="accordion-collapse collapse"
+                    [attr.aria-labelledby]="'heading_' + consommable.name.split('\<br>').join('_')"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div>
+                            <mat-list role="list">
+                                <mat-list-item role="listitem">
+                                    <span class="categorie">Quantitée</span>
+                                </mat-list-item>
+                                <mat-list-item>
+                                    {{consommable.quantity}} {{consommable.unity}}
+                                </mat-list-item>
+                                <mat-list-item role="listitem">
+                                    <span class="categorie">Coût</span><br>
+                                </mat-list-item>
+                                <mat-list-item role="listitem">
+                                    {{consommable.cost}}
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
             <div class="col">
                 <h2>Étapes</h2>
-                <table mat-table [dataSource]="dataSource_etape" class="mat-elevation-z8">
+                <table *ngIf="!windows_screen_mobile" mat-table [dataSource]="dataSource_etape"
+                    class="mat-elevation-z8">
                     <ng-container matColumnDef="nom">
                         <th class="name" mat-header-cell *matHeaderCellDef> nom </th>
                         <td class="name" mat-cell *matCellDef="let element"> {{element.nom}} </td>
@@ -110,19 +195,70 @@
                     </ng-container>
                     <ng-container matColumnDef="commentaire">
                         <th class="comm-cells" mat-header-cell *matHeaderCellDef> commentaire</th>
-                        <td class="comm-cells" mat-cell *matCellDef="let element"><p>{{element.commentaire}}</p></td>
+                        <td class="comm-cells" mat-cell *matCellDef="let element">
+                            <p>{{element.commentaire}}</p>
+                        </td>
                     </ng-container>
                     <tr mat-header-row *matHeaderRowDef="displayedColumnsEtape"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumnsEtape;"></tr>
                 </table>
-                <mat-paginator #paginatoretape [pageSizeOptions]="[1]"
-                    (page)="pageChangedEtape($event)"
-                    [length]="displayed_etape.length"
-                    showFirstLastButtons
+                <mat-paginator *ngIf="!windows_screen_mobile" #paginatoretape [pageSizeOptions]="[1]"
+                    (page)="pageChangedEtape($event)" [length]="displayed_etape.length" showFirstLastButtons
                     aria-label="Selection page d'une preparation">
                 </mat-paginator>
             </div>
+            <div *ngIf="windows_screen_mobile" #accordeon
+            [ngStyle]="{'max-width.px': this.mobile_service.accordeonMaxWidth()}" class="accordion">
+            <div class="accordion-item" *ngFor="let etape of displayed_etape; let i = index;">
+                <h2 class="accordion-header" [id]="'heading_' + etape.nom.split(' ').join('_')">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        [attr.data-bs-target]="'#collapse_' +  etape.nom.split(' ').join('_')"
+                        [attr.aria-controls]="'collapse_' +  etape.nom.split(' ').join('_')"
+                        (click)="changeArrow(i, 3)">
+                        <div class="collapse-section">
+                            <p>{{etape.nom}}</p>
+                            <i [ngClass]="getVisible(i, 3) ? 'fa-regular fa-angle-down' : 'fa-regular fa-angle-up'"></i>
+                        </div>
+                    </button>
+                </h2>
+                <div [id]="'collapse_' + etape.nom.split(' ').join('_')" class="accordion-collapse collapse"
+                    [attr.aria-labelledby]="'heading_' + etape.nom.split(' ').join('_')"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div>
+                            <mat-list role="list">
+                                <mat-list-item role="listitem">
+                                    <span class="categorie">Nom de préparation</span>
+                                </mat-list-item>
+                                <mat-list-item role="listitem">
+                                    <p>
+                                        {{etape.nom}}
+                                    </p>
+                                </mat-list-item>
+                                <mat-list-item role="listitem">
+                                    <span class="categorie">Temps de préparation</span><br>
+                                </mat-list-item>
+                                <mat-list-item role="listitem">
+                                    <p>
+                                        {{etape.temps}}
+                                    </p>
+                                </mat-list-item>
+                                <mat-list-item role="listitem">
+                                    <span class="categorie">Commentaire</span>
+                                </mat-list-item>
+                                <mat-list-item role="listitem">
+                                    <p>
+                                        {{etape.commentaire}}
+                                    </p>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>      
+        </div>
+    </div>
 </body>
+
 </html>

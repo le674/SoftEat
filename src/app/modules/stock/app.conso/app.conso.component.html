@@ -99,11 +99,25 @@
             <div class="accordion-body">
               <div>
                 <mat-list role="list">
-                    <mat-list-item role="listitem">Quantitée : <br> {{consommable.quantity}}</mat-list-item>
-                    <mat-list-item role="listitem">Unitée: <br> {{consommable.unity}}</mat-list-item>
-                    <mat-list-item role="listitem">Coût unitaire HT: <br> {{consommable.cost}}</mat-list-item>
-                    <mat-list-item role="listitem">Coût unitaire TTC: <br> {{consommable.cost_ttc}}</mat-list-item>
-                    <mat-list-item role="listitem">date de récéption: <br> {{consommable.date_reception}}</mat-list-item>
+                    <mat-list-item role="listitem">
+                        <span class="categorie">Quantitée :</span><br>
+                        {{consommable.quantity}}
+                    </mat-list-item>
+                    <mat-list-item role="listitem">
+                        <span class="categorie">Unitée: </span><br>
+                        {{consommable.unity}}
+                    </mat-list-item>
+                    <mat-list-item role="listitem">
+                        <span class="categorie">Coût unitaire HT:</span><br>
+                        {{consommable.cost}}</mat-list-item>
+                    <mat-list-item role="listitem">
+                        <span class="categorie">Coût unitaire TTC:</span><br>
+                        {{consommable.cost_ttc}}
+                    </mat-list-item>
+                    <mat-list-item role="listitem">
+                        <span class="categorie">date de récéption: </span><br>
+                        {{consommable.date_reception}}
+                    </mat-list-item>
                 </mat-list>
                 <div id="modif-section">
                     <i class="fa-regular fa-trash action_table" (click)="suppConso(consommable)"></i>

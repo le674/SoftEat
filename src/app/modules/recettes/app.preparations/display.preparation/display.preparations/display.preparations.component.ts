@@ -10,6 +10,7 @@ import { IngredientsInteractionService } from 'src/app/services/menus/ingredient
 import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
 import { RecetteHelpPreparationsComponent } from './display.preparations.modals/recette.help.preparations/recette.help.preparations.component';
+import { CommonService } from 'src/app/services/common/common.service';
 
 @Component({
   selector: 'app-display.preparations',
@@ -21,7 +22,6 @@ export class DisplayPreparationsComponent implements OnInit {
   public tmps_prepa: string;
   public prime_cost: number;
   public val_bouch:number; 
-
   public displayedColumnsIng: string[] = ['nom', 'quantity', 'unity', 'cost', 'cost_matiere'];
   public displayedColumnsConso: string[] = ['nom', 'quantity', 'unity', 'cost'];
   public displayedColumnsEtape: string[] = ['nom', 'temps', 'commentaire'];
@@ -32,20 +32,17 @@ export class DisplayPreparationsComponent implements OnInit {
     cost: number;
     cost_matiere: number;
   }>;
-
   public dataSource_conso: MatTableDataSource<{
     name: string;
     cost: number;
     quantity: number;
     unity: string,
   }>;
-
   public dataSource_etape: MatTableDataSource<{
     nom: string;
     temps: number;
     commentaire: string | null;
   }>;
-
   public displayed_ing: Array<{
     name: string;
     quantity: number;
@@ -53,26 +50,29 @@ export class DisplayPreparationsComponent implements OnInit {
     cost: number;
     cost_matiere: number;
   }>;
-
   public displayed_conso: Array<{
     name: string;
     cost: number;
     quantity: number;
     unity: string;
   }>;
-
   public displayed_etape: Array<{
     nom: string;
     temps: number;
     commentaire: string | null;
   }>;
+  public visibles:{
+    index_1:Array<boolean>,
+    index_2: Array<boolean>,
+    index_3: Array<boolean>
+  };
+  public windows_screen_mobile:boolean;
   @ViewChild('paginatoring') paginatoring!: MatPaginator;
   @ViewChild('paginatorconso') paginatorconso!: MatPaginator;
   @ViewChild('paginatoretape') paginatoretape!: MatPaginator;
   page_number_etapes: number;
   page_number_conso: number;
   page_number_ings: number;
-
   constructor(public dialogRef: MatDialogRef<DisplayPreparationsComponent>, @Inject(MAT_DIALOG_DATA) public data: {
     prop: string,
     restaurant: string,
@@ -87,7 +87,7 @@ export class DisplayPreparationsComponent implements OnInit {
     prime_cost:number
   }, private ingredient_service: IngredientsInteractionService,
    private prepa_service:CalculPrepaService, private restau_service:RestaurantService,
-   public dialog: MatDialog, private _snackBar: MatSnackBar) { 
+   public dialog: MatDialog, private _snackBar: MatSnackBar,  public mobile_service:CommonService) { 
     this.page_number_conso = 0;
     this.page_number_etapes = 0;
     this.page_number_ings = 0;
@@ -101,15 +101,18 @@ export class DisplayPreparationsComponent implements OnInit {
     this.dataSource_ing = new MatTableDataSource(this.displayed_ing);
     this.dataSource_conso = new MatTableDataSource(this.displayed_conso);
     this.dataSource_etape = new MatTableDataSource(this.displayed_etape);
+    this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("ing");
+    this.visibles = {
+      index_1: [],
+      index_2: [],
+      index_3: []
+    }
   }
-
   ngOnInit(): void {
-
     this.name_prepa = this.data.name;
     this.tmps_prepa = this.prepa_service.SecToString(this.data.temps);
     this.prime_cost = this.data.prime_cost;
     this.val_bouch = this.data.val_bouch;
-
     if(this.data.ingredients !== null){
       if(this.data.ingredients.length > 0){
 
@@ -117,16 +120,19 @@ export class DisplayPreparationsComponent implements OnInit {
           return {name: ing.name, quantity: ing.quantity, unity: ing.unity, cost:ing.cost, cost_matiere: ing.material_cost}
         })
         this.dataSource_ing.data = this.displayed_ing;
+        this.visibles.index_1 = new Array(this.displayed_ing.length).fill(false);
       }
     }
     if(this.data.consommables !== null){
       if(this.data.consommables.length > 0){
         this.displayed_conso = this.data.consommables;
-        this.dataSource_conso.data = this.displayed_conso; 
+        this.dataSource_conso.data = this.displayed_conso;
+        this.visibles.index_2 = new Array(this.displayed_conso.length).fill(false); 
       }
     }
     if(this.data.etapes !== null){
       this.displayed_etape = this.data.etapes.map((etape) => {return {nom: etape.nom, temps: etape.temps, commentaire: etape.commentaire}})
+      this.visibles.index_3 = new Array(this.displayed_etape.length).fill(false); 
       this.dataSource_etape.data = this.displayed_etape;
     }
     
@@ -150,7 +156,6 @@ export class DisplayPreparationsComponent implements OnInit {
     etapes_data.pageIndex = this.page_number_etapes
     this.pageChangedEtape(etapes_data);
   }
-  
   pageChangedEtape(event:PageEvent){
     event.length;
     let datasource = [... this.displayed_etape];
@@ -158,7 +163,6 @@ export class DisplayPreparationsComponent implements OnInit {
     this.dataSource_etape.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
     
   }
-
   pageChangedConso(event:PageEvent){
     event.length;
     let datasource = [... this.displayed_conso];
@@ -166,7 +170,6 @@ export class DisplayPreparationsComponent implements OnInit {
     this.dataSource_conso.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
     
   }
-
   pageChangedInv(event:PageEvent){
     event.length;
     let datasource = [... this.displayed_ing];
@@ -174,7 +177,6 @@ export class DisplayPreparationsComponent implements OnInit {
     this.dataSource_ing.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
     
   }
-  
   OpenHelp() {
     const dialogRef = this.dialog.open(RecetteHelpPreparationsComponent, {
       height: `630px`,
@@ -183,5 +185,12 @@ export class DisplayPreparationsComponent implements OnInit {
   }
   closePopup(click:MouseEvent){
     this.dialogRef.close();
+  }
+  // Gestion de l'accordéon version mobile
+  getVisible(i: number, categorie:number):boolean{
+    return this.visibles["index_" + categorie.toString() as keyof typeof this.visibles][i];
+  } 
+  changeArrow(arrow_index: number, categorie:number) {
+    this.visibles["index_" + categorie.toString() as keyof typeof this.visibles][arrow_index] = !this.visibles["index_" + categorie.toString() as keyof typeof this.visibles][arrow_index];
   }
 }

@@ -8,6 +8,7 @@ import { ConsommableInteractionService } from 'src/app/services/menus/consommabl
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { AddPreparationsComponent } from './add.preparations/add.preparations.component';
 import { DisplayPreparationsComponent } from './display.preparation/display.preparations/display.preparations.component';
+import { CommonService } from 'src/app/services/common/common.service';
 
 @Component({
   selector: 'app-preparations',
@@ -25,7 +26,8 @@ export class AppPreparationsComponent implements OnInit {
   private full_conso_lst: Array<Cconsommable>;
 
   constructor(public dialog: MatDialog, private ingredient_service: IngredientsInteractionService,
-  private consommable_service: ConsommableInteractionService, router: Router, private _snackBar: MatSnackBar) { 
+  private consommable_service: ConsommableInteractionService,
+  router: Router, private _snackBar: MatSnackBar) { 
     this.preparations = [];
     this.full_ing_lst = [];
     this.full_conso_lst = [];

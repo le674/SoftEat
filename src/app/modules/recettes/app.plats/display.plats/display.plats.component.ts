@@ -10,6 +10,8 @@ import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.in
 import { MenuCalculPlatsServiceService } from 'src/app/services/menus/menu.calcul/menu.calcul.plats/menu.calcul.plats.service.service';
 import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 import { RecetteHelpPlatsComponent } from './display.plats.modals/recette.help.plats/recette.help.plats.component';
+import { CommonService } from 'src/app/services/common/common.service';
+import { Visibles } from 'src/app/modules/autho/app.configue/app.configue.index';
 
 @Component({
   selector: 'app-display.plats',
@@ -29,7 +31,13 @@ export class DisplayPlatsComponent implements OnInit {
   public displayedColumnsConso: string[] = ['nom', 'quantity', 'unity', 'cost'];
   public displayedColumnsEtape: string[] = ['nom', 'temps', 'commentaire'];
   public displayedColumnsPrepa: string[] = ['nom', 'val_bouch', 'cost'];
-
+  public windows_screen_mobile:boolean;
+  public visibles:{
+    index_1:Array<boolean>,
+    index_2: Array<boolean>,
+    index_3: Array<boolean>,
+    index_4: Array<boolean>
+  };
   public dataSource_prepa: MatTableDataSource<{
     name: string;
     val_bouch:number;
@@ -102,7 +110,7 @@ export class DisplayPlatsComponent implements OnInit {
     preparations: Array<Cpreparation>,
     plat: Cplat
     }, private prepa_service:CalculPrepaService, private plat_service:MenuCalculPlatsServiceService, private _snackBar: MatSnackBar,
-     private calcul_service:CalculService,  public dialog: MatDialog) {
+     private calcul_service:CalculService, public mobile_service:CommonService  ,public dialog: MatDialog) {
       this.preparations = [];
       this.ingredients = [];
       this.consommables = [];
@@ -125,8 +133,14 @@ export class DisplayPlatsComponent implements OnInit {
       this.dataSource_conso = new MatTableDataSource(this.displayed_conso);
       this.dataSource_etape = new MatTableDataSource(this.displayed_etape);
       this.dataSource_prepa = new MatTableDataSource(this.displayed_prepa);
+      this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("ing");
+      this.visibles = {
+        index_1: [],
+        index_2: [],
+        index_3: [],
+        index_4: []
+      }
     }
-
   ngOnInit(): void {
     //ont récupère les préprations uniquement qui sont 
 
@@ -163,8 +177,9 @@ export class DisplayPlatsComponent implements OnInit {
                     val_bouch: this.prepa_service.getValBouchFromBasIng(preparation.base_ing as TIngredientBase[], 1, "p"),
                     cost: this.prepa_service.getTotCost(preparation.base_ing as TIngredientBase[])
             }
-        })
-        this.dataSource_prepa.data = this.displayed_prepa;
+          })
+          this.dataSource_prepa.data = this.displayed_prepa;
+          this.visibles.index_2 = new Array(this.displayed_prepa.length).fill(false);
       }
     }
 
@@ -172,9 +187,9 @@ export class DisplayPlatsComponent implements OnInit {
       if(this.data.plat.ingredients.length > 0){
         const material_cost = this.prepa_service.getCostMaterial(this.data.plat.ingredients);
         this.displayed_ing = material_cost.map((ing) => {
-
           return {name: ing.nom, quantity: ing.quantity, unity: ing.unity, cost:ing.cost, cost_matiere: ing.cost_matiere}
-        })
+        });
+        this.visibles.index_1 = new Array(this.displayed_ing.length).fill(false);
         this.dataSource_ing.data = this.displayed_ing;
       }
     }
@@ -183,11 +198,13 @@ export class DisplayPlatsComponent implements OnInit {
         this.displayed_conso = this.data.plat.consommables.map((consommable) => {
           return {name: consommable.name, cost: consommable.cost, quantity:consommable.quantity, unity:consommable.unity};
         });
+        this.visibles.index_3 = new Array(this.displayed_conso.length).fill(false);
         this.dataSource_conso.data = this.displayed_conso; 
       }
     }
     if(this.data.plat.etapes !== null){
       this.displayed_etape = this.data.plat.etapes.map((etape) => {return {nom: etape.nom, temps: etape.temps, commentaire: etape.commentaire}})
+      this.visibles.index_4 = new Array(this.displayed_etape.length).fill(false);
       this.dataSource_etape.data = this.displayed_etape;
     }
 
@@ -217,7 +234,6 @@ export class DisplayPlatsComponent implements OnInit {
      prepa_data.pageIndex = this.page_number_prepa
      this.pageChangedPrepa(prepa_data);
   }
-
   pageChangedPrepa(event:PageEvent){
     event.length;
     let datasource = [... this.displayed_prepa];
@@ -225,7 +241,6 @@ export class DisplayPlatsComponent implements OnInit {
     this.dataSource_prepa.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
     
   }
-
   pageChangedEtape(event:PageEvent){
     event.length;
     let datasource = [... this.displayed_etape];
@@ -233,7 +248,6 @@ export class DisplayPlatsComponent implements OnInit {
     this.dataSource_etape.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
     
   }
-
   pageChangedConso(event:PageEvent){
     event.length;
     let datasource = [... this.displayed_conso];
@@ -241,7 +255,6 @@ export class DisplayPlatsComponent implements OnInit {
     this.dataSource_conso.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
     
   }
-
   pageChangedIng(event:PageEvent){
     event.length;
     let datasource = [... this.displayed_ing];
@@ -249,7 +262,6 @@ export class DisplayPlatsComponent implements OnInit {
     this.dataSource_ing.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
     
   }
-
   OpenHelp() {
     const dialogRef = this.dialog.open(RecetteHelpPlatsComponent, {
       height: `900px`,
@@ -258,5 +270,13 @@ export class DisplayPlatsComponent implements OnInit {
   }
   closePopup(click:MouseEvent){
     this.dialogRef.close();
+  }
+
+  // Gestion de l'accordéon version mobile
+  getVisible(i: number, categorie:number):boolean{
+    return this.visibles["index_" + categorie.toString() as keyof typeof this.visibles][i];
+  } 
+  changeArrow(arrow_index: number, categorie:number) {
+    this.visibles["index_" + categorie.toString() as keyof typeof this.visibles][arrow_index] = !this.visibles["index_" + categorie.toString() as keyof typeof this.visibles][arrow_index];
   }
 }

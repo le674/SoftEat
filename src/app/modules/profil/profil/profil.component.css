@@ -283,7 +283,6 @@ h1, h2{
         width: fit-content !important;
         min-width: 100%;
     }
-
     ::ng-deep .mat-form-field-infix {
         min-width: 120px !important;
         width: fit-content !important;
