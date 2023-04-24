@@ -25,7 +25,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     unitary_cost: new FormControl(0, Validators.required),
     dlc: new FormControl(0, Validators.required),
     marge: new FormControl(0, Validators.required),
-    vrac: new FormControl('', Validators.required),
+    vrac: new FormControl('non', Validators.required),
   })
   @ViewChild('taux')
   taux!: ElementRef;
@@ -121,7 +121,6 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     let act_quant = 0;
     // on construit la date limite de consomation à partir de la date de récéption.
     if (this.is_modif) {
-
       const date_reception_date = this.calcul_service.stringToDate(this.data.ingredient.date_reception);
       const dlc = this.calcul_service.stringToDate(this.data.ingredient.date_reception);
       new_ing.date_reception = date_reception_date

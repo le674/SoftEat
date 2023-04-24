@@ -11,6 +11,8 @@ export class ConsommableInteractionService {
 
   private db: Database;
   private consommable: Array<Cconsommable>;
+  private months:string[];
+  private actual_month:string;
   constructor(private ofApp: FirebaseApp){
     this.db = getDatabase(ofApp);
     if((location.hostname === "localhost") && (!FIREBASE_PROD) ) {
@@ -22,12 +24,15 @@ export class ConsommableInteractionService {
       }
     } 
     this.consommable = [];
+    const actual_date = new Date();
+    this.months = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","decembre"];
+    this.actual_month = this.months[actual_date.getMonth()];
   }
 
   async getConsommablesFromRestaurants(prop: string, restaurant: string) {
     const ref_db = ref(this.db);
     this.consommable = [];
-    const path = `consommables_${prop}_${restaurant}/${prop}/${restaurant}/`;
+    const path = `consommables_${this.actual_month}_${prop}_${restaurant}/${prop}/${restaurant}/`;
     await get(child(ref_db, path)).then((consommable) => {
       consommable.forEach((conso) => {
         if ((conso.key !== "preparation") && (conso.key !== "resto_auth")) {
@@ -50,7 +55,7 @@ export class ConsommableInteractionService {
   async getConsommablesFromRestaurantsFiltreIds(prop: string, restaurant: string) {
     const ref_db = ref(this.db);
     this.consommable = [];
-    const path = `consommables_${prop}_${restaurant}/${prop}/${restaurant}/`;
+    const path = `consommables_${this.actual_month}_${prop}_${restaurant}/${prop}/${restaurant}/`;
     await get(child(ref_db, path)).then((consommable) => {
       consommable.forEach((conso) => {
         if ((conso.key !== "preparation")) {
@@ -80,7 +85,7 @@ export class ConsommableInteractionService {
 
       const conso_name = base_conso[index].name.split(' ').join('_');
       const conso_quantity = base_conso[index].quantity;
-      const path = `consommables_${prop}_${restaurant}/${prop}/${restaurant}/${conso_name}`
+      const path = `consommables_${this.actual_month}_${prop}_${restaurant}/${prop}/${restaurant}/${conso_name}`
       await get(child(ref_db, path)).then((conso_bdd) => {
         if((conso_bdd.child("cost").val() !== null)){
           let conso:Cconsommable = new Cconsommable();
@@ -99,7 +104,7 @@ export class ConsommableInteractionService {
     let ref_db: DatabaseReference;
     console.log(consommable);
     
-    const path_conso = `consommables_${prop}_${restaurant}/${prop}/${restaurant}/${consommable.name}`;
+    const path_conso = `consommables_${this.actual_month}_${prop}_${restaurant}/${prop}/${restaurant}/${consommable.name}`;
     const path_lst_conso = `inventaire_${prop}_${restaurant}/${prop}/${restaurant}/consommables/${consommable.name}`;
     ref_db = ref(this.db);
     // dans le cas d'ajout d'une non préparation  on modifie l'ingrédient préparé 
@@ -125,7 +130,7 @@ export class ConsommableInteractionService {
   async removeConsoInBdd(name_conso: string, prop:string, restaurant:string){
     let ref_db: DatabaseReference;
     if(name_conso !== ""){
-        const path = `consommables_${prop}_${restaurant}/${prop}/${restaurant}/${name_conso}`;
+        const path = `consommables_${this.actual_month}_${prop}_${restaurant}/${prop}/${restaurant}/${name_conso}`;
         const path_lst_conso = `inventaire_${prop}_${restaurant}/${prop}/${restaurant}/consommables/${name_conso}`;
         ref_db = ref(this.db, path);
         await remove(ref_db).then(() => console.log("consommable ", name_conso, "bien supprimée"))

@@ -17,6 +17,8 @@ import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.serv
 export class IngredientsInteractionService {
   private db: Database;
   private firestore: Firestore;
+  private months:string[];
+  private actual_month:string;
   private ingredients_minimal: Array<TIngredientBase>
   private preparation: Array<Cpreparation>;
   private ingredients: Array<CIngredient>;
@@ -44,11 +46,14 @@ export class IngredientsInteractionService {
     this.ingredients = [];
     this.preparation = [];
     this.ingredients_minimal = [];
+    this.months = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","decembre"];
+    const actual_date = new Date();
+    this.actual_month = this.months[actual_date.getMonth()];
   }
 
  getIngredientsBrFromRestaurantsBDD(prop: string, restaurant: string):Unsubscribe{
     const ref_db = ref(this.db);
-    const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/`;
+    const path = `ingredients_${this.actual_month}_${prop}_${restaurant}/${prop}/${restaurant}/`;
     this.sub_ingredients_br = onValue(child(ref_db, path), (ingredients) => {
       this.ingredients = [];
       this.data_ingredient.next([]);
@@ -80,7 +85,7 @@ export class IngredientsInteractionService {
 
  getIngredientsPrepFromRestaurantsBDD(prop: string, restaurant: string):Unsubscribe{
     const ref_db = ref(this.db);
-    const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation`;
+    const path = `ingredients_${this.actual_month}_${prop}_${restaurant}/${prop}/${restaurant}/preparation`;
      this.sub_ingredients_prep = onValue(child(ref_db, path), (preparations) => {
       this.preparation = [];
       this.data_ingredient_prep.next([]);
@@ -116,7 +121,7 @@ export class IngredientsInteractionService {
   async getIngredientsBrFromRestaurantsPROM(prop: string, restaurant: string){
     this.ingredients = [];
     const ref_db = ref(this.db);
-    const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/`
+    const path = `ingredients_${this.actual_month}_${prop}_${restaurant}/${prop}/${restaurant}/`
     await get(child(ref_db, path)).then((ingredients) => {
       ingredients.forEach((ingredient) => {
         if (ingredient.key !== "preparation") {
@@ -148,7 +153,7 @@ export class IngredientsInteractionService {
   async getIngredientsPrepFromRestaurantsPROMForMenu(prop: string, restaurant: string){
     this.preparation = [];
     const ref_db = ref(this.db);
-    const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/`
+    const path = `ingredients_${this.actual_month}_${prop}_${restaurant}/${prop}/${restaurant}/preparation/`
     await get(child(ref_db, path)).then((preparations) => {
       preparations.forEach((preparation) => {
             const add_preparation = new Cpreparation(this.service);
@@ -187,12 +192,10 @@ export class IngredientsInteractionService {
     let ref_db: DatabaseReference;
     ref_db = ref(this.db)
     for (let index = 0; index < base_ings.length; index++) {
-      
       const ingredient_name = base_ings[index].name.split(' ').join('_');
       const ingredient_quantity = base_ings[index].quantity;
-      const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/${ingredient_name}`
+      const path = `ingredients_${this.actual_month}_${prop}_${restaurant}/${prop}/${restaurant}/${ingredient_name}`
       await get(child(ref_db, path)).then((ingredient_bdd) => {
-        
         if((ingredient_bdd.child("cost").val() !== null)){
           let ingredient:TIngredientBase = {
             name: ingredient_name,
@@ -246,7 +249,7 @@ export class IngredientsInteractionService {
 
   async setPreparationInBdd(preparation: Cpreparation, prop:string, restaurant:string, new_ing_aft_prepa: CIngredient[] | null){
     let ref_db: DatabaseReference;
-    const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/`;
+    const path = `ingredients_${this.actual_month}_${prop}_${restaurant}/${prop}/${restaurant}/preparation/`;
     ref_db = ref(this.db, path);
          // dans le cas d'ajout d'une préparation on modifie l'ingrédient préparé et les ingrédients de base
          let prep_path = `${preparation.nom}`
@@ -286,7 +289,7 @@ export class IngredientsInteractionService {
 
   async setIngInBdd(ingredient: CIngredient, prop:string, restaurant:string){
     let ref_db: DatabaseReference;
-    const path_ings = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/${ingredient.nom}/`;
+    const path_ings = `ingredients_${this.actual_month}_${prop}_${restaurant}/${prop}/${restaurant}/${ingredient.nom}/`;
     const path_lst_ings = `inventaire_${prop}_${restaurant}/${prop}/${restaurant}/ingredients/${ingredient.nom}/`;
     ref_db = ref(this.db);
     // dans le cas d'ajout d'une non préparation  on modifie l'ingrédient préparé 
@@ -322,18 +325,18 @@ export class IngredientsInteractionService {
     let ref_db: DatabaseReference;
     if(name_ing !== ""){
       if(is_prep){
-        const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name_ing}`;
+        const path = `ingredients_${this.actual_month}_${prop}_${restaurant}/${prop}/${restaurant}/preparation/${name_ing}`;
         ref_db = ref(this.db,  path);
       }
       else{
-        const path = `ingredients_${prop}_${restaurant}/${prop}/${restaurant}/${name_ing}`;
+        const path = `ingredients_${this.actual_month}_${prop}_${restaurant}/${prop}/${restaurant}/${name_ing}`;
         ref_db = ref(this.db, path);
       }
   
       await remove(ref_db).then(() => console.log("ingrédient ", name_ing, "bien supprimée"))
 
       if(!is_prep){
-        ref_db = ref(this.db,  `inventaire_${prop}_${restaurant}/${prop}/${restaurant}/ingredients/${name_ing}`);
+        ref_db = ref(this.db,  `inventaire_${this.actual_month}_${prop}_${restaurant}/${prop}/${restaurant}/ingredients/${name_ing}`);
         await remove(ref_db).then(() => console.log("ingrédient ", name_ing, "bien supprimée"))
       }
     }
@@ -342,7 +345,7 @@ export class IngredientsInteractionService {
   // ont va chercher les ingrédients directement dans 
   async getFullIngs(prop:string, restaurant:string) {
     let ref_db: DatabaseReference;
-    ref_db = ref(this.db, `inventaire_${prop}_${restaurant}/${prop}/${restaurant}/ingredients`)
+    ref_db = ref(this.db, `inventaire_${this.actual_month}_${prop}_${restaurant}/${prop}/${restaurant}/ingredients`)
     await get(ref_db).then((ings) => {
       this.ingredients_minimal = [];
       ings.forEach((ing) => {
