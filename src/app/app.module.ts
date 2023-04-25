@@ -17,7 +17,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { getAuth } from 'firebase/auth';
 import { provideAuth } from '@angular/fire/auth';
 import { RecettesModule } from './modules/recettes/recettes.module';
-import {MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR } from '@angular/material/radio';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({

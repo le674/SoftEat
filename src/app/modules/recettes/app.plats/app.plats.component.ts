@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
-import { Cconsommable, CIngredient, TIngredientBase } from 'src/app/interfaces/ingredient';
+import { Cconsommable, TIngredientBase } from 'src/app/interfaces/ingredient';
 import { Cplat } from 'src/app/interfaces/plat';
 import { Cpreparation } from 'src/app/interfaces/preparation';
 import { ConsommableInteractionService } from 'src/app/services/menus/consommable-interaction.service';
@@ -18,7 +18,6 @@ import { DisplayPlatsComponent } from './display.plats/display.plats.component';
   styleUrls: ['./app.plats.component.css']
 })
 export class AppPlatsComponent implements OnInit {
-
   public full_lst_prepa:Array<Cpreparation>;
   public full_lst_ings:Array<TIngredientBase>;
   public full_lst_conso: Array<Cconsommable>;
@@ -26,6 +25,9 @@ export class AppPlatsComponent implements OnInit {
   private url: UrlTree;
   private router: Router;
   public plats: Array<Cplat>;
+  public display_categorie: Array<string> = ['Entrée', 'Plat', 'Dessert'];
+  private categorie: Array<string> = ['entree', 'plat', 'dessert'];
+  public carte:Array<Array<Cplat>>;
   private prop:string;
   private restaurant:string;
 
@@ -39,6 +41,7 @@ export class AppPlatsComponent implements OnInit {
     this.full_lst_prepa = [];
     this.full_lst_conso = [];
     this.full_lst_ings = [];
+    this.carte = [];
   }
   ngOnInit(): void {
     let user_info = this.url.queryParams;
@@ -46,6 +49,8 @@ export class AppPlatsComponent implements OnInit {
     this.restaurant = user_info["restaurant"];
     this.plat_service.getPlatFromRestaurant(this.prop, this.restaurant).then((plats) => { 
       this.plats = plats;
+      console.log(plats);
+      this.categorie.map((categorie) => this.carte.push(plats.filter((plat) => plat.type === categorie)));
     })
     this.ingredient_service.getFullIngs(this.prop,this.restaurant).then((ingredients) => {
       this.full_lst_ings = ingredients;
@@ -59,7 +64,8 @@ export class AppPlatsComponent implements OnInit {
     
   }
   
-  addPlat(){
+  addPlat(categorie:number){
+    console.log(this.categorie[categorie]);
     this.dialog.open(AddPlatsComponent, {
       height: `${window.innerHeight}px`,
       width: `${window.innerWidth - window.innerWidth/5}px`,
@@ -69,7 +75,8 @@ export class AppPlatsComponent implements OnInit {
         full_ingredients: this.full_lst_ings,
         full_consommables: this.full_lst_conso,
         full_preparations: this.full_lst_prepa,
-        plat:null
+        plat:null,
+        type: this.categorie[categorie]
       }
     });
   }
@@ -93,7 +100,8 @@ export class AppPlatsComponent implements OnInit {
         full_ingredients: this.full_lst_ings,
         full_consommables: this.full_lst_conso,
         full_preparations: this.full_lst_prepa,
-        plat:plat
+        plat:plat,
+        type: ""
       }
     });
   }
@@ -111,4 +119,9 @@ export class AppPlatsComponent implements OnInit {
       }
     })
   }
+
+  getSection(categorie: number): Array<Cplat> {
+    return this.carte[categorie];
+  }
+
 }

@@ -5,6 +5,7 @@ import { RecettesRoutingModule } from './recettes-routing.module';
 import { AppMenuComponent } from './app.menu/app.menu.component';
 import { AppPlatsComponent } from './app.plats/app.plats.component';
 import { AppPreparationsComponent } from './app.preparations/app.preparations.component';
+import {MatTabsModule} from '@angular/material/tabs'; 
 import {MatDialogModule } from '@angular/material/dialog';
 import { AddMenuComponent } from './app.menu/add.menu/add.menu.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,7 +21,6 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import { DisplayPreparationsComponent } from './app.preparations/display.preparation/display.preparations/display.preparations.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 import { AddPlatsComponent } from './app.plats/add.plats/add.plats.component';
 import { DisplayPlatsComponent } from './app.plats/display.plats/display.plats.component';
 import { DisplayMenuComponent } from './app.menu/display.menu/display.menu.component';
@@ -47,6 +47,7 @@ import { RecetteHelpPlatsComponent } from './app.plats/display.plats/display.pla
   imports: [
     CommonModule,
     RecettesRoutingModule,
+    MatTabsModule,
     MatDialogModule,
     MatButtonModule,
     MatInputModule,

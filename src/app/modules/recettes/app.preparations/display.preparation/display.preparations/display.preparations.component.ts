@@ -5,7 +5,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Cetape } from 'src/app/interfaces/etape';
 import { Consommable, TIngredientBase } from 'src/app/interfaces/ingredient';
-import { ConsommableInteractionService } from 'src/app/services/menus/consommable-interaction.service';
 import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
 import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
@@ -85,9 +84,8 @@ export class DisplayPreparationsComponent implements OnInit {
     val_bouch:number,
     temps:number,
     prime_cost:number
-  }, private ingredient_service: IngredientsInteractionService,
-   private prepa_service:CalculPrepaService, private restau_service:RestaurantService,
-   public dialog: MatDialog, private _snackBar: MatSnackBar,  public mobile_service:CommonService) { 
+  }, private prepa_service:CalculPrepaService,
+   public dialog: MatDialog, public mobile_service:CommonService) { 
     this.page_number_conso = 0;
     this.page_number_etapes = 0;
     this.page_number_ings = 0;

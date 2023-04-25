@@ -3,7 +3,8 @@ body{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
+    scrollbar-width: thin;          /* "auto" or "thin" */
+    scrollbar-color: rgb(125, 181, 46) white;   /* scroll thumb and track */
 }
 
 header{
@@ -21,7 +22,10 @@ h1{
   display: flex;
   justify-content: flex-end;
 }
-
+/* permet l'espacement entre les table de navigation et les cartes */
+#container{
+  margin-top: 50px;
+}
 /* comment CSS
  */
  .btn {
@@ -115,22 +119,15 @@ h1{
     overflow-x: scroll;
   }
   
-  /* Scroll bar design */
-  /* Firefox */
-  body {
-    scrollbar-width: thin;          /* "auto" or "thin" */
-    scrollbar-color: rgb(125, 181, 46) white;   /* scroll thumb and track */
-  }
-  
   /*Other nav */
   .scroll-right::-webkit-scrollbar{
     width: 5px;
     height: 5px;
   }
   
-  .scroll-right::-webkit-scrollbar-track{
+/*   .scroll-right::-webkit-scrollbar-track{
     background-color: white;
-  }
+  } */
   
   .scroll-right::-webkit-scrollbar-thumb {
     background-color: rgb(125, 181, 46);

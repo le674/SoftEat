@@ -61,6 +61,7 @@ export class AddPlatsComponent implements OnInit {
   });
   public boisson:boolean;
 
+  private categorie:string = "";
   constructor(public dialogRef: MatDialogRef<AddPlatsComponent>, public plat_interaction:PlatsInteractionService,
     public prepa_interaction:CalculPrepaService, private formBuilder: FormBuilder, @Inject(MAT_DIALOG_DATA) public data:{
     prop:string,
@@ -68,7 +69,8 @@ export class AddPlatsComponent implements OnInit {
     full_ingredients: Array<TIngredientBase>,
     full_consommables: Array<Consommable>,
     full_preparations: Array<Cpreparation>,
-    plat: Cplat
+    plat: Cplat,
+    type:string
     }, private _snackBar: MatSnackBar, private plat_service:MenuCalculPlatsServiceService,
     private calcul_service:CalculService, private calcul_service_prepa:CalculPrepaService) {
     this.unity_conso = [];
@@ -81,13 +83,16 @@ export class AddPlatsComponent implements OnInit {
     this.full_lst_prepa = [];
     this.boisson = false;
     this.curr_ingredients_vrac = [];
+    this.categorie = this.data.type    
    }
 
   ngOnInit(): void {
     this.full_lst_conso = this.data.full_consommables;
     this.full_lst_ings = this.data.full_ingredients;
     this.full_lst_prepa = this.data.full_preparations;
-    
+    if(this.categorie !== ""){
+      this.add_plats_section.controls.type.setValue(this.categorie);
+    }
     if((this.data.plat !== null) && (this.data.plat !== undefined)){
       if((this.data.plat.nom !== null) && (this.data.plat.nom !== undefined)){
         this.add_plats_section.controls.name.setValue(this.data.plat.nom.split('_').join(' '));
