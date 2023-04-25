@@ -72,11 +72,21 @@ export class MenuCalculPlatsServiceService {
     let sum_time_prepa  = 0
    const sum_time_plat = this.prepa_service.getFullTheoTimeSec(plat.etapes)
    if(plat.preparations !== null){
-    sum_time_prepa = plat.preparations.map((preparation) => preparation.etapes
-      // s'assurer que lors de l'ajout d'une preparation ont a obligation d'ajouter un temps 
-      .map((etape) => etape.temps)
-      .reduce((prev_tmps, next_tmps) =>  prev_tmps + next_tmps))
-      .reduce((prev_prep_time, next_prep_time) => prev_prep_time + next_prep_time);
+    sum_time_prepa = plat.preparations.map((preparation) => {
+      if((preparation.etapes !== null) && (preparation.etapes !== undefined)){
+        let etapes = preparation.etapes.filter((etape) => (etape !== null) && (etape !== undefined));
+        if(etapes.length > 0){
+          return preparation.etapes.map((etape) => etape.temps)
+          .reduce((prev_tmps, next_tmps) =>  prev_tmps + next_tmps);
+        }
+        else{
+          return 0;
+        }
+      }
+      else{
+        return 0;
+      }
+    }).reduce((prev_prep_time, next_prep_time) => prev_prep_time + next_prep_time);
    }
    const full_time =  sum_time_plat + sum_time_prepa;
    const heure = Math.trunc(full_time/3600);
@@ -92,14 +102,26 @@ export class MenuCalculPlatsServiceService {
       sum_time_plat = this.prepa_service.getFullTheoTimeSec(plat.etapes);
     }
     if(plat.preparations !== null){
-     sum_time_prepa = plat.preparations
-                          .filter((prepa) => (prepa !== undefined) && (prepa !== null))
-                          .map((preparation) => preparation.etapes
-                          // s'assurer que lors de l'ajout d'une preparation ont a obligation d'ajouter un temps 
-                          .map((etape) => etape.temps)
-                          .filter((temps) => (temps !== null) && (temps !== undefined))
-                          .reduce((prev_tmps, next_tmps) =>  prev_tmps + next_tmps))
-                          .reduce((prev_prep_time, next_prep_time) => prev_prep_time + next_prep_time);
+     const preparations = plat.preparations.filter((prepa) => (prepa !== undefined) && (prepa !== null))
+     if(preparations.length > 0){
+      sum_time_prepa = preparations
+      .map((preparation) => {
+          if(preparation.etapes !== null){
+            const etapes = preparation.etapes.filter((prepa) => (prepa !== undefined) && (prepa !== null));
+            if(etapes.length > 0){
+              const time_etapes = etapes.map((etape) => etape.temps)
+              if(time_etapes !== null){
+                time_etapes.filter((temps) => (temps !== null) && (temps !== undefined))
+                if(time_etapes.length > 0){
+                  return time_etapes.reduce((prev_tmps, next_tmps) =>  prev_tmps + next_tmps)
+                }
+              }
+            }
+          }
+          return 0
+        }
+      ).reduce((prev_prep_time, next_prep_time) => prev_prep_time + next_prep_time);
+     }
     }
     const full_time =  sum_time_plat + sum_time_prepa;
     return full_time;

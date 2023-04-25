@@ -25,7 +25,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     unitary_cost: new FormControl(0, Validators.required),
     dlc: new FormControl(0, Validators.required),
     marge: new FormControl(0, Validators.required),
-    vrac: new FormControl('', Validators.required),
+    vrac: new FormControl('non', Validators.required),
   })
   @ViewChild('taux')
   taux!: ElementRef;
