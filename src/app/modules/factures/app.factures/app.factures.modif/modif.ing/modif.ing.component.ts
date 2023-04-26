@@ -142,7 +142,8 @@ export class ModifIngComponent implements OnInit {
       ingredient.unity_unitary = this.add_ing_section.controls.unity.value;
     }
     if(this.add_ing_section.controls.unitary_cost.value !== null){
-      ingredient.cost_ttc = this.add_ing_section.controls.unitary_cost.value
+      ingredient.cost = this.add_ing_section.controls.unitary_cost.value
+      ingredient.cost_ttc = 0;
     }
     if(this.add_ing_section.controls.marge.value !== null){
       ingredient.marge = this.add_ing_section.controls.marge.value;

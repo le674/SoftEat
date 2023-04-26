@@ -348,9 +348,9 @@ export class FactureSharedService {
         new_ingredient.quantity = _ingredient.quantity;
         new_ingredient.total_quantity = _ingredient.quantity;
         new_ingredient.quantity_unity = 1;
-        new_ingredient.unity_unitary = "p (pièce)";
+        new_ingredient.unity_unitary = "p";
         new_ingredient.unity = "";
-        new_ingredient.cost_ttc = _ingredient.price;
+        new_ingredient.cost = _ingredient.price;
         new_ingredient.date_reception = new Date();
         new_ingredient.dlc = new Date();
         new_ingredient.marge = 0;

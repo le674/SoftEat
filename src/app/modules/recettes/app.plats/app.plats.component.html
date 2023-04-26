@@ -47,13 +47,16 @@
                                 <figure>
                                     <div class="tourpic">
                                         <img width="300" height="200" src='/assets/images/street.jpg'>
-                                        <span class="tourday hot">Ajouter un plat</span>
+                                        <span *ngIf="(cat === 'Plat') || (cat === 'Dessert')"class="tourday hot">Ajouter un {{cat}}</span>
+                                        <span *ngIf="cat === 'Entrée'">Ajouter une {{cat}}</span>
                                     </div>
                                     <figcaption>
                                         <h3 class="entry-title">
-                                            <a>Nouveau plat</a>
+                                            <a *ngIf="(cat === 'Plat') || (cat === 'Dessert')">Nouveau {{cat}}</a>
+                                            <a *ngIf="cat === 'Entrée'">Nouvelle {{cat}}</a>
                                         </h3>
-                                        <span class="description">Cliquer pour ajouter un plat</span>
+                                        <span *ngIf="(cat === 'Plat') || (cat === 'Dessert')" class="description">Cliquer pour ajouter un {{cat}}</span>
+                                        <span *ngIf="cat === 'Entrée'">Cliquer pour ajouter une {{cat}}</span>
                                     </figcaption>
                                     <div class="tourbtn">
                                         <a class="btn btn-sm" target="_blank" rel="noreferrer" (click)="addPlat(i)">
