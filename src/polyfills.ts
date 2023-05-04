@@ -45,9 +45,19 @@
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
+import { Buffer } from "buffer";
 import 'zone.js';  // Included with Angular CLI.
-
-
+(window as any).global = window;
+global.Buffer = Buffer;
+(window as any).process = {
+  env: { DEBUG: undefined },
+  version: '',
+  nextTick: require("next-tick")
+};
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+(global as any).process = require('process');
+(global as any).assert = require('assert');
+(global as any).stream = require('stream-browserify');
+

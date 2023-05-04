@@ -1,11 +1,9 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { ConnectionComponent } from '../connection/connection.component';
-import { DOCUMENT } from '@angular/common'; 
-import { AuthentificationService } from 'src/app/services/authentification.service';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { AuthentificationService } from '../../../../../app/services/authentification.service';
 import { connectAuthEmulator, getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { Router } from '@angular/router';
-import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from '../../../../../environments/variables';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactComponent } from '../contact/contact.component';
 const firebaseConfig = {

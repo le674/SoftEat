@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import { child, connectDatabaseEmulator, Database, DatabaseReference, get, getDatabase, ref, update } from 'firebase/database';
-import { Cetape } from 'src/app/interfaces/etape';
-import { TConsoBase, TIngredientBase } from 'src/app/interfaces/ingredient';
-import { AfterPreparation, Cpreparation } from 'src/app/interfaces/preparation';
-import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { Cetape } from '../../../app/interfaces/etape';
+import { TConsoBase, TIngredientBase } from '../../../app/interfaces/ingredient';
+import { AfterPreparation, Cpreparation } from '../../../app/interfaces/preparation';
+import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../../environments/variables';
 import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.service';
 
 @Injectable({

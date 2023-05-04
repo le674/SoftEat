@@ -1,13 +1,12 @@
-import { ThisReceiver } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
 import { Unsubscribe } from 'firebase/auth';
 import { child, connectDatabaseEmulator, Database, DatabaseReference, get, getDatabase, onValue, ref, remove, update } from 'firebase/database';
 import { collection, connectFirestoreEmulator, Firestore, getDocs, getFirestore } from "firebase/firestore";
 import { Subject } from 'rxjs';
-import { CIngredient, TIngredientBase } from 'src/app/interfaces/ingredient';
-import { Cpreparation } from 'src/app/interfaces/preparation';
-import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_FIRESTORE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { CIngredient, TIngredientBase } from '../../../app/interfaces/ingredient';
+import { Cpreparation } from '../../../app/interfaces/preparation';
+import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_FIRESTORE_EMULATOR_HOST, FIREBASE_PROD } from '../../../environments/variables';
 import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.service';
 
 

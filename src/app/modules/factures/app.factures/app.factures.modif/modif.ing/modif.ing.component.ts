@@ -2,9 +2,9 @@ import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, OnInit,
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CIngredient } from 'src/app/interfaces/ingredient';
-import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
-import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { CIngredient } from '../../../../../../app/interfaces/ingredient';
+import { IngredientsInteractionService } from '../../../../../../app/services/menus/ingredients-interaction.service';
+import { CalculService } from '../../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 
 @Component({
   selector: 'app-modif.ing',

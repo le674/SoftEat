@@ -2,10 +2,10 @@ import { AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren } 
 import { Auth, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { Router } from '@angular/router';
-import { ShortUser, User } from 'src/app/interfaces/user';
+import { ShortUser, User } from '../../../../app/interfaces/user';
 import { InteractionRestaurantService } from '../app.autho/interaction-restaurant.service';
-import { UserInteractionService } from 'src/app/services/user-interaction.service';
-import { Restaurant } from 'src/app/interfaces/restaurant';
+import { UserInteractionService } from '../../../../app/services/user-interaction.service';
+import { Restaurant } from '../../../../app/interfaces/restaurant';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
@@ -17,7 +17,7 @@ import { AddConfigueSalaryComponent } from './add.configue.salary/add.configue.s
 import { AddConfigueEmployeeComponent } from './add.configue.employee/add.configue.employee/add.configue.employee.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MobileUserDataComponent } from './mobile.user.data/mobile.user.data/mobile.user.data.component';
-import { CommonService } from 'src/app/services/common/common.service';
+import { CommonService } from '../../../../app/services/common/common.service';
 
 @Component({
   selector: 'app-app.configue',

@@ -13,7 +13,6 @@ import {MatTableModule} from '@angular/material/table';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
 import {MatSnackBarModule} from '@angular/material/snack-bar'; 
-import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { AddConfigueSalaryComponent } from './app.configue/add.configue.salary/add.configue.salary.component';
 import { MatInputModule } from '@angular/material/input';

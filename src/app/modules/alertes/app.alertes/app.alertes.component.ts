@@ -1,10 +1,9 @@
-import { AfterContentInit, AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatTabGroup } from '@angular/material/tabs';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/auth';
 import { first, Subscription } from 'rxjs';
-import { CAlerte } from 'src/app/interfaces/alerte';
-import { AlertesService } from 'src/app/services/alertes/alertes.service';
+import { CAlerte } from '../../../../app/interfaces/alerte';
+import { AlertesService } from '../../../../app/services/alertes/alertes.service';
 
 @Component({
   selector: 'app-alertes',

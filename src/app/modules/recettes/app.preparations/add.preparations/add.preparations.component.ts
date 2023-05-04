@@ -4,14 +4,14 @@ import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Cetape } from 'src/app/interfaces/etape';
-import {Cconsommable, Consommable, TConsoBase, TIngredientBase } from 'src/app/interfaces/ingredient';
-import { AfterPreparation } from 'src/app/interfaces/preparation';
-import { ConsommableInteractionService } from 'src/app/services/menus/consommable-interaction.service';
-import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
-import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
-import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
-import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
+import { Cetape } from '../../../../../app/interfaces/etape';
+import {Cconsommable, Consommable, TConsoBase, TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import { AfterPreparation } from '../../../../../app/interfaces/preparation';
+import { ConsommableInteractionService } from '../../../../../app/services/menus/consommable-interaction.service';
+import { IngredientsInteractionService } from '../../../../../app/services/menus/ingredients-interaction.service';
+import { CalculService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { CalculPrepaService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
+import { PreparationInteractionService } from '../../../../../app/services/menus/preparation-interaction.service';
 
 @Component({
   selector: 'app-add.preparations',

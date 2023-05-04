@@ -29,11 +29,9 @@
         </div>
         <ul id="configuration">
             <li>
-                <a *ngIf="is_confique" href="autho/configuration?new='true'" id="link_configure">
-                    <button class="btn btn-outline-success" id="configurer" *ngIf="is_confique">
-                        Configuration des restaurants
-                    </button>
-                </a>
+                <button class="btn btn-outline-success" (click)="redirectConfigue()" id="configurer" *ngIf="is_confique">
+                    Configuration des restaurants
+                </button>
             </li>
             <li>
                 <button class="btn btn-outline-success" id="analyse"> Analyse des restaurants</button>

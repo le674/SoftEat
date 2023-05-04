@@ -3,9 +3,9 @@ import { MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { MatOption } from '@angular/material/core';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Restaurant } from 'src/app/interfaces/restaurant';
-import { ShortUser, User } from 'src/app/interfaces/user';
-import { UserInteractionService } from 'src/app/services/user-interaction.service';
+import { Restaurant } from '../../../../../../app/interfaces/restaurant';
+import { ShortUser, User } from '../../../../../../app/interfaces/user';
+import { UserInteractionService } from '../../../../../../app/services/user-interaction.service';
 
 @Component({
   selector: 'app-mobile.user.data',

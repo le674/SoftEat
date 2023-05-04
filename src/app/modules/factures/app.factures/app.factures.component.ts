@@ -4,17 +4,16 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, UrlTree } from '@angular/router';
-import { CIngredient } from 'src/app/interfaces/ingredient';
-import { FacturePdfService } from 'src/app/services/factures/facture_pdf/facture-pdf.service';
-import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
-import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
-import { FactureImgService } from 'src/app/services/factures/facture_img/facture-img.service';
+import { CIngredient } from '../../../../app/interfaces/ingredient';
+import { FacturePdfService } from '../../../../app/services/factures/facture_pdf/facture-pdf.service';
+import { IngredientsInteractionService } from '../../../../app/services/menus/ingredients-interaction.service';
+import { CalculService } from '../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { FactureImgService } from '../../../../app/services/factures/facture_img/facture-img.service';
 import { FactureLoadComponent } from './app.factures.load/facture-load/facture-load.component';
-import { AddIngComponent } from '../../stock/app.stock/app.stock.modals/add-ing/add.ing/add.ing.component';
 import { ModifIngComponent } from './app.factures.modif/modif.ing/modif.ing.component';
-import { FactureSharedService } from 'src/app/services/factures/facture_shared/facture-shared.service';
+import { FactureSharedService } from '../../../../app/services/factures/facture_shared/facture-shared.service';
 import { MatRadioChange } from '@angular/material/radio';
-import { CommonService } from 'src/app/services/common/common.service';
+import { CommonService } from '../../../../app/services/common/common.service';
 import { Visibles } from '../../autho/app.configue/app.configue.index';
 
 @Component({

@@ -1,7 +1,7 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { Restaurant } from 'src/app/interfaces/restaurant';
+import { Restaurant } from '../../../../../../app/interfaces/restaurant';
 import { InteractionRestaurantService } from '../../../app.autho/interaction-restaurant.service';
 
 @Component({

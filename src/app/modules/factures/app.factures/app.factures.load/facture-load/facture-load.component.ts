@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FactureImgService } from 'src/app/services/factures/facture_img/facture-img.service';
-import { FacturePdfService } from 'src/app/services/factures/facture_pdf/facture-pdf.service';
+import { FactureImgService } from '../../../../../../app/services/factures/facture_img/facture-img.service';
+import { FacturePdfService } from '../../../../../../app/services/factures/facture_pdf/facture-pdf.service';
 
 @Component({
   selector: 'app-facture-load',

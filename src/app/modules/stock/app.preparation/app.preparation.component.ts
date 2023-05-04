@@ -6,13 +6,13 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/auth';
 import { Subscription, withLatestFrom } from 'rxjs';
-import { CIngredient } from 'src/app/interfaces/ingredient';
-import { Cpreparation } from 'src/app/interfaces/preparation';
-import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
-import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { CIngredient } from '../../../../app/interfaces/ingredient';
+import { Cpreparation } from '../../../../app/interfaces/preparation';
+import { IngredientsInteractionService } from '../../../../app/services/menus/ingredients-interaction.service';
+import { CalculService } from '../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AppAddPreparationComponent } from './app.preparation.modals/app.add.preparation/app.add.preparation.component';
 import { AppHelpPreparationComponent } from './app.preparation.modals/app.help.preparation/app.help.preparation/app.help.preparation.component';
-import { CommonService } from 'src/app/services/common/common.service';
+import { CommonService } from '../../../../app/services/common/common.service';
 
 @Component({
   selector: 'app-prepa',

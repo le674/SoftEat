@@ -1,12 +1,11 @@
 import { AfterContentInit, AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import {FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
-import { Cconsommable, CIngredient } from 'src/app/interfaces/ingredient';
+import { CalculService } from '../../../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { Cconsommable} from '../../../../../../../app/interfaces/ingredient';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TitleStrategy } from '@angular/router';
-import { ConsommableInteractionService } from 'src/app/services/menus/consommable-interaction.service';
-import { AlertesService } from 'src/app/services/alertes/alertes.service';
+import { ConsommableInteractionService } from '../../../../../../../app/services/menus/consommable-interaction.service';
+import { AlertesService } from '../../../../../../../app/services/alertes/alertes.service';
 
 @Component({
   selector: 'app-add.conso',

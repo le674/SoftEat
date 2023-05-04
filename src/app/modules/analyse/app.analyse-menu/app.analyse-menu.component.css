@@ -1,0 +1,15 @@
+
+h1{
+    display: block;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    width: 600px;
+    font-weight: normal;
+    color: rgb(125, 181, 46);
+}
+
+@media screen and (max-width: 440px){
+    h1{
+        font-size: medium;
+    }
+}

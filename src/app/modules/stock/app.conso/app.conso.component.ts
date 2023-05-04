@@ -4,11 +4,11 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, UrlTree } from '@angular/router';
-import { Cconsommable } from 'src/app/interfaces/ingredient';
-import { ConsommableInteractionService } from 'src/app/services/menus/consommable-interaction.service';
-import { CalculConsoServiceTsService } from 'src/app/services/menus/menu.calcul/menu.calcul.consommable/calcul.conso.service.ts.service';
+import { Cconsommable } from '../../../../app/interfaces/ingredient';
+import { ConsommableInteractionService } from '../../../../app/services/menus/consommable-interaction.service';
+import { CalculConsoServiceTsService } from '../../../../app/services/menus/menu.calcul/menu.calcul.consommable/calcul.conso.service.ts.service';
 import { AddConsoComponent } from './app.conso.modals/add-ing/add.ing/add.conso.component';
-import { CommonService } from 'src/app/services/common/common.service';
+import { CommonService } from '../../../../app/services/common/common.service';
 
 @Component({
   selector: 'app-conso',

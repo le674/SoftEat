@@ -1,12 +1,11 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
 import { initializeApp } from 'firebase/app';
-import { getAuth, onAuthStateChanged, updateProfile, User } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { Unsubscribe } from 'firebase/database';
-import { first, Observable, Subscription } from 'rxjs';
-import { CAlerte } from 'src/app/interfaces/alerte';
-import { AlertesService } from 'src/app/services/alertes/alertes.service';
-import { AuthentificationService } from 'src/app/services/authentification.service';
+import { first, Subscription } from 'rxjs';
+import { AlertesService } from '../../../../../app/services/alertes/alertes.service';
+import { AuthentificationService } from '../../../../../app/services/authentification.service';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo",

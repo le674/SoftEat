@@ -1,13 +1,13 @@
-import { AfterContentInit, AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { AfterContentInit, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CIngredient, TIngredientBase } from 'src/app/interfaces/ingredient';
-import { Cpreparation } from 'src/app/interfaces/preparation';
-import { AddPreparationsComponent } from 'src/app/modules/recettes/app.preparations/add.preparations/add.preparations.component';
-import { AlertesService } from 'src/app/services/alertes/alertes.service';
-import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
-import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { CIngredient, TIngredientBase } from '../../../../../../app/interfaces/ingredient';
+import { Cpreparation } from '../../../../../../app/interfaces/preparation';
+import { AddPreparationsComponent } from '../../../../../../app/modules/recettes/app.preparations/add.preparations/add.preparations.component';
+import { AlertesService } from '../../../../../../app/services/alertes/alertes.service';
+import { IngredientsInteractionService } from '../../../../../../app/services/menus/ingredients-interaction.service';
+import { CalculService } from '../../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 
 @Component({
   selector: 'app-app.add.preparation',

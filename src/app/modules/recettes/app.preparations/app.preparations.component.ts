@@ -2,13 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
-import { Cconsommable, TIngredientBase } from 'src/app/interfaces/ingredient';
-import { Cpreparation } from 'src/app/interfaces/preparation';
-import { ConsommableInteractionService } from 'src/app/services/menus/consommable-interaction.service';
-import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
+import { Cconsommable, TIngredientBase } from '../../../../app/interfaces/ingredient';
+import { Cpreparation } from '../../../../app/interfaces/preparation';
+import { ConsommableInteractionService } from '../../../../app/services/menus/consommable-interaction.service';
+import { IngredientsInteractionService } from '../../../../app/services/menus/ingredients-interaction.service';
 import { AddPreparationsComponent } from './add.preparations/add.preparations.component';
 import { DisplayPreparationsComponent } from './display.preparation/display.preparations/display.preparations.component';
-import { CommonService } from 'src/app/services/common/common.service';
 
 @Component({
   selector: 'app-preparations',

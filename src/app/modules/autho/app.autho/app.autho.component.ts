@@ -4,11 +4,10 @@ import { MatDialog} from '@angular/material/dialog';
 import {Router, UrlSerializer} from '@angular/router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { InteractionRestaurantService } from './interaction-restaurant.service';
-import {UserInteractionService} from 'src/app/services/user-interaction.service'
-import { Restaurant } from 'src/app/interfaces/restaurant';
+import {UserInteractionService} from '../../../../app/services/user-interaction.service'
+import { Restaurant } from '../../../../app/interfaces/restaurant';
 import { AppModalComponent } from '../app.modals/app.modal/app.modal/app.modal.component';
 import { AppFormComponent } from '../app.modals/app.form/app.form/app.form.component';
-import { Serializer } from '@angular/compiler';
 
 @Component({
   selector: 'app-app.autho',
@@ -100,10 +99,10 @@ export class AppAuthoComponent implements OnInit {
     });
   }
   restaurantNavigate(restaurant:string, proprietaire:string){
-    const dashboard = this.router.createUrlTree(["/dashboard"],{ queryParams: { restaurant: restaurant, prop: proprietaire}})
-    this.url =  this.serealizer.serialize(dashboard)
-    window.location.href = this.url
+    this.router.navigate(["/dashboard"],{ queryParams: { restaurant: restaurant, prop: proprietaire}})
   }
-  
+  redirectConfigue() {
+    this.router.navigate(["/autho/configuration"]);
+  }
 }
 

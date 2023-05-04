@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CIngredient } from 'src/app/interfaces/ingredient';
-import { Cpreparation } from 'src/app/interfaces/preparation';
+import { CIngredient } from '../../../../../app/interfaces/ingredient';
 
 @Injectable({
   providedIn: 'root'

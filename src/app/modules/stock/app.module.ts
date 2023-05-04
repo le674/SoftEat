@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { AppStockComponent } from './app.stock/app.stock.component';
 import { AppConsoComponent } from './app.conso/app.conso.component';
 import {MatTableModule} from '@angular/material/table'; 
-import { CIngredient } from 'src/app/interfaces/ingredient';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AddIngComponent } from './app.stock/app.stock.modals/add-ing/add.ing/add.ing.component';
@@ -20,6 +19,7 @@ import { AppPreparationComponent } from './app.preparation/app.preparation.compo
 import { AppAddPreparationComponent } from './app.preparation/app.preparation.modals/app.add.preparation/app.add.preparation.component';
 import { AppHelpPreparationComponent } from './app.preparation/app.preparation.modals/app.help.preparation/app.help.preparation/app.help.preparation.component';
 import { MatListModule } from '@angular/material/list';
+import { Cconsommable } from '../../../app/interfaces/ingredient';
 
 @NgModule({
   declarations: [
@@ -52,7 +52,7 @@ import { MatListModule } from '@angular/material/list';
     AppConsoComponent
   ],
   providers: [
-    CIngredient
+    Cconsommable
   ],
 })
 export class AppStockModule {}

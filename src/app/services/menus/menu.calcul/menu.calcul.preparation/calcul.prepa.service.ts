@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Cetape } from 'src/app/interfaces/etape';
-import { Cconsommable, TConsoBase, TIngredientBase } from 'src/app/interfaces/ingredient';
-import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
+import { Cetape } from '../../../../../app/interfaces/etape';
+import { Cconsommable, TConsoBase, TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import { RestaurantService } from '../../../../../app/services/restaurant/restaurant.service';
 import { CalculService } from '../menu.calcul.ingredients/calcul.service';
 
 @Injectable({

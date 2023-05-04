@@ -5,7 +5,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import {connectAuthEmulator, updatePassword } from 'firebase/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from '../../../../environments/variables';
 
 @Component({
   selector: 'app-modif-mdp',

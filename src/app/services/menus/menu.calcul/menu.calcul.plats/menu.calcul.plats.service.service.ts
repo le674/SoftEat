@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Cetape } from 'src/app/interfaces/etape';
-import { Cconsommable, TIngredientBase } from 'src/app/interfaces/ingredient';
-import { Cplat } from 'src/app/interfaces/plat';
+import { Cetape } from '../../../../../app/interfaces/etape';
+import { Cconsommable, TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import { Cplat } from '../../../../../app/interfaces/plat';
 import { CalculPrepaService } from '../menu.calcul.preparation/calcul.prepa.service';
 
 @Injectable({

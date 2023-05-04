@@ -14,7 +14,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatBadgeModule} from '@angular/material/badge'; 
 import { RecettesModule } from '../recettes/recettes.module';
 import { AppAnalyseModule } from '../analyse/app.module';
-import { AlertesService } from 'src/app/services/alertes/alertes.service';
+import { AlertesService } from '../../../app/services/alertes/alertes.service';
 
 
 

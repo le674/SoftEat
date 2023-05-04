@@ -6,12 +6,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/auth';
 import {Subscription } from 'rxjs';
-import { CIngredient } from 'src/app/interfaces/ingredient';
-import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
-import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { CIngredient } from '../../../../app/interfaces/ingredient';
+import { IngredientsInteractionService } from '../../../../app/services/menus/ingredients-interaction.service';
+import { CalculService } from '../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.component';
-import { Visibles } from '../../autho/app.configue/app.configue.index';
-import { CommonService } from 'src/app/services/common/common.service';
+import { CommonService } from '../../../../app/services/common/common.service';
 
 @Component({
   selector: 'app-stock',

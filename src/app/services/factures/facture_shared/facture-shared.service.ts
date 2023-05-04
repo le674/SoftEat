@@ -2,8 +2,8 @@
 // la différence réside dans le fait que pour 
 import { Injectable } from '@angular/core';
 import { TextItem } from 'pdfjs-dist/types/src/display/api';
-import { CIngredient } from 'src/app/interfaces/ingredient';
-import { TextImg, TextShared } from 'src/app/interfaces/text';
+import { CIngredient } from '../../../../app/interfaces/ingredient';
+import { TextImg, TextShared } from '../../../../app/interfaces/text';
 import { IngredientsInteractionService } from '../../menus/ingredients-interaction.service';
 import { CalculService } from '../../menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 

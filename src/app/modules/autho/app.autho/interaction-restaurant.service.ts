@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {FirebaseApp} from "@angular/fire/app";
 import {getAuth} from 'firebase/auth';
 import {child, connectDatabaseEmulator, get, getDatabase, ref, set, update} from 'firebase/database';
-import {Restaurant, UserRestaurant} from 'src/app/interfaces/restaurant';
-import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import {Restaurant, UserRestaurant} from '../../../../app/interfaces/restaurant';
+import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../../../environments/variables';
 
 
 
