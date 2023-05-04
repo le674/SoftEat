@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { RecetteHelpPreparationsComponent } from 'src/app/modules/recettes/app.preparations/display.preparation/display.preparations/display.preparations.modals/recette.help.preparations/recette.help.preparations.component';
+import { RecetteHelpPreparationsComponent } from '../../../../../../../app/modules/recettes/app.preparations/display.preparation/display.preparations/display.preparations.modals/recette.help.preparations/recette.help.preparations.component';
 
 @Component({
   selector: 'app-recette.help.plats',

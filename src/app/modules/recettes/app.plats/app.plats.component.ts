@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
-import { Cconsommable, TIngredientBase } from 'src/app/interfaces/ingredient';
-import { Cplat } from 'src/app/interfaces/plat';
-import { Cpreparation } from 'src/app/interfaces/preparation';
-import { ConsommableInteractionService } from 'src/app/services/menus/consommable-interaction.service';
-import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
-import { PlatsInteractionService } from 'src/app/services/menus/plats-interaction.service';
-import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
+import { Cconsommable, TIngredientBase } from '../../../../app/interfaces/ingredient';
+import { Cplat } from '../../../../app/interfaces/plat';
+import { Cpreparation } from '../../../../app/interfaces/preparation';
+import { ConsommableInteractionService } from '../../../../app/services/menus/consommable-interaction.service';
+import { IngredientsInteractionService } from '../../../../app/services/menus/ingredients-interaction.service';
+import { PlatsInteractionService } from '../../../../app/services/menus/plats-interaction.service';
+import { PreparationInteractionService } from '../../../../app/services/menus/preparation-interaction.service';
 import { AddPlatsComponent } from './add.plats/add.plats.component';
 import { DisplayPlatsComponent } from './display.plats/display.plats.component';
 
@@ -53,6 +53,7 @@ export class AppPlatsComponent implements OnInit {
       this.categorie.map((categorie) => this.carte.push(plats.filter((plat) => plat.type === categorie)));
     })
     this.ingredient_service.getFullIngs(this.prop,this.restaurant).then((ingredients) => {
+      console.log("full ingrédients", ingredients);
       this.full_lst_ings = ingredients;
     })
     this.conso_service.getFullConso(this.prop, this.restaurant).then((consomables) => {

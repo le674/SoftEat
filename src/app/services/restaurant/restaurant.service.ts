@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { child, connectDatabaseEmulator, Database, DatabaseReference, get, getDatabase, ref, update } from 'firebase/database';
-import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import {connectDatabaseEmulator, Database, DatabaseReference, get, getDatabase, ref, update } from 'firebase/database';
+import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../../environments/variables';
 
 @Injectable({
   providedIn: 'root'

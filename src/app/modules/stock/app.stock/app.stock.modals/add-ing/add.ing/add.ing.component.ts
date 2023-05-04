@@ -1,11 +1,11 @@
 import { AfterContentInit, AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import {FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
-import { CIngredient } from 'src/app/interfaces/ingredient';
-import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
+import { CalculService } from '../../../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { CIngredient } from '../../../../../../../app/interfaces/ingredient';
+import { IngredientsInteractionService } from '../../../../../../../app/services/menus/ingredients-interaction.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AlertesService } from 'src/app/services/alertes/alertes.service';
+import { AlertesService } from '../../../../../../../app/services/alertes/alertes.service';
 
 @Component({
   selector: 'app-add.ing',

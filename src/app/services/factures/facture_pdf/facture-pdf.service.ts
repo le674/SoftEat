@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as pdfjsLib from 'pdfjs-dist';
 import { TextItem } from 'pdfjs-dist/types/src/display/api';
 import { FactureSharedService } from '../facture_shared/facture-shared.service';
-import { TextShared } from 'src/app/interfaces/text';
+import { TextShared } from '../../../../app/interfaces/text';
 @Injectable({
   providedIn: 'root'
 })

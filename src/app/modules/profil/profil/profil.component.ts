@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { Auth, sendEmailVerification, user } from '@angular/fire/auth';
+import { Auth } from '@angular/fire/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
 import { connectAuthEmulator, getAuth, onAuthStateChanged, updateCurrentUser } from 'firebase/auth';
-import { User } from 'src/app/interfaces/user';
-import { MailServicesService } from 'src/app/services/mail-services.service';
-import { UserInteractionService } from 'src/app/services/user-interaction.service';
-import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { User } from '../../../../app/interfaces/user';
+import { MailServicesService } from '../../../../app/services/mail-services.service';
+import { UserInteractionService } from '../../../../app/services/user-interaction.service';
+import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from '../../../../environments/variables';
 import { InfoAppliComponent } from '../info-appli/info-appli.component';
 import { ModifMailComponent } from '../modif-mail/modif-mail.component';
 import { ModifMdpComponent } from '../modif-mdp/modif-mdp.component';
 import { ModifNumberComponent } from '../modif-number/modif-number.component';
-import { CommonService } from 'src/app/services/common/common.service';
+import { CommonService } from '../../../../app/services/common/common.service';
 
 @Component({
   selector: 'app-profil',

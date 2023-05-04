@@ -4,11 +4,11 @@ import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Cconsommable, CIngredient, Consommable, TIngredientBase } from 'src/app/interfaces/ingredient';
-import { Cmenu } from 'src/app/interfaces/menu';
-import { Cplat } from 'src/app/interfaces/plat';
-import { MenuInteractionService } from 'src/app/services/menus/menu-interaction.service';
-import { MenuCalculMenuService } from 'src/app/services/menus/menu.calcul/menu.calcul.menu.service';
+import { Cconsommable, CIngredient, Consommable, TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import { Cmenu } from '../../../../../app/interfaces/menu';
+import { Cplat } from '../../../../../app/interfaces/plat';
+import { MenuInteractionService } from '../../../../../app/services/menus/menu-interaction.service';
+import { MenuCalculMenuService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.menu.service';
 
 @Component({
   selector: 'app-add.menu',

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import { child, connectDatabaseEmulator, Database, DatabaseReference, get, getDatabase, ref, remove, update } from 'firebase/database';
-import { Cconsommable, TConsoBase } from 'src/app/interfaces/ingredient';
-import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { Cconsommable, TConsoBase } from '../../../app/interfaces/ingredient';
+import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../../environments/variables';
 
 @Injectable({
   providedIn: 'root'

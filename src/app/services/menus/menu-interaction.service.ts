@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import { child, connectDatabaseEmulator, Database, get, getDatabase, ref, remove, update } from 'firebase/database';
-import { Cetape, Etape } from 'src/app/interfaces/etape';
-import { Cconsommable, CIngredient, TIngredientBase } from 'src/app/interfaces/ingredient';
-import { Cmenu, TMPmenu } from 'src/app/interfaces/menu';
-import { Cplat } from 'src/app/interfaces/plat';
-import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { Cconsommable, TIngredientBase } from '../../../app/interfaces/ingredient';
+import { Cmenu } from '../../../app/interfaces/menu';
+import { Cplat } from '../../../app/interfaces/plat';
+import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../../environments/variables';
 import { ConsommableInteractionService } from './consommable-interaction.service';
 import { IngredientsInteractionService } from './ingredients-interaction.service';
 import { PlatsInteractionService } from './plats-interaction.service';

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { Observable } from 'rxjs';
-import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from '../../environments/variables';
 import { AuthentificationService } from './authentification.service';
 const auth = getAuth();
 if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {

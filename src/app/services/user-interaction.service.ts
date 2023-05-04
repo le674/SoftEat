@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { child, connectDatabaseEmulator, get, getDatabase, push, ref, set, update } from 'firebase/database';
+import { child, connectDatabaseEmulator, get, getDatabase, ref, set, update } from 'firebase/database';
 import { User } from '../interfaces/user';
 import { FirebaseApp } from "@angular/fire/app";
 import { Proprietaire } from '../interfaces/proprietaire';
 import { Restaurant } from '../interfaces/restaurant';
-import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../environments/variables';
 
 @Injectable({
   providedIn: 'root'

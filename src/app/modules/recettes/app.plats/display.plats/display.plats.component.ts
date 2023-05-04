@@ -3,15 +3,14 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { Cconsommable, Consommable, TIngredientBase } from 'src/app/interfaces/ingredient';
-import { Cplat } from 'src/app/interfaces/plat';
-import { Cpreparation } from 'src/app/interfaces/preparation';
-import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
-import { MenuCalculPlatsServiceService } from 'src/app/services/menus/menu.calcul/menu.calcul.plats/menu.calcul.plats.service.service';
-import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
+import { Cconsommable, Consommable, TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import { Cplat } from '../../../../../app/interfaces/plat';
+import { Cpreparation } from '../../../../../app/interfaces/preparation';
+import { CalculService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { MenuCalculPlatsServiceService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.plats/menu.calcul.plats.service.service';
+import { CalculPrepaService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 import { RecetteHelpPlatsComponent } from './display.plats.modals/recette.help.plats/recette.help.plats.component';
-import { CommonService } from 'src/app/services/common/common.service';
-import { Visibles } from 'src/app/modules/autho/app.configue/app.configue.index';
+import { CommonService } from '../../../../../app/services/common/common.service';
 
 @Component({
   selector: 'app-display.plats',

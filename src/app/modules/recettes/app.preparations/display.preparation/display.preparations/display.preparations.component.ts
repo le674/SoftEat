@@ -1,15 +1,12 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { Cetape } from 'src/app/interfaces/etape';
-import { Consommable, TIngredientBase } from 'src/app/interfaces/ingredient';
-import { IngredientsInteractionService } from 'src/app/services/menus/ingredients-interaction.service';
-import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
-import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
+import { Cetape } from '../../../../../../app/interfaces/etape';
+import { Consommable, TIngredientBase } from '../../../../../../app/interfaces/ingredient';
+import { CalculPrepaService } from '../../../../../../app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 import { RecetteHelpPreparationsComponent } from './display.preparations.modals/recette.help.preparations/recette.help.preparations.component';
-import { CommonService } from 'src/app/services/common/common.service';
+import { CommonService } from '../../../../../../app/services/common/common.service';
 
 @Component({
   selector: 'app-display.preparations',

@@ -3,8 +3,8 @@ import { Auth, createUserWithEmailAndPassword, updateCurrentUser } from 'firebas
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UserInteractionService } from 'src/app/services/user-interaction.service';
-import { User } from 'src/app/interfaces/user';
+import { UserInteractionService } from '../../../../../../app/services/user-interaction.service';
+import { User } from '../../../../../../app/interfaces/user';
 
 @Component({
   selector: 'app-add.configue.employee',

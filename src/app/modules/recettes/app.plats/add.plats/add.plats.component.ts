@@ -1,18 +1,17 @@
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Cetape } from 'src/app/interfaces/etape';
-import { Cconsommable, Consommable, TIngredientBase } from 'src/app/interfaces/ingredient';
-import { Cplat, Plat } from 'src/app/interfaces/plat';
-import { Cpreparation } from 'src/app/interfaces/preparation';
-import { CalculService } from 'src/app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
-import { MenuCalculPlatsServiceService } from 'src/app/services/menus/menu.calcul/menu.calcul.plats/menu.calcul.plats.service.service';
-import { CalculPrepaService } from 'src/app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
-import { PlatsInteractionService } from 'src/app/services/menus/plats-interaction.service';
-import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
+import { Cetape } from '../../../../../app/interfaces/etape';
+import { Cconsommable, Consommable, TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import { Cplat, Plat } from '../../../../../app/interfaces/plat';
+import { Cpreparation } from '../../../../../app/interfaces/preparation';
+import { CalculService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { MenuCalculPlatsServiceService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.plats/menu.calcul.plats.service.service';
+import { CalculPrepaService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
+import { PlatsInteractionService } from '../../../../../app/services/menus/plats-interaction.service';
 
 @Component({
   selector: 'app-add.plats',

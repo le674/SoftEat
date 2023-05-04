@@ -1,10 +1,9 @@
 
-import { Injectable, NgZone, Optional } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import {connectAuthEmulator, createUserWithEmailAndPassword , getAuth, onAuthStateChanged, signInWithEmailAndPassword} from 'firebase/auth';
 import {initializeApp } from 'firebase/app';
-import { authState, user } from '@angular/fire/auth';
-import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from '../../environments/variables';
 
 
 

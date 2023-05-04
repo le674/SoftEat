@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import { child, connectDatabaseEmulator, Database, get, getDatabase, onValue, ref,set, update } from 'firebase/database';
-import { CAlerte } from 'src/app/interfaces/alerte';
-import { Subject, BehaviorSubject, Subscription } from 'rxjs';
+import { CAlerte } from '../../../app/interfaces/alerte';
+import { Subject } from 'rxjs';
 import { Unsubscribe } from 'firebase/auth';
-import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../../environments/variables';
 
 
 @Injectable({

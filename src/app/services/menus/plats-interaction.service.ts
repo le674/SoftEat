@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import { child, connectDatabaseEmulator, Database, get, getDatabase, ref, remove, update } from 'firebase/database';
-import { Cetape } from 'src/app/interfaces/etape';
-import { Cconsommable,TIngredientBase } from 'src/app/interfaces/ingredient';
-import { Cplat, Plat } from 'src/app/interfaces/plat';
-import { Cpreparation} from 'src/app/interfaces/preparation';
-import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { Cetape } from '../../../app/interfaces/etape';
+import { Cconsommable,TIngredientBase } from '../../../app/interfaces/ingredient';
+import { Cplat, Plat } from '../../../app/interfaces/plat';
+import { Cpreparation} from '../../../app/interfaces/preparation';
+import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../../environments/variables';
 import { IngredientsInteractionService } from './ingredients-interaction.service';
 
 @Injectable({
