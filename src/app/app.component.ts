@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
-import { NavigationEnd, Router } from '@angular/router';
-import { getDatabase, ref, child, get} from 'firebase/database';
+import {Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
