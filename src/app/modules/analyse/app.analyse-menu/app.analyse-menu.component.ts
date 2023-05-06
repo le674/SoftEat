@@ -10,16 +10,15 @@ export class AppAnalyseMenuComponent implements OnInit {
 
   }
   ngOnInit(): void {
-     const data = [{
+ /*     const data = [{
       x: [1, 2, 3, 4, 5, 6],
       y: [1, 2, 3, 4, 5, 6]
     }];
     
     const layout = {
-      title: 'Mon graphique à barres'
+      title: 'classification des plats'
     };   
-    plotlyJsLib.newPlot('myPlot', data, layout);  
-    
+    plotlyJsLib.newPlot('menuEngineering', data, layout);  */ 
   }
 
 }

@@ -7,7 +7,15 @@ h1{
     font-weight: normal;
     color: rgb(125, 181, 46);
 }
-
+#select-label{
+    margin-top: 70px;
+}
+#month-selection{
+    margin-top: 10px;
+}
+mat-checkbox{
+    margin-right: 20px;
+}
 @media screen and (max-width: 440px){
     h1{
         font-size: medium;
