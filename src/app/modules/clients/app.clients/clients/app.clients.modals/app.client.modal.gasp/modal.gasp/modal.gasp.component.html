@@ -1,0 +1,41 @@
+<p class="title">Choisir les plats dont on souhaite transmettre une réduction.</p>
+<form [formGroup]="form_plats" (ngSubmit)="submitCampagne()">
+    <button type="submit" id="submit-campagne" mat-stroked-button>
+        Envoyer la campagne de communication 
+    </button>
+    <ng-container formArrayName="plats">
+        <div *ngFor="let item of form_plats.controls.plats.controls;let i=index">
+            <div class="full-container">
+                <button mat-mini-fab  type="button" class="add_input_plat" color="white" matTooltip="ajout d'un plat"
+                aria-label="ajout d'un ingrédient" (click)="addInputPlat()">
+                    <i class="fa-regular fa-plus"></i>
+                </button>
+                <ng-container [formGroupName]="i">
+                    <div class="container">
+                        <mat-form-field appearance="fill">
+                        <mat-label>Choisir le plat</mat-label>
+                        <mat-select formControlName="name">
+                             <mat-option *ngFor="let name of plat_names" [value]="name">
+                                {{name}}
+                            </mat-option>
+                        </mat-select>
+                        </mat-form-field>
+                            <mat-form-field class="classic-field" appearance="fill">
+                            <mat-label>Entrer la quantitée à écouler</mat-label>
+                            <input matInput type="number" formControlName="quantity" placeholder="7">
+                        </mat-form-field>
+                        <mat-form-field class="classic-field" appearance="fill">
+                            <mat-label>Entrer le prix des plats à écouler</mat-label>
+                            <input matInput type="number" formControlName="price" placeholder="7">
+                        </mat-form-field>
+                    </div>
+                </ng-container>
+                <button mat-mini-fab type="button" class="supp_input_plat" color="white" matTooltip="suppression d'un plat"
+                aria-label="ajout d'un ingrédient" (click)="remInputPlat(i)">
+                    <i class="fa-regular fa-minus"></i>
+                </button>
+            </div>
+            <mat-divider id="divider"></mat-divider>
+        </div>
+    </ng-container>    
+</form>

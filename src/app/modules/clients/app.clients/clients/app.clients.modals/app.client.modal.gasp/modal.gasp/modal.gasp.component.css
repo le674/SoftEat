@@ -1,0 +1,68 @@
+
+/*================================================*/
+/*   Conteneurs du corps du module */
+/*================================================*/
+.full-container{
+    display: flex;
+}
+.container{
+    display: flex;
+    flex-direction: column;
+}
+
+/*================================================*/
+/*   bouttons de validation de la campagnes */
+/*================================================*/
+.mat-stroked-button{
+    color: rgb(125, 181, 46);
+    background-color: white;
+    height: 40px;
+    min-width: 96px;
+    margin: 0;
+}
+.mat-stroked-button:hover{
+    background-color: rgb(125, 181, 46);
+    color: white;
+}
+#submit-campagne{
+    margin-bottom: 30px;
+}
+/*================================================*/
+/*   bouttons d'ajout et de suppression de plats  */
+/*================================================*/
+.supp_input_plat, .add_input_plat{
+    margin-top: 50px;
+}
+.supp_input_plat{
+    background-color: white;
+    color: red;
+}
+.supp_input_plat:hover{
+    background-color: red;
+    color: white;
+}
+.add_input_plat{
+    background-color: white;
+    color: rgb(125, 181, 46);
+}
+
+.add_input_plat:hover{
+    background-color: rgb(125, 181, 46);
+    color: white;
+}
+
+/*================================================*/
+/*            mise en forme du texte              */
+/*================================================*/
+.title{
+    font-size: large;
+    font-weight: normal;
+    color: rgb(125, 181, 46);
+}
+
+/*================================================*/
+/*            diviseur de sections                */
+/*================================================*/
+#divider{
+    margin-bottom: 25px;
+}

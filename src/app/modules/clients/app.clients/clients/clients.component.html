@@ -11,10 +11,10 @@
     <header>
         <h1> Clients </h1>
         <div id="action-buttons">
-            <button class="action-button" mat-stroked-button>
+            <button (click)="reducGaspMsg()"  class="action-button" mat-stroked-button>
                 Envoyer un message pour une réduction
             </button>
-            <button class="action-button" mat-stroked-button>
+            <button (click)="promMsg()" class="action-button" mat-stroked-button>
                 Envoyer une offre promotionnelle
             </button>
         </div>

@@ -12,20 +12,31 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRadioModule } from '@angular/material/radio';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
-
+import { ModalGaspComponent } from './app.clients/clients/app.clients.modals/app.client.modal.gasp/modal.gasp/modal.gasp.component';
+import { ModalMsgComponent } from './app.clients/clients/app.clients.modals/app.client.modal.msg/modal.msg/modal.msg.component';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import {MatDividerModule} from '@angular/material/divider'; 
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
     ClientsComponent,
-    ModalModifComponent
+    ModalModifComponent,
+    ModalGaspComponent,
+    ModalMsgComponent
   ],
   imports: [
     ReactiveFormsModule,
     CommonModule,
     ClientsRoutingModule,
+    MatTooltipModule,
     MatButtonModule,
     MatTableModule,
     MatInputModule,
+    MatDividerModule,
+    MatOptionModule,
+    MatSelectModule,
     MatPaginatorModule,
     MatFormFieldModule,
     MatRadioModule,

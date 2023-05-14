@@ -9,6 +9,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalModifComponent } from './app.clients.modals/app.client.modal.modif/modal.modif/modal.modif.component';
 import { ClientCalculService } from 'src/app/services/clients/client-calcul.service';
+import { ModalMsgComponent } from './app.clients.modals/app.client.modal.msg/modal.msg/modal.msg.component';
+import { ModalGaspComponent } from './app.clients.modals/app.client.modal.gasp/modal.gasp/modal.gasp.component';
 
 @Component({
   selector: 'app-clients',
@@ -18,19 +20,19 @@ import { ClientCalculService } from 'src/app/services/clients/client-calcul.serv
 export class ClientsComponent implements OnInit {
   public windows_screen_mobile: boolean;
   public displayedColumns: string[] = ['name', 'surname', 'email', 'number',
-  'adress','waste_alert', "promotions",'order_number', 'actions'];
-  public size:string;
+    'adress', 'waste_alert', "promotions", 'order_number', 'actions'];
+  public size: string;
   public clients: Array<Client>;
   public displayed_client: Array<DisplayedClient>;
-  public dataSource:  MatTableDataSource<DisplayedClient>;
+  public dataSource: MatTableDataSource<DisplayedClient>;
   private page_number: number;
   private url: UrlTree;
   private router: Router;
   private prop: string;
   private restaurant: string;
   public visibles: Array<boolean>;
-  constructor(public mobile_service:CommonService, router: Router,
-    private client_service:ClientsService, private client_calcul_service:ClientCalculService,
+  constructor(public mobile_service: CommonService, router: Router,
+    private client_service: ClientsService, private client_calcul_service: ClientCalculService,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar) {
     this.page_number = 1;
@@ -46,8 +48,8 @@ export class ClientsComponent implements OnInit {
     this.prop = "";
     this.restaurant = "";
     this.url = this.router.parseUrl(this.router.url);
-   }
-  ngOnInit(): void{
+  }
+  ngOnInit(): void {
     this.displayed_client = [];
     let user_info = this.url.queryParams;
     this.prop = user_info["prop"];
@@ -67,13 +69,13 @@ export class ClientsComponent implements OnInit {
     this.dataSource.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
   }
   // Gestion de l'accordéon
-  getVisible(i: number):boolean{
+  getVisible(i: number): boolean {
     return this.visibles[i];
   }
   changeArrow(arrow_index: number) {
     this.visibles[arrow_index] = !this.visibles[arrow_index];
   }
-  modifUser(client:DisplayedClient){
+  modifUser(client: DisplayedClient) {
     const dialogRef = this.dialog.open(ModalModifComponent, {
       height: `850px`,
       width: `500px`,
@@ -85,9 +87,25 @@ export class ClientsComponent implements OnInit {
       }
     })
   }
-  suppUser(dis_client:DisplayedClient){
+  promMsg() {
+    const dialogRef = this.dialog.open(ModalMsgComponent,{
+      height: `800px`,
+      width: `600px`,
+    })
+  }
+  reducGaspMsg() {
+    const dialogRef = this.dialog.open(ModalGaspComponent,{
+      height: `800px`,
+      width: `600px`,
+      data: {
+        restaurant: this.restaurant,
+        prop: this.prop
+      }
+    })
+  }
+  suppUser(dis_client: DisplayedClient) {
     const client = this.clients.find((client) => client.number === dis_client.number);
-    if(client !== undefined){
+    if (client !== undefined) {
       this.client_service.suppClient(this.prop, this.restaurant, client).then(() => {
         this._snackBar.open("le client vient d'être supprimé", "fermer");
       }).catch(() => {
