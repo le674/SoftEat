@@ -1,0 +1,100 @@
+body{
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+main{
+  margin-top: 50px;
+  padding: 0px;
+  display: flex;
+  justify-content:flex-start;
+  flex-direction: column;
+}
+h1{
+  margin-top: 50px;
+  font-weight: normal;
+  color: rgb(125, 181, 46);
+}
+h2{
+  font-size: larger;
+  font-weight: normal;
+  color: rgb(125, 181, 46);
+}
+ul{
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+.mat-stroked-button{
+  color: rgb(125, 181, 46);
+  background-color: white;
+  height: 40px;
+  min-width: 96px;
+  margin: 0;
+}
+.mat-stroked-button:hover{
+  background-color: rgb(125, 181, 46);
+  color: white;
+}
+.mat-table{
+  font-size: 14px;
+  overflow-x: auto;
+}
+ #action-buttons{
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 20px;
+}
+.action-button{
+  margin-left: 20px;
+  margin-top: 20px;
+} 
+.action_table{
+  border:1px solid;
+  padding: 5px;
+  cursor: pointer;
+}
+.fa-pen:hover{
+  color: white;
+  background-color: rgb(125, 181, 46);
+}
+.fa-trash:hover{
+  color: white;
+  background-color: red;
+}
+.fa-trash{
+  margin-right: 3px;
+} 
+
+/* mobile */
+.accordion-item {
+  margin-top: 1%;
+}
+.accordion-button{
+  color: rgb(125, 181, 46);
+  text-align: center;
+  display:block;
+}
+
+.accordion-body{
+display: flex;
+justify-content: space-between;
+}
+.collapse-section{
+  display: flex;
+  justify-content: space-between;
+}
+#modif-section{
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.mat-list-item{
+  margin-bottom: 10px;
+}
+.categorie{
+  font-size: medium;
+  font-weight: bolder;
+  color: rgb(125, 181, 46);
+}

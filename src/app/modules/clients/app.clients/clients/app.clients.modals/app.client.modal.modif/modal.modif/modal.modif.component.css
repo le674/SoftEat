@@ -1,0 +1,178 @@
+/* croix de fermeture de la fenêtre */
+.close-fab{
+    background-color: white;
+    color: red;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+.close-fab:hover{
+    background-color: red;
+    color: white;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+#close-section{
+    display: flex;
+    justify-content: flex-end;
+}
+.inputs-containers-close{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.fa-plus{
+    color: rgb(125, 181, 46);
+}
+.inputs-containers{
+    display: flex;
+    flex-direction: column;
+}
+
+.plus-fab{
+    color: white;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+p{
+    display: inline;
+}
+
+.title{
+    font-size: large;
+    font-weight: normal;
+    color: rgb(125, 181, 46);
+}
+
+#last{
+    display: block;
+}
+
+.supp_button{
+    color: red;
+    background-color: white;
+    height: 40px;
+    min-width: 18ch;
+    max-width: 200ch;
+    width: fit-content;
+    margin-left: 17px;
+}
+
+.supp_button:hover{
+    background-color: red;
+    color: white;
+}
+
+#add{
+    color: rgb(125, 181, 46);
+    background-color: white;
+    height: 40px;
+    min-width: 96px;
+    margin: 0;
+}
+
+#add{
+    background-color: rgb(125, 181, 46);
+    color: white;
+}
+
+
+.classic-field{
+    max-width: fit-content;
+}
+
+.old{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+    margin-left: 30px;
+}
+
+mat-form-field{
+    margin-left: 20px;
+}
+
+.selectSection{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.time{
+    width: 70px;
+ }
+ 
+
+mat-radio-button{
+  margin-right: 5px;
+}
+
+.mat-select {
+    width: fit-content !important;
+    min-width: 100%;
+}
+
+::ng-deep .mat-form-field-infix {
+    min-width: 120px !important;
+    width: fit-content !important;
+}
+
+::ng-deep .mat-select .mat-select-value {
+    width: fit-content;
+    min-width: 18ch;
+    max-width: 200ch;
+}
+::ng-deep .mat-select .mat-select-placeholder {
+    width: fit-content;
+    min-width: 32ch;
+}
+
+.section {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.section_fileds{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;  
+    margin-top: 30px;
+}
+
+.full-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.container-content{
+    display: flex;
+    justify-content: space-between;
+}
+#time-form{
+    display: flex;
+}
+
+.col{
+    display: flex;
+    flex-direction: column;
+}
+
+/*===========================================================================================*/
+/* Gestion des inputs  présent dans le html*/
+/*===========================================================================================*/
+#gasp{
+    margin-bottom: 55px;
+}
+mat-radio-group{
+    margin-bottom: 25px;
+    margin-left: 20px;
+}
+::ng-deep .mat-form-field-infix {
+    min-width: 200px !important;
+    width: fit-content !important;
+}

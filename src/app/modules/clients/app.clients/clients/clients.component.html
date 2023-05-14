@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <header>
+        <h1> Clients </h1>
+        <div id="action-buttons">
+            <button class="action-button" mat-stroked-button>
+                Envoyer un message pour une réduction
+            </button>
+            <button class="action-button" mat-stroked-button>
+                Envoyer une offre promotionnelle
+            </button>
+        </div>
+    </header>
+    <main>
+        <h2>Données</h2>
+        <table *ngIf="!windows_screen_mobile" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+            <!-- Position Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> prénom </th>
+                <td mat-cell *matCellDef="let element">
+                    <div [innerHTML]="element.name"></div>
+                </td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="surname">
+                <th mat-header-cell *matHeaderCellDef> nom </th>
+                <td mat-cell *matCellDef="let element">
+                    <div [innerHTML]="element.surname"></div>
+                </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef> mail</th>
+                <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+            </ng-container>
+
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="number">
+                <th mat-header-cell *matHeaderCellDef> numéro</th>
+                <td mat-cell *matCellDef="let element"> {{element.number}} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="adress">
+                <th mat-header-cell *matHeaderCellDef> adresse</th>
+                <td mat-cell *matCellDef="let element"> {{element.adress}} </td>
+            </ng-container>
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="waste_alert">
+                <th mat-header-cell *matHeaderCellDef> notif. gaspillage</th>
+                <td mat-cell *matCellDef="let element"> {{element.waste_alert}} </td>
+            </ng-container>
+             <!-- Symbol Column -->
+             <ng-container matColumnDef="promotions">
+                <th mat-header-cell *matHeaderCellDef> promotion</th>
+                <td mat-cell *matCellDef="let element"> {{element.promotion}} </td>
+            </ng-container>
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="order_number">
+                <th mat-header-cell *matHeaderCellDef> nombre de commandes</th>
+                <td mat-cell *matCellDef="let element"> {{element.order_number}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> actions </th>
+                <td id="validate" mat-cell *matCellDef="let element;let cell_index = index; ">
+                    <i class="fa-regular fa-trash action_table" (click)="suppUser(element)"></i>
+                    <i class="fa-regular fa-pen action_table" (click)="modifUser(element)"></i>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator *ngIf="!windows_screen_mobile" [pageSizeOptions]="[6]" (page)="pageChanged($event)"
+            [length]="clients.length" showFirstLastButtons aria-label="Selection page d'ingredients">
+        </mat-paginator>
+        <!-- <div *ngIf="windows_screen_mobile" #accordeon [ngStyle]="{'max-width.px': this.mobile_service.accordeonMaxWidth()}" class="accordion">
+            <div class="accordion-item" *ngFor="let client of clients_displayed; let i = index;">
+              <h2 class="accordion-header" [id]="'heading_' + client.name.split('\<br>').join('_')">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  [attr.data-bs-target]="'#collapse_' +  client.name.split('\<br>').join('_')" [attr.aria-controls]="'collapse_' +  client.name.split('\<br>').join('_')"
+                  (click)="changeArrow(i)">
+                  <div class="collapse-section">
+                    <p>{{client.name.split("\<br>").join(" ")}}</p>
+                    <i [ngClass]="getVisible(i) ? 'fa-regular fa-angle-down' : 'fa-regular fa-angle-up'"></i>
+                  </div>
+                </button>
+              </h2>
+              <div [id]="'collapse_' + client.name.split('\<br>').join('_')" class="accordion-collapse collapse"
+                [attr.aria-labelledby]="'heading_' +  client.name.split('\<br>').join('_')" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <div>
+                    <mat-list role="list">
+                        <mat-list-item role="listitem">
+                            <span class="categorie">Catégorie de tva</span> 
+                        </mat-list-item>
+                        <mat-list-item role="listitem">
+                            {{ingredient.categorie_tva.split("\<br>").join(" ")}}
+                        </mat-list-item>
+                        <mat-list-item role="listitem">
+                            <span class="categorie">Quantitée</span>
+                        </mat-list-item>
+                        <mat-list-item role="listitem">
+                            {{ingredient.quantity}}
+                        </mat-list-item>
+                        <mat-list-item role="listitem">
+                            <span class="categorie">Quantitée unitaire</span>
+                        </mat-list-item>
+                        <mat-list-item role="listitem"> 
+                            {{ingredient.quantity_unity}}
+                        </mat-list-item>
+                        <mat-list-item role="listitem">
+                            <span class="categorie">Unitée</span>
+                        </mat-list-item>
+                        <mat-list-item role="listitem">
+                            {{ingredient.unity}}
+                        </mat-list-item>
+                        <mat-list-item role="listitem">
+                            <span class="categorie">Coût unitaire HT</span>
+                        </mat-list-item>
+                        <mat-list-item role="listitem">
+                            {{ingredient.cost}}
+                        </mat-list-item>
+                        <mat-list-item role="listitem">
+                            <span class="categorie">Coût unitaire TTC</span>
+                        </mat-list-item>
+                        <mat-list-item role="listitem">
+                            {{ingredient.cost_ttc}}
+                        </mat-list-item>
+                        <mat-list-item role="listitem">
+                            <span class="categorie">date de récéption</span>
+                        </mat-list-item>
+                        <mat-list-item role="listitem">
+                            {{ingredient.date_reception}}
+                        </mat-list-item>
+                        <mat-list-item role="listitem">
+                            <span class="categorie">date limite de consommation</span>
+                        </mat-list-item>
+                        <mat-list-item role="listitem"> 
+                            {{ingredient.dlc}}
+                        </mat-list-item>
+                    </mat-list>
+                    <div id="modif-section">
+                        <i class="fa-regular fa-trash action_table" (click)="suppIng(ingredient)"></i>
+                        <i class="fa-regular fa-pen action_table" (click)="modifIng(ingredient)"></i>  
+                    </div>                    
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>  -->
+    </main>
+
+</body>
+
+</html>

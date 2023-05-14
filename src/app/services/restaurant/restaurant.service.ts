@@ -18,8 +18,7 @@ export class RestaurantService {
       } catch (error) {
         console.log(error);
         
-      }
-      
+      }  
     } 
   }
 

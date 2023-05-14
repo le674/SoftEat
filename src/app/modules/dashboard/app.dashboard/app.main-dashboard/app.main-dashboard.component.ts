@@ -134,7 +134,6 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
       }
     })
   }
-  
   getNom():string{
     if(email!=null){
     return email;
@@ -149,88 +148,74 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
       return true;
     }
   }
-
   clickAlertes(){
     this.numP.emit(1)
-    
   }
-
-  clickProfil(){
-    
+  clickProfil(){ 
     this.numP.emit(2)
   }
-
   clickIngredients(){
     this.numP.emit(3)
   }
-
   clickConso(){
     this.numP.emit(4)
   }
   clickPrepa(){
     this.numP.emit(5)
   }
-
   clickMenu(){
     this.numP.emit(6)
   }
-
   clickPlats(){
     this.numP.emit(7)
   }
-
   clickPreparation(){
     this.numP.emit(8)
   }
-
-  clickCAnalyseStock(){
+  clickClients(){
     this.numP.emit(9)
+  } 
+  clickCAnalyseStock(){
+    this.numP.emit(10)
   }
   
   clickAnalyseFreq(){
-    this.numP.emit(10)
+    this.numP.emit(11)
   }  
 
   clickAnalyseTable(){
-    this.numP.emit(11)
-  }
-
-  clickAnalyseConso(){
     this.numP.emit(12)
   }
 
-  clickAnalyseCA(){
+  clickAnalyseConso(){
     this.numP.emit(13)
   }
 
-  clickAnalyseMenu(){
+  clickAnalyseCA(){
     this.numP.emit(14)
+  }
+  clickAnalyseMenu(){
+    this.numP.emit(15)
   }
 
   clickCompta(){
-    this.numP.emit(15)
-  }
-  
-  clickScFactures(){
     this.numP.emit(16)
   }
-
-  clickArchi(){
+  clickScFactures(){
     this.numP.emit(17)
   }
-
-
-  clickRH(){
+  clickArchi(){
     this.numP.emit(18)
   }
-
+  clickRH(){
+    this.numP.emit(19)
+  }
   clickToggle(){
 
    /* const sidebar = document.querySelector(".sidebar");
     if(sidebar != null)
     sidebar.classList.toggle("close");*/
-    }
-    
+  }  
   clickLogo(){
     const sidebar = document.querySelector(".sidebar");
     const logo = document.querySelector(".logo-box");

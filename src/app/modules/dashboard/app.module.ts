@@ -15,6 +15,7 @@ import {MatBadgeModule} from '@angular/material/badge';
 import { RecettesModule } from '../recettes/recettes.module';
 import { AppAnalyseModule } from '../analyse/app.module';
 import { AlertesService } from '../../../app/services/alertes/alertes.service';
+import { ClientsModule } from '../clients/clients.module';
 
 
 
@@ -27,6 +28,7 @@ import { AlertesService } from '../../../app/services/alertes/alertes.service';
   imports: [ 
     AppRoutingModule,
     CommonModule,
+    ClientsModule,
     AppAnalyseModule,
     AppAlertesModule,
     AppBudgetModule,
