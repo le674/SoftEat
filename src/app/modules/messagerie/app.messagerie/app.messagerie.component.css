@@ -3,3 +3,51 @@ h1{
     font-weight: normal;
     color: rgb(125, 181, 46);
 }
+
+#conv {
+    float: right;
+    width: 75%;
+    overflow-wrap: break-word;
+}
+
+#form {
+    background: rgba(39, 112, 214, 0.51);
+    padding: 0.25rem;
+    position:fixed;
+    width: 75%;
+    right:0;
+    bottom: 0;
+    display: flex;
+    height: 3rem;
+    box-sizing: border-box;
+    backdrop-filter: blur(10px);
+}
+
+#input {
+    border: none;
+    padding: 0 1rem;
+    flex-grow: 1;
+    border-radius: 2rem;
+    margin: 0.25rem;
+}
+
+#input:focus {
+    outline: none;
+}
+
+#form>button {
+    background: #333;
+    border: none;
+    padding: 0 1rem;
+    margin: 0.25rem;
+    border-radius: 3px;
+    outline: none;
+    color: #fff;
+}
+
+#page {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+}
+
