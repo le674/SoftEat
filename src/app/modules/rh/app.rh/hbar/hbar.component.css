@@ -1,11 +1,53 @@
-h1{
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: violet;
+}
+
+h1 {
+    width: 300px;
     margin-top: 50px;
     margin-bottom: 50px;
     font-weight: normal;
+    text-align: center;
     color: rgb(125, 181, 46);
 }
 
-#restant{
-  display: flex;
-  flex-direction: row;
+
+div.flex-container#hbar {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 300px;
+    background-color: DodgerBlue;
+    flex-grow: 1;
 }
+
+div.flex-container#hbar>div {
+    background-color: #f1f1f1;
+    width: 275px;
+    margin: 5px;
+    align-self: center;
+    line-height: 30px;
+    font-size: 18px;
+}
+
+#restants{
+    margin: 5px;
+}
+
+div.flex-container#hbar>div#motif{
+    display: flex;
+    flex-wrap: wrap;
+    background-color: rgb(24, 95, 10);
+    justify-content: space-evenly;
+  }
+  
+  div.flex-container#hbar>div#motif>button {
+    background-color: #c20d0d;
+    margin: 5px;
+    min-width: 80px;
+    text-align: center;
+    font-size: 16px;
+    justify-content: center;
+  }
