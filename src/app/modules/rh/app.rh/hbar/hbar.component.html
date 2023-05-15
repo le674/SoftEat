@@ -1,9 +1,21 @@
 <body>
-    <div id="hbar">
-        <h1> Congés Payés </h1>
-        <div id="restant">
-            <p> Restant : </p>
-            <span [ngStyle]="{ color: 'rgb(0, ' + 85 + ', 0)' }"> 4 semaines <!-- mes semaines restantes de congés : {{ user.congés }} au lieu du "4 semaines" --> </span>
+    <h1> Congés Payés </h1>
+    <div id="hbar" class="flex-container">
+        <div style="flex-grow: 0.3" id="restants">
+            <p> Total : 6 semaines
+                <!-- mes semaines à l'année : {{ user.congés.total }} au lieu du "6 semaines" -->
+            </p>
+            <p> Restant : <span [ngStyle]="{ color: 'rgb(0, ' + 185 + ', 0)' }"> 4 semaines
+                    <!-- mes semaines restantes de congés : {{ user.congés.dispo }} au lieu du "4 semaines" -->
+                </span> </p>
         </div>
+        <div style="flex-grow: 1" id="motif">
+            <button>Congés</button>
+            <button>RTT</button>
+            <button>Maternité</button>
+            <button>Paternité</button>
+            <button>Exceptionnels</button>
+        </div>
+        <div style="flex-grow: 5">3</div>
     </div>
 </body>
