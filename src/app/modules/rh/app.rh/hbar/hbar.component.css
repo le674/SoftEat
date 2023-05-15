@@ -1,0 +1,11 @@
+h1{
+    margin-top: 50px;
+    margin-bottom: 50px;
+    font-weight: normal;
+    color: rgb(125, 181, 46);
+}
+
+#restant{
+  display: flex;
+  flex-direction: row;
+}
