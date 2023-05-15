@@ -20,6 +20,7 @@ import { RecettesModule } from './modules/recettes/recettes.module';
 import {MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR } from '@angular/material/radio';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppMessagerieModule } from './modules/messagerie/app.module';
+
 @NgModule({
   declarations: [
     AppComponent
