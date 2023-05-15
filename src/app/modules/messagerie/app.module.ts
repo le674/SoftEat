@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { AppMessagerieComponent  } from './app.messagerie/app.messagerie.component';
 import { AppRoutingModule } from './app-routing.module';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -8,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
   ],
   imports:[ 
     AppRoutingModule,
+    CommonModule
   ],
   exports: [
     AppMessagerieComponent

@@ -1,6 +1,7 @@
+
 h1{
     margin-top: 50px;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
     font-weight: normal;
     color: rgb(125, 181, 46);
     position: fixed;
@@ -9,10 +10,15 @@ h1{
     width: 100%;
 }
 
-#body{
-    padding-top: 50px;
+#display{
+    display: flex;
+    flex-direction:row;
+    padding-top: 100px;
+    
 }
+
 #conv {
+    background-color: #04AA6D;
     float: right;
     width: 75%;
     overflow-wrap: break-word;
@@ -60,7 +66,7 @@ h1{
     flex-direction: column;
     position:fixed;
     margin-top:100px;
-    max-height: calc(100vh - 140px); /* hauteur maximale pour la section de navigation */
+    max-height: calc(100vh - 100px); /* hauteur maximale pour la section de navigation */
     overflow-y: auto; /* afficher une barre de défilement si la section dépasse la hauteur maximale */
 }
 
