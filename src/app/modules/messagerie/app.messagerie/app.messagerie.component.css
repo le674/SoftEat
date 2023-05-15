@@ -1,14 +1,23 @@
-head{
+h1{
     margin-top: 50px;
+    margin-bottom: 50px;
     font-weight: normal;
-    text-decoration-color: rgb(125, 181, 46);
+    color: rgb(125, 181, 46);
     position: fixed;
+    top:0;
+    z-index : 1;
+    width: 100%;
 }
 
+#body{
+    padding-top: 50px;
+}
 #conv {
     float: right;
     width: 75%;
     overflow-wrap: break-word;
+    max-height: calc(100vh - 140px); /* hauteur maximale pour la section de conversation */
+    overflow-y: auto; /* afficher une barre de défilement si la section dépasse la hauteur maximale */
 }
 
 #form {
@@ -49,7 +58,10 @@ head{
 #page {
     display: flex;
     flex-direction: column;
-    width: 25%;
+    position:fixed;
+    margin-top:100px;
+    max-height: calc(100vh - 140px); /* hauteur maximale pour la section de navigation */
+    overflow-y: auto; /* afficher une barre de défilement si la section dépasse la hauteur maximale */
 }
 
 ul {

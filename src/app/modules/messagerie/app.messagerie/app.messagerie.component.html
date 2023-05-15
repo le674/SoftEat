@@ -2,49 +2,51 @@
     <h1>Messagerie</h1>
 </div>
 
-<div id="conv">
-    <ul id="messages">
-        <h3>inventaire</h3>
-    </ul>
+<div id="body">
+    <div id="conv">
+        <ul id="messages">
+            <h3>inventaire</h3>
+        </ul>
 
-    <form id="form" action="">
-        <input id="input" autocomplete="off" /><button>Send</button>
-    </form>
-</div>
+        <form id="form" action="">
+            <input id="input" autocomplete="off" /><button>Send</button>
+        </form>
+    </div>
 
-<div id="page">
-    <ul>
-        <li><a class="#inventaire">Inventaire</a></li>
-        <li><a class="#recette">Recette</a></li>
-        <li><a class="#analyse">Analyse</a></li>
-        <li><a class="#comptabilité">Comptabilité</a></li>
-        <li><a class="#ressourcesh">Ressources Humaines</a></li>
-        <li><a class="#Factures">Factures</a></li>
-    </ul>
+    <div id="page">
+        <ul>
+            <li *ngIf="showLocation"><a class="#inventaire">Inventaire</a></li>
+            <li><a class="#recette">Recette</a></li>
+            <li><a class="#analyse">Analyse</a></li>
+            <li><a class="#comptabilité">Comptabilité</a></li>
+            <li><a class="#ressourcesh">Ressources Humaines</a></li>
+            <li><a class="#Factures">Factures</a></li>
+        </ul>
 
-    <ul>
-        <li><a class="#inventaire">Inventaire</a></li>
-        <li><a class="#recette">Recette</a></li>
-        <li><a class="#analyse">Analyse</a></li>
-        <li><a class="#comptabilité">Comptabilité</a></li>
-        <li><a class="#ressourcesh">Ressources Humaines</a></li>
-        <li><a class="#Factures">Factures</a></li>
-    </ul>
-    <ul>
-        <li><a class="#inventaire">Inventaire</a></li>
-        <li><a class="#recette">Recette</a></li>
-        <li><a class="#analyse">Analyse</a></li>
-        <li><a class="#comptabilité">Comptabilité</a></li>
-        <li><a class="#ressourcesh">Ressources Humaines</a></li>
-        <li><a class="#Factures">Factures</a></li>
-    </ul>
-    <ul>
-        <li><a class="#inventaire">Inventaire</a></li>
-        <li><a class="#recette">Recette</a></li>
-        <li><a class="#analyse">Analyse</a></li>
-        <li><a class="#comptabilité">Comptabilité</a></li>
-        <li><a class="#ressourcesh">Ressources Humaines</a></li>
-        <li><a class="#Factures">Factures</a></li>
-    </ul>
+        <ul>
+            <li><a class="#inventaire">Inventaire</a></li>
+            <li><a class="#recette">Recette</a></li>
+            <li><a class="#analyse">Analyse</a></li>
+            <li><a class="#comptabilité">Comptabilité</a></li>
+            <li><a class="#ressourcesh">Ressources Humaines</a></li>
+            <li><a class="#Factures">Factures</a></li>
+        </ul>
+        <ul>
+            <li><a class="#inventaire">Inventaire</a></li>
+            <li><a class="#recette">Recette</a></li>
+            <li><a class="#analyse">Analyse</a></li>
+            <li><a class="#comptabilité">Comptabilité</a></li>
+            <li><a class="#ressourcesh">Ressources Humaines</a></li>
+            <li><a class="#Factures">Factures</a></li>
+        </ul>
+        <ul>
+            <li><a class="#inventaire">Inventaire</a></li>
+            <li><a class="#recette">Recette</a></li>
+            <li><a class="#analyse">Analyse</a></li>
+            <li><a class="#comptabilité">Comptabilité</a></li>
+            <li><a class="#ressourcesh">Ressources Humaines</a></li>
+            <li><a class="#Factures">Factures</a></li>
+        </ul>
 
+    </div>
 </div>

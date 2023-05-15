@@ -15,4 +15,7 @@ export class AppMessagerieComponent implements OnInit {
     this.text = "it works !";
   }
 
+  showLocation = true;
+  
+
 }
