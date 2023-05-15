@@ -15,7 +15,7 @@ import {MatBadgeModule} from '@angular/material/badge';
 import { RecettesModule } from '../recettes/recettes.module';
 import { AppAnalyseModule } from '../analyse/app.module';
 import { AlertesService } from 'src/app/services/alertes/alertes.service';
-
+import { AppMessagerieModule } from '../messagerie/app.module';
 
 
 @NgModule({
@@ -37,7 +37,8 @@ import { AlertesService } from 'src/app/services/alertes/alertes.service';
     ProfilModule,
     RecettesModule,
     MatMenuModule,
-    MatBadgeModule
+    MatBadgeModule,
+    AppMessagerieModule
   ],
   exports: [
     AppDashboardComponent
