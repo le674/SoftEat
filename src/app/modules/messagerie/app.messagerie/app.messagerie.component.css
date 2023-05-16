@@ -40,7 +40,7 @@ h1{
     background: rgba(39, 112, 214, 0.51);
     padding: 0.25rem;
     position:fixed;
-    width: 100%;
+    width: 75%;
     right:0;
     bottom: 0;
     display: flex;
@@ -76,7 +76,7 @@ h1{
     max-height: calc(100vh - 140px); /*hauteur maximale pour la section de conversation*/
     overflow-y: auto; /* afficher une barre de défilement si la section dépasse la hauteur maximale */
     background-color: #2a9a24;
-    width: 25%;
+    width: 16%;
 }
 
 #page ul {
