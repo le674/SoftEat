@@ -1,20 +1,10 @@
-<div id="head">
-   <h1>Messagerie</h1>
-</div>
+<div id="display">
 
-<div id="body">
+   <div id="head">
+      <h1>Messagerie</h1>
+   </div>
 
-   <div class="display">
-      <div id="conv">
-         <ul id="messages">
-            <h3>inventaire {{date | date : 'd MMMM yyyy à hh:mm'}}</h3>
-         </ul>
-
-         <form id="form" action="">
-            <input id="input" autocomplete="off" /><button>Send</button>
-         </form>
-      </div>
-
+   <div id="content">
       <div id="page">
          <ul>
             <li *ngIf="stock"><a class="#inventaire">Inventaire</a></li>
@@ -51,7 +41,15 @@
          </ul>
 
       </div>
+      <div id="conv">
+         <ul id="messages">
+            <h3>inventaire {{date | date : 'd MMMM yyyy à hh:mm'}}</h3>
+         </ul>
 
+         <form id="form" action="">
+            <input id="input" autocomplete="off" /><button>Send</button>
+         </form>
+      </div>
    </div>
 
 </div>
