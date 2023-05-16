@@ -16,6 +16,21 @@
             <button>Paternité</button>
             <button>Exceptionnels</button>
         </div>
-        <div style="flex-grow: 5">3</div>
+        <div style="flex-grow: 5">
+            <form>
+                <label for="nom">Motif </label>
+                <input type="text" placeholder="Motif ?">
+
+                <label for="début">Date début </label>
+                <input type="date" id="début" name="début" required>
+                <label for="fin">Date début </label>
+                <input type="date" id="fin" name="fin" required>
+
+                <label for="file">Joindre un fichier </label>
+                <input type="file" id="file" name="file">
+
+                <input type="submit" value="Envoyer">
+            </form>
+        </div>
     </div>
 </body>
