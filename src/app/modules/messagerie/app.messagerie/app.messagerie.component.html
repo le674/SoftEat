@@ -1,0 +1,33 @@
+<div id="display">
+
+   <div id="head">
+      <h1>Messagerie</h1>
+   </div>
+
+   <div id="content">
+      <div id="conversation_list">
+         <ul>
+            <li *ngIf="stock"><a class="#inventaire">Inventaire</a></li>
+            <li *ngIf="stock"><a class="#recette">Recette</a></li>
+            <li *ngIf="analyse"><a class="#analyse">Analyse</a></li>
+            <li *ngIf="budget"><a class="#comptabilité">Comptabilité</a></li>
+            <li *ngIf="facture"><a class="#Factures">Factures</a></li>
+            <li *ngIf="planning"><a class="#rh">EMPLOYES</a></li>
+            <li><a class="#ressourcesh">Ressources Humaines</a></li>
+         </ul>
+
+      </div>
+      <div id="conversation">
+         <div id="messages">
+            <message-template></message-template>
+            <message-template></message-template>
+         </div>
+         <div id="message_bar">
+            <form id="form" action="">
+               <input id="input" autocomplete="off" /><button>Envoyer</button>
+            </form>
+         </div>
+      </div>
+   </div>
+
+</div>
