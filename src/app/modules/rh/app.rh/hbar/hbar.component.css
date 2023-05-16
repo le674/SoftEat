@@ -1,7 +1,7 @@
 body {
     display: flex;
     flex-direction: column;
-    background-color: violet;
+    /*background-color: violet;*/
 }
 
 h1 {
@@ -15,17 +15,18 @@ h1 {
 
 
 div.flex-container#hbar {
+    background-color: black;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     width: 300px;
-    background-color: DodgerBlue;
+    
     flex-grow: 1;
 }
 
 div.flex-container#hbar>div {
     background-color: #f1f1f1;
-    width: 275px;
+    width: 290px;
     margin: 5px;
     align-self: center;
     line-height: 30px;
@@ -37,14 +38,14 @@ div.flex-container#hbar>div {
 }
 
 div.flex-container#hbar>div#motif{
+    /*background-color: rgb(24, 95, 10);*/
     display: flex;
     flex-wrap: wrap;
-    background-color: rgb(24, 95, 10);
     justify-content: space-evenly;
   }
   
   div.flex-container#hbar>div#motif>button {
-    background-color: #c20d0d;
+    /*background-color: #c20d0d;*/
     margin: 5px;
     min-width: 80px;
     text-align: center;

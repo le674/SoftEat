@@ -10,10 +10,10 @@
                 </span> </p>
         </div>
         <div style="flex-grow: 1" id="motif">
-            <button (click)="autofillInput()">Congés</button>
-            <button>RTT</button>
-            <button>Maternité</button>
-            <button>Paternité</button>
+            <button #autofillConge (click)="autofillInput(autofillConge.innerText)">Congés</button>
+            <button #autofillRTT (click)="autofillInput(autofillRTT.innerText)">RTT</button>
+            <button #autofillMate (click)="autofillInput(autofillMate.innerText)">Maternité</button>
+            <button #autofillPate (click)="autofillInput(autofillPate.innerText)">Paternité</button>
             <button>Exceptionnels</button>
         </div>
         <div style="flex-grow: 5">
