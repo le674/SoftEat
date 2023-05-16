@@ -27,7 +27,7 @@ h1{
 
 #conv {
     background-color: #04AA6D;
-    width: 75%;
+    width: 80%;
     position: fixed;
     right:0;
     overflow-wrap: break-word;
@@ -74,14 +74,14 @@ h1{
     display: flex;
     max-height: calc(100vh - 100px); /* hauteur maximale pour la section de navigation */
     overflow-y: auto; /* afficher une barre de défilement si la section dépasse la hauteur maximale */
+    background-color: #2a9a24;
+
 }
 
-ul {
+#page ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    width: 200px;
-    background-color: #f1f1f1;
 }
 
 li a {
