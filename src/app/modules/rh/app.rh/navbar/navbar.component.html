@@ -1,0 +1,44 @@
+<ul>
+    <li *ngFor="let categories of Categories">
+        {{categories.nom}}
+        <button (click)="openCategories(categories)">{{categories.buttonname}}</button>
+        <ul [ngSwitch]="categories.nom">
+            <ng-container *ngSwitchCase="'Cuisiniers'">
+                <span *ngIf="categories.open">
+                    <li *ngFor="let liste of Cuisiniers">
+                        {{liste}}
+                        <button (click)="selectEmployee(liste)">Selectionner</button>
+                    </li>
+                </span>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'Serveurs'">
+                <span *ngIf="categories.open">
+                    <li *ngFor="let liste of Serveurs">
+                        {{liste}}
+                        <button (click)="selectEmployee(liste)">Selectionner</button>
+                    </li>
+                </span>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'Barmans'">
+                <span *ngIf="categories.open">
+                    <li *ngFor="let liste of Barmans">
+                        {{liste}}
+                        <button (click)="selectEmployee(liste)">Selectionner</button>
+                    </li>
+                </span>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'Gérents'">
+                <span *ngIf="categories.open">
+                    <li *ngFor="let liste of Gerents">
+                        {{liste}}
+                        <button (click)="selectEmployee(liste)">Selectionner</button>
+                    </li>
+                </span>
+            </ng-container>
+        </ul>
+    </li>
+</ul>
+{{select}}
