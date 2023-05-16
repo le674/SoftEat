@@ -1,103 +1,99 @@
-
-h1{
-    margin-top: 50px;
-    margin-bottom: 20px;
-    font-weight: normal;
-    color: rgb(125, 181, 46);
-    position: fixed;
-    top:0;
-    z-index : 1;
-    width: 100%;
+#display {
+	display: flex;
+	flex-direction: column;
 }
 
-
-
-#display{
-    display: flex;
-    flex-direction:column;
-    padding-top: 100px;
-    
+#head {
+	margin-top: 50px;
+	margin-bottom: 20px;
 }
 
-#content{
-    display: flex;
-    flex-direction: row;
-    align-items:end;
+h1 {
+	
+	font-weight: normal;
+	color: rgb(125, 181, 46);
+	/* position: fixed; */
+	top: 0;
+	z-index: 1;
+	/* width: 100%; */
 }
 
-#conv {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+#content {
+	display: flex;
+	flex-direction: row;
+	align-items: stretch;
+}
+
+#conversation_list {
+	display: flex;
+	height: 80vh;  /*hauteur maximale pour la section de conversation*/
+	overflow-y: auto;  /* afficher une barre de défilement si la section dépasse la hauteur maximale */
+	background-color: #2a9a24;
+	width: 16%;
+}
+
+#conversation {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
 }
 
 #messages {
-    background-color: #04AA6D;
-    overflow-wrap: break-word;
-    max-height: calc(100vh - 140px); /*hauteur maximale pour la section de conversation*/
-    overflow-y: auto; /* afficher une barre de défilement si la section dépasse la hauteur maximale */
-}
-
-#message_bar {
-    
+	background-color: #04AA6D;
+	overflow-wrap: break-word;
+	height: 75vh;  /*hauteur maximale pour la section de conversation*/
+	overflow-y: auto;  /* afficher une barre de défilement si la section dépasse la hauteur maximale */
 }
 
 #form {
-    background: rgba(39, 112, 214, 0.51);
-    display: flex;
-    box-sizing: border-box;
-    backdrop-filter: blur(10px);
+	background: rgba(39, 112, 214, 0.51);
+	display: flex;
+	box-sizing: border-box;
+	backdrop-filter: blur(10px);
+	height: 5vh;
 }
 
 #input {
-    border: none;
-    padding: 0 1rem;
-    flex-grow: 1;
-    border-radius: 2rem;
-    margin: 0.25rem;
+	border: none;
+	padding: 0 1rem;
+	flex-grow: 1;
+	border-radius: 2rem;
+	margin: 0.25rem;
 }
 
 #input:focus {
-    outline: none;
+	outline: none;
 }
 
 #form>button {
-    background: #333;
-    border: none;
-    padding: 0 1rem;
-    margin: 0.25rem;
-    border-radius: 3px;
-    outline: none;
-    color: #fff;
+	background: #333;
+	border: none;
+	padding: 0 1rem;
+	margin: 0.25rem;
+	border-radius: 3px;
+	outline: none;
+	color: #fff;
 }
 
-#page {
-    display: flex;
-    max-height: calc(100vh - 140px); /*hauteur maximale pour la section de conversation*/
-    overflow-y: auto; /* afficher une barre de défilement si la section dépasse la hauteur maximale */
-    background-color: #2a9a24;
-    width: 16%;
-}
-
-#page ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+#conversation_list ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
 }
 
 li a {
-    display: block;
-    color: #000;
-    padding: 8px 16px;
-    text-decoration: none;
+	display: block;
+	color: #000;
+	padding: 8px 16px;
+	text-decoration: none;
 }
-  
+
 li a.active {
-    background-color: #04AA6D;
-    color: rgb(230, 14, 14);
+	background-color: #04AA6D;
+	color: rgb(230, 14, 14);
 }
-  
+
 li a:hover:not(.active) {
-    background-color: #ca0e0e;
-    color: white;
+	background-color: #ca0e0e;
+	color: white;
 }
