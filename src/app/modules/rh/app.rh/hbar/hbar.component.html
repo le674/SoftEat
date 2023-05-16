@@ -26,9 +26,14 @@
                 <label for="fin">Date début </label>
                 <input type="date" id="fin" name="fin" required>
 
-                <label for="file">Joindre un fichier </label>
-                <input type="file" id="file" name="file">
+                <input type="file" id="fileInput" name="fileInput" class="file-input"
+                    (change)="displayFileName($event)">
+                <label for="fileInput" class="file-label">Joindre un fichier</label>
 
+                <div *ngIf="selectedFileName" class="file-info">
+                    <p class="selected">{{ selectedFileName }}</p>
+                    <button class="unchoose-button" (click)="unchooseFile()">&cross;</button>
+                </div>
                 <input type="submit" value="Envoyer">
             </form>
         </div>

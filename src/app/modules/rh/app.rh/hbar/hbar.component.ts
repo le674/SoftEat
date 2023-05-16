@@ -6,6 +6,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
   styleUrls: ['./hbar.component.css']
 })
 export class HbarComponent implements OnInit {
+  selectedFileName!: string;
   @ViewChild('motif') motif!: ElementRef;
   @ViewChild('autofillConge') autofillConge!: ElementRef;
   @ViewChild('autofillRTT') autofillRTT!: ElementRef;
@@ -21,4 +22,18 @@ export class HbarComponent implements OnInit {
     this.motif.nativeElement.value = value;
   }
 
+  displayFileName(event: any) {
+    const fileInput = event.target;
+    if (fileInput.files.length > 0) {
+      this.selectedFileName = fileInput.files[0].name;
+    } else {
+      this.selectedFileName = '';
+    }
+  }
+  unchooseFile() {
+    this.selectedFileName = '';
+    // Reset the file input value if needed
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    fileInput.value = '';
+  }
 }
