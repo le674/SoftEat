@@ -8,11 +8,13 @@ import { Component, OnInit } from '@angular/core';
 export class AppMessageTemplateComponent implements OnInit {
   date = new Date();
   text!: string;
+  message!: string;
 
   constructor() { }
 
   ngOnInit(): void {
-    this.text = "Message content that is super very long, like reaaaally long.";
+    this.message = "received";
+    this.text = "Bonjour la messagerie !";
   }
 
   

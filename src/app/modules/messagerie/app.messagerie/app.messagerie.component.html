@@ -8,29 +8,12 @@
       <div id="conversation_list">
          <ul>
             <li *ngIf="stock"><a class="#inventaire">Inventaire</a></li>
-            <li><a class="#recette">Recette</a></li>
-            <li><a class="#analyse">Analyse</a></li>
-            <li><a class="#comptabilité">Comptabilité</a></li>
+            <li *ngIf="stock"><a class="#recette">Recette</a></li>
+            <li *ngIf="analyse"><a class="#analyse">Analyse</a></li>
+            <li *ngIf="budget"><a class="#comptabilité">Comptabilité</a></li>
+            <li *ngIf="facture"><a class="#Factures">Factures</a></li>
+            <li *ngIf="planning"><a class="#rh">EMPLOYES</a></li>
             <li><a class="#ressourcesh">Ressources Humaines</a></li>
-            <li><a class="#Factures">Factures</a></li>
-            <li><a class="#inventaire">Inventaire</a></li>
-            <li><a class="#recette">Recette</a></li>
-            <li><a class="#analyse">Analyse</a></li>
-            <li><a class="#comptabilité">Comptabilité</a></li>
-            <li><a class="#ressourcesh">Ressources Humaines</a></li>
-            <li><a class="#Factures">Factures</a></li>
-            <li><a class="#inventaire">Inventaire</a></li>
-            <li><a class="#recette">Recette</a></li>
-            <li><a class="#analyse">Analyse</a></li>
-            <li><a class="#comptabilité">Comptabilité</a></li>
-            <li><a class="#ressourcesh">Ressources Humaines</a></li>
-            <li><a class="#Factures">Factures</a></li>
-            <li><a class="#inventaire">Inventaire</a></li>
-            <li><a class="#recette">Recette</a></li>
-            <li><a class="#analyse">Analyse</a></li>
-            <li><a class="#comptabilité">Comptabilité</a></li>
-            <li><a class="#ressourcesh">Ressources Humaines</a></li>
-            <li><a class="#Factures">Factures</a></li>
          </ul>
 
       </div>
@@ -41,7 +24,7 @@
          </div>
          <div id="message_bar">
             <form id="form" action="">
-               <input id="input" autocomplete="off" /><button>Send</button>
+               <input id="input" autocomplete="off" /><button>Envoyer</button>
             </form>
          </div>
       </div>

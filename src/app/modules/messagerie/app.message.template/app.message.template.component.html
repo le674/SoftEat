@@ -1,8 +1,12 @@
 <div class="messagerie">
   <div class="message">
-    <div class="message__outer">
-      <div class="message__inner">
-        <div class="message__bubble" dir="auto">
+    <div class="message_outer">
+      <div [ngStyle]="{
+      'flex-direction': message === 'send' ? 'row-reverse' : (message === 'row' ? '#ecc6f8' : 'row')
+      }" class="message_inner">
+        <div [ngStyle]="{
+        'background-color': message === 'send' ? '#DCF8C6' : (message === 'bot' ? '#ecc6f8' : '#e0e0e0')
+        }" class="message_bubble" dir="auto">
           <div class="message_infos">
             <div class="name">
               <p>~Matthieu d'Hoop</p>
@@ -15,9 +19,9 @@
             <p>{{ text }}</p>
           </div>
         </div>
-        <div class="message__spacer"></div>
+        <div class="message_spacer"></div>
       </div>
-      <div class="message__status"></div>
+      <div class="message_status"></div>
     </div>
   </div>
 </div>

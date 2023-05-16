@@ -28,24 +28,23 @@
   margin-bottom: -10px;
 }
 
-.message__outer {
+.message_outer {
   display: flex;
 }
 
-.message__inner {
+.message_inner {
   flex: 1;
   display: flex;
-  flex-direction: row-reverse;
 }
 
-.message__spacer {
+.message_spacer {
   flex: 1;
 }
 
-.message__bubble {
+.message_bubble {
   max-width: calc(100% - 67px);
   overflow-wrap: break-word;
-  background-color: #DCF8C6;
+  background-color: #e0e0e0;
   border-radius: 10px;
   padding-left: 10px;
   padding-right: 10px;
@@ -54,7 +53,7 @@
   margin-bottom: 5px;
 }
 
-.message__status {
+.message_status {
   width: 20px;
   display: flex;
   flex-direction: column;
