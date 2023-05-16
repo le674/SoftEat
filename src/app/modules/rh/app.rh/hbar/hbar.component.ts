@@ -7,14 +7,18 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 })
 export class HbarComponent implements OnInit {
   @ViewChild('motif') motif!: ElementRef;
+  @ViewChild('autofillConge') autofillConge!: ElementRef;
+  @ViewChild('autofillRTT') autofillRTT!: ElementRef;
+  @ViewChild('autofillMate') autofillMate!: ElementRef;
+  @ViewChild('autofillPate') autofillPate!: ElementRef;
   constructor() { }
 
   ngOnInit(): void {
     /*this.motif = "";*/
   }
 
-  autofillInput(): void {
-    this.motif.nativeElement.value = 'Congés';
+  autofillInput(value: string): void {
+    this.motif.nativeElement.value = value;
   }
 
 }
