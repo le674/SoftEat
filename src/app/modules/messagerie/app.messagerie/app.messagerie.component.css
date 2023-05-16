@@ -22,29 +22,29 @@ h1{
 #content{
     display: flex;
     flex-direction: row;
-    align-items: stretch;
+    align-items:end;
 }
 
 #conv {
-    background-color: #04AA6D;
-    /* width: 80%; */
-    /* position: fixed; */
-    /* right:0; */
+    display: flex;
+    flex-direction: column;
     width: 100%;
+}
+
+#messages {
+    background-color: #04AA6D;
     overflow-wrap: break-word;
     max-height: calc(100vh - 140px); /*hauteur maximale pour la section de conversation*/
     overflow-y: auto; /* afficher une barre de défilement si la section dépasse la hauteur maximale */
 }
 
+#message_bar {
+    
+}
+
 #form {
     background: rgba(39, 112, 214, 0.51);
-    padding: 0.25rem;
-    position:fixed;
-    width: 75%;
-    right:0;
-    bottom: 0;
     display: flex;
-    height: 3rem;
     box-sizing: border-box;
     backdrop-filter: blur(10px);
 }
