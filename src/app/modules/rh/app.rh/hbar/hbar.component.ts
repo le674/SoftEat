@@ -19,7 +19,10 @@ export class HbarComponent implements OnInit {
   }
 
   autofillInput(value: string): void {
-    this.motif.nativeElement.value = value;
+    if (value =="Exceptionnels"){
+      this.motif.nativeElement.value = '';
+    }else
+      this.motif.nativeElement.value = value;
   }
 
   displayFileName(event: any) {
