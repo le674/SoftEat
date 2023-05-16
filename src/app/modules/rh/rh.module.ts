@@ -12,7 +12,7 @@ import { HbarComponent } from './app.rh/hbar/hbar.component';
   
   
     AppRhComponent,
-            CalendarComponent
+            CalendarComponent,
             HbarComponent
   ],
   imports: [
