@@ -22,16 +22,17 @@ h1{
 #content{
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: stretch;
 }
 
 #conv {
     background-color: #04AA6D;
-    width: 80%;
-    position: fixed;
-    right:0;
+    /* width: 80%; */
+    /* position: fixed; */
+    /* right:0; */
+    width: 100%;
     overflow-wrap: break-word;
-    max-height: calc(100vh - 140px); /* hauteur maximale pour la section de conversation */
+    max-height: calc(100vh - 140px); /*hauteur maximale pour la section de conversation*/
     overflow-y: auto; /* afficher une barre de défilement si la section dépasse la hauteur maximale */
 }
 
@@ -39,7 +40,7 @@ h1{
     background: rgba(39, 112, 214, 0.51);
     padding: 0.25rem;
     position:fixed;
-    width: 75%;
+    width: 100%;
     right:0;
     bottom: 0;
     display: flex;
@@ -72,10 +73,10 @@ h1{
 
 #page {
     display: flex;
-    max-height: calc(100vh - 100px); /* hauteur maximale pour la section de navigation */
+    max-height: calc(100vh - 140px); /*hauteur maximale pour la section de conversation*/
     overflow-y: auto; /* afficher une barre de défilement si la section dépasse la hauteur maximale */
     background-color: #2a9a24;
-
+    width: 25%;
 }
 
 #page ul {
