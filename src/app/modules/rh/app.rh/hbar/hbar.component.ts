@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-hbar',
@@ -6,15 +6,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./hbar.component.css']
 })
 export class HbarComponent implements OnInit {
-  /*motif! : String*/
+  @ViewChild('motif') motif!: ElementRef;
   constructor() { }
 
   ngOnInit(): void {
     /*this.motif = "";*/
   }
 
-  autofillInput(value: string): void {
-    /*this.motif = value;*/
+  autofillInput(): void {
+    this.motif.nativeElement.value = 'Congés';
   }
 
 }

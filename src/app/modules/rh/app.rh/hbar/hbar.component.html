@@ -10,7 +10,7 @@
                 </span> </p>
         </div>
         <div style="flex-grow: 1" id="motif">
-            <button>Congés</button>
+            <button (click)="autofillInput()">Congés</button>
             <button>RTT</button>
             <button>Maternité</button>
             <button>Paternité</button>
@@ -19,7 +19,7 @@
         <div style="flex-grow: 5">
             <form>
                 <label for="nom">Motif </label>
-                <input type="text" placeholder="Motif ?">
+                <input #motif type="text" placeholder="Motif ?">
 
                 <label for="début">Date début </label>
                 <input type="date" id="début" name="début" required>
