@@ -1,41 +1,44 @@
-/* Appliquer une couleur de fond gris-vert au tableau */
-table {
-    background-color: #e0f2e9;
-    border-collapse: collapse;
-    width: 100%;
-  }
-  
-  /* Appliquer une couleur de fond blanche aux cellules du tableau */
-  td {
-    background-color: #ffffff;
-    padding: 8px;
-  }
-  
-  /* Appliquer une bordure grise aux cellules du tableau */
-  td {
-    border: 1px solid #dddddd;
-  }
-  
-  /* Style pour le bouton */
-  button {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    text-align: center;
-    text-decoration: none;
+.code-container {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
     display: inline-block;
-    font-size: 12px;
-    cursor: pointer;
   }
   
-  /* Style pour le bouton lorsqu'il est survolé */
-  button:hover {
-    background-color: #45a049;
+  ul.table {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
   }
   
-  /* Style pour le bouton lorsqu'il est pressé */
-  button:active {
-    background-color: #3e8e41;
+  ul.table li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
   }
   
+  ul.table li:last-child {
+    border-bottom: none;
+  }
+  
+  ul.table li button {
+    margin-left: 10px;
+  }
+  
+  span {
+    display: block;
+    margin-top: 10px;
+  }
+  
+  /* Ajoutez ces styles si nécessaire */
+  .code-container {
+    width: 290px;
+    margin: 20px auto;
+  }
+  
+  ul.table {
+    margin-top: 10px;
+  }

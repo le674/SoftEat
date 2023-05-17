@@ -18,10 +18,10 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.Categories = [
-      { nom: 'Cuisiniers', open: false, buttonname: 'open' },
-      { nom: 'Serveurs', open: false, buttonname: 'open' },
-      { nom: 'Barmans', open: false, buttonname: 'open' },
-      { nom: 'Gérents', open: false, buttonname: 'open' },
+      { nom: 'Cuisiniers', open: false, buttonname: '▼' },
+      { nom: 'Serveurs', open: false, buttonname: '▼' },
+      { nom: 'Barmans', open: false, buttonname: '▼' },
+      { nom: 'Gérents', open: false, buttonname: '▼' },
     ];
     this.Cuisiniers = [
       { nom: 'Cuisto1', selectionne: false },
@@ -43,10 +43,10 @@ export class NavbarComponent implements OnInit {
   }
 
   openCategories(categories: any) {
-    if (categories.buttonname == 'open') {
-      categories.buttonname = 'close';
+    if (categories.buttonname == '▼') {
+      categories.buttonname = '▲';
     } else {
-      categories.buttonname = 'open';
+      categories.buttonname = '▼';
     }
     categories.open = !categories.open;
   }
