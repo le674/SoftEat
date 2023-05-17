@@ -9,11 +9,9 @@ import { HbarComponent } from './app.rh/hbar/hbar.component';
 
 @NgModule({
   declarations: [
-  
-  
     AppRhComponent,
-            CalendarComponent,
-            HbarComponent
+    CalendarComponent,
+    HbarComponent
   ],
   imports: [
     CommonModule,
