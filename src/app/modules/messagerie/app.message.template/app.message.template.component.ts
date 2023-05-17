@@ -89,4 +89,8 @@ export class AppMessageTemplateComponent implements OnInit {
       this.heure = hours.toString().padStart(2, '0') + ':' + utcHourSplit[1];
     });
   }
+
+  updateSeparationDate(){
+    this.separationDateB = !this.separationDateB;
+  }
 }
