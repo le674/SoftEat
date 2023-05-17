@@ -15,11 +15,12 @@
 
 .time_sent p {
   color: rgb(100, 100, 100);
-  padding: 0;
 }
 
 .name {
   font-weight: bold;
+  padding-right: 30px;
+  white-space: nowrap;
 }
 
 .message_content,
