@@ -32,6 +32,7 @@ h1 {
 	background-color: #ffffff;
 	width: 16%;
   border: 2px solid rgb(125, 181, 46);
+	border-right: none;
 }
 
 #conversation {
@@ -46,6 +47,8 @@ h1 {
 	overflow-wrap: break-word;
 	height: 100%;  /*hauteur maximale pour la section de conversation */
 	overflow-y: auto;  /* afficher une barre de défilement si la section dépasse la hauteur maximale */
+	padding: 10px;
+
 }
 
 #form {
@@ -88,6 +91,7 @@ li a {
 	color: #000;
 	padding: 8px 16px;
 	text-decoration: none;
+	border-bottom: solid 1px #000;
 }
 
 li a.active {
@@ -98,8 +102,4 @@ li a.active {
 li a:hover:not(.active) {
 	background-color: rgb(125, 181, 46);
 	color: white;
-}
-
-ul {
-	border-bottom: rgb(0, 0, 0);
 }

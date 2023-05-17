@@ -13,7 +13,7 @@ export class AppMessageTemplateComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.message = "received";
+    this.message = "send";
     this.text = "Bonjour la messagerie !";
   }
 
