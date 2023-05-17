@@ -84,6 +84,7 @@ h1 {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
+	width: 100%;
 }
 
 li a {
@@ -91,7 +92,21 @@ li a {
 	color: #000;
 	padding: 8px 16px;
 	text-decoration: none;
-	border-bottom: solid 1px #000;
+	white-space: nowrap;
+}
+
+ul li {
+	position: relative;
+}
+
+ul li::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left:10%; /* Ajustez cette valeur pour contrôler la position de la ligne partielle */
+	right: 10%; /* Ajustez cette valeur pour contrôler la largeur de la ligne partielle */
+	height: 1px;
+	background-color: rgb(154, 154, 154);
 }
 
 li a.active {
