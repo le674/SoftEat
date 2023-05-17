@@ -91,8 +91,12 @@ li a {
   white-space: nowrap;
 }
 
-ul li {
-  position: relative;
+ul li a {
+  /* position: relative; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 ul li::after {
@@ -113,4 +117,13 @@ li a.active {
 li a:hover:not(.active) {
   background-color: rgb(125, 181, 46);
   color: white;
+}
+
+.notification-badge {
+  background-color: red;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 5px;
 }
