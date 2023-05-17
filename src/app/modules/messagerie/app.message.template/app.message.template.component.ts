@@ -16,6 +16,4 @@ export class AppMessageTemplateComponent implements OnInit {
     this.message = "received";
     this.text = "Bonjour la messagerie !";
   }
-
-  
 }
