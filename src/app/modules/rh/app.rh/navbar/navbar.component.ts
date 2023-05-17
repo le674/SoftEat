@@ -6,13 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-  Categories!: { nom: string; open: boolean; buttonname : String }[];
-  Cuisiniers!: String[];
-  Serveurs!: String[];
-  Barmans!: String[];
-  Gerents!: String[];
+  Categories!: { nom: string; open: boolean; buttonname: String }[];
+  Cuisiniers!: { nom: String; selectionne: boolean }[];
+  Serveurs!: { nom: String; selectionne: boolean }[];
+  Barmans!: { nom: String; selectionne: boolean }[];
+  Gerents!: { nom: String; selectionne: boolean }[];
 
-  select!: String;
+  select!: String[];
 
   constructor() {}
 
@@ -23,12 +23,23 @@ export class NavbarComponent implements OnInit {
       { nom: 'Barmans', open: false, buttonname: 'open' },
       { nom: 'Gérents', open: false, buttonname: 'open' },
     ];
-    this.Cuisiniers = ['Cuisto1', 'Cuisto2', 'Cuisto3'];
-    this.Serveurs = ['Serveur1', 'Serveur2'];
-    this.Barmans = ['Barman1', 'Barman2', 'Barman3'];
-    this.Gerents = ['Gerent1'];
+    this.Cuisiniers = [
+      { nom: 'Cuisto1', selectionne: false },
+      { nom: 'Cuisto2', selectionne: false },
+      { nom: 'Cuisto3', selectionne: false },
+    ];
+    this.Serveurs = [
+      { nom: 'Serveur1', selectionne: false },
+      { nom: 'Serveur2', selectionne: false },
+    ];
+    this.Barmans = [
+      { nom: 'Barman1', selectionne: false },
+      { nom: 'Barman2', selectionne: false },
+      { nom: 'Barman3', selectionne: false },
+    ];
+    this.Gerents = [{ nom: 'Gerent1', selectionne: false }];
 
-    this.select = '';
+    this.select = [];
   }
 
   openCategories(categories: any) {
@@ -40,7 +51,13 @@ export class NavbarComponent implements OnInit {
     categories.open = !categories.open;
   }
 
-  selectEmployee(liste: any){
-    this.select=liste;
+  selectEmployee(liste: any) {
+    if (!liste.selectionne) {
+      this.select.push(liste.nom);
+      liste.selectionne = !liste.selectionne;
+    } else {
+      this.select.splice(this.select.indexOf(liste.nom), 1);
+      liste.selectionne = !liste.selectionne;
+    }
   }
 }

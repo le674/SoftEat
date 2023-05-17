@@ -1,0 +1,41 @@
+/* Appliquer une couleur de fond gris-vert au tableau */
+table {
+    background-color: #e0f2e9;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  /* Appliquer une couleur de fond blanche aux cellules du tableau */
+  td {
+    background-color: #ffffff;
+    padding: 8px;
+  }
+  
+  /* Appliquer une bordure grise aux cellules du tableau */
+  td {
+    border: 1px solid #dddddd;
+  }
+  
+  /* Style pour le bouton */
+  button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  
+  /* Style pour le bouton lorsqu'il est survolé */
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Style pour le bouton lorsqu'il est pressé */
+  button:active {
+    background-color: #3e8e41;
+  }
+  

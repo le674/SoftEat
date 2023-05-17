@@ -1,4 +1,4 @@
-<ul>
+<ul class="table">
     <li *ngFor="let categories of Categories">
         {{categories.nom}}
         <button (click)="openCategories(categories)">{{categories.buttonname}}</button>
@@ -6,7 +6,7 @@
             <ng-container *ngSwitchCase="'Cuisiniers'">
                 <span *ngIf="categories.open">
                     <li *ngFor="let liste of Cuisiniers">
-                        {{liste}}
+                        {{liste.nom}}
                         <button (click)="selectEmployee(liste)">Selectionner</button>
                     </li>
                 </span>
@@ -15,7 +15,7 @@
             <ng-container *ngSwitchCase="'Serveurs'">
                 <span *ngIf="categories.open">
                     <li *ngFor="let liste of Serveurs">
-                        {{liste}}
+                        {{liste.nom}}
                         <button (click)="selectEmployee(liste)">Selectionner</button>
                     </li>
                 </span>
@@ -24,7 +24,7 @@
             <ng-container *ngSwitchCase="'Barmans'">
                 <span *ngIf="categories.open">
                     <li *ngFor="let liste of Barmans">
-                        {{liste}}
+                        {{liste.nom}}
                         <button (click)="selectEmployee(liste)">Selectionner</button>
                     </li>
                 </span>
@@ -33,7 +33,7 @@
             <ng-container *ngSwitchCase="'Gérents'">
                 <span *ngIf="categories.open">
                     <li *ngFor="let liste of Gerents">
-                        {{liste}}
+                        {{liste.nom}}
                         <button (click)="selectEmployee(liste)">Selectionner</button>
                     </li>
                 </span>
@@ -41,4 +41,7 @@
         </ul>
     </li>
 </ul>
-{{select}}
+
+<span *ngFor="let element of select">
+    {{element}}
+</span>
