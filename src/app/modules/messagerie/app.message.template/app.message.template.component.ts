@@ -95,4 +95,8 @@ export class AppMessageTemplateComponent implements OnInit {
 
     });
   }
+
+  updateSeparationDate(){
+    this.separationDateB = !this.separationDateB;
+  }
 }
