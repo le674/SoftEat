@@ -1,0 +1,100 @@
+#display {
+	display: flex;
+	flex-direction: column;
+}
+
+#head {
+	margin-top: 50px;
+	margin-bottom: 20px;
+}
+
+h1 {
+	
+	font-weight: normal;
+	color: rgb(125, 181, 46);
+	/* position: fixed; */
+	top: 0;
+	z-index: 1;
+	/* width: 100%; */
+}
+
+#content {
+	display: flex;
+	flex-direction: row;
+	align-items: stretch;
+}
+
+#conversation_list {
+	display: flex;
+	height: 80vh;  /*hauteur maximale pour la section de conversation*/
+	overflow-y: auto;  /* afficher une barre de défilement si la section dépasse la hauteur maximale */
+	background-color: #ffffff;
+	width: 16%;
+}
+
+#conversation {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+    border: 2px solid rgb(125, 181, 46);
+}
+
+#messages {
+	background-color: #ebebeb;
+	overflow-wrap: break-word;
+	height: 75vh;  /*hauteur maximale pour la section de conversation*/
+	overflow-y: auto;  /* afficher une barre de défilement si la section dépasse la hauteur maximale */
+}
+
+#form {
+	background: rgb(125, 181, 46);
+	display: flex;
+	box-sizing: border-box;
+	backdrop-filter: blur(10px);
+	height: 5vh;
+}
+
+#input {
+	border: none;
+	padding: 0 1rem;
+	flex-grow: 1;
+	border-radius: 2rem;
+	margin: 0.25rem;
+}
+
+#input:focus {
+	outline: none;
+}
+
+#form>button {
+	background: #333;
+	border: none;
+	padding: 0 1rem;
+	margin: 0.25rem;
+	border-radius: 3px;
+	outline: none;
+	color: #fff;
+}
+
+#conversation_list ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+li a {
+	display: block;
+	color: #000;
+	padding: 8px 16px;
+	text-decoration: none;
+}
+
+li a.active {
+	background-color: rgb(125, 181, 46);
+	color: rgb(255, 255, 255);
+}
+
+li a:hover:not(.active) {
+	background-color: rgb(125, 181, 46);
+	color: white;
+}
