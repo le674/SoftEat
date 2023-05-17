@@ -8,6 +8,7 @@
   .table>tbody>tr>td {
     vertical-align: middle;
   }
+  
   .input-group {
     width: 100%;
   }
@@ -19,6 +20,8 @@
     text-shadow: none;
     box-shadow: none;
   }
-  .addBtn {
+  
+  button {
     cursor: pointer;
   }
+  
