@@ -30,7 +30,7 @@ h1 {
 	height: 100%;  /*hauteur maximale pour la section de conversation*/
 	overflow-y: auto;  /* afficher une barre de défilement si la section dépasse la hauteur maximale */
 	background-color: #ffffff;
-	width: 16%;
+	width: 20%;
   border: 2px solid rgb(125, 181, 46);
 	border-right: none;
 }
@@ -52,7 +52,7 @@ h1 {
 }
 
 #form {
-	background: rgb(125, 181, 46);
+	background: rgb(191, 191, 191);
 	display: flex;
 	box-sizing: border-box;
 	backdrop-filter: blur(10px);
@@ -62,7 +62,7 @@ h1 {
 	border: none;
 	padding: 0.20rem 1rem;
 	flex-grow: 1;
-	border-radius: 2rem;
+	border-radius: 3px;
 	margin: 0.25rem;
 }
 
@@ -106,7 +106,7 @@ ul li::after {
 	left:10%; /* Ajustez cette valeur pour contrôler la position de la ligne partielle */
 	right: 10%; /* Ajustez cette valeur pour contrôler la largeur de la ligne partielle */
 	height: 1px;
-	background-color: rgb(154, 154, 154);
+	background-color: rgb(212, 212, 212);
 }
 
 li a.active {
