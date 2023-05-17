@@ -3,7 +3,8 @@
   border: 1px solid #ccc;
   padding: 10px;
   margin-bottom: 20px;
-  width: 300px; /* Ajout de la largeur de 300px au cadre */
+  width: 300px;
+  /* Ajout de la largeur de 300px au cadre */
 }
 
 /* Styles pour la liste des catégories */
