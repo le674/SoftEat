@@ -1,0 +1,24 @@
+.remove {
+    background: #f1f1f1;
+    /*td {
+      font-style: italic;
+    }*/
+  }
+  
+  .table>tbody>tr>td {
+    vertical-align: middle;
+  }
+  .input-group {
+    width: 100%;
+  }
+  
+  .editable {
+    border: none;
+    padding: 0;
+    margin: 0;
+    text-shadow: none;
+    box-shadow: none;
+  }
+  .addBtn {
+    cursor: pointer;
+  }
