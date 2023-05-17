@@ -1,50 +1,44 @@
 <div class="col-md-12">
     <table class="table">
-        <thead>
-            <tr>
-                <th>Formal Suffix</th>
-                <th>Postal Service Preferred</th>
-                <th>Common Alternatives</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr id="addRow">
-                <td class="col-xs-3">
-                    <input class="form-control addMain" type="text" placeholder="Enter title" />
-                </td>
-
-                <td class="col-xs-3">
-                    <input class="form-control addPrefer" type="text" placeholder="Enter title" />
-                </td>
-                <td class="col-xs-5">
-                    <input class="form-control addCommon" type="text" placeholder="Enter title" />
-                </td>
-                <td class="col-xs-1 text-center">
-                    <span class="addBtn">
-                        <i class="fa fa-plus" onclick="onClickAdd()"></i>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-xs-3"><input type="text" value="Alley" class="form-control editable" /> </td>
-
-                <td class="col-xs-3"><input type="text" value="Aly" class="form-control editable" /> </td>
-                <td class="col-xs-5"><input type="text" value="Allee, AL, Ally" class="form-control editable" /> </td>
-                <td class="col-xs-1 text-center"><a href="#" onClick="deleteRow(this)"><i class="fa fa-trash-o"
-                            aria-hidden="true"></i></a></td>
-            </tr>
-            <tr>
-                <td class="col-xs-3"><input type="text" value="Avenue" class="form-control editable" /> </td>
-
-                <td class="col-xs-3"><input type="text" value="Ave" class="form-control editable" /> </td>
-                <td class="col-xs-5"><input type="text" value="Av, Aven, Ally" class="form-control editable" /> </td>
-                <td class="col-xs-1 text-center"><a href="#" onClick="deleteRow(this)"><i class="fa fa-trash-o"
-                            aria-hidden="true"></i></a></td>
-            </tr>
-        </tbody>
+      <thead>
+        <tr>
+          <th>Formal Suffix</th>
+          <th>Postal Service Preferred</th>
+          <th>Common Alternatives</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-xs-3">
+            <input #addMain class="form-control" type="text" placeholder="Enter title" />
+          </td>
+          <td class="col-xs-3">
+            <input #addPrefer class="form-control" type="text" placeholder="Enter title" />
+          </td>
+          <td class="col-xs-5">
+            <input #addCommon class="form-control" type="text" placeholder="Enter title" />
+          </td>
+          <td class="col-xs-1 text-center">
+            <button (click)="onClickAdd(addMain.value, addPrefer.value, addCommon.value)">
+              <i class="fa fa-plus"></i>
+            </button>
+          </td>
+        </tr>
+        <tr *ngFor="let row of rows; let i=index">
+          <td class="col-xs-3"><input [(ngModel)]="row.main" class="form-control editable" /></td>
+          <td class="col-xs-3"><input [(ngModel)]="row.preferred" class="form-control editable" /></td>
+          <td class="col-xs-5"><input [(ngModel)]="row.common" class="form-control editable" /></td>
+          <td class="col-xs-1 text-center">
+            <button (click)="deleteRow(i)">
+                <i class="fa-regular fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
     </table>
     <div class="col-md-1 pull-right">
-        <button class="btn btn-primary pull-right">Save</button>
+      <button class="btn btn-primary pull-right">Save</button>
     </div>
-</div>
+  </div>
+  
