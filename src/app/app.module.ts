@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,6 +20,9 @@ import { RecettesModule } from './modules/recettes/recettes.module';
 import {MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR } from '@angular/material/radio';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppMessagerieModule } from './modules/messagerie/app.module';
+import {registerLocaleData} from '@angular/common';
+import * as fr from '@angular/common/locales/fr';
+
 
 @NgModule({
   declarations: [
@@ -48,11 +51,16 @@ import { AppMessagerieModule } from './modules/messagerie/app.module';
     AppRoutingModule
 
   ],
-  providers: [AuthentificationService],
+  providers: [
+    AuthentificationService,
+    { provide: LOCALE_ID, useValue: 'fr-FR' }
+  ],
   bootstrap: [AppComponent]
 })
 
 export class AppModule {
-
+  constructor(){
+    registerLocaleData(fr.default);
+  }
 
 }
