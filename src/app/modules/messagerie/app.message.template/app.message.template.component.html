@@ -1,4 +1,10 @@
 <div class="messagerie">
+  <div *ngIf ="separationDateB" class="separationDate">
+    <span>{{ separationDate[0] }}</span>
+  </div>
+  <div *ngIf ="separationDateB" class="separationTime">
+    <span>{{ separationDate[1] }}</span>
+  </div>
   <div class="message">
     <div class="message_outer">
       <div [ngStyle]="{
