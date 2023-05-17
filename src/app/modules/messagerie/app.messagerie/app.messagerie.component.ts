@@ -9,13 +9,13 @@ import { Component, NgModule, OnInit } from '@angular/core';
 
 export class AppMessagerieComponent implements OnInit {
   text!: string;
-  notification!: boolean;
+  notification!: boolean[];
 
   constructor() { }
 
   ngOnInit(): void {
     this.text = "it works !";
-    this.notification = true;
+    this.notification = [true, true, true, true, true, true, true];
   }
 
   date: Date = new Date();
@@ -25,6 +25,11 @@ export class AppMessagerieComponent implements OnInit {
   facture = true;
   planning = true;
   stock = true;
+
+  updateNotification(index: number){
+    this.notification[index] = !this.notification[index];
+  }
+  
 
 }
 
