@@ -14,7 +14,7 @@
         'background-color': message === 'send' ? '#DCF8C6' : (message === 'bot' ? '#ecc6f8' : '#e0e0e0')
         }" class="message_bubble" dir="auto">
           <div class="message_infos">
-            <div class="name">
+            <div class="name">  
               <p>~Matthieu d'Hoop</p>
             </div>
             <div class="time_sent">
@@ -25,7 +25,7 @@
             <p>{{ text }}</p>
           </div>
         </div>
-        <div class="message_spacer"></div>
+        <div class="message_spacer"><button (click)="updateSeparationDate()"> update </button></div>
       </div>
     </div>
   </div>
