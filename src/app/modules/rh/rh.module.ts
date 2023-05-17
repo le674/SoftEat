@@ -6,6 +6,7 @@ import { AppRhComponent } from './app.rh/app.rh.component';
 import { CalendarComponent } from './app.rh/calendar/calendar.component';
 import { HbarComponent } from './app.rh/hbar/hbar.component';
 import { NavbarComponent } from './app.rh/navbar/navbar.component';
+import { EventFormComponent } from './app.rh/event-form/event-form.component';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { NavbarComponent } from './app.rh/navbar/navbar.component';
     AppRhComponent,
     CalendarComponent,
     HbarComponent,
-    NavbarComponent
+    NavbarComponent,
+    EventFormComponent
   ],
   imports: [
     CommonModule,
