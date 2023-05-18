@@ -10,6 +10,9 @@ import { PrixComponent } from './app.component.acceuil/prix/prix.component';
 import { ProposComponent } from './app.component.acceuil/propos/propos.component';
 import { ContactComponent } from './app.component.acceuil/contact/contact.component'
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FooterComponent } from './app.component.acceuil/footer/footer.component';
 @NgModule({
   declarations: [
     ComponentAcceuil,
@@ -19,10 +22,13 @@ import { MatDialogModule } from '@angular/material/dialog';
     FonctionnaliteComponent,
     PrixComponent,
     ProposComponent,
-    ContactComponent
+    ContactComponent,
+    FooterComponent
   ],
   imports: [
      CommonModule,
+     MatDividerModule,
+     ReactiveFormsModule,
      AppModuleRoutingModule,
      MatDialogModule
     ],

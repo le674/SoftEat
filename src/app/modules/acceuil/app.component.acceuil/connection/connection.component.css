@@ -1,27 +1,23 @@
 
-   *{
-    margin:0;
-    padding: 0;
-   }
    form{
     margin-top: 250px;
-    margin-left:10%;
-    margin-right: 10%;
     background: rgba(255, 255, 255, 0.1);
     width: max-content;
-    padding: 2rem;
+    padding: 4rem;
     border-radius: 20px;
     box-shadow: 20px 20px 40px -6px rgba(0,0,0,.3);
     text-align: center;
     font-family: 'Inter', sans-serif;
-
-
+   }
+   .cont{
+    display: flex;
+    justify-content: center;
+    margin: 0px;
+    padding: 0px;
    }
    input[type="button"]{
     margin-top: 10px;
-   
    }
-   
    input[type ="mail"]{
     color:rgb(125, 181, 46);
     font-weight: 200;
@@ -43,8 +39,8 @@
     border-top: 1px solid rgba(255,255,255,.3);
     padding: 1rem;
     width: 300px;
-    border-radius: 20px;
-    margin-bottom: 1em;
+    border-radius: 90px;
+    margin-bottom: 3em;
     background-color: rgba(0, 255,0, 0.02);
    }
    .panel-default {
@@ -70,4 +66,3 @@
       color: white;
       background-color: rgb(125, 181, 46);
     }
- 

@@ -1,10 +1,47 @@
-
-<div id="conteneurPresentation">
-    
-    <h2 id ="titreAccueil">Sobriété, automatisation,<br/>intuitivité...</h2>
-    <p id ="presentation"><I id ="marque">SoftEat</I> propose une solution informatique permettant la gestion d’un ou plusieurs restaurants.
-        Elle permet d’aider la gestion du restaurant, de proposer une analyse en temps réel ainsi qu’une vision globale du restaurant en temps réel. 
-        Cette solution informatique ne propose pas qu’une application, mais tout un accompagnement tel que la mise en place et l’installation d’un équipement informatique complet et gratuitement, d’une équipe présente a vos côtés et à l’écoute. </p>
-        <button id ="buttonF" >Fonctionnalités</button>
-        <button id="buttonE"(click)="clicConnexion()">Espace Membres</button>
+<header>
+  <div id="conteneurPresentation">    
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-3">
+            <h2 id="titreAccueilContainer" class="titreAccueil">SOBRIÉTÉ,</h2>
+          </div>
+          <div class="col-sm-9"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10">
+                <h2 class ="titreAccueil">AUTOMATISATION,</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6">
+                <h2 class ="titreAccueil">INTUITIVITÉ...,</h2>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <p id ="subtitle">
+                Les restaurants ont besoin <br>
+                d'un logiciel extraordinaire
+            </p>
+          </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <p id ="presentation">SoftEat propose une solution informatique permettant la gestion d’un ou plusieurs restaurants. <br>
+                Elle permet d’aider la gestion du restaurant, de proposer une analyse en temps réel ainsi qu’une <br> vision globale du restaurant en temps réel. 
+                Cette solution informatique ne propose pas qu’une <br> application,  mais tout un accompagnement tel que la mise en place et l’installation d’un équipement <br> informatique complet et gratuitement, d’une équipe présente a vos côtés et à l’écoute. 
+            </p>
+          </div>
+        </div>
+    </div>
+    <button id ="buttonF" (click)="clicFonctionnalite()">Fonctionnalités</button>
+    <button id="buttonE"(click)="clicConnexion()">Espace Membres</button>
 </div>
+<img src="/assets/images/ecranSoftEat.png" alt="">
+</header>

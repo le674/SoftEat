@@ -1,84 +1,110 @@
-
 <!---->
-    
- 
-    
-<div id ="divMobile">
-<h2 id="Fmobile">Nos Fonctionnalités</h2>
-
-<div style ="top:150px; font-weight: 76px; color: #101A24;" id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="true"  c>
-    <div id="petitBoutonCote"class="carousel-indicators">
-      <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+<div id="divMobile">
+  <h2 id="Fmobile">Nos Fonctionnalités</h2>
+  <div style="top:150px; font-weight: 76px; color: #101A24;" id="carouselExampleDark"
+    class="carousel carousel-dark slide" data-bs-ride="true" c>
+    <div id="petitBoutonCote" class="carousel-indicators" *ngIf="!windows_screen_mobile">
+      <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active"
+        aria-current="true" aria-label="Slide 1"></button>
       <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
       <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="3" class="active"
+      aria-current="true" aria-label="Slide 4"></button>
+      <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="4" aria-label="Slide 5"></button>
+      <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="5" aria-label="Slide 6"></button>
     </div>
     <div class="carousel-inner">
       <div class="carousel-item active">
-
-
-        <div class="card mx-auto " id ="cardGeneral"
-         >
-            <div class="card-body" >
-              <h5 class="card-title">Gestion des Commandes</h5>
-              <h6 class="card-subtitle mb-2 text-muted" style="font-size: 26px;">Prise des Commandes</h6>
-              <p class="card-text" style = "font-size: 20px;">Mise en place d'une installation permettant
-                  la prise de commandes des serveurs.
-                  Les commandes prises par les serveurs via une application
-                  mobile installés sur une tablette ou sur téléphone seront
-                  envoyées et affichées directement à la cuisine.
-                  Les serveurs seront prévenus via l'application lorsqu'un
-                  ingrédient sera en rupture afin d'éviter de 
-                  proposer des plats qui contiennent cet ingrédient/ou de
-                  proposer une alternative.</p>
-              <a href="#" class="card-link">détails</a>
-            </div>
+        <div class="card mx-auto " id="cardGeneral">
+          <div class="card-body">
+            <h5 class="card-title">Gestion des Commandes</h5>
+            <h6 class="card-subtitle mb-2 text-muted" style="font-size: 26px;">Prise des Commandes</h6>
+            <p class="card-text" style="font-size: 20px;">Mise en place d'une installation permettant
+              la prise de commandes des serveurs.
+              Les commandes prises par les serveurs via une application
+              mobile installé sur une tablette ou sur téléphone seront
+              envoyées et affichées directement à la cuisine.
+              Les serveurs seront prévenus via l'application lorsqu'un
+              ingrédient sera en rupture afin d'éviter de
+              proposer des plats qui contiennent cet ingrédient/ou de
+              proposer une alternative.</p>
           </div>
-          
-                </div>
-      <div class="carousel-item">
-
-
-        <div class="card mx-auto" id ="cardGeneral">
-            <div class="card-body">
-              <h5 class="card-title">Gestion des Ressources Humaines</h5>
-              <h6 class="card-subtitle mb-2 text-muted" style = "font-size: 26px;">Planning et Communication</h6>
-              <p class="card-text" style = "font-size: 20px;">Une interface sera mise a disposition exclusivement
-                pour ceux qui ont le droit de faire les plannings des cuisiniers
-                et des serveurs.
-                Cette interface permet entre autres de faires le planning des
-                employés et de leurs envoyées directement par mail.
-                Une installation de badgeuse est à prévoir.
-                Un système d'alerte serait aussi mise à disposition pour favoriser l'efficacité
-                des informations entre chef de cuisine, propriétaire, gérants, cuisiniers et serveurs</p>
-              <a href="#" class="card-link">détails</a>
-            </div>
-          </div>
-          
-                </div>
-      <div class="carousel-item" >
-                
-
-        <div class="card mx-auto" id ="cardGeneral">
-            <div class="card-body">
-            <h5 class="card-title">Analyse des restaurants en temps réel</h5>
-            <h6 class="card-subtitle mb-2 text-muted" style = "font-size: 26px;">Analyse via SoftEat.net et SoftEat.fr</h6>
-            <p class="card-text" style ="font-size: 20px;">
-                Une analyse des restaurants sera aussi possible.
-                À chaque commandes prit le propriétaire ainsi que le gérant du restaurant
-                pourront le voir directement sur SoftEat.net et SoftEat.fr, ils pourront aussi avoir
-                accès à une multitude d'analyse sous forme de graphique complètement flexible
-                et pourront avoir ainsi une bonne vision des restaurants.
-                Les gérants/propriétaires des restaurants pourront aussi fixé des objectifs
-                à atteindre.
-            </p>
-            <a  href="#" class="card-link">détails</a>
-            </div>
         </div>
-  
-  
+      </div>
+      <div class="carousel-item">
+        <div class="card mx-auto" id="cardGeneral">
+          <div class="card-body">
+            <h5 class="card-title">Clients</h5>
+            <h6 class="card-subtitle mb-2 text-muted" style="font-size: 26px;">Clients
+            </h6>
+            <p class="card-text" style="font-size: 20px;">
+              Avec SoftEat, vous pouvez connaître les clients de votre restaurant, 
+              aussi vous pouvez conserver leurs coordonnées.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="card mx-auto" id="cardGeneral">
+          <div class="card-body">
+            <h5 class="card-title">Planning employés</h5>
+            <h6 class="card-subtitle mb-2 text-muted" style="font-size: 26px;">Planning</h6>
+            <p class="card-text" style="font-size: 20px;">
+              SoftEat offre la possibilité à une ou des personnes habilitées de pouvoir éditer
+              le planning des employés et d'exporter leurs calendriers sur google calendar.
+              Les employés peuvent prendre leurs jours de repos. Un message automatique
+              est transmit au gestionnaire du planning afin de confirmer les jours de repos.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="card mx-auto" id="cardGeneral">
+          <div class="card-body">
+            <h5 class="card-title">Messagerie</h5>
+            <h6 class="card-subtitle mb-2 text-muted" style="font-size: 26px;">Messagerie</h6>
+            <p class="card-text" style="font-size: 20px;">
+              SoftEat intègre une messagerie. Des alertes peuvent être envoyées par l'application.
+              Par exemple si il manque des ingrédients dans le stock, si le CA critique est atteint où
+              pour la prise de congé d'un employé. La messagerie offre aussi la possibilité aux 
+              employés de pouvoir communiquer entre eux.  
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="card mx-auto" id="cardGeneral">
+          <div class="card-body">
+            <h5 class="card-title">Recettes et plats</h5>
+            <h6 class="card-subtitle mb-2 text-muted" style="font-size: 26px;">Recette
+            </h6>
+            <p class="card-text" style="font-size: 20px;">
+              Avec SoftEat, vous pouvez accéder aux fiches techniques complètes de vos plats et recettes.
+              Profitez de l'intégration mobiles de SoftEat pour consulter partout et à tout moment 
+              vos recette. Prennez connaissances des indices de la restauration propre à votre carte 
+              pour optimiser la tarification.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="card mx-auto" id="cardGeneral">
+          <div class="card-body">
+            <h5 class="card-title">Inventaire</h5>
+            <h6 class="card-subtitle mb-2 text-muted" style="font-size: 26px;">Inventaire
+            </h6>
+            <p class="card-text" style="font-size: 20px;">
+              SoftEat s'occupe de la gestion de votre inventaire. Avec SoftEat, vous aurez accès 
+              à l'inventaire des ingrédients, mais aussi des consommables ou 
+              encore des préparations. Vous êtes prévenus avant la rupture de stock afin 
+              de prévenir les manques.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
-    </div>
-    <button style = "color:rgb(8, 100, 8)" class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+    <button style="color:rgb(8, 100, 8)" class="carousel-control-prev" type="button"
+      data-bs-target="#carouselExampleDark" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
     </button>
@@ -87,7 +113,7 @@
       <span class="visually-hidden">Next</span>
     </button>
   </div>
-  
-  </div>
-
- 
+  <footer>
+    <app-footer></app-footer>
+  </footer>
+</div>

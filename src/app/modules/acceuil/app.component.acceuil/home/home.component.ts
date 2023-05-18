@@ -15,5 +15,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
+  clicFonctionnalite() {
+    var element = document.querySelector("#divMobile");
+    element?.scrollIntoView();
+  }
 }

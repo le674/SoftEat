@@ -2,11 +2,8 @@
     height: 82px;
     width: 168px;
   }
-
   li a:hover {
     font-weight: bold;
-    
-   
   }
   #souligneVert::after{
     content: '';
@@ -30,15 +27,16 @@ li {
 
   }
   #navbar_top{
-    background-color: rgb(255, 255, 255,0.8);margin-left: 7%;margin-top: 20px;
+    background-color: rgb(255, 255, 255, 0.45);
+    padding-left: 1%;
+    padding-top: 20px;
+    padding-right: 100%;
     width: max-content;
     
   }
   @media screen and (max-width: 600px) { 
     #navbar_top{
-      background-color: white;
-      width: max-content;
-      margin-left: 0%;
+      padding-left: 0%;
     }
   }
 

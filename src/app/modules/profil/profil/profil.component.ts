@@ -10,11 +10,11 @@ import { User } from '../../../../app/interfaces/user';
 import { MailServicesService } from '../../../../app/services/mail-services.service';
 import { UserInteractionService } from '../../../../app/services/user-interaction.service';
 import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from '../../../../environments/variables';
-import { InfoAppliComponent } from '../info-appli/info-appli.component';
-import { ModifMailComponent } from '../modif-mail/modif-mail.component';
+import { InfoAppliComponent } from '../../acceuil/app.component.acceuil/footer/info-appli/info-appli.component';
 import { ModifMdpComponent } from '../modif-mdp/modif-mdp.component';
 import { ModifNumberComponent } from '../modif-number/modif-number.component';
 import { CommonService } from '../../../../app/services/common/common.service';
+import { ModifMailComponent } from '../modif-mail/modif-mail.component';
 
 @Component({
   selector: 'app-profil',

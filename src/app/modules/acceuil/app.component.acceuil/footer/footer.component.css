@@ -1,0 +1,229 @@
+
+.fa-phone, .fa-envelope{
+    color: rgb(125, 181, 46);
+    margin-bottom: 10px;
+}
+
+.title{
+    color: rgb(125, 181, 46);
+    font-size: large;
+    font-weight: normal;
+}
+
+
+button{
+    font-size: larger;
+}
+
+/* on supprime la possibiliter de cliquer sur l'icon */
+
+#mail{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.fa-envelope .fa-phone{
+    margin-top: 4px;
+}
+.not_email{
+    margin-left: 102px;
+}
+#logo_section{
+    margin-left: 30px;
+    display:flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+#a_propos_section{
+    display:flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+#contact_section{
+    display:flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    margin-right: 30px;
+    margin-top: 15px;
+}
+
+#submit{
+    margin-bottom: 10px;
+}
+
+footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.link{
+    cursor: pointer;
+    color: black;
+}
+
+.link:hover {
+    color: rgb(120,120,120);
+}
+
+
+ul{
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+h1, h2{
+    font-family: 'Inter', sans-serif;
+}
+
+.formular{
+    margin-right: 10px;
+}
+#send-button{
+    color: rgb(125, 181, 46);
+    background-color: white;
+    height: 40px;
+    min-width: 96px;
+    margin: 0;
+    border-radius: 3px;
+    border-color: rgb(125, 181, 46, 0.5);
+}
+
+#send-button:hover{
+    background-color: rgb(125, 181, 46);
+    color: white;
+}
+
+
+
+#first_filed{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+}
+
+.form-group{
+    margin-bottom: 20px;
+}
+
+.contact {
+    margin-top: 20px;
+    color: rgb(125, 181, 46);
+    font-size: 32px;
+}
+
+.nous-contacter{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+#action-buttons{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+
+ /* modification de la taille de l'input lorsque on passe sur un écran plus petit */
+@media(max-width: 960px) {
+    #gestion_compte{
+        display: flex;
+        flex-direction: column;
+    }
+    footer{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .items_liste{
+        max-width: 200px;
+    }
+    main{
+        padding-left: 0px;
+    }
+    #first_liste{
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    #action-buttons{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .sub-title{
+        font-family: 'Inter', sans-serif;
+        color: rgb(125, 181, 46);
+        font-size: larger;
+        font-weight: normal;
+    }
+    .selector-item{
+        margin-bottom: 20px;
+    }
+    .nous-contacter{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+    #a_propos_section{
+        display: flex;
+        flex-direction: column;
+    }
+    #logo_section{
+        margin-left: 0px;
+    }
+    #first_filed{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .not_email{
+        margin-left: 0px;
+    }
+ }
+@media (max-width: 1040px) and (min-width: 960px){
+    footer{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #a_propos_section{
+        margin-left: 45px;
+        justify-content: center;
+    }
+
+    #contact_section{
+        margin-left: 45px;
+        justify-content: center;
+    }
+
+    #first_liste{
+        justify-content: space-between;
+    }
+}
+@media (min-width: 1040px){
+    .mat-select {
+        width: fit-content !important;
+        min-width: 100%;
+    }
+    ::ng-deep .mat-form-field-infix {
+        min-width: 120px !important;
+        width: fit-content !important;
+    }
+    
+    ::ng-deep .mat-select .mat-select-value {
+        width: fit-content;
+        min-width: 18ch;
+        max-width: 200ch;
+    }
+    ::ng-deep .mat-select .mat-select-placeholder {
+        width: fit-content;
+        min-width: 32ch;
+    }
+}

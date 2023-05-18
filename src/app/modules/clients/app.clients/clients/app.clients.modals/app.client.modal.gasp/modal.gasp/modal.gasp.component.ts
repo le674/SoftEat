@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Cplat } from 'src/app/interfaces/plat';
-import { PlatsInteractionService } from 'src/app/services/menus/plats-interaction.service';
+import { Cplat } from '../../../../../../../../app/interfaces/plat';
+import { PlatsInteractionService } from '../../../../../../../../app/services/menus/plats-interaction.service';
 
 @Component({
   selector: 'app-modal.gasp',

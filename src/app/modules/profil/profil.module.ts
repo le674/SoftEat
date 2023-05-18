@@ -12,9 +12,9 @@ import {MatDialogModule } from '@angular/material/dialog';
 import { ModifMdpComponent } from './modif-mdp/modif-mdp.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
-import { ModifMailComponent } from './modif-mail/modif-mail.component';
 import { ModifNumberComponent } from './modif-number/modif-number.component';
-import { InfoAppliComponent } from './info-appli/info-appli.component'; 
+import { InfoAppliComponent } from '../acceuil/app.component.acceuil/footer/info-appli/info-appli.component'; 
+import { ModifMailComponent } from './modif-mail/modif-mail.component';
 
 
 @NgModule({
