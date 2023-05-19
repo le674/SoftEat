@@ -1,23 +1,14 @@
-const { initializeApp } = require("firebase/app");
-const { getDatabase, ref, get, update, child, set, push } = require("firebase/database");
+//FIREBASE_DATABASE_EMULATOR_HOST_1 = 'http://softeat-serveur:9000/?ns=psofteat-65478545498421319564'
+//NODE_ENV = "development"
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
 const cors = require("cors")({ origin: true });
-
-admin.initializeApp();
-const app = initializeApp(
-    {
-        apiKey: "AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo",
-        authDomain: "psofteat-65478545498421319564.firebaseapp.com",
-        databaseURL: "http://softeat-serveur/?ns=psofteat-65478545498421319564",
-        projectId: "psofteat-65478545498421319564",
-        storageBucket: "psofteat-65478545498421319564.appspot.com",
-        messagingSenderId: "135059251548",
-        appId: "1:135059251548:web:fb05e45e1d1631953f6199",
-        measurementId: "G-5FBJE9WH0X"
-    }
-)
+const serviceAccount = require('./key.json');
+const app = admin.initializeApp({
+    credential:  admin.credential.cert(serviceAccount), 
+    databaseURL: "https://psofteat-65478545498421319564-default-rtdb.firebaseio.com"
+})
 
 /**
 * Here we're using Gmail to send depuis 2022-05-02 on utilise une app password au lieu du mot de passe du compte
@@ -32,6 +23,9 @@ let transporter = nodemailer.createTransport({
 
 /** l'url de la fonction get à utiliser est example : https://us-central1-project-firebase-44cfe.cloudfunctions.net/sendMail?from=adamakkouche42@yahoo.fr&subj=suppression%20de%20compte&message=je%20souhaite%20supprimer%20le%20compte%20adam */
 exports.sendMail = functions.https.onRequest((req, res) => {
+    console.log(res.getHeader());
+    res.setHeader("Access-Control-Allow-Origin","https://psofteat-65478545498421319564.web.app");
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
     cors(req, res, () => {
         const from = req.query.from;
         const subj = req.query.subj;
@@ -41,10 +35,11 @@ exports.sendMail = functions.https.onRequest((req, res) => {
             to: 'softeat.contact@gmail.com',
             subject: subj,
             html: message
-
+    
         };
         //on retourne le résultat de l'envoie de mail
         return transporter.sendMail(mailOptions, (erro, info) => {
+            console.log(info);
             if (erro) {
                 return res.send(erro.toString());
             }
@@ -56,7 +51,7 @@ exports.sendMail = functions.https.onRequest((req, res) => {
 });
 
 //===================== fonction de suppression de plat ds la base de données avec les ingrédients comprient ===================
-exports.suppPlats = functions.https.onRequest((req, res) => {
+/* exports.suppPlats = functions.https.onRequest((req, res) => {
     let db = getDatabase(app);
     const prop = req.query.prop;
     const restaurant = req.query.restaurant;
@@ -220,4 +215,4 @@ exports.suppPlats = functions.https.onRequest((req, res) => {
     })
 
 
-})
+}) */

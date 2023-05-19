@@ -1,17 +1,7 @@
 {
   "functions": [
     {
-      "source": "functions",
-      "codebase": "default",
-      "ignore": [
-        "node_modules",
-        ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log"
-      ]
-    },
-    {
-      "source": "softeat",
+      "source": "softeat_backend",
       "codebase": "softeat_backend",
       "ignore": [
         "node_modules",
@@ -59,6 +49,12 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/accueil",
+        "destination": "/"
+      }
     ]
   }
 }

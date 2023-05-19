@@ -1,5 +1,18 @@
 {
   "projects": {
     "default": "psofteat-65478545498421319564"
-  }
+  },
+  "targets": {
+    "psofteat-65478545498421319564": {
+      "hosting": {
+        "www.softeat.fr": [
+          "psofteat-65478545498421319564"
+        ],
+        "psofteat-65478545498421319564": [
+          "www.softeat.fr"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
