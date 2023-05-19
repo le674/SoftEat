@@ -37,7 +37,7 @@ export class ClientsService {
           client.name = bdd_client.child("name").val();
           client.surname = bdd_client.child("surname").val();
           client.is_contacted = bdd_client.child("is_contacted").val();
-          client.waste_alert = bdd_client.child("wast_alert").val();
+          client.waste_alert = bdd_client.child("waste_alert").val();
           this.clients.push(client)
         }
       })
@@ -57,7 +57,6 @@ export class ClientsService {
     ref_db = ref(this.db,path);
     return await update(ref_db, {
         [`${client.id}`]:client
-      
     })
   }
 }

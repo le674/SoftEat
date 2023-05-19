@@ -8,6 +8,7 @@ export class ClientCalculService {
   constructor() { }
   clientToDisClient(clients: Client[]): DisplayedClient[]{
     const dis_clients:DisplayedClient[] = clients.map((client) => {
+      
      let dis_client:DisplayedClient = new DisplayedClient();
      dis_client.name = client.name;
      dis_client.surname = client.surname;

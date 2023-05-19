@@ -41,7 +41,6 @@ export class ModalModifComponent implements OnInit {
       this.modif_clients_section.controls.email.setValue(this.data.client.email);
     }
     if(this.data.client.adress !== undefined){
-      console.log(this.data.client.adress);
       this.modif_clients_section.controls.adress.setValue(this.data.client.adress)
     }
     if(this.data.client.order_number !== undefined){
@@ -64,6 +63,7 @@ export class ModalModifComponent implements OnInit {
     if(this.data.client.number !== undefined){
       const client = this.data.clients.find((client) => this.data.client.number === client.number);
       if(client !== undefined){
+
         const adress = this.modif_clients_section.controls.adress.value;
         const name =  this.modif_clients_section.controls.name.value;
         const surname =  this.modif_clients_section.controls.surname.value;
@@ -71,7 +71,7 @@ export class ModalModifComponent implements OnInit {
         const number =  this.modif_clients_section.controls.number.value;
         const order_number =  this.modif_clients_section.controls.order_number.value;
         const promotion = this.modif_clients_section.controls.promotion.value;
-        const wast_alert = this.modif_clients_section.controls.waste_alert.value;
+        const waste_alert = this.modif_clients_section.controls.waste_alert.value;
         if((name !== null) && (name !== undefined)){
           client.name = name;
         }
@@ -98,8 +98,8 @@ export class ModalModifComponent implements OnInit {
             client.promotion = false;
           }
         }
-        if((wast_alert !== null) && (wast_alert !== undefined)){
-          if(wast_alert === "oui"){
+        if((waste_alert !== null) && (waste_alert !== undefined)){
+          if(waste_alert === "oui"){
             client.waste_alert = true;
           }
           else{
