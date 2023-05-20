@@ -12,7 +12,7 @@ export class MailServicesService {
   constructor(private http: HttpClient) {
 
     // hôte sur lequel on réalise la requête get de récupération
-    this.host = "https://us-central1-psofteat-65478545498421319564.cloudfunctions.net/sendMail";
+    this.host = "https://sendMail";
    }
 
   sendMailCompteSuppresse(email:string){
