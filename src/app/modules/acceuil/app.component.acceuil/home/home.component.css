@@ -107,9 +107,6 @@ img{
 }
 
 @media screen and (max-width: 682px) {
-    #buttonE {
-        margin-left: 1%;
-    }
     .titreAccueil{
         font-size: 40px;
     }
@@ -120,8 +117,11 @@ img{
 
 
 @media screen and (max-width: 769px) {
+    #buttonF {
+        margin-left: 4%;
+    }
     #buttonE {
-        margin-left: 1%;
+        margin-left: 4%;
     }
 }
 
