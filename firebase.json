@@ -31,7 +31,10 @@
       "enabled": true,
       "port": 4000
     },
-    "singleProjectMode": true
+    "singleProjectMode": true,
+    "hosting": {
+      "port": 5000
+    }
   },
   "database": {
     "rules": "database.rules.json"
@@ -44,16 +47,15 @@
     "rules": "storage.rules"
   },
   "hosting": {
-    "public": "dist",
+    "public": "dist/",
     "ignore": [
-      "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
     "rewrites": [
       {
-        "source": "/accueil",
-        "destination": "/"
+        "source": "**",
+        "destination": "/index.html"
       }
     ]
   }

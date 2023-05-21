@@ -3,11 +3,7 @@ WARNING: Illegal reflective access by io.netty.util.internal.ReflectionUtil (fil
 WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.ReflectionUtil
 WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
 WARNING: All illegal access operations will be denied in a future release
-18:45:18.053 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
-18:45:18.165 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000
-18:45:27.276 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO com.firebase.core.namespace.NamespaceActor - psofteat-65478545498421319564-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 89ms, init: 0ms
-18:45:27.361 [NamespaceSystem-blocking-namespace-operation-dispatcher-6] INFO com.firebase.core.namespace.StateManager - Namespace psofteat-65478545498421319564-default-rtdb status Active to Active
-18:50:44.459 [Thread-0] INFO com.firebase.server.forge.App$ - Attempting graceful shutdown.
-18:50:44.466 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO com.firebase.core.namespace.Terminator$Terminator - 1 actors left to terminate: psofteat-65478545498421319564-default-rtdb
-18:50:44.474 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO com.firebase.core.namespace.NamespaceActor - stopped namespace actor for psofteat-65478545498421319564-default-rtdb
-18:50:44.480 [Thread-0] INFO com.firebase.server.forge.App$ - Graceful shutdown complete.
+20:57:08.814 [NamespaceSystem-akka.actor.default-dispatcher-4] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
+20:57:08.925 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000
+20:57:17.479 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO com.firebase.core.namespace.NamespaceActor - psofteat-65478545498421319564-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 98ms, init: 0ms
+20:57:17.545 [NamespaceSystem-blocking-namespace-operation-dispatcher-7] INFO com.firebase.core.namespace.StateManager - Namespace psofteat-65478545498421319564-default-rtdb status Active to Active

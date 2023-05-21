@@ -13,4 +13,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes), RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],
   exports: [RouterModule]
 })
-export class AppModuleRoutingModule { }
+export class AppModuleRoutingModule { 
+}

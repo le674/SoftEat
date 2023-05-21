@@ -9,11 +9,8 @@ import {Router } from '@angular/router';
 })
 export class AppComponent {
   title = 'restoP';
-
   constructor(private router: Router, private ofApp: FirebaseApp){
-
   }
-
   ngOnInit(){
 
   }
