@@ -1,17 +1,6 @@
 {
   "$schema": "./node_modules/@angular/service-worker/config/schema.json",
   "index": "/index.html",
-  "dataGroups": [
-    {
-      "name": "dynamic-routes",
-      "urls": ["/accueil", "http://127.0.0.1:8080/"],
-      "cacheConfig": {
-        "strategy": "freshness",
-        "maxSize": 5000000,
-        "maxAge": "1h"
-      }
-    }
-  ],
   "assetGroups": [
     {
       "name": "app",
