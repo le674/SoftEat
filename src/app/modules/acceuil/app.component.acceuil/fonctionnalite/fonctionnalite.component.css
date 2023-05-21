@@ -48,7 +48,6 @@ footer{
         height: 1000px;
     }
 }
-
 @media screen and (min-width: 398px) and (max-width: 424px) { 
     #cardGeneral{
         width: auto;

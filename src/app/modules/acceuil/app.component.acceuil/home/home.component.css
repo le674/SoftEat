@@ -32,7 +32,7 @@ img{
     padding-bottom: 25px;
 }
 .container{
-   margin-left: 2%;
+   margin-left: 4%;
 }
 
 #titreAccueilContainer {
@@ -61,7 +61,7 @@ img{
 }
 
 #buttonF {
-    margin-left: 1%;
+    margin-left: 5%;
     width: 248px;
     height: 58px;
     /* Primary color */
@@ -84,7 +84,7 @@ img{
 }
 
 #buttonE {
-    margin-left: 15%;
+    margin-left: 17%;
     background-color: white;
     width: 248px;
     height: 58px;
