@@ -155,3 +155,14 @@ export class Cplat implements Plat{
        this.unity = unity;
     }
 }
+
+export class Mplat{
+    "name":string;
+    "quantity":number | null;
+    "price":number;
+    constructor(name:string, price:number){
+        this.name = name;
+        this.price = price;
+        this.quantity = null;
+    }
+}
