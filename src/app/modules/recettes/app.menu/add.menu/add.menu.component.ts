@@ -4,7 +4,7 @@ import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Cconsommable, CIngredient, Consommable, TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import { Cconsommable, Consommable, TIngredientBase } from '../../../../../app/interfaces/ingredient';
 import { Cmenu } from '../../../../../app/interfaces/menu';
 import { Cplat } from '../../../../../app/interfaces/plat';
 import { MenuInteractionService } from '../../../../../app/services/menus/menu-interaction.service';
