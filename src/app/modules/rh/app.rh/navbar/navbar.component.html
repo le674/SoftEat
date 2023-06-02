@@ -9,7 +9,7 @@
                     <span *ngIf="categories.open">
                         <li *ngFor="let liste of Cuisiniers">
                             {{liste.nom}}
-                            <button (click)="selectEmployee(liste)">Selectionner</button>
+                            <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)">
                         </li>
                     </span>
                 </ng-container>
@@ -18,7 +18,7 @@
                     <span *ngIf="categories.open">
                         <li *ngFor="let liste of Serveurs">
                             {{liste.nom}}
-                            <button (click)="selectEmployee(liste)">Selectionner</button>
+                            <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)">
                         </li>
                     </span>
                 </ng-container>
@@ -27,7 +27,7 @@
                     <span *ngIf="categories.open">
                         <li *ngFor="let liste of Barmans">
                             {{liste.nom}}
-                            <button (click)="selectEmployee(liste)">Selectionner</button>
+                            <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)">
                         </li>
                     </span>
                 </ng-container>
@@ -36,7 +36,7 @@
                     <span *ngIf="categories.open">
                         <li *ngFor="let liste of Gerents">
                             {{liste.nom}}
-                            <button (click)="selectEmployee(liste)">Selectionner</button>
+                            <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)">
                         </li>
                     </span>
                 </ng-container>
@@ -44,7 +44,7 @@
         </li>
     </ul>
 </div>
-
+Employés Selectionnés :
 <span *ngFor="let element of select">
-    Employés Selectionnés : {{element}}
+    {{element}}
 </span>

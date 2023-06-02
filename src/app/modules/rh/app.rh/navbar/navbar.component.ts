@@ -13,6 +13,7 @@ export class NavbarComponent implements OnInit {
   Gerents!: { nom: String; selectionne: boolean }[];
 
   select!: String[];
+isChecked: any;
 
   constructor() {}
 
@@ -51,7 +52,7 @@ export class NavbarComponent implements OnInit {
     categories.open = !categories.open;
   }
 
-  selectEmployee(liste: any) {
+  /*selectEmployee(liste: any) {
     if (!liste.selectionne) {
       this.select.push(liste.nom);
       liste.selectionne = !liste.selectionne;
@@ -59,5 +60,15 @@ export class NavbarComponent implements OnInit {
       this.select.splice(this.select.indexOf(liste.nom), 1);
       liste.selectionne = !liste.selectionne;
     }
+  }*/
+  selectEmployee(liste: any) {
+    if (liste.selectionne) {
+      this.select.splice(this.select.indexOf(liste.nom), 1);
+    } else {
+      this.select.push(liste.nom);
+    }
+    
+    liste.selectionne = !liste.selectionne;
   }
+  
 }
