@@ -52,6 +52,7 @@ export class MenuCalculPlatsServiceService {
           material_cost:0,
           taux_tva:0,
           marge:0,
+          added_price:0,
           supp:false
         }
         return ingredient
@@ -171,6 +172,7 @@ export class MenuCalculPlatsServiceService {
             material_cost:0,
             taux_tva:0,
             marge:0,
+            added_price:0,
             supp:false
           }
           return ingredient

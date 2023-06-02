@@ -14,6 +14,7 @@ export type TIngredientBase = {
     vrac:string,
     taux_tva:number, 
     marge:number,
+    added_price:number,
     supp:boolean
 
 }
@@ -228,7 +229,8 @@ export class CIngredient implements Ingredient {
             vrac: this.vrac,
             taux_tva: this.taux_tva,
             marge: this.marge,
-            supp: false
+            supp: false,
+            added_price:0
         };
         return ingredient
       }

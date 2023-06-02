@@ -89,37 +89,29 @@ p{
     margin-bottom: 40px;
     margin-left: 30px;
 }
-
 mat-form-field{
     margin-left: 20px;
 }
-
 .selectSection{
     display: flex;
     justify-content: space-between;
     margin-top: 5px;
     margin-bottom: 10px;
 }
-
 .time{
     width: 70px;
  }
- 
-
 mat-radio-button{
   margin-right: 5px;
 }
-
 .mat-select {
     width: fit-content !important;
     min-width: 100%;
 }
-
 ::ng-deep .mat-form-field-infix {
     min-width: 120px !important;
     width: fit-content !important;
 }
-
 ::ng-deep .mat-select .mat-select-value {
     width: fit-content;
     min-width: 18ch;
@@ -129,26 +121,22 @@ mat-radio-button{
     width: fit-content;
     min-width: 32ch;
 }
-
 .section {
     display: flex;
     justify-content: flex-start;
     align-items: center;
 }
-
 .section_fileds{
     display: flex;
     justify-content: flex-start;
     align-items: center;  
     margin-top: 30px;
 }
-
 .full-container{
     display: flex;
     flex-direction: column;
     justify-content: space-around;
 }
-
 .container-content{
     display: flex;
 }
@@ -162,7 +150,6 @@ mat-radio-button{
 #time-form{
     display: flex;
 }
-
 .col{
     display: flex;
     flex-direction: column;

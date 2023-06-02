@@ -40,7 +40,8 @@ export class AddPlatsComponent implements OnInit {
       name:FormControl<string | null>,
       quantity:FormControl<number | null>,
       unity:FormControl<string | null>,
-      supp:FormControl
+      supp:FormControl,
+      added_price:FormControl<number>
     }>>([]),
     base_conso: new FormArray<FormGroup<{
       name:FormControl<string | null>,
@@ -123,7 +124,8 @@ export class AddPlatsComponent implements OnInit {
             name:new FormControl(ingredient.name),
             quantity: new FormControl(ingredient.quantity),
             unity: new FormControl(unity),
-            supp: new FormControl(ingredient.supp)
+            supp: new FormControl(ingredient.supp),
+            added_price:new FormControl(ingredient.added_price),
           })
           this.getBaseIng().push(to_add_grp);
         })
@@ -207,6 +209,9 @@ export class AddPlatsComponent implements OnInit {
           }
           if((_ingredient.supp !== null) && (_ingredient.supp !== undefined)){
             ingredient.supp = _ingredient.supp;
+          }
+          if((_ingredient.added_price !== null) && (_ingredient.added_price !== undefined)){
+            ingredient.added_price = _ingredient.added_price;
           }
         }
         return ingredient
@@ -326,7 +331,8 @@ export class AddPlatsComponent implements OnInit {
       name: new FormControl(name, Validators.required),
       quantity: new FormControl(quantity),
       unity: new FormControl(unity),
-      supp: new FormControl()
+      supp: new FormControl(),
+      added_price:0
     });
     this.getBaseIng().push(new_ing);
   }
@@ -436,7 +442,8 @@ export class AddPlatsComponent implements OnInit {
       name:FormControl<string | null>,
       quantity:FormControl<number | null>,
       unity:FormControl<string | null>,
-      supp:FormControl
+      supp:FormControl,
+      added_price:FormControl
     }>>
   }
 
