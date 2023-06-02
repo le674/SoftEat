@@ -13,7 +13,9 @@ export type TIngredientBase = {
     material_cost:number,
     vrac:string,
     taux_tva:number, 
-    marge:number
+    marge:number,
+    supp:boolean
+
 }
 
 export type TConsoBase = {
@@ -44,7 +46,6 @@ export interface Ingredient {
     "gelee": boolean;
     "marge": number;
     "vrac":string;
-
 
     getInfoDico(): void;
 /*     getValBouchFromNewQauntity(quantity_unity: number): CIngredient; */
@@ -124,6 +125,27 @@ export interface Consommable {
 @Injectable({
     providedIn: 'root'
 })
+/**
+ * @class ingrédient dan la base de donnée 
+ * @argument nom nom de l'ingrédient
+ * @argument categorie_restaurant catégorie dans lequel le restaurant souhaite ranger l'ingrédient pour le suivie des coûts
+ * @argument taux_tva taux de tva à appliquer à 'lingrédient
+ * @argument categorie_dico catégorie de dictionnaire dans lequel ont souhaite ranger l'ingrédient
+ * @argument cost coût de l'ingrédient
+ * @argument quantity nombre de pack d'ingrédient 1 si vrac
+ * @argument quantity_unity quantitée pour un pack 
+ * @argument total_quantity quantitée total une fois réapprovisionnement afin de contrôler les marges
+ * @argument unity unitée de vente du produit ex. huile -> litre
+ * @argument unity_unitary cette unitée est utilisez pour les préparation par ex. huile -> c.s
+ * @argument date_reception date de récéption de l'aliment 
+ * @argument dlc date limite de consommation de l'aliment
+ * @argument cost_ttc coût toutes taxes comprisent
+ * @argument conditionnement actuellement non utilisé
+ * @argument refrigiree actuellement non utilisé
+ * @argument gelee actuellement non utilisé
+ * @argument marge marge présent sur total_quantity une fois que la quantitée est inférieur à la marge ont prévient le restaurateur d'un problème de stock
+ * @argument vrac est ce que l'aliment est en vrac ou non 
+ */
 export class CIngredient implements Ingredient {
     "nom": string;
     "categorie_restaurant": string;
@@ -145,7 +167,6 @@ export class CIngredient implements Ingredient {
     "is_similar":number;
     "marge": number;
     "vrac": string;
-
     constructor(private service: CalculService, private db_service: IngredientsInteractionService) {
         this.nom = "";
         this.categorie_restaurant = "";
@@ -168,17 +189,13 @@ export class CIngredient implements Ingredient {
 
 
     async getInfoDico(): Promise<CIngredient> {
-        
-        console.log('test');
         const Pingredient = await this.db_service.getInfoIngFromDico(this.nom);
         this.categorie_dico = Pingredient.categorie_dico;
         this.conditionnement = Pingredient.conditionnement;
         // on réecrit la catégori en onction du conditionnement important pour le calcul de tva
         if((this.categorie_tva=== "") || (this.categorie_tva === undefined)){
             this.categorie_tva = this.service.getTvaCategorieFromConditionnement(Pingredient.categorie_tva, Pingredient.conditionnement);
-        } 
-
-      
+        }    
         if(typeof this.dlc !== "string"){
             this.dlc.setHours(this.date_reception.getHours() + 24*Pingredient.dlc);
         }
@@ -191,11 +208,14 @@ export class CIngredient implements Ingredient {
         }
         this.gelee = Pingredient.gelee;
         this.refrigiree = Pingredient.refrigiree;
-
         return this
     }
 
-
+    /**
+     * Permet de convertire un ingrédient en ingrédient_base qui contiennent moins d'information 
+     * que les ingrédients et qui sont donc plus légées
+     * @returns {TIngredientBase} une instance d'un ingrédient de base
+     */
     convertToBase(): any {
         let ingredient:TIngredientBase = {
             name:this.nom,
@@ -207,19 +227,29 @@ export class CIngredient implements Ingredient {
             material_cost: 0,
             vrac: this.vrac,
             taux_tva: this.taux_tva,
-            marge: this.marge
+            marge: this.marge,
+            supp: false
         };
         return ingredient
       }
 
+    /**
+     * permet de récupérer le cout ttc d'un ingrédient à partir de la catégorie de tva et du cout
+     */
     getCostTtcFromCat(): void {
         this.cost_ttc = this.service.getCostTtcFromCat(this.categorie_tva, this.cost);
     } 
 
+    /**
+     * permet de récupérer le cout ttc d'un ingrédient à partir du taux de tva et du cout
+    */
     getCostTtcFromTaux():void{
         this.cost_ttc = this.service.getCostTtcFromTaux(this.taux_tva, this.cost)
     }
 
+    /**
+     * permet de récupérer la date de récéption de l'ingrédient
+    */
     getDateReception(): Date {
         return this.date_reception;
     }

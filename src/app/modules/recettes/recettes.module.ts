@@ -16,6 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 import {ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
 import { MatRadioModule } from '@angular/material/radio';
 import {MatGridListModule} from '@angular/material/grid-list'; 
 import { DisplayPreparationsComponent } from './app.preparations/display.preparation/display.preparations/display.preparations.component';
@@ -58,6 +59,7 @@ import { RecetteHelpPlatsComponent } from './app.plats/display.plats/display.pla
     MatListModule,
     MatGridListModule,
     ReactiveFormsModule,
+    MatSlideToggleModule,
     MatRadioModule,
     MatPaginatorModule,
     MatTableModule,

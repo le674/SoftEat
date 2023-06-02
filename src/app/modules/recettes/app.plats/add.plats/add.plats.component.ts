@@ -39,7 +39,8 @@ export class AddPlatsComponent implements OnInit {
     base_ing: new FormArray<FormGroup<{
       name:FormControl<string | null>,
       quantity:FormControl<number | null>,
-      unity:FormControl<string | null>
+      unity:FormControl<string | null>,
+      supp:FormControl
     }>>([]),
     base_conso: new FormArray<FormGroup<{
       name:FormControl<string | null>,
@@ -121,7 +122,8 @@ export class AddPlatsComponent implements OnInit {
           const to_add_grp = new FormGroup({
             name:new FormControl(ingredient.name),
             quantity: new FormControl(ingredient.quantity),
-            unity: new FormControl(unity)
+            unity: new FormControl(unity),
+            supp: new FormControl(ingredient.supp)
           })
           this.getBaseIng().push(to_add_grp);
         })
@@ -203,10 +205,12 @@ export class AddPlatsComponent implements OnInit {
           if((_ingredient.quantity !== undefined) && (_ingredient.quantity !== null)){
             ingredient.material_cost = this.prepa_interaction.getOnlyCostMaterial(ingredient);
           }
+          if((_ingredient.supp !== null) && (_ingredient.supp !== undefined)){
+            ingredient.supp = _ingredient.supp;
+          }
         }
         return ingredient
-      });
-      
+      }); 
     }
     if(this.add_plats_section.controls.base_conso.value !== null){
       let base_conso = this.add_plats_section.controls.base_conso.value;
@@ -321,7 +325,8 @@ export class AddPlatsComponent implements OnInit {
     const new_ing = this.formBuilder.group({
       name: new FormControl(name, Validators.required),
       quantity: new FormControl(quantity),
-      unity: new FormControl(unity)
+      unity: new FormControl(unity),
+      supp: new FormControl()
     });
     this.getBaseIng().push(new_ing);
   }
@@ -430,7 +435,8 @@ export class AddPlatsComponent implements OnInit {
     return this.add_plats_section.get("base_ing") as FormArray<FormGroup<{
       name:FormControl<string | null>,
       quantity:FormControl<number | null>,
-      unity:FormControl<string | null>
+      unity:FormControl<string | null>,
+      supp:FormControl
     }>>
   }
 

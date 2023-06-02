@@ -70,6 +70,7 @@
                             <p>nom de l'ingrédient</p>
                             <p>quantitée de l'ingrédient</p>
                             <p>unitée de l'ingrédient</p>
+                            <p class="toggle-label">supplément</p>
                         </div>
                         <div class="full-container">
                             <mat-form-field appearance="fill">
@@ -100,6 +101,9 @@
                                     <mat-option value="cl"> cl (centilitre)</mat-option>
                                 </mat-select>
                             </mat-form-field>
+                            <div class="toggle-section">
+                                <mat-slide-toggle  formControlName="supp"></mat-slide-toggle>   
+                            </div>                            
                         </div>
                     </div>
                 </ng-container>

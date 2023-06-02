@@ -1,5 +1,5 @@
 import { Etape } from "./etape";
-import {Consommable, Ingredient, TIngredientBase} from "./ingredient";
+import {Consommable, TIngredientBase} from "./ingredient";
 import { Cpreparation } from "./preparation";
 
 export interface Plat{

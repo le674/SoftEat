@@ -203,7 +203,8 @@ export class IngredientsInteractionService {
             vrac: ingredient_bdd.child("vrac").val(),
             material_cost: ingredient_bdd.child("material_cost").val(),
             taux_tva: this.service.getTauxFromCat(ingredient_bdd.child("categorie_tva").val()),
-            marge: 0
+            marge: 0,
+            supp: false
           };
           this.ingredients_minimal.push(ingredient);
         }
@@ -356,7 +357,8 @@ export class IngredientsInteractionService {
             vrac: ing.child('vrac').val(),
             taux_tva: ing.child('taux_tva').val(), 
             material_cost: 0,
-            marge: 0
+            marge: 0,
+            supp:false
           }
           this.ingredients_minimal.push(ingredient);
         }

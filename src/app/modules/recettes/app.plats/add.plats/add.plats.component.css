@@ -152,7 +152,13 @@ mat-radio-button{
 .container-content{
     display: flex;
 }
-
+.toggle-label{
+    margin-bottom: 5%;
+}
+.toggle-section{
+    margin-left: 25%;
+    margin-bottom: 10%;
+}
 #time-form{
     display: flex;
 }

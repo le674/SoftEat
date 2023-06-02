@@ -49,11 +49,9 @@ export class AppPlatsComponent implements OnInit {
     this.restaurant = user_info["restaurant"];
     this.plat_service.getPlatFromRestaurant(this.prop, this.restaurant).then((plats) => { 
       this.plats = plats;
-      console.log(plats);
       this.categorie.map((categorie) => this.carte.push(plats.filter((plat) => plat.type === categorie)));
     })
     this.ingredient_service.getFullIngs(this.prop,this.restaurant).then((ingredients) => {
-      console.log("full ingrédients", ingredients);
       this.full_lst_ings = ingredients;
     })
     this.conso_service.getFullConso(this.prop, this.restaurant).then((consomables) => {
@@ -66,7 +64,6 @@ export class AppPlatsComponent implements OnInit {
   }
   
   addPlat(categorie:number){
-    console.log(this.categorie[categorie]);
     this.dialog.open(AddPlatsComponent, {
       height: `${window.innerHeight}px`,
       width: `${window.innerWidth - window.innerWidth/5}px`,

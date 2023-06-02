@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
-import { Cconsommable, CIngredient, TIngredientBase } from '../../../../app/interfaces/ingredient';
+import { Cconsommable, TIngredientBase } from '../../../../app/interfaces/ingredient';
 import { Cmenu } from '../../../../app/interfaces/menu';
 import { Cplat } from '../../../../app/interfaces/plat';
 import { ConsommableInteractionService } from '../../../../app/services/menus/consommable-interaction.service';

@@ -51,7 +51,8 @@ export class MenuCalculPlatsServiceService {
           vrac:ing.vrac,
           material_cost:0,
           taux_tva:0,
-          marge:0
+          marge:0,
+          supp:false
         }
         return ingredient
       })).flat();
@@ -67,7 +68,6 @@ export class MenuCalculPlatsServiceService {
     }
     return this.prepa_service.getPrimCost(prop, restaurant, etapes, arr_ings, consommables)
   }
-
   getFullTheoTimeFromSec(plat:Cplat):string{
     let sum_time_prepa  = 0
    const sum_time_plat = this.prepa_service.getFullTheoTimeSec(plat.etapes)
@@ -92,9 +92,8 @@ export class MenuCalculPlatsServiceService {
    const heure = Math.trunc(full_time/3600);
    const min = Math.trunc(full_time%3600/60);
    const sec = full_time%60;
-   return `${heure}h ${min}min ${sec}sec`
+   return `${heure}h ${min}min ${sec}sec`;
   }
-
   getFullTheoTimeToSec(plat:Cplat):number{
     let sum_time_prepa  = 0
     let sum_time_plat = 0;
@@ -126,8 +125,6 @@ export class MenuCalculPlatsServiceService {
     const full_time =  sum_time_plat + sum_time_prepa;
     return full_time;
   }
-
-
   // convertion des secondes en chaine de caractère
   SecToString(full_time:number){
    const heure = Math.trunc(full_time/3600);
@@ -135,7 +132,6 @@ export class MenuCalculPlatsServiceService {
    const sec = full_time%60;
    return `${heure}h ${min}min ${sec}sec`
   }
-  
   // convertion de l'heure en seconde 
   StringToSec(time_str:string){
     let hour = 0;
@@ -153,7 +149,6 @@ export class MenuCalculPlatsServiceService {
     }
     return hour + minute + sec;
   }
-
   getPortionCost(plat:Cplat):number{
     let arr_ingredients: TIngredientBase[] = [];
     let prepa_ingredients:TIngredientBase[] = [];
@@ -175,7 +170,8 @@ export class MenuCalculPlatsServiceService {
             vrac:ing.vrac,
             material_cost:0,
             taux_tva:0,
-            marge:0
+            marge:0,
+            supp:false
           }
           return ingredient
         })).flat();
@@ -193,12 +189,10 @@ export class MenuCalculPlatsServiceService {
       return 0;
     }
   }
-
   getRatioMaterial(portion_cost:number,plat:Cplat){
     const price_ht = plat.prix;
     return(Math.round(this.ToCentime(portion_cost/price_ht)*100))
   }
-
   // ont utilise la liste [5,4,3,2.5] qui sont les coefficient multiplicateur pour l'établissement du prix des plats
   platsRecommendationStep1(portion_cost:number):number{
     const coeff = this.listCoeffTarif()
@@ -216,11 +210,9 @@ export class MenuCalculPlatsServiceService {
     }
     return 0
   }
-
   listCoeffTarif(){
     return {fst_tarif_coeff: 2.5, sec_tarif_coeff: 3, third_tarif_coeff:4, fourth_tarif_coeff:5}
   }
-
   ToCentime(quantity:number):number{
     return Math.round(quantity*100)/100;
   }
