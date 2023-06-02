@@ -1,6 +1,15 @@
+h1 {
+  width: 300px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  font-weight: normal;
+  text-align: center;
+  color: rgb(125, 181, 46);
+}
+
 /* Styles pour les conteneurs de code */
 .code-container {
-  border: 1px solid #ccc;
+  border: 3px solid black;
   padding: 10px;
   margin-bottom: 20px;
   width: 300px;
