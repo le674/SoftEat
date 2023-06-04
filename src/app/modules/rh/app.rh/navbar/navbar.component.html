@@ -2,14 +2,18 @@
 <div class="code-container">
     <ul>
         <li *ngFor="let categories of Categories">
-            {{categories.nom}}
-            <button (click)="openCategories(categories)">{{categories.buttonname}}</button>
+            <div class="center-container">
+                <div class="left">{{categories.nom}}</div>
+                <button (click)="openCategories(categories)" class="right">{{categories.buttonname}}</button>
+            </div>
             <ul [ngSwitch]="categories.nom">
                 <ng-container *ngSwitchCase="'Cuisiniers'">
                     <span *ngIf="categories.open">
                         <li *ngFor="let liste of Cuisiniers">
-                            {{liste.nom}}
-                            <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)">
+                            <div class="center-container">
+                                <div class="left">{{liste.nom}}</div>
+                                <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)" class="right">
+                            </div>
                         </li>
                     </span>
                 </ng-container>
@@ -17,8 +21,10 @@
                 <ng-container *ngSwitchCase="'Serveurs'">
                     <span *ngIf="categories.open">
                         <li *ngFor="let liste of Serveurs">
-                            {{liste.nom}}
-                            <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)">
+                            <div class="center-container">
+                                <div class="left">{{liste.nom}}</div>
+                                <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)" class="right">
+                            </div>
                         </li>
                     </span>
                 </ng-container>
@@ -26,8 +32,10 @@
                 <ng-container *ngSwitchCase="'Barmans'">
                     <span *ngIf="categories.open">
                         <li *ngFor="let liste of Barmans">
-                            {{liste.nom}}
-                            <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)">
+                            <div class="center-container">
+                                <div class="left">{{liste.nom}}</div>
+                                <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)" class="right">
+                            </div>
                         </li>
                     </span>
                 </ng-container>
@@ -35,8 +43,10 @@
                 <ng-container *ngSwitchCase="'Gérents'">
                     <span *ngIf="categories.open">
                         <li *ngFor="let liste of Gerents">
-                            {{liste.nom}}
-                            <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)">
+                            <div class="center-container">
+                                <div class="left">{{liste.nom}}</div>
+                                <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)" class="right">
+                            </div>
                         </li>
                     </span>
                 </ng-container>

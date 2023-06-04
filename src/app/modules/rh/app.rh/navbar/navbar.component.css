@@ -14,7 +14,6 @@ h1 {
   padding: 10px;
   margin-bottom: 20px;
   width: 300px;
-  /* Ajout de la largeur de 300px au cadre */
 }
 
 /* Styles pour la liste des catégories */
@@ -37,10 +36,23 @@ button {
   padding: 5px 10px;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
+  /*display: inline-block;*/
   font-size: 14px;
   margin-left: 10px;
   cursor: pointer;
+}
+
+.center-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.left {
+  margin-right: auto;
+}
+
+.right {
+  margin-left: auto;
 }
 
 /* Styles pour les listes déroulantes */
