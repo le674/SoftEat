@@ -1,9 +1,10 @@
 <div class="messagerie">
   <div *ngIf ="separationDateB" class="separationDate">
-    <span>{{ separationDate[0] }}</span>
+
+    <span>{{ date | date }} </span>
   </div>
   <div *ngIf ="separationDateB" class="separationTime">
-    <span>{{ separationDate[1] }}</span>
+    <span>{{ date | date : 'HH:mm'}}</span>
   </div>
   <div class="message">
     <div class="message_outer">
@@ -25,7 +26,9 @@
             <p>{{ text }}</p>
           </div>
         </div>
-        <div class="message_spacer"><button (click)="updateSeparationDate()"> update </button></div>
+        <div class="message_spacer">
+          <!-- <button (click)="updateSeparationDate()"> update </button> -->
+        </div>
       </div>
     </div>
   </div>

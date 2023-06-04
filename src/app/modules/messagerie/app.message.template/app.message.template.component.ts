@@ -9,8 +9,10 @@ export class AppMessageTemplateComponent implements OnInit {
   date = new Date();
   text!: string;
   message!: string;
-  separationDate!: string[];
   separationDateB!: boolean;
+
+
+
 
 
   constructor() { }
@@ -18,7 +20,6 @@ export class AppMessageTemplateComponent implements OnInit {
   ngOnInit(): void {
     this.message = "received";
     this.text = "Bonjour la messagerie !";
-    this.separationDate = [this.date.toLocaleDateString(), this.date.toLocaleTimeString()];
     this.separationDateB = true;
   }
 
