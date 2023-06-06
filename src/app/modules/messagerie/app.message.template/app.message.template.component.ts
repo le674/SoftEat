@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseApp, initializeApp } from "@angular/fire/app";
-import { getDatabase, ref, onValue, child, get} from 'firebase/database';
+import { getDatabase, ref, onValue} from 'firebase/database';
 import { Statut } from '../../../interfaces/statut';
+import { HttpClient } from '@angular/common/http';
+
+
 
 @Component({
   selector: 'message-template',
@@ -15,12 +18,15 @@ export class AppMessageTemplateComponent implements OnInit {
   separationDateB!: boolean;
   statut!: Statut;
   email!: string;
+  // private http!: HttpClient; // Dois être défini dans le constructeur
+  heure!: string;
+  
 
 
 
 
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.message = "received";
@@ -28,8 +34,9 @@ export class AppMessageTemplateComponent implements OnInit {
     this.separationDateB = true;
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
     this.email = "";
-
     this.fetchUserStatus();
+    this.fetchTimeServer();
+    
   }
 
   updateSeparationDate(){
@@ -50,15 +57,15 @@ export class AppMessageTemplateComponent implements OnInit {
       measurementId: "G-5FBJE9WH0X"
     };
     const firebaseApp = initializeApp(firebaseConfig);
-
     const db = getDatabase(firebaseApp);
     
+    console.log(db);
     const userEmailRef = ref(db, 'users/foodandboost_prop/' + userId + '/email');
+    const userStatusRef = ref(db, 'users/foodandboost_prop/' + userId + '/statut');
 
     onValue(userEmailRef, (snapshot) => {
       this.email = snapshot.val();
     });
-    const userStatusRef = ref(db, 'users/foodandboost_prop/' + userId + '/statut');
     onValue(userStatusRef, (snapshot) => {
       const statut = snapshot.val();
       this.statut.alertes = statut.alertes;
@@ -72,5 +79,25 @@ export class AppMessageTemplateComponent implements OnInit {
     });
 
     this.text = "Voici mes statuts :\n alertes : " + this.statut.alertes + ",\n analyse : " + this.statut.analyse + ",\n budget : " + this.statut.budget + ",\n facture : " + this.statut.facture + ",\n planning : " + this.statut.planning + ",\n stock : " + this.statut.stock + ".";
+
+    
+
+  }
+
+  fetchTimeServer(){
+    this.http.get('http://worldtimeapi.org/api/timezone/Europe/Paris').subscribe((data: any) => {
+      const utcDateTime = data.utc_datetime.slice(11,16); //"utc_datetime": "2023-06-06T12:50:44.493419+00:00"
+      const utcOffset = data.utc_offset; //"utc_offset": "+02:00"
+      const offsetHours = parseInt(utcOffset.slice(1, 3), 10);
+      const utcHourSplit = utcDateTime.split(':');
+      
+      const hoursInt = parseInt(utcHourSplit[0], 10);
+      let hours = hoursInt + offsetHours;
+      if (hours >= 24) {
+        hours -= 24;
+      };
+      this.heure = hours.toString().padStart(2, '0') + ':' + utcHourSplit[1];
+
+    });
   }
 }
