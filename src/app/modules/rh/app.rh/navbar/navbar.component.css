@@ -7,6 +7,13 @@ h1 {
   color: rgb(125, 181, 46);
 }
 
+.navbar {
+  width: 300px; /* Adjust the width as per your requirements */
+  height: 400px; /* Adjust the height as per your requirements */
+  overflow: auto;
+}
+
+
 /* Styles pour les boutons */
 button {
   background-color: rgb(125, 181, 46);
