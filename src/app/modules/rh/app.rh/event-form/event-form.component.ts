@@ -18,19 +18,12 @@ export class EventFormComponent implements OnInit {
   }
   
 
-<<<<<<< HEAD
 
   rows: Row[] = [];
 
   addRow(personnel: string, event: string, lieu: string,
         prisePoste: string, finPoste: string, repeter: string): void {
     const newRow: Row = { personnel, event, lieu, prisePoste, finPoste, repeter };
-=======
-  rows: Row[] = [];
-
-  addRow(main: string, preferred: string, common: string): void {
-    const newRow: Row = { main, preferred, common };
->>>>>>> 99dfe52 (table responsive add/remove -> ajouter les bons champs + les dropdownlist)
     this.rows.push(newRow);
   }
 
