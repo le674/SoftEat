@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ViewChild, ElementRef, AfterViewInit} from '@angular/core';
+import { UserInteractionService } from 'src/app/services/user-interaction.service';
+import { User } from 'src/app/interfaces/user';
+import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { AngularFireAuth, AngularFireAuthModule } from "@angular/fire/compat/auth";
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
 declare let gapi: any;
 declare let google: any;
@@ -18,6 +23,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     tokenClient !: any;
     gapiInited !: boolean;
     gisInited !: boolean;
+    afAuth !: any;
+    provider !: GoogleAuthProvider;
     @ViewChild('authorizeButton') authorizeButton!: ElementRef;
     @ViewChild('signoutButton') signoutButton!: ElementRef;
     @ViewChild('addEventButton') addEventButton!: ElementRef;
@@ -31,11 +38,17 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.SCOPES = 'https://www.googleapis.com/auth/calendar';
     this.gapiInited = false;
     this.gisInited = false;
+    /*this.provider = new GoogleAuthProvider();
+    this.afAuth.signInWithPopup(this.provider)
+    .then((credential:any) => {
+      const accessToken = credential.credential.accessToken;
+      // Now you can use the access token to call Google APIs
+      this.createEvent(accessToken);  // Pass the token to your function
+    });*/
   }
 
   ngOnInit(): void {
     console.log("ngOnInit")
-    
     
   }
 
@@ -150,6 +163,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             this.content.nativeElement.innerText = output;
   }
 
+  convertToUTC(date: Date): Date {
+    const utcDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000));
+    return utcDate;
+  }
+  
   async createEvent(): Promise<any> {
     const event = {
       summary: 'SoftEat Test',
@@ -157,11 +175,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       description: 'Sprint Retrospective',
       start: {
         dateTime: '2023-05-17T09:00:00-07:00',
-        timeZone: 'CET'
+        timeZone: 'Europe/Paris'
       },
       end: {
         dateTime: '2023-05-17T11:00:00-07:00',
-        timeZone: 'CET'
+        timeZone: 'Europe/Paris'
       },
       recurrence: ['RRULE:FREQ=DAILY;COUNT=2'],
       /*attendees: [

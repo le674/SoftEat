@@ -1,11 +1,11 @@
 <body>
     <h1> Congés Payés </h1>
     <div id="hbar" class="flex-container">
-        <div style="flex-grow: 0.3" id="restants">
+        <div style="flex-grow: 0.2" id="restants">
             <p> Total : 6 semaines
                 <!-- mes semaines à l'année : {{ user.congés.total }} au lieu du "6 semaines" -->
             </p>
-            <p> Restant : <span [ngStyle]="{ color: 'rgb(0, ' + 185 + ', 0)' }"> 4 semaines
+            <p> Restant : <span [ngStyle]="{ color: 'rgb(0, ' + 185 + ', 0)' }" style="margin-left: 2px;"> 4 semaines
                     <!-- mes semaines restantes de congés : {{ user.congés.dispo }} au lieu du "4 semaines" -->
                 </span> </p>
         </div>
@@ -14,22 +14,37 @@
             <button #autofillRTT (click)="autofillInput(autofillRTT.innerText)">RTT</button>
             <button #autofillMate (click)="autofillInput(autofillMate.innerText)">Maternité</button>
             <button #autofillPate (click)="autofillInput(autofillPate.innerText)">Paternité</button>
-            <button>Exceptionnels</button>
+            <button #autofillExce (click)="autofillInput(autofillExce.innerText)">Exceptionnels</button>
         </div>
         <div style="flex-grow: 5">
+            <h2> Demande de congés payés </h2>
             <form>
-                <label for="nom">Motif </label>
-                <input #motif type="text" placeholder="Motif ?">
+                <div class="line">
+                    <label for="nom">Motif </label>
+                    <input #motif id="motif" type="text" placeholder="*Champ obligatoire" required>
+                </div>
+                <div class="line">
+                    <label for="début">Date début </label>
+                    <input type="date" id="début" name="début" required>
+                </div>
+                <div class="line">
+                    <label for="fin">Date début </label>
+                    <input type="date" id="fin" name="fin" required>
+                </div>
 
-                <label for="début">Date début </label>
-                <input type="date" id="début" name="début" required>
-                <label for="fin">Date début </label>
-                <input type="date" id="fin" name="fin" required>
+                <div class="picker">
+                    <input type="file" id="fileInput" name="fileInput" class="file-input"
+                        (change)="displayFileName($event)">
+                    <label for="fileInput" class="file-label">Joindre un fichier</label>
+                </div>
+                <div *ngIf="selectedFileName" class="file-info">
+                    <p class="selected">{{ selectedFileName }}</p>
+                    <button class="unchoose-button" (click)="unchooseFile()">&cross;</button>
+                </div>
 
-                <label for="file">Joindre un fichier </label>
-                <input type="file" id="file" name="file">
-
-                <input type="submit" value="Envoyer">
+                <div class="submit">
+                    <input class="mat-stroked-button" type="submit" value="Envoyer">
+                </div>
             </form>
         </div>
     </div>

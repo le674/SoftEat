@@ -10,12 +10,10 @@ import { NavbarComponent } from './app.rh/navbar/navbar.component';
 
 @NgModule({
   declarations: [
-  
-  
     AppRhComponent,
-            CalendarComponent,
-            HbarComponent,
-            NavbarComponent
+    CalendarComponent,
+    HbarComponent,
+    NavbarComponent
   ],
   imports: [
     CommonModule,
