@@ -1,44 +1,68 @@
 <div class="col-md-12">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Formal Suffix</th>
-          <th>Postal Service Preferred</th>
-          <th>Common Alternatives</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="col-xs-3">
-            <input #addMain class="form-control" type="text" placeholder="Enter title" />
-          </td>
-          <td class="col-xs-3">
-            <input #addPrefer class="form-control" type="text" placeholder="Enter title" />
-          </td>
-          <td class="col-xs-5">
-            <input #addCommon class="form-control" type="text" placeholder="Enter title" />
-          </td>
-          <td class="col-xs-1 text-center">
-            <button (click)="onClickAdd(addMain.value, addPrefer.value, addCommon.value)">
-              <i class="fa fa-plus"></i>
-            </button>
-          </td>
-        </tr>
-        <tr *ngFor="let row of rows; let i=index">
-          <td class="col-xs-3"><input [(ngModel)]="row.main" class="form-control editable" /></td>
-          <td class="col-xs-3"><input [(ngModel)]="row.preferred" class="form-control editable" /></td>
-          <td class="col-xs-5"><input [(ngModel)]="row.common" class="form-control editable" /></td>
-          <td class="col-xs-1 text-center">
-            <button (click)="deleteRow(i)">
-                <i class="fa-regular fa-trash"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="col-md-1 pull-right">
-      <button class="btn btn-primary pull-right">Save</button>
-    </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Formal Suffix</th>
+        <th>Postal Service Preferred</th>
+        <th>Common Alternatives</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-xs-3">
+          <input #addPersonnel class="form-control" type="text" placeholder="Personnel*" required />
+        </td>
+        <td class="col-xs-3">
+          <input #addEvent class="form-control" type="text" placeholder="Evènement" />
+        </td>
+        <td class="col-xs-5">
+          <input #addLieu class="form-control" type="text" placeholder="Lieu*" required/>
+        </td>
+        <td class="col-xs-5">
+          <label for="addPrisePoste">Prise de poste :</label>        </td>
+        <td class="col-xs-5">
+          <!-- <label for="addPrisePoste">Prise de poste:</label> -->
+          <input #addPrisePoste class="form-control" type="datetime-local" required>
+        </td>
+        <td class="col-xs-5">
+          <label for="addPrisePoste">Fin de poste :</label>        </td>
+        <td class="col-xs-5">
+        <td class="col-xs-5">
+          <!--<label for="addFinPoste">Fin de poste:</label> -->
+          <input #addFinPoste class="form-control" type="datetime-local" required>
+        </td>
+        <td class="col-xs-5">
+          <select #addRepeter required>
+            <option disabled selected value="">Répéter</option>
+            <option value="option2">Cette semaine</option>
+            <option value="option3">Ce mois</option>
+            <option value="option4">?</option>
+            <option value="option1">Non</option>
+          </select>
+        </td>
+        <td class="col-xs-1 text-center">
+          <button (click)="onClickAdd(addPersonnel.value, addEvent.value, addLieu.value, addPrisePoste.value, addFinPoste.value, addRepeter.value)">
+            <i class="fa fa-plus"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngFor="let row of rows; let i=index">
+        <td class="col-xs-3"><input [(ngModel)]="row.personnel" class="form-control editable" /></td>
+        <td class="col-xs-3"><input [(ngModel)]="row.event" class="form-control editable" /></td>
+        <td class="col-xs-5"><input [(ngModel)]="row.lieu" class="form-control editable" /></td>
+        <td class="col-xs-5"><input [(ngModel)]="row.prisePoste" class="form-control editable" /></td>
+        <td class="col-xs-5"><input [(ngModel)]="row.finPoste" class="form-control editable" /></td>
+        <td class="col-xs-5"><input [(ngModel)]="row.repeter" class="form-control editable" /></td>
+        <td class="col-xs-1 text-center">
+          <button (click)="deleteRow(i)">
+            <i class="fa-regular fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="col-md-1 pull-right">
+    <button class="btn btn-primary pull-right">Save</button>
   </div>
-  
+</div>

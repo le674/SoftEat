@@ -5,17 +5,24 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
   styleUrls: ['./event-form.component.css']
 })
 export class EventFormComponent implements OnInit {
-  
+
+  @ViewChild('addPersonnel') addPersonnelInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('addEvent') addEventInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('addLieu') addLieuInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('addPrisePoste') addPrisePosteInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('addFinPoste') addFinPosteInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('addRepeter') addRepeterSelect!: ElementRef<HTMLSelectElement>;
   constructor() { }
 
   ngOnInit(): void {
   }
-  
+
 
   rows: Row[] = [];
 
-  addRow(main: string, preferred: string, common: string): void {
-    const newRow: Row = { main, preferred, common };
+  addRow(personnel: string, event: string, lieu: string,
+        prisePoste: string, finPoste: string, repeter: string): void {
+    const newRow: Row = { personnel, event, lieu, prisePoste, finPoste, repeter };
     this.rows.push(newRow);
   }
 
@@ -23,13 +30,27 @@ export class EventFormComponent implements OnInit {
     this.rows.splice(index, 1);
   }
 
-  onClickAdd(main: string, preferred: string, common: string): void {
-    this.addRow(main, preferred, common);
+  onClickAdd(personnel: string, event: string, lieu: string,
+    prisePoste: string, finPoste: string, repeter: string): void {
+    this.addRow(personnel, event, lieu, prisePoste, finPoste, repeter);
+    this.resetFormFields();
+  }
+
+  resetFormFields(): void {
+    this.addPersonnelInput.nativeElement.value = '';
+    this.addEventInput.nativeElement.value = '';
+    this.addLieuInput.nativeElement.value = '';
+    this.addPrisePosteInput.nativeElement.value = '';
+    this.addFinPosteInput.nativeElement.value = '';
+    this.addRepeterSelect.nativeElement.value = '';
   }
 }
 
-  export interface Row {
-    main: string;
-    preferred: string;
-    common: string;
-  }
+export interface Row {
+  personnel: string;
+  event?: string;
+  lieu: string;
+  prisePoste: string;
+  finPoste: string;
+  repeter: string;
+}
