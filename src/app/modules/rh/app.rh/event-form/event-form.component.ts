@@ -16,7 +16,7 @@ export class EventFormComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  
+
 
 
   rows: Row[] = [];
