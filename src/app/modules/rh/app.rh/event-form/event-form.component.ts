@@ -4,8 +4,8 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
   templateUrl: './event-form.component.html',
   styleUrls: ['./event-form.component.css']
 })
-export class EventFormComponent implements OnInit {
 
+export class EventFormComponent implements OnInit {
   @ViewChild('addPersonnel') addPersonnelInput!: ElementRef<HTMLInputElement>;
   @ViewChild('addEvent') addEventInput!: ElementRef<HTMLInputElement>;
   @ViewChild('addLieu') addLieuInput!: ElementRef<HTMLInputElement>;
@@ -30,8 +30,25 @@ export class EventFormComponent implements OnInit {
     this.rows.splice(index, 1);
   }
 
+  isFieldFilled(inputRef: ElementRef<HTMLInputElement | HTMLSelectElement>): boolean {
+    const value = inputRef.nativeElement.value;
+    if (inputRef.nativeElement.tagName.toLowerCase() === 'select') {
+      return value !== '';
+    }
+    return value.trim() !== '';
+  }
+
   onClickAdd(personnel: string, event: string, lieu: string,
     prisePoste: string, finPoste: string, repeter: string): void {
+    if (!this.isFieldFilled(this.addPersonnelInput) ||
+        !this.isFieldFilled(this.addLieuInput) ||
+        !this.isFieldFilled(this.addPrisePosteInput) ||
+        !this.isFieldFilled(this.addFinPosteInput) ||
+        !this.isFieldFilled(this.addRepeterSelect)) {
+        // Show the popup or perform any required validation logic
+        alert("Renseignez les champs obligatoires : Personnel, Lieu, Prise et Fin de Poste, Répéter l'évènement.");
+        return;
+    }
     this.addRow(personnel, event, lieu, prisePoste, finPoste, repeter);
     this.resetFormFields();
   }

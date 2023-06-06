@@ -17,16 +17,18 @@
           <input #addEvent class="form-control" type="text" placeholder="Evènement" />
         </td>
         <td class="col-xs-5">
-          <input #addLieu class="form-control" type="text" placeholder="Lieu*" required/>
+          <input #addLieu class="form-control" type="text" placeholder="Lieu*" required />
         </td>
         <td class="col-xs-5">
-          <label for="addPrisePoste">Prise de poste :</label>        </td>
+          <label for="addPrisePoste">Prise de poste :</label>
+        </td>
         <td class="col-xs-5">
           <!-- <label for="addPrisePoste">Prise de poste:</label> -->
           <input #addPrisePoste class="form-control" type="datetime-local" required>
         </td>
         <td class="col-xs-5">
-          <label for="addPrisePoste">Fin de poste :</label>        </td>
+          <label for="addPrisePoste">Fin de poste :</label>
+        </td>
         <td class="col-xs-5">
         <td class="col-xs-5">
           <!--<label for="addFinPoste">Fin de poste:</label> -->
@@ -42,7 +44,8 @@
           </select>
         </td>
         <td class="col-xs-1 text-center">
-          <button (click)="onClickAdd(addPersonnel.value, addEvent.value, addLieu.value, addPrisePoste.value, addFinPoste.value, addRepeter.value)">
+          <button
+            (click)="onClickAdd(addPersonnel.value, addEvent.value, addLieu.value, addPrisePoste.value, addFinPoste.value, addRepeter.value)">
             <i class="fa fa-plus"></i>
           </button>
         </td>
@@ -51,9 +54,15 @@
         <td class="col-xs-3"><input [(ngModel)]="row.personnel" class="form-control editable" /></td>
         <td class="col-xs-3"><input [(ngModel)]="row.event" class="form-control editable" /></td>
         <td class="col-xs-5"><input [(ngModel)]="row.lieu" class="form-control editable" /></td>
-        <td class="col-xs-5"><input [(ngModel)]="row.prisePoste" class="form-control editable" /></td>
-        <td class="col-xs-5"><input [(ngModel)]="row.finPoste" class="form-control editable" /></td>
-        <td class="col-xs-5"><input [(ngModel)]="row.repeter" class="form-control editable" /></td>
+        <td class="col-xs-5"><input [(ngModel)]="row.prisePoste" type="datetime-local" /></td>
+        <td class="col-xs-5"><input [(ngModel)]="row.finPoste" type="datetime-local" /></td>
+        <td class="col-xs-5"><select [(ngModel)]="row.repeter">
+            <option disabled selected value="">Répéter</option>
+            <option value="option2" [selected]="row.repeter === 'option2'">Cette semaine</option>
+            <option value="option3" [selected]="row.repeter === 'option3'">Ce mois</option>
+            <option value="option4" [selected]="row.repeter === 'option4'">?</option>
+            <option value="option1" [selected]="row.repeter === 'option1'">Non</option>
+          </select></td>
         <td class="col-xs-1 text-center">
           <button (click)="deleteRow(i)">
             <i class="fa-regular fa-trash"></i>
