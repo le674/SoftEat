@@ -1,6 +1,5 @@
 <div class="messagerie">
   <div *ngIf ="separationDateB" class="separationDate">
-
     <span>{{ date | date }} </span>
   </div>
   <div *ngIf ="separationDateB" class="separationTime">
@@ -16,7 +15,7 @@
         }" class="message_bubble" dir="auto">
           <div class="message_infos">
             <div class="name">  
-              <p>~Matthieu d'Hoop</p>
+              <p>{{ email }}</p>
             </div>
             <div class="time_sent">
               <p>{{ date | date: 'd MMMM, HH:mm'}}</p>
@@ -28,6 +27,7 @@
         </div>
         <div class="message_spacer">
           <!-- <button (click)="updateSeparationDate()"> update </button> -->
+          <button (click)="fetchUserStatus()">Obtenir les statuts de l'utilisateur</button>
         </div>
       </div>
     </div>
