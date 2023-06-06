@@ -15,6 +15,10 @@ export class NavbarComponent implements OnInit {
   select!: String[];
   isChecked: any;
   selectAll: boolean = false;
+  selectAllCuisiniers: boolean = false;
+  selectAllServeurs: boolean = false;
+  selectAllBarmans: boolean = false;
+  selectAllGerants: boolean = false;
 
   constructor() {}
 
@@ -65,7 +69,7 @@ export class NavbarComponent implements OnInit {
   }
   */
 
-  selectEmployee(liste: any) {  
+  selectEmployee(liste: any) {
     if (liste.selectionne) {
       const index = this.select.indexOf(liste.nom);
       if (index !== -1) {
@@ -74,42 +78,17 @@ export class NavbarComponent implements OnInit {
     } else {
       this.select.push(liste.nom);
     }
-  
+
     liste.selectionne = !liste.selectionne;
   }
-  
 
-  addAllEmployees() {
-    if (this.selectAll) {
+  addAllCuisiniers() {
+    if (this.selectAllCuisiniers) {
       this.Cuisiniers.forEach((cuisto) => {
         const index = this.select.indexOf(cuisto.nom);
         if (index !== -1) {
           this.select.splice(index, 1);
           cuisto.selectionne = !cuisto.selectionne;
-        }
-      });
-  
-      this.Serveurs.forEach((serveur) => {
-        const index = this.select.indexOf(serveur.nom);
-        if (index !== -1) {
-          this.select.splice(index, 1);
-          serveur.selectionne = !serveur.selectionne;
-        }
-      });
-  
-      this.Barmans.forEach((barman) => {
-        const index = this.select.indexOf(barman.nom);
-        if (index !== -1) {
-          this.select.splice(index, 1);
-          barman.selectionne = !barman.selectionne;
-        }
-      });
-  
-      this.Gerants.forEach((gerant) => {
-        const index = this.select.indexOf(gerant.nom);
-        if (index !== -1) {
-          this.select.splice(index, 1);
-          gerant.selectionne = !gerant.selectionne;
         }
       });
     } else {
@@ -119,21 +98,60 @@ export class NavbarComponent implements OnInit {
           cuisto.selectionne = !cuisto.selectionne;
         }
       });
-  
+    }
+    this.selectAllCuisiniers = !this.selectAllCuisiniers;
+  }
+
+  addAllServeurs() {
+    if (this.selectAllServeurs) {
+      this.Serveurs.forEach((serveur) => {
+        const index = this.select.indexOf(serveur.nom);
+        if (index !== -1) {
+          this.select.splice(index, 1);
+          serveur.selectionne = !serveur.selectionne;
+        }
+      });
+    } else {
       this.Serveurs.forEach((serveur) => {
         if (!this.select.includes(serveur.nom)) {
           this.select.push(serveur.nom);
           serveur.selectionne = !serveur.selectionne;
         }
       });
-  
+    }
+    this.selectAllServeurs = !this.selectAllServeurs;
+  }
+
+  addAllBarmans() {
+    if (this.selectAllBarmans) {
+      this.Barmans.forEach((barman) => {
+        const index = this.select.indexOf(barman.nom);
+        if (index !== -1) {
+          this.select.splice(index, 1);
+          barman.selectionne = !barman.selectionne;
+        }
+      });
+    } else {
       this.Barmans.forEach((barman) => {
         if (!this.select.includes(barman.nom)) {
           this.select.push(barman.nom);
           barman.selectionne = !barman.selectionne;
         }
       });
-  
+    }
+    this.selectAllBarmans = !this.selectAllBarmans;
+  }
+
+  addAllGerants() {
+    if (this.selectAllGerants) {
+      this.Gerants.forEach((gerant) => {
+        const index = this.select.indexOf(gerant.nom);
+        if (index !== -1) {
+          this.select.splice(index, 1);
+          gerant.selectionne = !gerant.selectionne;
+        }
+      });
+    } else {
       this.Gerants.forEach((gerant) => {
         if (!this.select.includes(gerant.nom)) {
           this.select.push(gerant.nom);
@@ -141,7 +159,6 @@ export class NavbarComponent implements OnInit {
         }
       });
     }
-  
-    this.selectAll = !this.selectAll;
-  }  
+    this.selectAllGerants = !this.selectAllGerants;
+  }
 }
