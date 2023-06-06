@@ -7,6 +7,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 export class EventFormComponent implements OnInit {
   @ViewChild('addPersonnel') addPersonnelInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('addMotif') addMotifInput!: ElementRef<HTMLInputElement>;
   @ViewChild('addEvent') addEventInput!: ElementRef<HTMLInputElement>;
   @ViewChild('addLieu') addLieuInput!: ElementRef<HTMLInputElement>;
   @ViewChild('addPrisePoste') addPrisePosteInput!: ElementRef<HTMLInputElement>;
@@ -18,12 +19,11 @@ export class EventFormComponent implements OnInit {
   }
 
 
-
   rows: Row[] = [];
 
-  addRow(personnel: string, event: string, lieu: string,
-        prisePoste: string, finPoste: string, repeter: string): void {
-    const newRow: Row = { personnel, event, lieu, prisePoste, finPoste, repeter };
+  addRow(personnel: string, motif: string, event: string, lieu: string,
+    prisePoste: string, finPoste: string, repeter: string): void {
+    const newRow: Row = { personnel, motif, event, lieu, prisePoste, finPoste, repeter };
     this.rows.push(newRow);
   }
 
@@ -39,23 +39,25 @@ export class EventFormComponent implements OnInit {
     return value.trim() !== '';
   }
 
-  onClickAdd(personnel: string, event: string, lieu: string,
+  onClickAdd(personnel: string, motif: string, event: string, lieu: string,
     prisePoste: string, finPoste: string, repeter: string): void {
     if (!this.isFieldFilled(this.addPersonnelInput) ||
-        !this.isFieldFilled(this.addLieuInput) ||
-        !this.isFieldFilled(this.addPrisePosteInput) ||
-        !this.isFieldFilled(this.addFinPosteInput) ||
-        !this.isFieldFilled(this.addRepeterSelect)) {
-        // Show the popup or perform any required validation logic
-        alert("Renseignez les champs obligatoires : Personnel, Lieu, Prise et Fin de Poste, Répéter l'évènement.");
-        return;
+      !this.isFieldFilled(this.addMotifInput) ||
+      !this.isFieldFilled(this.addLieuInput) ||
+      !this.isFieldFilled(this.addPrisePosteInput) ||
+      !this.isFieldFilled(this.addFinPosteInput) ||
+      !this.isFieldFilled(this.addRepeterSelect)) {
+      // Show the popup or perform any required validation logic
+      alert("Renseignez les champs obligatoires : Personnel, Lieu, Prise et Fin de Poste, Répéter l'évènement.");
+      return;
     }
-    this.addRow(personnel, event, lieu, prisePoste, finPoste, repeter);
+    this.addRow(personnel, motif, event, lieu, prisePoste, finPoste, repeter);
     this.resetFormFields();
   }
 
   resetFormFields(): void {
     this.addPersonnelInput.nativeElement.value = '';
+    this.addMotifInput.nativeElement.value = '';
     this.addEventInput.nativeElement.value = '';
     this.addLieuInput.nativeElement.value = '';
     this.addPrisePosteInput.nativeElement.value = '';
@@ -66,6 +68,7 @@ export class EventFormComponent implements OnInit {
 
 export interface Row {
   personnel: string;
+  motif: string;
   event?: string;
   lieu: string;
   prisePoste: string;
