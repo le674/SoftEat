@@ -3,29 +3,42 @@ h1 {
   margin-top: 50px;
   margin-bottom: 50px;
   font-weight: normal;
-  text-align: center;
   color: rgb(125, 181, 46);
+  --h1-height: 0; /* Initial value for h1 height */
+}
+
+.sidebar {  
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  padding: 0%;  
 }
 
 .navbar {
-  width: 300px; /* Adjust the width as per your requirements */
-  height: 400px; /* Adjust the height as per your requirements */
+  padding: 0%;
   overflow: auto;
+  max-height: 70vh;
+  border: 2px solid rgb(125, 181, 46);
 }
+
 .navbar::-webkit-scrollbar {
-  width: 4px; /* width of the scrollbar */
+  width: 4px;
+  /* width of the scrollbar */
 }
 
 .navbar::-webkit-scrollbar-track {
-  background-color: #f1f1f1; /* background color of the scrollbar track */
+  background-color: #f1f1f1;
+  /* background color of the scrollbar track */
 }
 
 .navbar::-webkit-scrollbar-thumb {
-  background-color: #888; /* color of the scrollbar thumb */
+  background-color: #888;
+  /* color of the scrollbar thumb */
 }
 
 .navbar::-webkit-scrollbar-thumb:hover {
-  background-color: #555; /* color of the scrollbar thumb on hover */
+  background-color: #555;
+  /* color of the scrollbar thumb on hover */
 }
 
 
@@ -61,7 +74,7 @@ table {
 }
 
 tr {
-  border: 3px solid black;
+  border-top: 1px solid rgb(125, 181, 46);
 }
 
 ul {
@@ -72,7 +85,7 @@ ul {
 
 li {
   background-color: #f9f9f9;
-  padding: 10px; 
+  padding: 10px;
   font-size: 14px;
   font-weight: lighter;
 }
@@ -96,7 +109,8 @@ input[type="checkbox"] {
 
 /* Style de la coche */
 input[type="checkbox"]:checked::before {
-  content: "\2713"; /* Code unicode pour le symbole de la coche */
+  content: "\2713";
+  /* Code unicode pour le symbole de la coche */
   position: absolute;
   top: 50%;
   left: 50%;

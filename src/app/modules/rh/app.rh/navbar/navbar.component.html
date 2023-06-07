@@ -1,96 +1,96 @@
-<h1> Sélectionner employé </h1>
+<h1>EDT Employés</h1>
 
-<div class="container">
-    <div class="navbar">
-        <table>
-            <tr *ngFor="let categories of Categories">
-                <div class="center-container">
-                    <div class="left categ">{{categories.nom}}</div>
-                    <button (click)="openCategories(categories)" class="right">{{categories.buttonname}}</button>
-                </div>
-                <div [ngSwitch]="categories.nom">
-                    <ng-container *ngSwitchCase="'Cuisiniers'">
-                        <ul *ngIf="categories.open">
-                            <li>
-                                <div class="center-container">
-                                    <div class="left">Sélectionner tout</div>
-                                    <input type="checkbox" [checked]="selectAllCuisiniers" (click)="addAllCuisiniers()"
-                                        class="right">
-                                </div>
-                            </li>
-                            <li *ngFor="let liste of Cuisiniers">
-                                <div class="center-container">
-                                    <div class="left">{{liste.nom}}</div>
-                                    <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)"
-                                        class="right">
-                                </div>
-                            </li>
-                        </ul>
-                    </ng-container>
+<div class="sidebar">
+        <div class="navbar">
+            <table>
+                <tr *ngFor="let categories of Categories">
+                    <div class="center-container">
+                        <div class="left categ">{{categories.nom}}</div>
+                        <button (click)="openCategories(categories)" class="right">{{categories.buttonname}}</button>
+                    </div>
+                    <div [ngSwitch]="categories.nom">
+                        <ng-container *ngSwitchCase="'Cuisiniers'">
+                            <ul *ngIf="categories.open">
+                                <li>
+                                    <div class="center-container">
+                                        <div class="left">Sélectionner tout</div>
+                                        <input type="checkbox" [checked]="selectAllCuisiniers"
+                                            (click)="addAllCuisiniers()" class="right">
+                                    </div>
+                                </li>
+                                <li *ngFor="let liste of Cuisiniers">
+                                    <div class="center-container">
+                                        <div class="left">{{liste.nom}}</div>
+                                        <input type="checkbox" [checked]="liste.selectionne"
+                                            (click)="selectEmployee(liste)" class="right">
+                                    </div>
+                                </li>
+                            </ul>
+                        </ng-container>
 
-                    <ng-container *ngSwitchCase="'Serveurs'">
-                        <ul *ngIf="categories.open">
-                            <li>
-                                <div class="center-container">
-                                    <div class="left">Sélectionner tout</div>
-                                    <input type="checkbox" [checked]="selectAllServeurs" (click)="addAllServeurs()"
-                                        class="right">
-                                </div>
-                            </li>
-                            <li *ngFor="let liste of Serveurs">
-                                <div class="center-container">
-                                    <div class="left">{{liste.nom}}</div>
-                                    <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)"
-                                        class="right">
-                                </div>
-                            </li>
-                        </ul>
-                    </ng-container>
+                        <ng-container *ngSwitchCase="'Serveurs'">
+                            <ul *ngIf="categories.open">
+                                <li>
+                                    <div class="center-container">
+                                        <div class="left">Sélectionner tout</div>
+                                        <input type="checkbox" [checked]="selectAllServeurs" (click)="addAllServeurs()"
+                                            class="right">
+                                    </div>
+                                </li>
+                                <li *ngFor="let liste of Serveurs">
+                                    <div class="center-container">
+                                        <div class="left">{{liste.nom}}</div>
+                                        <input type="checkbox" [checked]="liste.selectionne"
+                                            (click)="selectEmployee(liste)" class="right">
+                                    </div>
+                                </li>
+                            </ul>
+                        </ng-container>
 
-                    <ng-container *ngSwitchCase="'Barmans'">
-                        <ul *ngIf="categories.open">
-                            <li>
-                                <div class="center-container">
-                                    <div class="left">Sélectionner tout</div>
-                                    <input type="checkbox" [checked]="selectAllBarmans" (click)="addAllBarmans()"
-                                        class="right">
-                                </div>
-                            </li>
-                            <li *ngFor="let liste of Barmans">
-                                <div class="center-container">
-                                    <div class="left">{{liste.nom}}</div>
-                                    <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)"
-                                        class="right">
-                                </div>
-                            </li>
-                        </ul>
-                    </ng-container>
+                        <ng-container *ngSwitchCase="'Barmans'">
+                            <ul *ngIf="categories.open">
+                                <li>
+                                    <div class="center-container">
+                                        <div class="left">Sélectionner tout</div>
+                                        <input type="checkbox" [checked]="selectAllBarmans" (click)="addAllBarmans()"
+                                            class="right">
+                                    </div>
+                                </li>
+                                <li *ngFor="let liste of Barmans">
+                                    <div class="center-container">
+                                        <div class="left">{{liste.nom}}</div>
+                                        <input type="checkbox" [checked]="liste.selectionne"
+                                            (click)="selectEmployee(liste)" class="right">
+                                    </div>
+                                </li>
+                            </ul>
+                        </ng-container>
 
-                    <ng-container *ngSwitchCase="'Gérants'">
-                        <ul *ngIf="categories.open">
-                            <li>
-                                <div class="center-container">
-                                    <div class="left">Sélectionner tout</div>
-                                    <input type="checkbox" [checked]="selectAllGerants" (click)="addAllGerants()"
-                                        class="right">
-                                </div>
-                            </li>
-                            <li *ngFor="let liste of Gerants">
-                                <div class="center-container">
-                                    <div class="left">{{liste.nom}}</div>
-                                    <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)"
-                                        class="right">
-                                </div>
-                            </li>
-                        </ul>
-                    </ng-container>
-                </div>
-            </tr>
-        </table>
-    </div>
+                        <ng-container *ngSwitchCase="'Gérants'">
+                            <ul *ngIf="categories.open">
+                                <li>
+                                    <div class="center-container">
+                                        <div class="left">Sélectionner tout</div>
+                                        <input type="checkbox" [checked]="selectAllGerants" (click)="addAllGerants()"
+                                            class="right">
+                                    </div>
+                                </li>
+                                <li *ngFor="let liste of Gerants">
+                                    <div class="center-container">
+                                        <div class="left">{{liste.nom}}</div>
+                                        <input type="checkbox" [checked]="liste.selectionne"
+                                            (click)="selectEmployee(liste)" class="right">
+                                    </div>
+                                </li>
+                            </ul>
+                        </ng-container>
+                    </div>
+                </tr>
+            </table>
+        </div>
 </div>
-<br>
+<!-- <br>
 Employés Selectionnés :
 <span *ngFor="let element of select">
     {{element}}
-</span>
+</span> -->
