@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { initializeApp } from '@angular/fire/app';
+import { getDatabase, ref, onValue } from 'firebase/database';
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 
 @Component({
   selector: 'app-navbar',
@@ -19,6 +22,9 @@ export class NavbarComponent implements OnInit {
   selectAllServeurs: boolean = false;
   selectAllBarmans: boolean = false;
   selectAllGerants: boolean = false;
+
+  email!: string;
+  role!: string;
 
   constructor() {}
 
@@ -56,18 +62,6 @@ export class NavbarComponent implements OnInit {
     }
     categories.open = !categories.open;
   }
-
-  /*
-  selectEmployee(liste: any) {
-    if (liste.selectionne) {
-      this.select.splice(this.select.indexOf(liste.nom), 1);
-    } else {
-      this.select.push(liste.nom);
-    }
-
-    liste.selectionne = !liste.selectionne;
-  }
-  */
 
   selectEmployee(liste: any) {
     if (liste.selectionne) {
@@ -160,5 +154,46 @@ export class NavbarComponent implements OnInit {
       });
     }
     this.selectAllGerants = !this.selectAllGerants;
+  }
+
+  fetchUserStatus() {
+    const userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
+
+    const firebaseConfig = {
+      apiKey: 'AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo',
+      authDomain: 'psofteat-65478545498421319564.firebaseapp.com',
+      databaseURL:
+        'https://psofteat-65478545498421319564-default-rtdb.firebaseio.com',
+      projectId: 'psofteat-65478545498421319564',
+      storageBucket: 'psofteat-65478545498421319564.appspot.com',
+      messagingSenderId: '135059251548',
+      appId: '1:135059251548:web:fb05e45e1d1631953f6199',
+      measurementId: 'G-5FBJE9WH0X',
+    };
+    const firebaseApp = initializeApp(firebaseConfig);
+    const db = getDatabase(firebaseApp);
+    const auth = getAuth(firebaseApp);
+    let user = auth.currentUser;
+    console.log("Current user :");
+    console.log(user);
+
+    console.log(db);
+    const userEmailRef = ref(
+      db,
+      'users/foodandboost_prop/' + userId + '/email'
+    );
+    const userRoleRef = ref(db, 'users/foodandboost_prop/' + userId + '/role');
+
+    onValue(userEmailRef, (snapshot) => {
+      this.email = snapshot.val();
+      console.log('email : ');
+      console.log(this.email);
+    });
+
+    onValue(userRoleRef, (snapshot) => {
+      this.role = snapshot.val();
+      console.log('role : ');
+      console.log(this.role);
+    });
   }
 }
