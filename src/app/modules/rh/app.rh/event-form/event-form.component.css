@@ -13,17 +13,17 @@
   vertical-align: middle;
 }
 
-.form-control{
+.form-control {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.date{
+.date {
   width: 70px;
 }
 
-td>button {
+button {
   cursor: pointer;
   background: rgb(125, 181, 46);
   border: none;
