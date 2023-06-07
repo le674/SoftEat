@@ -2,23 +2,24 @@
   <table class="table">
     <thead>
       <tr>
-        <th>Personnel</th>
-        <th>Motif</th>
-        <th>Evenement</th>
-        <th>Lieu</th>
-        <th>Prise de poste</th>
-        <th>Fin de poste</th>
-        <th>Répéter</th>
+        <th>Personnel<span class='required'>*</span></th>
+        <th>Motif<span class='required'>*</span></th>
+        <th>Évènement</th>
+        <th>Lieu<span class='required'>*</span></th>
+        <th>Prise de poste<span class='required'>*</span></th>
+        <th>Fin de poste<span class='required'>*</span></th>
+        <th>Répéter<span class='required'>*</span></th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td class="col-xs-3">
-          <input #addPersonnel class="form-control" type="text" placeholder="Personnel*" required />
+          <input #addPersonnel class="form-control" type="text" placeholder="Personnel"
+            (input)="truncateInputValue(addPersonnelInput.nativeElement)" required />
         </td>
         <td class="col-xs-5">
           <select #addMotif required>
-            <option disabled selected value="">Motif*</option>
+            <option disabled selected value="">Motif</option>
             <option value="motif-option1">Travail</option>
             <option value="motif-option2">Congés</option>
             <option value="motif-option3">Entretien</option>
@@ -26,20 +27,22 @@
           </select>
         </td>
         <td class="col-xs-3">
-          <input #addEvent class="form-control" type="text" placeholder="Evènement" />
+          <input #addEvent class="form-control" type="text" placeholder="Évènement"
+            (input)="truncateInputValue(addEventInput.nativeElement)" />
         </td>
         <td class="col-xs-5">
-          <input #addLieu class="form-control" type="text" placeholder="Lieu*" required />
+          <input #addLieu class="form-control" type="text" placeholder="Lieu"
+            (input)="truncateInputValue(addLieuInput.nativeElement)" required />
         </td>
         <td class="col-xs-5">
-          <input #addPrisePoste class="form-control" type="datetime-local" required>
+          <input #addPrisePoste class="form-control date" type="datetime-local" [style.width]="dateWidth" required>
         </td>
         <td class="col-xs-5">
-          <input #addFinPoste class="form-control" type="datetime-local" required>
+          <input #addFinPoste class="form-control date" type="datetime-local" [style.width]="dateWidth" required>
         </td>
         <td class="col-xs-5">
           <select #addRepeter required>
-            <option disabled selected value="">Répéter*</option>
+            <option disabled selected value="">Répéter</option>
             <option value="repeter-option2">Cette semaine</option>
             <option value="repeter-option3">Ce mois</option>
             <option value="repeter-option4">?</option>
@@ -49,7 +52,7 @@
         <td class="col-xs-1 text-center">
           <button
             (click)="onClickAdd(addPersonnel.value, addMotif.value, addEvent.value, addLieu.value, addPrisePoste.value, addFinPoste.value, addRepeter.value)">
-            <i class="fa fa-plus"></i>
+            <i class="fa fa-plus" aria-hidden="true"></i>
           </button>
         </td>
       </tr>
