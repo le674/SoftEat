@@ -20,11 +20,6 @@ export class AppMessageTemplateComponent implements OnInit {
   email!: string;
   // private http!: HttpClient; // Dois être défini dans le constructeur
   heure!: string;
-  
-
-
-
-
 
   constructor(private http: HttpClient) { }
 
@@ -41,6 +36,23 @@ export class AppMessageTemplateComponent implements OnInit {
 
   updateSeparationDate(){
     this.separationDateB = !this.separationDateB;
+  }
+
+  fetchUserInformations() {
+    const firebaseConfig = {
+      apiKey: "AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo",
+      authDomain: "psofteat-65478545498421319564.firebaseapp.com",
+      databaseURL: "https://psofteat-65478545498421319564-default-rtdb.firebaseio.com",
+      projectId: "psofteat-65478545498421319564",
+      storageBucket: "psofteat-65478545498421319564.appspot.com",
+      messagingSenderId: "135059251548",
+      appId: "1:135059251548:web:fb05e45e1d1631953f6199",
+      measurementId: "G-5FBJE9WH0X"
+    };
+    const firebaseApp = initializeApp(firebaseConfig);
+    const db = getDatabase(firebaseApp);
+
+    
   }
 
   fetchUserStatus() {
@@ -78,11 +90,14 @@ export class AppMessageTemplateComponent implements OnInit {
       console.log('Une erreur s\'est produite lors de la récupération des statuts :', error);
     });
 
-    this.text = "Voici mes statuts :\n alertes : " + this.statut.alertes 
-    + ",\n analyse : " + this.statut.analyse + ",\n budget : " 
-    + this.statut.budget + ",\n facture : " + this.statut.facture 
-    + ",\n planning : " + this.statut.planning + ",\n stock : " 
-    + this.statut.stock + ".";
+    // this.text = "Voici mes statuts :\n alertes : " + this.statut.alertes 
+    // + ",\n analyse : " + this.statut.analyse + ",\n budget : " 
+    // + this.statut.budget + ",\n facture : " + this.statut.facture 
+    // + ",\n planning : " + this.statut.planning + ",\n stock : " 
+    // + this.statut.stock + ".";
+    console.log(db);
+    // const userConversations = ref(db, 'restaurants/' + )
+    this.text = "hey";
 
     
 
