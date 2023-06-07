@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog'; 
 
 import { RhRoutingModule } from './rh-routing.module';
 import { AppRhComponent } from './app.rh/app.rh.component';
@@ -12,7 +13,7 @@ import { EventFormComponent } from './app.rh/event-form/event-form.component';
 
 @NgModule({
   declarations: [
-    AppRhComponent,
+    AppRhComponent, 
     CalendarComponent,
     HbarComponent,
     NavbarComponent,
@@ -21,7 +22,8 @@ import { EventFormComponent } from './app.rh/event-form/event-form.component';
   imports: [
     CommonModule,
     RhRoutingModule,
-    FormsModule
+    FormsModule,
+    MatDialogModule
   ],
   exports: [
     AppRhComponent
