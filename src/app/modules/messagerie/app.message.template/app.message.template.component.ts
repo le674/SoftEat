@@ -69,6 +69,7 @@ export class AppMessageTemplateComponent implements OnInit {
     this.text = localStorage.getItem("user_email") as string;
 
 
+
   }
 
   fetchTimeServer(){
