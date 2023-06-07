@@ -4,6 +4,7 @@ import { getDatabase, ref, onValue} from 'firebase/database';
 import { Statut } from '../../../interfaces/statut';
 import { HttpClient } from '@angular/common/http';
 import { FirebaseService } from '../../../services/firebase.service';
+import { AuthentificationService } from '../../../services/authentification.service';
 
 
 @Component({
@@ -35,7 +36,7 @@ export class AppMessageTemplateComponent implements OnInit {
     this.db = this.firebaseService.getDatabaseInstance();
     this.fetchUserStatus();
     this.fetchTimeServer();
-    
+    console.log(this.email);
   }
 
   updateSeparationDate(){
@@ -63,7 +64,14 @@ export class AppMessageTemplateComponent implements OnInit {
       console.log('Une erreur s\'est produite lors de la récupération des statuts :', error);
     });
 
-    this.text = "Voici mes statuts :\n analyse : " + this.statut.analyse + ",\n budget : " + this.statut.budget + ",\n facture : " + this.statut.facture + ",\n planning : " + this.statut.planning + ",\n stock : " + this.statut.stock + ".";
+    // this.text = "Voici mes statuts :\n alertes : " + this.statut.alertes 
+    // + ",\n analyse : " + this.statut.analyse + ",\n budget : " 
+    // + this.statut.budget + ",\n facture : " + this.statut.facture 
+    // + ",\n planning : " + this.statut.planning + ",\n stock : " 
+    // + this.statut.stock + ".";
+    console.log(this.db);
+    // const userConversations = ref(db, 'restaurants/' + )
+    this.text = "hey";
 
 
   }
