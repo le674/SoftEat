@@ -25,8 +25,8 @@
             <message-template></message-template>
          </div>
          <div id="message_bar">
-            <form id="form" action="">
-               <input id="input" autocomplete="off" /><button><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+            <form (ngSubmit)="sendMessage(messageInput?.value ?? '')" id="'form">
+               <input id="messageInput" autocomplete="off" #messageInput/><button><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
             </form>
          </div>
       </div>
