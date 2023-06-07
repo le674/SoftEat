@@ -1,100 +1,129 @@
 #display {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 #head {
-	margin-top: 50px;
-	margin-bottom: 20px;
+  margin-top: 50px;
+  margin-bottom: 20px;
 }
 
 h1 {
-	
-	font-weight: normal;
-	color: rgb(125, 181, 46);
-	/* position: fixed; */
-	top: 0;
-	z-index: 1;
-	/* width: 100%; */
+  font-weight: normal;
+  color: rgb(125, 181, 46);
+  z-index: 1;
 }
 
 #content {
-	display: flex;
-	flex-direction: row;
-	align-items: stretch;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: 80vh;
 }
 
 #conversation_list {
 	display: flex;
-	height: 80vh;  /*hauteur maximale pour la section de conversation*/
+	height: 100%;  /*hauteur maximale pour la section de conversation*/
 	overflow-y: auto;  /* afficher une barre de défilement si la section dépasse la hauteur maximale */
 	background-color: #ffffff;
-	width: 16%;
+	width: 20%;
+  border: 2px solid rgb(125, 181, 46);
+  border-right: none;
 }
 
 #conversation {
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-    border: 2px solid rgb(125, 181, 46);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 2px solid rgb(125, 181, 46);
 }
 
 #messages {
-	background-color: #ebebeb;
-	overflow-wrap: break-word;
-	height: 75vh;  /*hauteur maximale pour la section de conversation*/
-	overflow-y: auto;  /* afficher une barre de défilement si la section dépasse la hauteur maximale */
+  background-color: #f4f2f2;
+  overflow-wrap: break-word;
+  height: 100%;  /*hauteur maximale pour la section de conversation */
+  overflow-y: auto;  /* afficher une barre de défilement si la section dépasse la hauteur maximale */
+  padding: 10px;
+
 }
 
 #form {
-	background: rgb(125, 181, 46);
-	display: flex;
-	box-sizing: border-box;
-	backdrop-filter: blur(10px);
-	height: 5vh;
+  background: #c9c9c9;
+  display: flex;
+  box-sizing: border-box;
+  backdrop-filter: blur(10px);
 }
 
 #input {
 	border: none;
-	padding: 0 1rem;
+	padding: 0.20rem 1rem;
 	flex-grow: 1;
-	border-radius: 2rem;
+	border-radius: 3px;
 	margin: 0.25rem;
 }
 
 #input:focus {
-	outline: none;
+  outline: none;
 }
 
 #form>button {
-	background: #333;
-	border: none;
-	padding: 0 1rem;
-	margin: 0.25rem;
-	border-radius: 3px;
-	outline: none;
-	color: #fff;
+  background: rgb(125, 181, 46);
+  border: none;
+  padding: 0 1rem;
+  margin: 0.25rem;
+  border-radius: 3px;
+  outline: none;
+  color: #fff;
 }
 
 #conversation_list ul {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 
 li a {
-	display: block;
-	color: #000;
-	padding: 8px 16px;
-	text-decoration: none;
+  display: block;
+  color: #000;
+  padding: 8px 16px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+ul li a {
+  /* position: relative; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+ul li::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left:10%; /* Ajustez cette valeur pour contrôler la position de la ligne partielle */
+	right: 10%; /* Ajustez cette valeur pour contrôler la largeur de la ligne partielle */
+	height: 1px;
+	background-color: rgb(212, 212, 212);
 }
 
 li a.active {
-	background-color: rgb(125, 181, 46);
-	color: rgb(255, 255, 255);
+  background-color: rgb(125, 181, 46);
+  color: rgb(255, 255, 255);
 }
 
 li a:hover:not(.active) {
-	background-color: rgb(125, 181, 46);
-	color: white;
+  background-color: rgb(125, 181, 46);
+  color: white;
+}
+
+.notification-badge {
+  background-color: red;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 5px;
 }

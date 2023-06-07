@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ViewChild, ElementRef, AfterViewInit} from '@angular/core';
-import { UserInteractionService } from 'src/app/services/user-interaction.service';
-import { User } from 'src/app/interfaces/user';
-import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
-import { AngularFireAuth, AngularFireAuthModule } from "@angular/fire/compat/auth";
-import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import {DayPilot, DayPilotSchedulerComponent} from 'daypilot-pro-angular';
 import {SchedulerDataService} from './scheduler-data.service';
+
+
+// Pour bouton "ajouter évènement" et faire apparaître le form en pop-up
+import { MatDialog } from '@angular/material/dialog'; // Import MatDialog for opening a dialog
+import { EventFormComponent } from '../event-form/event-form.component'; // Import the EventFormComponent
+
+
 @Component({
   selector: 'app-calendar',
   template: `<daypilot-scheduler [config]="config" [events]="events" #scheduler></daypilot-scheduler>`,
@@ -122,5 +124,18 @@ export class CalendarComponent implements AfterViewInit {
       this.events = result;
     });
   }
+  constructor (private dialog: MatDialog){
+    
+  }
 
+  ngOnInit(): void {
+    console.log("ngOnInit")
+    
+  }
+
+  openEventForm(): void {
+    const dialogRef = this.dialog.open(EventFormComponent, {
+      width: '85vw', height: '85vh', // Set the width of the dialog as per your requirements
+      // You can also configure other properties of the dialog, such as height, position, etc.
+    });
 }
