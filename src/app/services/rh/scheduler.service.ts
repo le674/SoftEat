@@ -1,13 +1,20 @@
-import {Injectable} from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import {DayPilot} from 'daypilot-pro-angular';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import { FirebaseApp, initializeApp } from "@angular/fire/app";
 import { getDatabase, ref, onValue} from 'firebase/database';
-import { FirebaseService } from '../../../../services/firebase.service'
+import { FirebaseService } from '../firebase.service'
 
-@Injectable()
-export class SchedulerDataService {
+@Injectable({providedIn: 'root'})
+export class SchedulerService implements OnInit{
+  barColor!:string;
+  end!:string;
+  id!:string;
+  resource!:string;
+  start!:string;
+  text!:string;
+  private db: any;
 
   resources: DayPilot.ResourceData[] = [
     {
@@ -26,34 +33,13 @@ export class SchedulerDataService {
     }
   ];
 
-  events: DayPilot.EventData[] = [
-    {
-      id: '1',
-      resource: 'R1',
-      start: '2023-10-03',
-      end: '2023-10-03',
-      text: '9h30 - 13h30',
-      barColor: '#e69138'
-    },
-    {
-      id: '2',
-      resource: 'R3',
-      start: '2023-10-02',
-      end: '2023-10-02',
-      text: '10h-14h',
-      barColor: '#6aa84f'
-    },
-    {
-      id: '3',
-      resource: 'R3',
-      start: '2023-10-06',
-      end: '2023-10-06',
-      text: '15h-18h',
-      barColor: '#3c78d8'
-    }
-  ];
+  events: DayPilot.EventData[] = [];
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private firebaseService: FirebaseService) {
+  }
+
+  ngOnInit(): void {
+    this.db = this.firebaseService.getDatabaseInstance();
   }
 
   getEvents(from: DayPilot.Date, to: DayPilot.Date): Observable<any[]> {
@@ -69,15 +55,8 @@ export class SchedulerDataService {
   }
 
   getResources(): Observable<any[]> {
-
-    // simulating an HTTP request
-    return new Observable(observer => {
-      setTimeout(() => {
-        observer.next(this.resources);
-      }, 200);
-    });
+    return this.db.list('/backend_resources').valueChanges();
+  }
 
     // return this.http.get("/api/resources");
   }
-
-}
