@@ -11,7 +11,7 @@ import { EventFormComponent } from '../event-form/event-form.component'; // Impo
 
 @Component({
   selector: 'app-calendar',
-  template: `<daypilot-scheduler [config]="config" [events]="events" #scheduler></daypilot-scheduler>`,
+  templateUrl: './calendar.component.html',
   styles: [``]
 })
 export class CalendarComponent implements AfterViewInit {
@@ -99,7 +99,8 @@ export class CalendarComponent implements AfterViewInit {
     treeEnabled: true,
   };
 
-  constructor(private ds: SchedulerDataService) {
+  constructor(private ds: SchedulerDataService, private dialog: MatDialog) {
+    
   }
 
   async editEvent(e: DayPilot.Event): Promise<void> {
@@ -124,18 +125,11 @@ export class CalendarComponent implements AfterViewInit {
       this.events = result;
     });
   }
-  constructor (private dialog: MatDialog){
-    
-  }
-
-  ngOnInit(): void {
-    console.log("ngOnInit")
-    
-  }
-
+  
   openEventForm(): void {
     const dialogRef = this.dialog.open(EventFormComponent, {
       width: '85vw', height: '85vh', // Set the width of the dialog as per your requirements
       // You can also configure other properties of the dialog, such as height, position, etc.
     });
+}
 }
