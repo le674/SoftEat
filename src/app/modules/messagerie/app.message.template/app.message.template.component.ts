@@ -20,47 +20,22 @@ export class AppMessageTemplateComponent implements OnInit {
   email!: any;
   // private http!: HttpClient; // Dois être défini dans le constructeur
   heure!: string;
-  private db: any;
-  
-  constructor(private firebaseService: FirebaseService, private http: HttpClient) { }
+
+  constructor(private http: HttpClient, private authentificationService : AuthentificationService) { }
 
   ngOnInit(): void {
     this.message = "received";
     this.text = "Bonjour la messagerie !";
     this.separationDateB = true;
-    this.statut = {
-      is_prop:false, 
-      stock:"", 
-      alertes:"", 
-      analyse:"", 
-      budget:"", 
-      facture:"", 
-      planning:""
-    };
-    this.db = this.firebaseService.getDatabaseInstance();
+    this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
+    this.email = this.authentificationService.userData.email;
     this.fetchUserStatus();
     this.fetchTimeServer();
+    console.log(this.email);
   }
 
   updateSeparationDate(){
     this.separationDateB = !this.separationDateB;
-  }
-
-  fetchUserInformations() {
-    const firebaseConfig = {
-      apiKey: "AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo",
-      authDomain: "psofteat-65478545498421319564.firebaseapp.com",
-      databaseURL: "https://psofteat-65478545498421319564-default-rtdb.firebaseio.com",
-      projectId: "psofteat-65478545498421319564",
-      storageBucket: "psofteat-65478545498421319564.appspot.com",
-      messagingSenderId: "135059251548",
-      appId: "1:135059251548:web:fb05e45e1d1631953f6199",
-      measurementId: "G-5FBJE9WH0X"
-    };
-    const firebaseApp = initializeApp(firebaseConfig);
-    const db = getDatabase(firebaseApp);
-
-    
   }
 
   fetchUserStatus() {
