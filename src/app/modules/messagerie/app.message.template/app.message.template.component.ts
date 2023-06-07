@@ -78,7 +78,11 @@ export class AppMessageTemplateComponent implements OnInit {
       console.log('Une erreur s\'est produite lors de la récupération des statuts :', error);
     });
 
-    this.text = "Voici mes statuts :\n alertes : " + this.statut.alertes + ",\n analyse : " + this.statut.analyse + ",\n budget : " + this.statut.budget + ",\n facture : " + this.statut.facture + ",\n planning : " + this.statut.planning + ",\n stock : " + this.statut.stock + ".";
+    this.text = "Voici mes statuts :\n alertes : " + this.statut.alertes 
+    + ",\n analyse : " + this.statut.analyse + ",\n budget : " 
+    + this.statut.budget + ",\n facture : " + this.statut.facture 
+    + ",\n planning : " + this.statut.planning + ",\n stock : " 
+    + this.statut.stock + ".";
 
     
 
