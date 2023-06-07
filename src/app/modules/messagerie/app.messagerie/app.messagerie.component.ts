@@ -15,6 +15,11 @@ export class AppMessagerieComponent implements OnInit {
   private db: any;
   statut!: Statut;
   userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
+  analyse!: boolean;
+  budget!: boolean;
+  facture!: boolean;
+  planning!: boolean;
+  stock!: boolean; //(this.statut.stock === 'rw');
 
   constructor(private firebaseService: FirebaseService) { }
 
@@ -23,15 +28,22 @@ export class AppMessagerieComponent implements OnInit {
     this.notification = [true, true, true, true, true, true, true];
     // this.db = this.firebaseService.getDatabaseInstance();
     this.statut = this.firebaseService.fetchUserStatus(this.userId);
+    this.showCanal();
   }
 
-  date: Date = new Date();
 
-  analyse = true;
-  budget = true;
-  facture = true;
-  planning = true;
-  stock = (this.statut.stock === 'rw');
+  showCanal() {
+    if(this.statut.stock === 'rw' || this.statut.stock === 'r' ) {
+      this.stock = true;
+      console.log(this.stock);
+    }
+    if(this.statut.analyse === 'rw' || this.statut.analyse === 'r' ) this.stock = true;
+    if(this.statut.budget === 'rw' || this.statut.budget === 'r' ) this.budget = true;
+    if(this.statut.facture === 'rw' || this.statut.facture === 'r' ) this.facture = true;
+    if(this.statut.planning === 'rw' || this.statut.planning === 'r' ) this.planning = true;
+  }
+  
+
   
 
   updateNotification(index: number){
