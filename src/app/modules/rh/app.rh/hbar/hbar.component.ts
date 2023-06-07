@@ -12,10 +12,22 @@ export class HbarComponent implements OnInit {
   @ViewChild('autofillRTT') autofillRTT!: ElementRef;
   @ViewChild('autofillMate') autofillMate!: ElementRef;
   @ViewChild('autofillPate') autofillPate!: ElementRef;
+  @ViewChild('dateDebut') dateDebutInput!: ElementRef<HTMLInputElement>;
+  dateWidth = '150px'; // Default width
   constructor() { }
 
+  /* Les 2 méthodes suivantes permettent de rendre l'espace occupé par la date responsive*/ 
+  ngAfterViewInit(): void {
+    this.calculateInputWidth();
+  }
+
+  calculateInputWidth(): void {
+    const inputElement = this.dateDebutInput.nativeElement;
+    const contentWidth = inputElement.scrollWidth + 'px';
+    this.dateWidth = contentWidth;
+  }
+
   ngOnInit(): void {
-    /*this.motif = "";*/
   }
 
   autofillInput(value: string): void {

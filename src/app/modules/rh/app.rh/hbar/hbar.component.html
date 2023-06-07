@@ -21,15 +21,15 @@
             <form>
                 <div class="line">
                     <label for="nom">Motif </label>
-                    <input #motif id="motif" type="text" placeholder="*Champ obligatoire" required>
+                    <input #motif id="motif" type="text" placeholder="Champ obligatoire*" [style.width]="dateWidth" required>
                 </div>
                 <div class="line">
                     <label for="début">Date début </label>
-                    <input type="date" id="début" name="début" required>
+                    <input #dateDebut type="date" id="début" name="début" [style.width]="dateWidth" required>
                 </div>
                 <div class="line">
-                    <label for="fin">Date début </label>
-                    <input type="date" id="fin" name="fin" required>
+                    <label for="fin">Date fin </label>
+                    <input #dateFin type="date" id="fin" name="fin" [style.width]="dateWidth" required>
                 </div>
 
                 <div class="picker">
