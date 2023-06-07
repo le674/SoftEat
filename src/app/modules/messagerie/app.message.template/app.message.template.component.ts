@@ -3,7 +3,7 @@ import { FirebaseApp, initializeApp } from "@angular/fire/app";
 import { getDatabase, ref, onValue} from 'firebase/database';
 import { Statut } from '../../../interfaces/statut';
 import { HttpClient } from '@angular/common/http';
-import { FirebaseService } from '../../../services/firebase.service';
+import { FirebaseService } from '../../../services/firebase.service';import { AuthentificationService } from '../../../services/authentification.service';
 
 
 @Component({
@@ -35,28 +35,11 @@ export class AppMessageTemplateComponent implements OnInit {
     this.db = this.firebaseService.getDatabaseInstance();
     this.fetchUserStatus();
     this.fetchTimeServer();
-    
+    console.log(this.email);
   }
 
   updateSeparationDate(){
     this.separationDateB = !this.separationDateB;
-  }
-
-  fetchUserInformations() {
-    const firebaseConfig = {
-      apiKey: "AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo",
-      authDomain: "psofteat-65478545498421319564.firebaseapp.com",
-      databaseURL: "https://psofteat-65478545498421319564-default-rtdb.firebaseio.com",
-      projectId: "psofteat-65478545498421319564",
-      storageBucket: "psofteat-65478545498421319564.appspot.com",
-      messagingSenderId: "135059251548",
-      appId: "1:135059251548:web:fb05e45e1d1631953f6199",
-      measurementId: "G-5FBJE9WH0X"
-    };
-    const firebaseApp = initializeApp(firebaseConfig);
-    const db = getDatabase(firebaseApp);
-
-    
   }
 
   fetchUserStatus() {
