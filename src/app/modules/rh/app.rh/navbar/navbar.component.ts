@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,} from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
@@ -20,9 +20,11 @@ export class NavbarComponent implements OnInit {
   selectAllBarmans: boolean = false;
   selectAllGerants: boolean = false;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
+    
+
     this.Categories = [
       { nom: 'Cuisiniers', open: false, buttonname: '▼' },
       { nom: 'Serveurs', open: false, buttonname: '▼' },
