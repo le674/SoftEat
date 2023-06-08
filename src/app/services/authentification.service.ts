@@ -25,7 +25,7 @@ const app = initializeApp(firebaseConfig);
 })
 export class AuthentificationService {
   auth = getAuth(app);
-  userData: any; // Save logged in user data
+  public userData: any; // Save logged in user data
   private connecter:boolean;
   constructor(public router: Router){
     if((location.hostname === "localhost") && (!FIREBASE_PROD)) {

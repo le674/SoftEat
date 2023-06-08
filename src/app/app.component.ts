@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { FirebaseApp } from "@angular/fire/app";
+import { FirebaseApp, initializeApp } from "@angular/fire/app";
 import { NavigationEnd, Router } from '@angular/router';
-import { getDatabase, ref, child, get} from 'firebase/database';
+
 
 @Component({
   selector: 'app-root',
@@ -18,4 +18,6 @@ export class AppComponent {
   ngOnInit(){
 
   }
+
+  
 }
