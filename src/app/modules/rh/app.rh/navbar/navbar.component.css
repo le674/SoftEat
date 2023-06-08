@@ -1,38 +1,52 @@
 h1 {
-  width: 300px;
   margin-top: 50px;
   margin-bottom: 50px;
   font-weight: normal;
-  text-align: center;
   color: rgb(125, 181, 46);
 }
 
-.navbar {
-  width: 300px; /* Adjust the width as per your requirements */
-  height: 400px; /* Adjust the height as per your requirements */
-  overflow: auto;
+
+.sidebar {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
 }
+
+.navbar {
+  padding: 0%;
+  display: flex;
+  align-items: flex-start;
+  overflow: auto;
+  height: 70vh;
+  border: 2px solid rgb(125, 181, 46);
+}
+
 .navbar::-webkit-scrollbar {
-  width: 10px; /* width of the scrollbar */
+  width: 3px;
+  /* width of the scrollbar */
 }
 
 .navbar::-webkit-scrollbar-track {
-  background-color: #f1f1f1; /* background color of the scrollbar track */
+  background-color: #f1f1f1;
+  /* background color of the scrollbar track */
 }
 
 .navbar::-webkit-scrollbar-thumb {
-  background-color: #888; /* color of the scrollbar thumb */
+  background-color: #888;
+  /* color of the scrollbar thumb */
 }
 
 .navbar::-webkit-scrollbar-thumb:hover {
-  background-color: #555; /* color of the scrollbar thumb on hover */
+  background-color: #555;
+  /* color of the scrollbar thumb on hover */
 }
 
 
 /* Styles pour les boutons */
 button {
   background-color: rgb(125, 181, 46);
-  color: white;
+  color: rgb(255, 255, 255);
   border: none;
   padding: 5px 10px;
   text-align: center;
@@ -45,7 +59,6 @@ button {
 /* Styles pour mettre des informations à droite et à gauche de la case */
 .center-container {
   display: flex;
-  justify-content: space-between;
 }
 
 .left {
@@ -58,11 +71,15 @@ button {
 
 table {
   width: 300px;
+  
 }
 
 tr {
-  border: 3px solid black;
+  border-top: 1px solid rgb(125, 181, 46);
+  border-bottom: 1px solid rgb(125, 181, 46);
 }
+
+
 
 ul {
   list-style: none;
@@ -71,8 +88,8 @@ ul {
 }
 
 li {
-  background-color: #f9f9f9;
-  padding: 10px; 
+  background-color: #ffffff;
+  padding: 10px;
   font-size: 14px;
   font-weight: lighter;
 }
@@ -96,7 +113,8 @@ input[type="checkbox"] {
 
 /* Style de la coche */
 input[type="checkbox"]:checked::before {
-  content: "\2713"; /* Code unicode pour le symbole de la coche */
+  content: "\2713";
+  /* Code unicode pour le symbole de la coche */
   position: absolute;
   top: 50%;
   left: 50%;

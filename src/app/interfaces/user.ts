@@ -18,6 +18,10 @@ export class User {
     planning?:string
     is_prop?:boolean
   };
+  public "calendar": {
+    id?:string;
+    api_key?:string;
+  };
   public "is_prop": boolean;
   public "roles": Array<string>;
   public "prev_aliments": string;
@@ -38,6 +42,7 @@ export class User {
     this.is_prop = false
     this.statut = Object.assign({"alertes": ""},{"stock": ""},
      {"analyse": ""}, {"budget": ""},{ "facture": ""}, {"planning": ""})
+    this.calendar = Object.assign({"id": ""},{"api_key": ""})
   }
 
   getStatus(right:string):string[]{
@@ -105,6 +110,9 @@ export class User {
     this.statut = Object.assign({}, user.statut)
   }
 
+  getCalendar(): { id?: string; api_key?: string } {
+    return this.calendar;
+  }
 
   remove_null(){
     this.statut = {

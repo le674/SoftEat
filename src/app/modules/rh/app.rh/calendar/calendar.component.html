@@ -1,7 +1,5 @@
 <p>SoftEat Google Calendar</p>
 
 <!--Add buttons to initiate auth sequence and sign out-->
-<button #authorizeButton (click)="handleAuthClick()">Authorize</button>
-<button #signoutButton (click)="handleSignoutClick()">Sign Out</button>
-<button #addEventButton (click)="createEvent()">Add Event</button>
-<pre #content style="white-space: pre-wrap;"></pre>
+<button (click)="openEventForm()">Ajouter un évènement</button>
+<daypilot-scheduler [config]="config" [events]="events" #scheduler></daypilot-scheduler>

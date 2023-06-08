@@ -1,0 +1,35 @@
+.remove {
+  background: #f1f1f1;
+  /*td {
+      font-style: italic;
+    }*/
+}
+
+.required {
+  color: red;
+}
+
+.table>tbody>tr>td {
+  vertical-align: middle;
+}
+
+.form-control {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.date {
+  width: 70px;
+}
+
+button {
+  cursor: pointer;
+  background: rgb(125, 181, 46);
+  border: none;
+  padding: 0 1rem;
+  margin: 0.25rem;
+  border-radius: 3px;
+  outline: none;
+  color: #fff;
+}

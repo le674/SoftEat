@@ -29,6 +29,8 @@ export class NavbarComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
+    
+
     this.Categories = [
       { nom: 'Cuisiniers', open: false, buttonname: '▼' },
       { nom: 'Serveurs', open: false, buttonname: '▼' },

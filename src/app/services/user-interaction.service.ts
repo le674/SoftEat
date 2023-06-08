@@ -62,6 +62,8 @@ export class UserInteractionService {
         add_user.statut.planning = user.child("statut/planning").val();
         add_user.statut.is_prop = user.child("statut/is_prop").val();
         add_user.to_roles();
+        add_user.calendar.id = user.child("calendar/id").val();
+        add_user.calendar.api_key = user.child("calendar/api_key").val();
 
         this.prop_list.employee.push(add_user);
       })
@@ -125,6 +127,8 @@ export class UserInteractionService {
         this.user.statut.planning = user.child("statut/planning").val();
         this.user.statut.is_prop = user.child(`statut/is_prop`).val();
         this.user.to_roles();
+        this.user.calendar.id = user.child("calendar/id").val();
+        this.user.calendar.api_key = user.child("calendar/api_key").val();
       }
     })
     return this.user
