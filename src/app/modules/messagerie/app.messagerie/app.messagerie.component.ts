@@ -27,15 +27,12 @@ export class AppMessagerieComponent implements OnInit {
     this.firebaseApp = firebaseApp;
   }
 
-  
-
   ngOnInit(): void {
     this.text = "it works !";
     this.notification = [true, true, true, true, true, true, true];
     this.statut = this.firebaseService.fetchUserStatus(this.userId);
     // this.showCanal();
   }
-
 
   showCanal() {
     if(this.statut.stock === 'rw' || this.statut.stock === 'r' ) {
@@ -49,12 +46,6 @@ export class AppMessagerieComponent implements OnInit {
   }
 
   messageInput = document.getElementById("messageInput");
-
-  updateNotification(index: number){
-    this.notification[index] = !this.notification[index];
-  }
-  
-
   
   sendMessage(){
     if(this.inputText != '') {
