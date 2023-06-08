@@ -5,7 +5,6 @@ import { Statut } from '../../../interfaces/statut';
 import { HttpClient } from '@angular/common/http';
 <<<<<<< HEAD
 import { FirebaseService } from '../../../services/firebase.service';
-import { Auth, getAuth, onAuthStateChanged, user } from '@angular/fire/auth';
 =======
 import { FirebaseService } from '../../../services/firebase.service';import { AuthentificationService } from '../../../services/authentification.service';
 >>>>>>> 6cf05cb (get user data)
@@ -36,7 +35,6 @@ export class AppMessageTemplateComponent implements OnInit {
     this.email = this.authentificationService.userData.email;
     this.fetchUserStatus();
     this.fetchTimeServer();
-    console.log(this.email);
   }
 
   updateSeparationDate(){
@@ -70,7 +68,8 @@ export class AppMessageTemplateComponent implements OnInit {
     // + ",\n planning : " + this.statut.planning + ",\n stock : " 
     // + this.statut.stock + ".";
     // const userConversations = ref(db, 'restaurants/' + )
-    this.text = "hey";
+    this.text = localStorage.getItem("user_email") as string;
+
 
 
 
