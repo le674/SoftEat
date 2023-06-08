@@ -76,7 +76,7 @@ export class CalendarViewComponent implements AfterViewInit {
     loadEvents(): void {
       const froom = this.nav.control.visibleStart();
       const to = this.nav.control.visibleEnd();
-      from(this.ds.getEvents(froom, to,"telecom","ping_11")).subscribe(result => {
+      from(this.ds.getEvents(froom, to,"foodandboost_prop","0uNzmnBI0jYYspF4wNXdRd2xw9Q2")).subscribe(result => {
         this.events = result;
       });
     }
