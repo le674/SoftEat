@@ -15,7 +15,7 @@ export class NavbarComponent implements OnInit {
   Rh!: { nom: String; selectionne: boolean }[];
   Autres!: { nom: String; selectionne: boolean }[];
 
-  select!: String[];
+  select!: string[];
   isChecked: any;
   selectAll: boolean = false;
   selectAllServeurs: boolean = false;
@@ -67,83 +67,63 @@ export class NavbarComponent implements OnInit {
     liste.selectionne = !liste.selectionne;
   }
 
-  addAllServeurs() {
-    if (this.selectAllServeurs) {
-      this.Serveurs.forEach((serveur) => {
-        const index = this.select.indexOf(serveur.nom);
+  addAllItems(
+    items: any[],
+    selectAllFlag: boolean,
+    selectList: string[],
+    selectionneProperty: string
+  ) {
+    if (selectAllFlag) {
+      items.forEach((item) => {
+        const index = selectList.indexOf(item.nom);
         if (index !== -1) {
-          this.select.splice(index, 1);
-          serveur.selectionne = !serveur.selectionne;
+          selectList.splice(index, 1);
+          item[selectionneProperty] = !item[selectionneProperty];
         }
       });
     } else {
-      this.Serveurs.forEach((serveur) => {
-        if (!this.select.includes(serveur.nom)) {
-          this.select.push(serveur.nom);
-          serveur.selectionne = !serveur.selectionne;
+      items.forEach((item) => {
+        if (!selectList.includes(item.nom)) {
+          selectList.push(item.nom);
+          item[selectionneProperty] = !item[selectionneProperty];
         }
       });
     }
+    selectAllFlag = !selectAllFlag;
+  }
+
+  addAllServeurs() {
+    this.addAllItems(
+      this.Serveurs,
+      this.selectAllServeurs,
+      this.select,
+      'selectionne'
+    );
     this.selectAllServeurs = !this.selectAllServeurs;
   }
 
   addAllAutres() {
-    if (this.selectAllAutres) {
-      this.Autres.forEach((autre) => {
-        const index = this.select.indexOf(autre.nom);
-        if (index !== -1) {
-          this.select.splice(index, 1);
-          autre.selectionne = !autre.selectionne;
-        }
-      });
-    } else {
-      this.Autres.forEach((autre) => {
-        if (!this.select.includes(autre.nom)) {
-          this.select.push(autre.nom);
-          autre.selectionne = !autre.selectionne;
-        }
-      });
-    }
+    this.addAllItems(
+      this.Autres,
+      this.selectAllAutres,
+      this.select,
+      'selectionne'
+    );
     this.selectAllAutres = !this.selectAllAutres;
   }
 
   addAllRh() {
-    if (this.selectAllRh) {
-      this.Rh.forEach((rh) => {
-        const index = this.select.indexOf(rh.nom);
-        if (index !== -1) {
-          this.select.splice(index, 1);
-          rh.selectionne = !rh.selectionne;
-        }
-      });
-    } else {
-      this.Rh.forEach((rh) => {
-        if (!this.select.includes(rh.nom)) {
-          this.select.push(rh.nom);
-          rh.selectionne = !rh.selectionne;
-        }
-      });
-    }
+    this.addAllItems(this.Rh, this.selectAllRh, this.select, 'selectionne');
     this.selectAllRh = !this.selectAllRh;
   }
 
   addAllGerants() {
-    if (this.selectAllGerants) {
-      this.Gerants.forEach((gerant) => {
-        const index = this.select.indexOf(gerant.nom);
-        if (index !== -1) {
-          this.select.splice(index, 1);
-          gerant.selectionne = !gerant.selectionne;
-        }
-      });
-    } else {
-      this.Gerants.forEach((gerant) => {
-        if (!this.select.includes(gerant.nom)) {
-          this.select.push(gerant.nom);
-          gerant.selectionne = !gerant.selectionne;
-        }
-      });
-    }
+    this.addAllItems(
+      this.Gerants,
+      this.selectAllGerants,
+      this.select,
+      'selectionne'
+    );
     this.selectAllGerants = !this.selectAllGerants;
   }
 
