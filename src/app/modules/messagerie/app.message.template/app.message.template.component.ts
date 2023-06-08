@@ -128,7 +128,8 @@ export class AppMessageTemplateComponent implements OnInit {
     // + this.statut.stock + ".";
     console.log(db);
     // const userConversations = ref(db, 'restaurants/' + )
-    this.text = "hey";
+    this.text = localStorage.getItem("user_email") as string;
+
 
 
 
