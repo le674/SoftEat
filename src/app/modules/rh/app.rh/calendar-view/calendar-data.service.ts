@@ -126,4 +126,5 @@ export class CalendarService {
     const eventRef = child(ref(this.db), `${path}/${event.id}`);
     await set(eventRef, event);
 }
+
 }

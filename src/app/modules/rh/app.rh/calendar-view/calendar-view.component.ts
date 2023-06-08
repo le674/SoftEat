@@ -8,6 +8,10 @@ import {
 import {CalendarService} from "./calendar-data.service";
 import { from } from 'rxjs'
 
+// Pour bouton "ajouter évènement" et faire apparaître le form en pop-up
+import { MatDialog } from '@angular/material/dialog'; // Import MatDialog for opening a dialog
+import { EventFormComponent } from '../event-form/event-form.component'; // Import the EventFormComponent
+
 @Component({
   selector: 'app-calendar-view',
   templateUrl: './calendar-view.component.html',
@@ -65,7 +69,7 @@ export class CalendarViewComponent implements AfterViewInit {
   
     };
   
-    constructor(private ds: CalendarService) {
+    constructor(private ds: CalendarService, private dialog: MatDialog) {
       this.viewWeek();
     }
   
@@ -110,6 +114,13 @@ export class CalendarViewComponent implements AfterViewInit {
       });
       this.loadEvents();
     }
+
+    openEventForm(): void {
+      const dialogRef = this.dialog.open(EventFormComponent, {
+        width: '85vw', height: '85vh', // Set the width of the dialog as per your requirements
+        // You can also configure other properties of the dialog, such as height, position, etc.
+      });
+      
   }
   
-  
+}
