@@ -38,7 +38,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Unsubscribe } from 'firebase/auth';
 import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_FIRESTORE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
-import { child, connectDatabaseEmulator, Database, DatabaseReference, get, getDatabase, onValue, ref, remove, update } from 'firebase/database';
+import { environment } from 'src/environments/environment';
+import { child, connectDatabaseEmulator, Database, DatabaseReference, get, set, getDatabase, onValue, ref, remove, update } from 'firebase/database';
 import { collection, connectFirestoreEmulator, Firestore, getDocs, getFirestore } from "firebase/firestore";
 import { FirebaseApp, initializeApp } from "@angular/fire/app";
 import { map } from 'rxjs/operators';
@@ -104,4 +105,26 @@ export class CalendarService {
 
     return this.events;
   }
+
+  async add_event(prop: string, user: string, newEvent: DayPilot.EventData): Promise<void> {
+    // path to save the event
+    const path = `users/${prop}/${user}/planning/events`;
+
+    // convert the DayPilot.Date objects to ISO date strings
+    const startString = newEvent.start.toString("yyyy-MM-ddTHH:mm:ss");
+    const endString = newEvent.end.toString("yyyy-MM-ddTHH:mm:ss");
+
+    // create an Event object similar to how you're storing them in Firebase
+    const event = {
+        start: startString,
+        end: endString,
+        text: newEvent.text,
+        id: newEvent.id
+    };
+
+    // generate a new child location using push() and save the event data
+    // replace 'this.db' with your Firebase Realtime Database reference
+    const eventRef = child(ref(this.db), `${path}/${event.id}`);
+    await set(eventRef, event);
+}
 }

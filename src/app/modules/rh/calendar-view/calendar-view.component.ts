@@ -101,8 +101,15 @@ export class CalendarViewComponent implements AfterViewInit {
       this.configWeek.visible = false;
       this.configMonth.visible = true;
     }
-  
-  
+    addEvent():void{
+      this.ds.add_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', {
+        start: DayPilot.Date.today(), 
+        end: DayPilot.Date.today().addDays(1), 
+        text: 'New Event', 
+        id: 'newEventId'
+      });
+      this.loadEvents();
+    }
   }
   
   
