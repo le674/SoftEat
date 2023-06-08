@@ -3,6 +3,7 @@ import { AppMessagerieComponent  } from './app.messagerie/app.messagerie.compone
 import { AppRoutingModule } from './app-routing.module';
 import { AppMessageTemplateComponent } from './app.message.template/app.message.template.component';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -11,7 +12,8 @@ import { CommonModule } from '@angular/common';
   ],
   imports:[ 
     AppRoutingModule,
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
   exports: [
     AppMessagerieComponent,
