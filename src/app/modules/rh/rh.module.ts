@@ -2,10 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog'; 
-import { SchedulerDataService } from './app.rh/calendar/scheduler-data.service';
 import { CalendarService } from './app.rh/calendar-view/calendar-data.service';
 import { BrowserModule } from '@angular/platform-browser';
-import { CalendarComponent } from './app.rh/calendar/calendar.component';
 import { DayPilotModule } from 'daypilot-pro-angular';
 import { HttpClientModule } from '@angular/common/http';
 import { RhRoutingModule } from './rh-routing.module';
@@ -18,7 +16,6 @@ import { CalendarViewComponent } from './app.rh/calendar-view/calendar-view.comp
 @NgModule({
   declarations: [
     AppRhComponent, 
-    CalendarComponent,
     HbarComponent,
     NavbarComponent,
     EventFormComponent,
@@ -35,11 +32,9 @@ import { CalendarViewComponent } from './app.rh/calendar-view/calendar-view.comp
   ],
   exports: [
     AppRhComponent,
-    CalendarComponent,
     CalendarViewComponent
   ],
   providers: [
-    SchedulerDataService,
     CalendarService
   ]
 })
