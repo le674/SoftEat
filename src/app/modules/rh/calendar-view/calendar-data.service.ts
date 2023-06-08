@@ -36,31 +36,31 @@ import { Injectable, OnInit } from '@angular/core';
 import { DayPilot } from 'daypilot-pro-angular';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Unsubscribe } from 'firebase/auth';
+import { Unsubscribe, getAuth } from 'firebase/auth';
 import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_FIRESTORE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { environment } from 'src/environments/environment';
 import { child, connectDatabaseEmulator, Database, DatabaseReference, get, getDatabase, onValue, ref, remove, update } from 'firebase/database';
 import { collection, connectFirestoreEmulator, Firestore, getDocs, getFirestore } from "firebase/firestore";
 import { FirebaseApp, initializeApp } from "@angular/fire/app";
-import { map } from 'rxjs/operators';
-import { DataSnapshot } from 'firebase/database';
 
 interface Event {
   start: string;
   end: string;
   text: string;
   id:string;
-  // Include any other properties your events might have
 }
 
 @Injectable()
 export class CalendarService {
-  private db: Database;
   private firestore: Firestore;
   events: Event[] = [];
   private sub_event!: Unsubscribe;
+  private firebaseConfig=environment.firebase;
+  private firebaseApp = initializeApp(this.firebaseConfig);
+  private db = getDatabase(this.firebaseApp);
 
-  constructor(private http: HttpClient, private ofApp: FirebaseApp) {
-    this.db = getDatabase(ofApp);
+  constructor(private ofApp: FirebaseApp) {
+    //this.db = getDatabase(ofApp);
     this.firestore = getFirestore(ofApp);
     if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
       try {
@@ -77,12 +77,12 @@ export class CalendarService {
   }
 
 
-  async getEvents(from: DayPilot.Date, to: DayPilot.Date, prop: string, restaurant: string): Promise<DayPilot.EventData[]> {
+  async getEvents(from: DayPilot.Date, to: DayPilot.Date, prop: string, user: string): Promise<DayPilot.EventData[]> {
     // convert DayPilot.Date to ISO date string
     const fromDateString = from.toString("yyyy-MM-dd");
     const toDateString = to.toString("yyyy-MM-dd");
 
-    const path = `restaurants/${restaurant}/${prop}/employes/valentin/planning/events`
+    const path = `users/${prop}/${user}/planning/events`
     const eventsSnapshot = await get(child(ref(this.db), path));
 
     if (eventsSnapshot.exists()) {
