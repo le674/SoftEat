@@ -70,7 +70,7 @@ export class AppMessageTemplateComponent implements OnInit {
     // + ",\n planning : " + this.statut.planning + ",\n stock : " 
     // + this.statut.stock + ".";
     // const userConversations = ref(db, 'restaurants/' + )
-    this.text = localStorage.getItem("user_email") as string;
+    this.text = "hey";
 
 
 
