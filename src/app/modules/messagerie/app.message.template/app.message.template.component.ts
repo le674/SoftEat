@@ -4,6 +4,7 @@ import { getDatabase, ref, onValue} from 'firebase/database';
 import { Statut } from '../../../interfaces/statut';
 import { HttpClient } from '@angular/common/http';
 import { FirebaseService } from '../../../services/firebase.service';
+import { Auth, getAuth, onAuthStateChanged, user } from '@angular/fire/auth';
 
 
 @Component({
