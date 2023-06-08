@@ -3,7 +3,8 @@ import { FirebaseApp, initializeApp } from "@angular/fire/app";
 import { getDatabase, ref, onValue} from 'firebase/database';
 import { Statut } from '../../../interfaces/statut';
 import { HttpClient } from '@angular/common/http';
-import { FirebaseService } from '../../../services/firebase.service';import { AuthentificationService } from '../../../services/authentification.service';
+import { FirebaseService } from '../../../services/firebase.service';
+import { Auth, getAuth, onAuthStateChanged, user } from '@angular/fire/auth';
 
 
 @Component({
@@ -17,21 +18,24 @@ export class AppMessageTemplateComponent implements OnInit {
   message!: string;
   separationDateB!: boolean;
   statut!: Statut;
-  email!: string;
+  email!: any;
   // private http!: HttpClient; // Dois être défini dans le constructeur
   heure!: string;
   private db: any;
+  private auth: Auth;
   
 
 
-  constructor(private firebaseService: FirebaseService, private http: HttpClient) { }
+  constructor(private ofApp: FirebaseApp, private firebaseService: FirebaseService, private http: HttpClient) { 
+    this.auth = getAuth(this.ofApp);
+  }
 
   ngOnInit(): void {
     this.message = "received";
     this.text = "Bonjour la messagerie !";
     this.separationDateB = true;
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
-    this.email = "";
+    this.email = "oups";
     this.db = this.firebaseService.getDatabaseInstance();
     this.fetchUserStatus();
     this.fetchTimeServer();
@@ -70,7 +74,8 @@ export class AppMessageTemplateComponent implements OnInit {
     // + this.statut.stock + ".";
     console.log(db);
     // const userConversations = ref(db, 'restaurants/' + )
-    this.text = "hey";
+    this.text = localStorage.getItem("user_email") as string;
+
 
 
 
