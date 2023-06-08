@@ -5,7 +5,9 @@ import {
   DayPilotMonthComponent,
   DayPilotNavigatorComponent
 } from "daypilot-pro-angular";
-import {CalendarDataService} from "./calendar-data.service";
+import {CalendarService} from "./calendar-data.service";
+import { from } from 'rxjs'
+
 @Component({
   selector: 'app-calendar-view',
   templateUrl: './calendar-view.component.html',
@@ -22,7 +24,7 @@ export class CalendarViewComponent implements AfterViewInit {
     date = DayPilot.Date.today();
   
     configNavigator: DayPilot.NavigatorConfig = {
-      showMonths: 3,
+      showMonths: 1,
       cellWidth: 25,
       cellHeight: 25,
       onVisibleRangeChanged: args => {
@@ -63,7 +65,7 @@ export class CalendarViewComponent implements AfterViewInit {
   
     };
   
-    constructor(private ds: CalendarDataService) {
+    constructor(private ds: CalendarService) {
       this.viewWeek();
     }
   
@@ -72,9 +74,9 @@ export class CalendarViewComponent implements AfterViewInit {
     }
   
     loadEvents(): void {
-      const from = this.nav.control.visibleStart();
+      const froom = this.nav.control.visibleStart();
       const to = this.nav.control.visibleEnd();
-      this.ds.getEvents(from, to).subscribe(result => {
+      from(this.ds.getEvents(froom, to,"telecom","ping_11")).subscribe(result => {
         this.events = result;
       });
     }
