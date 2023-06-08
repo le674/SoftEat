@@ -47,7 +47,7 @@ h1 {
 
 }
 
-#form {
+#message_bar {
   background: #c9c9c9;
   display: flex;
   box-sizing: border-box;
@@ -66,7 +66,7 @@ h1 {
   outline: none;
 }
 
-#form>button {
+#message_bar>button {
   background: rgb(125, 181, 46);
   border: none;
   padding: 0 1rem;

@@ -4,7 +4,6 @@ import { getDatabase, ref, onValue} from 'firebase/database';
 import { Statut } from '../../../interfaces/statut';
 import { HttpClient } from '@angular/common/http';
 import { FirebaseService } from '../../../services/firebase.service';
-import { Auth, getAuth, onAuthStateChanged, user } from '@angular/fire/auth';
 
 
 @Component({
@@ -22,24 +21,25 @@ export class AppMessageTemplateComponent implements OnInit {
   // private http!: HttpClient; // Dois être défini dans le constructeur
   heure!: string;
   private db: any;
-  private auth: Auth;
   
-
-
-  constructor(private ofApp: FirebaseApp, private firebaseService: FirebaseService, private http: HttpClient) { 
-    this.auth = getAuth(this.ofApp);
-  }
+  constructor(private firebaseService: FirebaseService, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.message = "received";
     this.text = "Bonjour la messagerie !";
     this.separationDateB = true;
-    this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
-    this.email = "oups";
+    this.statut = {
+      is_prop:false, 
+      stock:"", 
+      alertes:"", 
+      analyse:"", 
+      budget:"", 
+      facture:"", 
+      planning:""
+    };
     this.db = this.firebaseService.getDatabaseInstance();
     this.fetchUserStatus();
     this.fetchTimeServer();
-    console.log(this.email);
   }
 
   updateSeparationDate(){
@@ -72,13 +72,8 @@ export class AppMessageTemplateComponent implements OnInit {
     // + this.statut.budget + ",\n facture : " + this.statut.facture 
     // + ",\n planning : " + this.statut.planning + ",\n stock : " 
     // + this.statut.stock + ".";
-    console.log(this.db);
     // const userConversations = ref(db, 'restaurants/' + )
     this.text = localStorage.getItem("user_email") as string;
-
-
-
-
   }
 
   fetchTimeServer(){
@@ -94,7 +89,6 @@ export class AppMessageTemplateComponent implements OnInit {
         hours -= 24;
       };
       this.heure = hours.toString().padStart(2, '0') + ':' + utcHourSplit[1];
-
     });
   }
 }
