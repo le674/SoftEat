@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog'; 
 import { SchedulerDataService } from './app.rh/calendar/scheduler-data.service';
-import { CalendarDataService } from './calendar-view/calendar-data.service';
+import { CalendarService } from './calendar-view/calendar-data.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { CalendarComponent } from './app.rh/calendar/calendar.component';
 import { DayPilotModule } from 'daypilot-pro-angular';
@@ -40,7 +40,7 @@ import { CalendarViewComponent } from './calendar-view/calendar-view.component';
   ],
   providers: [
     SchedulerDataService,
-    CalendarDataService
+    CalendarService
   ]
 })
 export class RhModule { }

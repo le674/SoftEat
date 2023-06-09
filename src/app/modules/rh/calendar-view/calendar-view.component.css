@@ -29,3 +29,9 @@ button {
 button.selected {
     background-color: #1c4587;
 }
+
+.important-event {
+    font-weight: bold;
+    color: darkblue;
+  }
+  

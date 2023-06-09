@@ -2,6 +2,9 @@ import {Injectable} from '@angular/core';
 import {DayPilot} from 'daypilot-pro-angular';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import { FirebaseApp, initializeApp } from "@angular/fire/app";
+import { getDatabase, ref, onValue} from 'firebase/database';
+import { FirebaseService } from '../../../../services/firebase.service'
 
 @Injectable()
 export class SchedulerDataService {
