@@ -3,11 +3,7 @@ import { FirebaseApp, initializeApp } from "@angular/fire/app";
 import { getDatabase, ref, onValue} from 'firebase/database';
 import { Statut } from '../../../interfaces/statut';
 import { HttpClient } from '@angular/common/http';
-<<<<<<< HEAD
 import { FirebaseService } from '../../../services/firebase.service';
-=======
-import { FirebaseService } from '../../../services/firebase.service';import { AuthentificationService } from '../../../services/authentification.service';
->>>>>>> 6cf05cb (get user data)
 
 
 @Component({
@@ -24,15 +20,16 @@ export class AppMessageTemplateComponent implements OnInit {
   email!: any;
   // private http!: HttpClient; // Dois être défini dans le constructeur
   heure!: string;
+  firebaseApp: FirebaseApp | undefined;
 
-  constructor(private http: HttpClient, private authentificationService : AuthentificationService) { }
+
+  constructor(private http: HttpClient, firebaseApp: FirebaseApp) { }
 
   ngOnInit(): void {
     this.message = "received";
     this.text = "Bonjour la messagerie !";
     this.separationDateB = true;
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
-    this.email = this.authentificationService.userData.email;
     this.fetchUserStatus();
     this.fetchTimeServer();
   }
@@ -42,10 +39,12 @@ export class AppMessageTemplateComponent implements OnInit {
   }
 
   fetchUserStatus() {
+    const db = getDatabase(this.firebaseApp);
+
     const userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
 
-    const userEmailRef = ref(this.db, 'users/foodandboost_prop/' + userId + '/email');
-    const userStatusRef = ref(this.db, 'users/foodandboost_prop/' + userId + '/statut');
+    const userEmailRef = ref(db, 'users/foodandboost_prop/' + userId + '/email');
+    const userStatusRef = ref(db, 'users/foodandboost_prop/' + userId + '/statut');
 
     onValue(userEmailRef, (snapshot) => {
       this.email = snapshot.val();
