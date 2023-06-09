@@ -1,7 +1,7 @@
-import { Component, NgModule, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
-import { getDatabase, ref, push, get, child, set, onValue } from 'firebase/database';
+import { getDatabase, ref, push } from 'firebase/database';
 import { FirebaseApp } from '@angular/fire/app';
 
 @Component({
@@ -66,10 +66,8 @@ export class AppMessagerieComponent implements OnInit {
         contenu: this.inputText,
         horodatage: new Date().getTime()
       }
-
       //Ecriture du message dans la BDD
       const nodeRef = ref(db, `conversations/deliss_pizz/deliss_pizz/del42_ana_037581`);
-      
       push(nodeRef, newMessage).then(() => {
         console.log("New message with custom name created successfully");
       })
