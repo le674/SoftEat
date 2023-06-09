@@ -109,10 +109,11 @@ input[type="checkbox"] {
   outline: none;
   cursor: pointer;
   border: 2px solid rgb(125, 181, 46);
+  background-color: white;
 }
 
 /* Style de la coche */
-input[type="checkbox"]:checked::before {
+input[type="checkbox"]::before {
   content: "\2713";
   /* Code unicode pour le symbole de la coche */
   position: absolute;
@@ -121,6 +122,12 @@ input[type="checkbox"]:checked::before {
   transform: translate(-50%, -50%);
   color: rgb(125, 181, 46);
   font-size: 14px;
+  visibility: hidden; /* Hide the checkmark by default */
+}
+
+/* Style lorsque la checkbox est cochée */
+input[type="checkbox"]:checked::before {
+  visibility: visible; /* Show the checkmark when checked */
 }
 
 /* Style au survol de la checkbox */
@@ -128,17 +135,8 @@ input[type="checkbox"]:hover {
   border-color: rgb(125, 181, 46);
 }
 
-/* Style lorsque la checkbox est cochée */
-input[type="checkbox"]:checked {
-  background-color: rgb(125, 181, 46);
-}
-
 /* Style du fond de la checkbox lorsque désactivée */
 input[type="checkbox"]:disabled {
   background-color: rgba(125, 181, 46, 0.5);
   cursor: not-allowed;
-}
-
-.categ {
-  font-size: 18px;
 }
