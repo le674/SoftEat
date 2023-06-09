@@ -42,7 +42,7 @@ export class NavbarComponent implements OnInit {
 
     this.select = [];
 
-    this.fetchUserStatus();
+    this.fetchUser();
   }
 
   openCategories(categories: any) {
@@ -127,7 +127,7 @@ export class NavbarComponent implements OnInit {
     this.selectAllGerants = !this.selectAllGerants;
   }
 
-  fetchUserStatus() {
+  fetchUser() {
     const firebaseConfig = {
       apiKey: 'AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo',
       authDomain: 'psofteat-65478545498421319564.firebaseapp.com',
@@ -141,14 +141,6 @@ export class NavbarComponent implements OnInit {
     };
     const firebaseApp = initializeApp(firebaseConfig);
     const db = getDatabase(firebaseApp);
-
-    //Current user
-    /*
-    const auth = getAuth(firebaseApp);
-    let user = auth.currentUser;
-    console.log('Current user :');
-    console.log(user);
-    */
 
     //const userPath = 'restaurants/ping_11/telecom/employes/';
     const userPath = '/users/foodandboost_prop/';
