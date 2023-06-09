@@ -1,46 +1,9 @@
-/*import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
-import {DayPilot} from "daypilot-pro-angular";
-import {HttpClient} from "@angular/common/http";
-
-@Injectable()
-export class CalendarDataService {
-
-  events: any[] = [
-    {
-      id: "1",
-      start: DayPilot.Date.today().addHours(10),
-      end: DayPilot.Date.today().addHours(12),
-      text: "Event 1"
-    }
-  ];
-
-  constructor(private http : HttpClient){
-  }
-
-  getEvents(from: DayPilot.Date, to: DayPilot.Date): Observable<any[]> {
-
-    // simulating an HTTP request
-    return new Observable(observer => {
-      setTimeout(() => {
-        observer.next(this.events);
-      }, 200);
-    });
-
-    // return this.http.get("/api/events?from=" + from.toString() + "&to=" + to.toString());
-  }
-
-}*/
-
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { DayPilot } from 'daypilot-pro-angular';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Unsubscribe, getAuth } from 'firebase/auth';
 import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_FIRESTORE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
 import { environment } from 'src/environments/environment';
-import { child, connectDatabaseEmulator, Database, DatabaseReference, get, set, getDatabase, onValue, ref, remove, update } from 'firebase/database';
-import { collection, connectFirestoreEmulator, Firestore, getDocs, getFirestore } from "firebase/firestore";
+import { child, push, connectDatabaseEmulator, get, set, getDatabase,  ref } from 'firebase/database';
+import { connectFirestoreEmulator, Firestore, getFirestore } from "firebase/firestore";
 import { FirebaseApp, initializeApp } from "@angular/fire/app";
 
 interface Event {
@@ -48,13 +11,13 @@ interface Event {
   end: string;
   text: string;
   id:string;
+  tags:string;
 }
 
 @Injectable()
 export class CalendarService {
   private firestore: Firestore;
   events: Event[] = [];
-  private sub_event!: Unsubscribe;
   private firebaseConfig=environment.firebase;
   private firebaseApp = initializeApp(this.firebaseConfig);
   private db = getDatabase(this.firebaseApp);
@@ -78,27 +41,27 @@ export class CalendarService {
 
 
   async getEvents(from: DayPilot.Date, to: DayPilot.Date, prop: string, user: string): Promise<DayPilot.EventData[]> {
-    // convert DayPilot.Date to ISO date string
+    // converti le DayPilot.Date en date ISO string
     const fromDateString = from.toString("yyyy-MM-dd");
     const toDateString = to.toString("yyyy-MM-dd");
 
-    const path = `users/${prop}/${user}/planning/events`
-    const eventsSnapshot = await get(child(ref(this.db), path));
+    const path = `users/${prop}/${user}/planning/events` //chemin vers la BDD
+    const eventsSnapshot = await get(child(ref(this.db), path)); //ensemble des events
 
     if (eventsSnapshot.exists()) {
       this.events = [];
-      eventsSnapshot.forEach((eventSnapshot) => {
+      eventsSnapshot.forEach((eventSnapshot) => { //parcoure les events de la BDD
         const event = eventSnapshot.val() as Event;
-        //console.log(event);
         if (event.start >= fromDateString && event.start <= toDateString) {
           this.events.push({ 
             start: event.start,
             end: event.end,
             text: event.text,
-            id: event.id
+            id: event.id,
+            tags : event.tags,
            });
         }
-        return false; // continue to the next child
+        return false; // regarde le prochain event
       });
     }
 
@@ -106,24 +69,25 @@ export class CalendarService {
   }
 
   async add_event(prop: string, user: string, newEvent: DayPilot.EventData): Promise<void> {
-    // path to save the event
+    // Chemin vers la BDD
     const path = `users/${prop}/${user}/planning/events`;
 
-    // convert the DayPilot.Date objects to ISO date strings
+    // converti le DayPilot.Date objet en date ISO
     const startString = newEvent.start.toString("yyyy-MM-ddTHH:mm:ss");
     const endString = newEvent.end.toString("yyyy-MM-ddTHH:mm:ss");
 
-    // create an Event object similar to how you're storing them in Firebase
+    const eventRef = push(child(ref(this.db), path));
+    const id = eventRef.key;
+
+    // Crée l'événement
     const event = {
         start: startString,
         end: endString,
         text: newEvent.text,
-        id: newEvent.id
+        id: id,
+        tags : newEvent.tags,
     };
 
-    // generate a new child location using push() and save the event data
-    // replace 'this.db' with your Firebase Realtime Database reference
-    const eventRef = child(ref(this.db), `${path}/${event.id}`);
     await set(eventRef, event);
 }
 }
