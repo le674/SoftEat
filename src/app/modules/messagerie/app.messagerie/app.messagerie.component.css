@@ -67,13 +67,18 @@ h1 {
 }
 
 #message_bar>button {
-  background: rgb(125, 181, 46);
+  color: rgb(125, 181, 46);
+  background-color: white;
   border: none;
   padding: 0 1rem;
   margin: 0.25rem;
   border-radius: 3px;
   outline: none;
-  color: #fff;
+}
+
+#message_bar>button:hover{
+  background-color: rgb(125, 181, 46);
+  color: white;
 }
 
 #conversation_list ul {
