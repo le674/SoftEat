@@ -68,5 +68,9 @@ export class AppMessagerieComponent implements OnInit {
     }
     this.inputText = "";
   }
+
+  updateNotification(index: number){
+    this.notification[index] = !this.notification[index];
+  }
 }
 
