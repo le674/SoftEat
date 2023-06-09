@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { initializeApp } from '@angular/fire/app';
-import { getDatabase, ref, onValue } from 'firebase/database';
+import { getDatabase, ref, onValue, get } from 'firebase/database';
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 
 @Component({
@@ -10,18 +10,18 @@ import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 })
 export class NavbarComponent implements OnInit {
   Categories!: { nom: string; open: boolean; buttonname: String }[];
-  Cuisiniers!: { nom: String; selectionne: boolean }[];
   Serveurs!: { nom: String; selectionne: boolean }[];
-  Barmans!: { nom: String; selectionne: boolean }[];
   Gerants!: { nom: String; selectionne: boolean }[];
+  Rh!: { nom: String; selectionne: boolean }[];
+  Autres!: { nom: String; selectionne: boolean }[];
 
-  select!: String[];
+  select!: string[];
   isChecked: any;
   selectAll: boolean = false;
-  selectAllCuisiniers: boolean = false;
   selectAllServeurs: boolean = false;
-  selectAllBarmans: boolean = false;
   selectAllGerants: boolean = false;
+  selectAllRh: boolean = false;
+  selectAllAutres: boolean = false;
 
   email!: string;
   role!: string;
@@ -29,31 +29,20 @@ export class NavbarComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    
-
     this.Categories = [
-      { nom: 'Cuisiniers', open: false, buttonname: '▼' },
       { nom: 'Serveurs', open: false, buttonname: '▼' },
-      { nom: 'Barmans', open: false, buttonname: '▼' },
+      { nom: 'Rh', open: false, buttonname: '▼' },
       { nom: 'Gérants', open: false, buttonname: '▼' },
+      { nom: 'Autres', open: false, buttonname: '▼' },
     ];
-    this.Cuisiniers = [
-      { nom: 'Cuisto1', selectionne: false },
-      { nom: 'Cuisto2', selectionne: false },
-      { nom: 'Cuisto3', selectionne: false },
-    ];
-    this.Serveurs = [
-      { nom: 'Serveur1', selectionne: false },
-      { nom: 'Serveur2', selectionne: false },
-    ];
-    this.Barmans = [
-      { nom: 'Barman1', selectionne: false },
-      { nom: 'Barman2', selectionne: false },
-      { nom: 'Barman3', selectionne: false },
-    ];
-    this.Gerants = [{ nom: 'Gerant1', selectionne: false }];
+    this.Serveurs = [];
+    this.Gerants = [];
+    this.Rh = [];
+    this.Autres = [];
 
     this.select = [];
+
+    this.fetchUser();
   }
 
   openCategories(categories: any) {
@@ -78,89 +67,67 @@ export class NavbarComponent implements OnInit {
     liste.selectionne = !liste.selectionne;
   }
 
-  addAllCuisiniers() {
-    if (this.selectAllCuisiniers) {
-      this.Cuisiniers.forEach((cuisto) => {
-        const index = this.select.indexOf(cuisto.nom);
+  addAllItems(
+    items: any[],
+    selectAllFlag: boolean,
+    selectList: string[],
+    selectionneProperty: string
+  ) {
+    if (selectAllFlag) {
+      items.forEach((item) => {
+        const index = selectList.indexOf(item.nom);
         if (index !== -1) {
-          this.select.splice(index, 1);
-          cuisto.selectionne = !cuisto.selectionne;
+          selectList.splice(index, 1);
+          item[selectionneProperty] = !item[selectionneProperty];
         }
       });
     } else {
-      this.Cuisiniers.forEach((cuisto) => {
-        if (!this.select.includes(cuisto.nom)) {
-          this.select.push(cuisto.nom);
-          cuisto.selectionne = !cuisto.selectionne;
+      items.forEach((item) => {
+        if (!selectList.includes(item.nom)) {
+          selectList.push(item.nom);
+          item[selectionneProperty] = !item[selectionneProperty];
         }
       });
     }
-    this.selectAllCuisiniers = !this.selectAllCuisiniers;
+    selectAllFlag = !selectAllFlag;
   }
 
   addAllServeurs() {
-    if (this.selectAllServeurs) {
-      this.Serveurs.forEach((serveur) => {
-        const index = this.select.indexOf(serveur.nom);
-        if (index !== -1) {
-          this.select.splice(index, 1);
-          serveur.selectionne = !serveur.selectionne;
-        }
-      });
-    } else {
-      this.Serveurs.forEach((serveur) => {
-        if (!this.select.includes(serveur.nom)) {
-          this.select.push(serveur.nom);
-          serveur.selectionne = !serveur.selectionne;
-        }
-      });
-    }
+    this.addAllItems(
+      this.Serveurs,
+      this.selectAllServeurs,
+      this.select,
+      'selectionne'
+    );
     this.selectAllServeurs = !this.selectAllServeurs;
   }
 
-  addAllBarmans() {
-    if (this.selectAllBarmans) {
-      this.Barmans.forEach((barman) => {
-        const index = this.select.indexOf(barman.nom);
-        if (index !== -1) {
-          this.select.splice(index, 1);
-          barman.selectionne = !barman.selectionne;
-        }
-      });
-    } else {
-      this.Barmans.forEach((barman) => {
-        if (!this.select.includes(barman.nom)) {
-          this.select.push(barman.nom);
-          barman.selectionne = !barman.selectionne;
-        }
-      });
-    }
-    this.selectAllBarmans = !this.selectAllBarmans;
+  addAllAutres() {
+    this.addAllItems(
+      this.Autres,
+      this.selectAllAutres,
+      this.select,
+      'selectionne'
+    );
+    this.selectAllAutres = !this.selectAllAutres;
+  }
+
+  addAllRh() {
+    this.addAllItems(this.Rh, this.selectAllRh, this.select, 'selectionne');
+    this.selectAllRh = !this.selectAllRh;
   }
 
   addAllGerants() {
-    if (this.selectAllGerants) {
-      this.Gerants.forEach((gerant) => {
-        const index = this.select.indexOf(gerant.nom);
-        if (index !== -1) {
-          this.select.splice(index, 1);
-          gerant.selectionne = !gerant.selectionne;
-        }
-      });
-    } else {
-      this.Gerants.forEach((gerant) => {
-        if (!this.select.includes(gerant.nom)) {
-          this.select.push(gerant.nom);
-          gerant.selectionne = !gerant.selectionne;
-        }
-      });
-    }
+    this.addAllItems(
+      this.Gerants,
+      this.selectAllGerants,
+      this.select,
+      'selectionne'
+    );
     this.selectAllGerants = !this.selectAllGerants;
   }
 
-  fetchUserStatus() {
-    const userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
-
+  fetchUser() {
     const firebaseConfig = {
       apiKey: 'AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo',
       authDomain: 'psofteat-65478545498421319564.firebaseapp.com',
@@ -174,28 +141,53 @@ export class NavbarComponent implements OnInit {
     };
     const firebaseApp = initializeApp(firebaseConfig);
     const db = getDatabase(firebaseApp);
-    const auth = getAuth(firebaseApp);
-    let user = auth.currentUser;
-    console.log("Current user :");
-    console.log(user);
 
-    console.log(db);
-    const userEmailRef = ref(
-      db,
-      'users/foodandboost_prop/' + userId + '/email'
-    );
-    const userRoleRef = ref(db, 'users/foodandboost_prop/' + userId + '/role');
+    //const userPath = 'restaurants/ping_11/telecom/employes/';
+    const userPath = '/users/foodandboost_prop/';
 
-    onValue(userEmailRef, (snapshot) => {
-      this.email = snapshot.val();
-      console.log('email : ');
-      console.log(this.email);
-    });
+    // Référence au chemin des utilisateurs
+    const usersRef = ref(db, userPath);
 
-    onValue(userRoleRef, (snapshot) => {
-      this.role = snapshot.val();
-      console.log('role : ');
-      console.log(this.role);
-    });
+    // Récupérer les données des utilisateurs
+    get(usersRef)
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const usersData = snapshot.val();
+          const userIDs = Object.keys(usersData);
+          console.log('User IDs:');
+          console.log(userIDs);
+
+          // A chaque utilisateurs dans le chemin
+          userIDs.forEach((userID) => {
+            const userEmailRef = ref(db, `${userPath}/${userID}/email`);
+            const userRoleRef = ref(db, `${userPath}/${userID}/role`);
+
+            // Récup l'email
+            onValue(userEmailRef, (snapshot) => {
+              this.email = snapshot.val();
+            });
+
+            // Récup le rôle et push dans les bonnes listes
+            onValue(userRoleRef, (roleSnapshot) => {
+              const role = roleSnapshot.val();
+              if (role == 'gerant') {
+                this.Gerants.push({ nom: this.email, selectionne: false });
+                console.log(userID);
+              } else if (role == 'rh') {
+                this.Rh.push({ nom: this.email, selectionne: false });
+              } else if (role == 'serveur') {
+                this.Serveurs.push({ nom: this.email, selectionne: false });
+              } else {
+                this.Autres.push({ nom: this.email, selectionne: false });
+              }
+            });
+          });
+        } else {
+          console.log('No user data found.');
+        }
+      })
+      .catch((error) => {
+        console.error('An error occurred while retrieving user data:', error);
+      });
   }
 }

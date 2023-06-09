@@ -1,7 +1,7 @@
 <div class="container">
     <div class="sidebar">
-      <app-navbar></app-navbar>
-      <!--<app-hbar></app-hbar> -->
+      <app-navbar *ngIf="currentUserRole == 'gerant'"></app-navbar>
+      <app-hbar *ngIf="currentUserRole != 'gerant'"></app-hbar>
     </div>
     <div class="content">
       <app-calendar></app-calendar>
