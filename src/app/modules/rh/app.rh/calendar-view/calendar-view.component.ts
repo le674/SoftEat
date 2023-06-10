@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+=======
+import { Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+>>>>>>> 7609658611ed7eb247ba085c4a085a76ee928bb9
 import {
   DayPilot,
   DayPilotCalendarComponent,
