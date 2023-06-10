@@ -1,4 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { DayPilot } from "daypilot-pro-angular";
+import { CalendarService } from "../calendar-view/calendar-data.service";
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-event-form',
@@ -15,9 +18,10 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   @ViewChild('addFinPoste') addFinPosteInput!: ElementRef<HTMLInputElement>;
   @ViewChild('addRepeter') addRepeterSelect!: ElementRef<HTMLSelectElement>;
   dateWidth = '150px'; // Default width
+  newEvent? : DayPilot.EventData;
 
-  constructor() {
-
+  constructor(private calendar: CalendarService, public dialogRef: MatDialogRef<EventFormComponent>) {
+    this.dialogRef = dialogRef;
   }
 
   /* Les deux premières méthodes ajoutent automatiquement des majuscules sur 
@@ -98,7 +102,15 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   saveRows(): void {
     // Retrieve the information of the rows
     const rowInfo = this.rows.map(row => {
-      return {
+      this.newEvent = {
+        start: row.prisePoste,
+        end: row.finPoste,
+        text: row.event,
+        id: 'newEventId',
+        tags: this.getMotifLabel(row.motif)
+      }
+      this.addEvent(this.newEvent);
+      /*return {
         personnel: row.personnel,
         motif: this.getMotifLabel(row.motif),
         event: row.event,
@@ -106,12 +118,13 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         prisePoste: row.prisePoste,
         finPoste: row.finPoste,
         repeter: this.getRepeterLabel(row.repeter)
-      };
+      };*/
     });
-  
+    this.closeDialog();
+    //this.calendar.closeEventForm();
     // Display the information
-    const infoText = JSON.stringify(rowInfo, null, 2); // Convert the information to a formatted JSON string
-    alert(infoText); // You can replace this with any other display method you prefer
+    //const infoText = JSON.stringify(rowInfo, null, 2); // Convert the information to a formatted JSON string
+    //alert(infoText); // You can replace this with any other display method you prefer
   }
   
   getMotifLabel(value: string): string {
@@ -143,12 +156,20 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         return '';
     }
   }
+
+  addEvent(newEvent : DayPilot.EventData): void {
+    this.calendar.add_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', newEvent);
+    //this.loadEvents();
+  }
+  closeDialog(): void {
+    this.dialogRef.close(); // Close the dialog
+  }
 }
 
 export interface Row {
   personnel: string;
   motif: string;
-  event?: string;
+  event: string;
   lieu: string;
   prisePoste: string;
   finPoste: string;

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-=======
-import { Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
->>>>>>> 7609658611ed7eb247ba085c4a085a76ee928bb9
 import {
   DayPilot,
   DayPilotCalendarComponent,
@@ -153,10 +149,28 @@ export class CalendarViewComponent implements AfterViewInit {
 
   openEventForm(): void {
     const dialogRef = this.dialog.open(EventFormComponent, {
-      width: '85vw', height: '85vh', // Set the width of the dialog as per your requirements
-      // You can also configure other properties of the dialog, such as height, position, etc.
+      width: '85vw',
+      height: '85vh',
+      // Set the width and height of the dialog as per your requirements
+      // You can also configure other properties of the dialog, such as position, etc.
     });
-}
+
+    dialogRef.afterClosed().subscribe(result => {
+      // This code block will be executed when the dialog is closed
+      // You can perform any desired actions here
+      console.log('Dialog closed with result:', result);
+      // Call your method here that you want to be executed when the dialog is closed
+      this.onDialogClosed();
+    });
+  }
+
+  onDialogClosed(): void {
+    // This method will be called when the dialog is closed
+    // You can perform any desired actions here
+    this.loadEvents();
+    // Add your code here
+  }
+
 }
 
 

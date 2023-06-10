@@ -90,5 +90,4 @@ export class CalendarService {
 
     await set(eventRef, event);
 }
-
 }
