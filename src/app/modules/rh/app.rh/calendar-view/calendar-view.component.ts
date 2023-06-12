@@ -47,6 +47,9 @@ export class CalendarViewComponent implements AfterViewInit {
   }
 
   configDay: DayPilot.CalendarConfig = {
+    locale : "fr-fr",
+    dayBeginsHour : 8,
+    dayEndsHour : 22,
     onBeforeEventRender: args => {
       if (args.data.tags === "important") {
         args.data.barColor = "#ff0000"; // red color for important events
@@ -60,6 +63,9 @@ export class CalendarViewComponent implements AfterViewInit {
   };
 
   configWeek: DayPilot.CalendarConfig = {
+    locale : "fr-fr",
+    dayBeginsHour : 8,
+    dayEndsHour : 22,
     viewType: "Week",
     onTimeRangeSelected: async (args) => {
       const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
@@ -86,6 +92,7 @@ export class CalendarViewComponent implements AfterViewInit {
   };
 
   configMonth: DayPilot.MonthConfig = {
+    locale : "fr-fr",
     onBeforeEventRender: args => {
       if (args.data.tags === "important") {
         args.data.barColor = "#ff0000"; // red color for important events
