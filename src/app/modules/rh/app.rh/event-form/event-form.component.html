@@ -14,8 +14,12 @@
     <tbody>
       <tr>
         <td class="col-xs-3">
-          <input #addPersonnel class="form-control" type="text" placeholder="Personnel"
-            (input)="truncateInputValue(addPersonnelInput.nativeElement)" required />
+          <select #addPersonnel required class="width-block">
+            <option disabled selected value="">Personnel</option>
+            <optgroup *ngFor="let category of Categories" [label]="category">
+              <option *ngFor="let user of getCategoryUsers(category)" [value]="user.nom">{{ user.nom }}</option>
+            </optgroup>
+          </select>
         </td>
         <td class="col-xs-5">
           <select #addMotif required>
