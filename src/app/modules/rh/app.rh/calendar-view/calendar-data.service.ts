@@ -10,8 +10,9 @@ interface Event {
   start: string;
   end: string;
   text: string;
-  id: string;
-  tags: string;
+  id:string;
+  tags:string;
+  resource:string;
 }
 
 @Injectable()
@@ -58,8 +59,9 @@ export class CalendarService {
             end: event.end,
             text: event.text,
             id: event.id,
-            tags: event.tags,
-          });
+            tags : event.tags,
+            resource: event.resource,
+           });
         }
         return false; // regarde le prochain event
       });
@@ -81,11 +83,12 @@ export class CalendarService {
 
     // Crée l'événement
     const event = {
-      start: startString,
-      end: endString,
-      text: newEvent.text,
-      id: id,
-      tags: newEvent.tags,
+        start: startString,
+        end: endString,
+        text: newEvent.text,
+        id: id,
+        tags: newEvent.tags,
+        resource: newEvent.resource,
     };
 
     await set(eventRef, event);

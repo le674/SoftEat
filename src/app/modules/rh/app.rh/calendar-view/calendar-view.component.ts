@@ -141,14 +141,26 @@ export class CalendarViewComponent implements AfterViewInit {
       }));
     },
     onBeforeEventRender: args => {
-      if (args.data.tags === "important") {
-        args.data.barColor = "#ff0000"; // red color for important events
-        args.data.html = "<span class='important-event'>" + args.data.text + "</span>";
-        args.data.toolTip = "This is an important event.";
+      if (args.data.tags === "Maladie") {
+        args.data.barColor = "#ff0000"; // duration bar
+        args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background
+        //args.data.backColor = "rgba(255, 0, 0, 0.2)"; // background 
+        //args.data.toolTip = "This is an important event.";
+      } else if (args.data.tags === "Congés") {
+        args.data.barColor = "#ffa500";
+        args.data.barBackColor = "rgba(255, 165, 0, 0.5)"; // duration bar background
+        //args.data.toolTip = "This is a regular event.";
+      } else if (args.data.tags === "Entretien") {
+        args.data.barColor = "#7db52e";
+        args.data.barBackColor = "rgba(121, 181, 46, 0.5)"; // duration bar background
+        //args.data.toolTip = "This is a regular event.";
       } else {
-        args.data.html = args.data.text;
-        args.data.toolTip = "This is a regular event.";
+        //args.data.toolTip = "This is a regular event.";
       }
+      let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + args.data.resource + "</div>" : "";
+      args.data.html = "<span class='event'><strong>" + args.data.tags + "</strong><br>" +
+        resourceHtml + "<br>" +
+        args.data.text + "</span>";
     }
   };
 
@@ -228,10 +240,28 @@ export class CalendarViewComponent implements AfterViewInit {
 
   openEventForm(): void {
     const dialogRef = this.dialog.open(EventFormComponent, {
-      width: '85vw', height: '85vh', // Set the width of the dialog as per your requirements
-      // You can also configure other properties of the dialog, such as height, position, etc.
+      width: '85vw',
+      height: '85vh',
+      // Set the width and height of the dialog as per your requirements
+      // You can also configure other properties of the dialog, such as position, etc.
     });
-}
+
+    dialogRef.afterClosed().subscribe(result => {
+      // This code block will be executed when the dialog is closed
+      // You can perform any desired actions here
+      console.log('Dialog closed with result:', result);
+      // Call your method here that you want to be executed when the dialog is closed
+      this.onDialogClosed();
+    });
+  }
+
+  onDialogClosed(): void {
+    // This method will be called when the dialog is closed
+    // You can perform any desired actions here
+    this.loadEvents();
+    // Add your code here
+  }
+
 }
 
 
