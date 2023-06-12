@@ -103,8 +103,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     // Retrieve the information of the rows
     const rowInfo = this.rows.map(row => {
       this.newEvent = {
-        start: row.prisePoste,
-        end: row.finPoste,
+        start: row.prisePoste+":00",
+        end: row.finPoste+":00",
         text: row.event,
         id: 'newEventId',
         tags: this.getMotifLabel(row.motif)
