@@ -5,7 +5,6 @@ import { Statut } from '../../../interfaces/statut';
 import { HttpClient } from '@angular/common/http';
 import { MessageModel } from '../messages_models/model';
 import { AppMessagerieComponent } from '../app.messagerie/app.messagerie.component';
-
 @Component({
   selector: 'message-template',
   templateUrl: './app.message.template.component.html',
@@ -14,10 +13,9 @@ import { AppMessagerieComponent } from '../app.messagerie/app.messagerie.compone
 
 export class AppMessageTemplateComponent implements OnInit {
 
-  @Input() listeMessages!: MessageModel[];
+  @Input() listeMessages!: MessageModel;
 
   date = new Date();
-  text!: string;
   message!: string;
   separationDateB!: boolean;
   statut!: Statut;
@@ -40,11 +38,6 @@ export class AppMessageTemplateComponent implements OnInit {
     this.fetchUserStatus();
     this.fetchTimeServer();
     this.getName();
-    this.listeMessages = this.messagerie.getMessagerie();
-  }
-
-  setText(text: string) {
-    this.text = text;
   }
 
   updateSeparationDate(){
@@ -59,9 +52,14 @@ export class AppMessageTemplateComponent implements OnInit {
     const userEmailRef = ref(db, 'users/foodandboost_prop/' + userId + '/email');
     const userStatusRef = ref(db, 'users/foodandboost_prop/' + userId + '/statut');
 
+    this.email = localStorage.getItem("user_email") as string;
+
+    /*
     onValue(userEmailRef, (snapshot) => {
       this.email = snapshot.val();
     });
+    */
+
     onValue(userStatusRef, (snapshot) => {
       const statut = snapshot.val();
       // this.statut.alertes = statut.alertes;
@@ -73,8 +71,6 @@ export class AppMessageTemplateComponent implements OnInit {
     }, (error) => {
       console.log('Une erreur s\'est produite lors de la récupération des statuts :', error);
     });
-
-    this.text = localStorage.getItem("user_email") as string;
   }
 
   //recuperation heure du serveur

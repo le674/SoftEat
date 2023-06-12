@@ -98,7 +98,7 @@ export class AppMessagerieComponent implements OnInit {
       donneesMessage.contenu = data.contenu;
       donneesMessage.horodatage = data.horodatage;
       this.messagerie.push(donneesMessage);
-      console.log(this.messagerie);
+      //console.log(this.messagerie);
       //Ajouter msg au DOM
 
     });
