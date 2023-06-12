@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { getDatabase, ref, onValue, get } from 'firebase/database';
 import { FirebaseService } from '../../../../services/firebase.service';
 import { FirebaseApp, initializeApp } from "@angular/fire/app";
+import { CalendarService } from '../calendar-view/calendar-data.service';
 
 @Component({
   selector: 'app-navbar',
@@ -25,7 +26,7 @@ export class NavbarComponent implements OnInit {
 
   firebaseApp: FirebaseApp | undefined;
 
-  constructor(firebaseApp: FirebaseApp) {}
+  constructor(firebaseApp: FirebaseApp, private ds : CalendarService) {}
 
   ngOnInit(): void {
     this.Categories = [
@@ -61,6 +62,7 @@ export class NavbarComponent implements OnInit {
       }
     } else {
       this.select.push(liste.nom);
+      //this.ds.getEvents()
     }
 
     liste.selectionne = !liste.selectionne;

@@ -36,7 +36,7 @@ export class CalendarViewComponent implements AfterViewInit {
     cellWidth: 25,
     cellHeight: 25,
     onVisibleRangeChanged: args => {
-      this.loadEvents();
+      this.loadEvents("0uNzmnBI0jYYspF4wNXdRd2xw9Q2");
     }
   };
 
@@ -92,7 +92,7 @@ export class CalendarViewComponent implements AfterViewInit {
           onClick: async (args) => { 
             var e = args.source;
             await this.ds.remove_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', e.id()); 
-            this.loadEvents();
+            this.loadEvents("0uNzmnBI0jYYspF4wNXdRd2xw9Q2");
           }
         }
       ]
@@ -139,7 +139,7 @@ export class CalendarViewComponent implements AfterViewInit {
           onClick: async (args) => { 
             var e = args.source;
             await this.ds.remove_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', e.id()); 
-            this.loadEvents();
+            this.loadEvents("0uNzmnBI0jYYspF4wNXdRd2xw9Q2");
           }
         }
       ]
@@ -183,7 +183,7 @@ export class CalendarViewComponent implements AfterViewInit {
           onClick: async (args) => { 
             var e = args.source;
             await this.ds.remove_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', e.id()); 
-            this.loadEvents();
+            this.loadEvents("0uNzmnBI0jYYspF4wNXdRd2xw9Q2");
           }
         }
       ]
@@ -212,13 +212,13 @@ export class CalendarViewComponent implements AfterViewInit {
   
 
   ngAfterViewInit(): void {
-    this.loadEvents();
+    this.loadEvents("0uNzmnBI0jYYspF4wNXdRd2xw9Q2");
   }
 
-  loadEvents(): void {
+  loadEvents(user : string): void {
     const froom = this.nav.control.visibleStart();
     const to = this.nav.control.visibleEnd();
-    from(this.ds.getEvents(froom, to, "foodandboost_prop", "0uNzmnBI0jYYspF4wNXdRd2xw9Q2")).subscribe(result => {
+    from(this.ds.getEvents(froom, to, "foodandboost_prop", user)).subscribe(result => {
       this.events = result;
     });
   }
@@ -251,7 +251,7 @@ export class CalendarViewComponent implements AfterViewInit {
       id: 'newEventId',
       tags: 'conge',
     });
-    this.loadEvents();
+    this.loadEvents("0uNzmnBI0jYYspF4wNXdRd2xw9Q2");
   }
 
 
@@ -275,7 +275,7 @@ export class CalendarViewComponent implements AfterViewInit {
   onDialogClosed(): void {
     // This method will be called when the dialog is closed
     // You can perform any desired actions here
-    this.loadEvents();
+    this.loadEvents("0uNzmnBI0jYYspF4wNXdRd2xw9Q2");
     // Add your code here
   }
 
