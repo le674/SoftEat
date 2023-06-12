@@ -6,7 +6,6 @@ import { child, push, connectDatabaseEmulator, get, set, getDatabase, ref, query
 import { connectFirestoreEmulator, Firestore, getFirestore } from "firebase/firestore";
 import { FirebaseApp, initializeApp } from "@angular/fire/app";
 
-
 interface Event {
   start: string;
   end: string;
@@ -97,24 +96,27 @@ export class CalendarService {
     await set(eventRef, event);
   }
 
-  async getToken(email: string): Promise<string | null> {
-    try {
-      const usersRef = ref(getDatabase(this.firebaseApp), 'users');
-      const queryRef = query(usersRef, orderByChild('email'), equalTo(email));
-      const snapshot = await get(queryRef);
-      const user = snapshot.val();
+  async getPath(email: string): Promise<string | null> {
+    const database = getDatabase(this.ofApp); // Get the Realtime Database instance
 
-      if (user) {
-        const token = Object.keys(user)[0];
-        console.log('Token:', token); // Log the token value
-        return token;
-      } else {
-        return null; // Email not found in the database
-      }
-    } catch (error) {
-      console.error('Error retrieving token:', error);
-      return null;
+    // Query the database to find the path based on the email
+    const usersRef = ref(database, 'users');
+    const queryRef = query(usersRef, orderByChild('email'), equalTo(email));
+    const snapshot = await get(queryRef);
+
+    if (snapshot.exists()) {
+      // Get the first matching user's key (assuming there is only one match)
+      const userId = Object.keys(snapshot.val())[0];
+      
+      // Construct the path using the found user ID
+      const path = `${userId}`;
+
+      return path;
     }
+
+    return null; // Return null if no matching user is found
   }
+  
+
 
 }

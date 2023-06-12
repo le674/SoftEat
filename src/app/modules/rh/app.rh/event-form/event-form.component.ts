@@ -103,33 +103,29 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   }
 
 
-  saveRows(): void {
-    // Retrieve the information of the rows
-    const rowInfo = this.rows.map(async row => {
-      this.newEvent = {
-        start: row.prisePoste + ":00",
-        end: row.finPoste + ":00",
-        text: row.event,
-        id: 'newEventId',
-        tags: this.getMotifLabel(row.motif),
-        resource: row.lieu
-      }
-      const user: string | null = await this.calendar.getToken(row.personnel);
-      if (user) {
-        this.addEvent(user, this.newEvent);
-      }/*return {
-        personnel: row.personnel,
-        motif: this.getMotifLabel(row.motif),
-        event: row.event,
-        lieu: row.lieu,
-        prisePoste: row.prisePoste,
-        finPoste: row.finPoste,
-        repeter: this.getRepeterLabel(row.repeter)
-      };*/
-    });
-    this.closeDialog();
+  async saveRows(): Promise<void> {
+  // Retrieve the information of the rows
+  for (const row of this.rows) {
+    this.newEvent = {
+      start: row.prisePoste + ":00",
+      end: row.finPoste + ":00",
+      text: row.event,
+      id: 'newEventId',
+      tags: this.getMotifLabel(row.motif),
+      resource: row.lieu
+    };
+    console.log('Personnel:', row.personnel);
+    const userPath: string | null = await this.calendar.getPath(row.personnel);
+    console.log("Path : ", userPath);
+    if (userPath) {
+      await this.addEvent(userPath, this.newEvent); // Wait for the event to be added
+    }
   }
+  this.closeDialog();
+}
 
+  
+  
   getMotifLabel(value: string): string {
     switch (value) {
       case 'motif-option1':
@@ -160,10 +156,11 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     }
   }
 
-  addEvent(user: string, newEvent: DayPilot.EventData): void {
-    this.calendar.add_event('foodandboost_prop', user, newEvent);
-    //this.loadEvents();
+  addEvent(userId: string, newEvent: DayPilot.EventData): void {
+    const prop = 'foodandboost_prop'; // Assuming the property name is fixed
+    this.calendar.add_event(prop, userId, newEvent);
   }
+  
   closeDialog(): void {
     this.dialogRef.close(); // Close the dialog
   }
