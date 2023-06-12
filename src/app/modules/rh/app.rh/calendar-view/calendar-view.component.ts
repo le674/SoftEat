@@ -84,21 +84,22 @@ export class CalendarViewComponent implements AfterViewInit {
         args.data.barColor = "#ff0000"; // duration bar
         args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background
         //args.data.backColor = "rgba(255, 0, 0, 0.2)"; // background 
-        args.data.toolTip = "This is an important event.";
-      } else if(args.data.tags === "Congés") {
+        //args.data.toolTip = "This is an important event.";
+      } else if (args.data.tags === "Congés") {
         args.data.barColor = "#ffa500";
         args.data.barBackColor = "rgba(255, 165, 0, 0.5)"; // duration bar background
-        args.data.toolTip = "This is a regular event.";
-      } else if(args.data.tags === "Entretien") {
+        //args.data.toolTip = "This is a regular event.";
+      } else if (args.data.tags === "Entretien") {
         args.data.barColor = "#7db52e";
         args.data.barBackColor = "rgba(121, 181, 46, 0.5)"; // duration bar background
-        args.data.toolTip = "This is a regular event.";
+        //args.data.toolTip = "This is a regular event.";
       } else {
-        args.data.toolTip = "This is a regular event.";
+        //args.data.toolTip = "This is a regular event.";
       }
-      args.data.html = "<span class='event'><strong>"+ args.data.tags + "</strong><br>" +
-      "<div style='font-style: italic;'>" + args.data.resource + "</div><br>" + 
-      args.data.text + "</span>";
+      let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + args.data.resource + "</div>" : "";
+      args.data.html = "<span class='event'><strong>" + args.data.tags + "</strong><br>" +
+        resourceHtml + "<br>" +
+        args.data.text + "</span>";
     }
   };
 
