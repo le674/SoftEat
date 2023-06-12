@@ -81,6 +81,8 @@ export class CalendarViewComponent implements AfterViewInit {
 
   configDay: DayPilot.CalendarConfig = {
     locale : "fr-fr",
+    eventMoveHandling : "Disabled",
+    eventResizeHandling : "Disabled",
     eventArrangement : "SideBySide",
     contextMenu : new DayPilot.Menu({
       items: [
@@ -111,6 +113,8 @@ export class CalendarViewComponent implements AfterViewInit {
 
   configWeek: DayPilot.CalendarConfig = {
     locale : "fr-fr",
+    eventMoveHandling : "Disabled",
+    eventResizeHandling : "Disabled",
     eventArrangement : "SideBySide",
     contextMenu : new DayPilot.Menu({
       items: [
@@ -166,6 +170,8 @@ export class CalendarViewComponent implements AfterViewInit {
 
   configMonth: DayPilot.MonthConfig = {
     locale : "fr-fr",
+    eventMoveHandling : "Disabled",
+    eventResizeHandling : "Disabled",
     contextMenu : new DayPilot.Menu({
       items: [
         {
