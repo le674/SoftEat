@@ -5,6 +5,7 @@ import { getDatabase, ref, push, onValue, query, orderByChild, limitToLast, onCh
 import { FirebaseApp } from '@angular/fire/app';
 import { AppMessageTemplateComponent } from '../app.message.template/app.message.template.component';
 import { HttpClient } from '@angular/common/http';
+import { MessageModel } from '../messages_models/model';
 
 @Component({
   selector: 'app-messagerie',
@@ -26,6 +27,7 @@ export class AppMessagerieComponent implements OnInit {
   inputText!: string;
   firebaseApp: FirebaseApp | undefined;
   http!: HttpClient;
+  messagerie!: MessageModel[];
   
   constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService, http: HttpClient) {  
     this.firebaseApp = firebaseApp;
@@ -90,12 +92,16 @@ export class AppMessagerieComponent implements OnInit {
     onChildAdded(dataRef, (snapshot) => {
       console.log('new message detected');
       const data = snapshot.val();
-      console.log(data);
-      const msg = new AppMessageTemplateComponent(this.http);
-      msg.setText(data.text)
-
+      //console.log(data);
+      this.messagerie.push(data);
+      console.log(this.messagerie);
       //Ajouter msg au DOM
+
     });
+  }
+
+  getMessagerie(): MessageModel[]{
+    return this.messagerie;
   }
 }
 

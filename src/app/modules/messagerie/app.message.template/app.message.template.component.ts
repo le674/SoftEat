@@ -3,13 +3,19 @@ import { FirebaseApp,  } from "@angular/fire/app";
 import { getDatabase, ref, onValue, get} from 'firebase/database';
 import { Statut } from '../../../interfaces/statut';
 import { HttpClient } from '@angular/common/http';
+import { MessageModel } from '../messages_models/model';
+import { AppMessagerieComponent } from '../app.messagerie/app.messagerie.component';
 
 @Component({
   selector: 'message-template',
   templateUrl: './app.message.template.component.html',
   styleUrls: ['./app.message.template.component.css']
 })
+
 export class AppMessageTemplateComponent implements OnInit {
+
+  listeMessages!: MessageModel[];
+
   date = new Date();
   text!: string;
   message!: string;
@@ -23,7 +29,9 @@ export class AppMessageTemplateComponent implements OnInit {
   surname!: string;
 
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private messagerie: AppMessagerieComponent) { }
 
   ngOnInit(): void {
     this.message = "received";
@@ -32,6 +40,7 @@ export class AppMessageTemplateComponent implements OnInit {
     this.fetchUserStatus();
     this.fetchTimeServer();
     this.getName();
+    this.listeMessages = this.messagerie.getMessagerie();
   }
 
   setText(text: string) {
@@ -68,6 +77,7 @@ export class AppMessageTemplateComponent implements OnInit {
     this.text = localStorage.getItem("user_email") as string;
   }
 
+  //recuperation heure du serveur
   fetchTimeServer(){
     this.http.get('http://worldtimeapi.org/api/timezone/Europe/Paris').subscribe((data: any) => {
       const utcDateTime = data.utc_datetime.slice(11,16); //"utc_datetime": "2023-06-06T12:50:44.493419+00:00"
@@ -104,3 +114,5 @@ export class AppMessageTemplateComponent implements OnInit {
 
   }
 }
+
+
