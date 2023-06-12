@@ -15,15 +15,15 @@
         }" class="message_bubble" dir="auto">
           <div class="message_infos">
             <div class="name">  
-              <p>{{ surname }} {{ name }}</p>
+              <p>{{ listeMessages.auteur }}</p>
             </div>
             <div class="time_sent">
               <!-- <p>{{ date | date: 'd MMMM, HH:mm'}}</p> -->
-              <p> {{ heure }} </p>
+              <p> {{ listeMessages.horodatage }} </p>
             </div>
           </div>
           <div class="message_content">
-            <p>Ceci est un text.</p>
+            <p>{{ listeMessages.contenu }}</p>
           </div>
         </div>
         <div class="message_spacer">
