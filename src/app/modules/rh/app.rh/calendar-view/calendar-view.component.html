@@ -4,11 +4,11 @@
     </div>
     <div class="content">
       <div class="buttons">
-      <button (click)="viewDay()" [class]="this.configNavigator.selectMode == 'Day' ? 'selected' : ''">Day</button>
-      <button (click)="viewWeek()" [class]="this.configNavigator.selectMode == 'Week' ? 'selected' : ''">Week</button>
-      <button (click)="viewMonth()" [class]="this.configNavigator.selectMode == 'Month' ? 'selected' : ''">Month</button>
-      <button (click)="addEvent()">Add Event</button>    
-      <button (click)="openEventForm()">Ajouter un évènement (OUVRE LE FORM) <!--<i class="fa-tag"></i>--> </button>
+      <button (click)="viewDay()" [class]="this.configNavigator.selectMode == 'Day' ? 'selected' : ''">Jour</button>
+      <button (click)="viewWeek()" [class]="this.configNavigator.selectMode == 'Week' ? 'selected' : ''">Semaine</button>
+      <button (click)="viewMonth()" [class]="this.configNavigator.selectMode == 'Month' ? 'selected' : ''">Mois</button>
+      <!--<button (click)="addEvent()">Add Event</button>  -->  
+      <button (click)="openEventForm()">Ajouter un évènement<!--<i class="fa-tag"></i>--> </button>
     </div>
 
       <daypilot-calendar [config]="configDay" [events]="events" #day></daypilot-calendar>
