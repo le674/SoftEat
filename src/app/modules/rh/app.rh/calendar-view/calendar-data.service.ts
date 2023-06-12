@@ -12,6 +12,7 @@ interface Event {
   text: string;
   id:string;
   tags:string;
+  resource:string;
 }
 
 @Injectable()
@@ -59,6 +60,7 @@ export class CalendarService {
             text: event.text,
             id: event.id,
             tags : event.tags,
+            resource: event.resource,
            });
         }
         return false; // regarde le prochain event
@@ -85,7 +87,8 @@ export class CalendarService {
         end: endString,
         text: newEvent.text,
         id: id,
-        tags : newEvent.tags,
+        tags: newEvent.tags,
+        resource: newEvent.resource,
     };
 
     await set(eventRef, event);
