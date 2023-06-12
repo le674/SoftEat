@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseApp, initializeApp } from "@angular/fire/app";
-import { getDatabase, ref, onValue} from 'firebase/database';
+import { getDatabase, ref, onValue, query, equalTo, get} from 'firebase/database';
 import { Statut } from '../../../interfaces/statut';
 import { HttpClient } from '@angular/common/http';
 import { FirebaseService } from '../../../services/firebase.service';
@@ -21,6 +21,9 @@ export class AppMessageTemplateComponent implements OnInit {
   // private http!: HttpClient; // Dois être défini dans le constructeur
   heure!: string;
   firebaseApp: FirebaseApp | undefined;
+  name1!: string[];
+  name!: string;
+  surname!: string;
 
 
   constructor(private http: HttpClient, firebaseApp: FirebaseApp) { }
@@ -32,6 +35,7 @@ export class AppMessageTemplateComponent implements OnInit {
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
     this.fetchUserStatus();
     this.fetchTimeServer();
+    this.getName();
   }
 
   updateSeparationDate(){
@@ -61,12 +65,6 @@ export class AppMessageTemplateComponent implements OnInit {
       console.log('Une erreur s\'est produite lors de la récupération des statuts :', error);
     });
 
-    // this.text = "Voici mes statuts :\n alertes : " + this.statut.alertes 
-    // + ",\n analyse : " + this.statut.analyse + ",\n budget : " 
-    // + this.statut.budget + ",\n facture : " + this.statut.facture 
-    // + ",\n planning : " + this.statut.planning + ",\n stock : " 
-    // + this.statut.stock + ".";
-    // const userConversations = ref(db, 'restaurants/' + )
     this.text = localStorage.getItem("user_email") as string;
   }
 
@@ -87,4 +85,22 @@ export class AppMessageTemplateComponent implements OnInit {
     });
   }
 
+
+  async getName(): Promise<void> { //: Promise<string>
+    const db = getDatabase(this.firebaseApp);
+    const usersRef = ref(db, 'users/foodandboost_prop');
+    const usersSnapShot = await get(usersRef);
+
+    if (usersSnapShot.exists()) {
+
+      usersSnapShot.forEach((userSnapShot) => {
+        const user = userSnapShot.val();
+        if (user.email == this.email) {
+          this.name = user.nom;
+          this.surname = user.prenom;
+        }
+      });
+    }
+
+  }
 }
