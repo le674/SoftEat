@@ -18,7 +18,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   @ViewChild('addFinPoste') addFinPosteInput!: ElementRef<HTMLInputElement>;
   @ViewChild('addRepeter') addRepeterSelect!: ElementRef<HTMLSelectElement>;
   dateWidth = '150px'; // Default width
-  newEvent? : DayPilot.EventData;
+  newEvent?: DayPilot.EventData;
 
   constructor(private calendar: CalendarService, public dialogRef: MatDialogRef<EventFormComponent>) {
     this.dialogRef = dialogRef;
@@ -27,13 +27,15 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   /* Les deux premières méthodes ajoutent automatiquement des majuscules sur 
   le premier caractère du champ Evenement uniformiser */
   ngOnInit(): void {
-    const inputFields: HTMLInputElement[] = [
-      this.addEventInput.nativeElement
-    ];
+    setTimeout(() => {
+      const inputFields: HTMLInputElement[] = [
+        this.addEventInput.nativeElement
+      ];
 
-    inputFields.forEach((input) => {
-      input.addEventListener('input', () => {
-        this.truncateInputValue(input);
+      inputFields.forEach((input) => {
+        input.addEventListener('input', () => {
+          this.truncateInputValue(input);
+        });
       });
     });
   }
@@ -44,7 +46,9 @@ export class EventFormComponent implements OnInit, AfterViewInit {
 
   /* Les 2 méthodes suivantes permettent de rendre l'espace occupé par la date responsive*/
   ngAfterViewInit(): void {
-    this.calculateInputWidth();
+    setTimeout(() => {
+      this.calculateInputWidth();
+    });
   }
 
   calculateInputWidth(): void {
@@ -101,17 +105,19 @@ export class EventFormComponent implements OnInit, AfterViewInit {
 
   saveRows(): void {
     // Retrieve the information of the rows
-    const rowInfo = this.rows.map(row => {
+    const rowInfo = this.rows.map(async row => {
       this.newEvent = {
-        start: row.prisePoste+":00",
-        end: row.finPoste+":00",
+        start: row.prisePoste + ":00",
+        end: row.finPoste + ":00",
         text: row.event,
         id: 'newEventId',
         tags: this.getMotifLabel(row.motif),
         resource: row.lieu
       }
-      this.addEvent(this.newEvent);
-      /*return {
+      const user: string | null = await this.calendar.getToken(row.personnel);
+      if (user) {
+        this.addEvent(user, this.newEvent);
+      }/*return {
         personnel: row.personnel,
         motif: this.getMotifLabel(row.motif),
         event: row.event,
@@ -122,12 +128,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       };*/
     });
     this.closeDialog();
-    //this.calendar.closeEventForm();
-    // Display the information
-    //const infoText = JSON.stringify(rowInfo, null, 2); // Convert the information to a formatted JSON string
-    //alert(infoText); // You can replace this with any other display method you prefer
   }
-  
+
   getMotifLabel(value: string): string {
     switch (value) {
       case 'motif-option1':
@@ -142,7 +144,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         return '';
     }
   }
-  
+
   getRepeterLabel(value: string): string {
     switch (value) {
       case 'repeter-option1':
@@ -158,8 +160,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     }
   }
 
-  addEvent(newEvent : DayPilot.EventData): void {
-    this.calendar.add_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', newEvent);
+  addEvent(user: string, newEvent: DayPilot.EventData): void {
+    this.calendar.add_event('foodandboost_prop', user, newEvent);
     //this.loadEvents();
   }
   closeDialog(): void {
