@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FirebaseApp, initializeApp } from "@angular/fire/app";
-import { getDatabase, ref, onValue, query, equalTo, get} from 'firebase/database';
+import { FirebaseApp,  } from "@angular/fire/app";
+import { getDatabase, ref, onValue, get} from 'firebase/database';
 import { Statut } from '../../../interfaces/statut';
 import { HttpClient } from '@angular/common/http';
-import { FirebaseService } from '../../../services/firebase.service';
-
 
 @Component({
   selector: 'message-template',
@@ -18,7 +16,6 @@ export class AppMessageTemplateComponent implements OnInit {
   separationDateB!: boolean;
   statut!: Statut;
   email!: any;
-  // private http!: HttpClient; // Dois être défini dans le constructeur
   heure!: string;
   firebaseApp: FirebaseApp | undefined;
   name1!: string[];
@@ -26,16 +23,19 @@ export class AppMessageTemplateComponent implements OnInit {
   surname!: string;
 
 
-  constructor(private http: HttpClient, firebaseApp: FirebaseApp) { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.message = "received";
-    this.text = "Bonjour la messagerie !";
     this.separationDateB = true;
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
     this.fetchUserStatus();
     this.fetchTimeServer();
     this.getName();
+  }
+
+  setText(text: string) {
+    this.text = text;
   }
 
   updateSeparationDate(){

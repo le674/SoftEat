@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
 import { getDatabase, ref, push, onValue, query, orderByChild, limitToLast, onChildAdded } from 'firebase/database';
 import { FirebaseApp } from '@angular/fire/app';
-import { Observable, map } from 'rxjs';  
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
+import { AppMessageTemplateComponent } from '../app.message.template/app.message.template.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-messagerie',
@@ -13,6 +13,7 @@ import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/datab
 })
 
 export class AppMessagerieComponent implements OnInit {
+  @ViewChild('messages', { read: ViewContainerRef }) messages!: ViewContainerRef;
   text!: string;
   notification!: boolean[];
   statut!: Statut;
@@ -24,10 +25,12 @@ export class AppMessagerieComponent implements OnInit {
   stockCanal!: boolean; //(this.statut.stock === 'rw');
   inputText!: string;
   firebaseApp: FirebaseApp | undefined;
+  http!: HttpClient;
   
-  constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService) {  
+  constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService, http: HttpClient) {  
     this.firebaseApp = firebaseApp;
     this.fetchData();
+    this.http = http;
   }
 
   
@@ -88,8 +91,10 @@ export class AppMessagerieComponent implements OnInit {
       console.log('new message detected');
       const data = snapshot.val();
       console.log(data);
-      // const messageTemplate = document.createElement('message-template');
-      // document.getElementById('messages')?.appendChild(messageTemplate);
+      const msg = new AppMessageTemplateComponent(this.http);
+      msg.setText(data.text)
+
+      //Ajouter msg au DOM
     });
   }
 }
