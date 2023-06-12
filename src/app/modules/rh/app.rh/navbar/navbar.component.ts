@@ -150,7 +150,6 @@ export class NavbarComponent implements OnInit {
           if (email) {
             if (role == 'gerant') {
               this.Gerants.push({ nom: email, selectionne: false });
-              console.log(userID);
             } else if (role == 'rh') {
               this.Rh.push({ nom: email, selectionne: false });
             } else if (role == 'serveur') {
