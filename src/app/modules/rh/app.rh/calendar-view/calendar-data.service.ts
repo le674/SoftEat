@@ -51,7 +51,7 @@ export class CalendarService {
 
     if (eventsSnapshot.exists()) {
       this.events = [];
-      eventsSnapshot.forEach((eventSnapshot) => { //parcoure les events de la BDD
+      eventsSnapshot.forEach((eventSnapshot) => { //parcourt les events de la BDD
         const event = eventSnapshot.val() as Event;
         if (event.start >= fromDateString && event.start <= toDateString) {
           this.events.push({

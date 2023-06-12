@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
-import { getDatabase, ref, push } from 'firebase/database';
+import { getDatabase, ref, push, onValue, query, orderByChild, limitToLast, onChildAdded } from 'firebase/database';
 import { FirebaseApp } from '@angular/fire/app';
+import { Observable, map } from 'rxjs';  
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 
 @Component({
   selector: 'app-messagerie',
@@ -25,6 +27,7 @@ export class AppMessagerieComponent implements OnInit {
   
   constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService) {  
     this.firebaseApp = firebaseApp;
+    this.fetchData();
   }
 
   
@@ -75,5 +78,19 @@ export class AppMessagerieComponent implements OnInit {
     this.inputText = "";
   }
 
+  fetchData() {
+    // Création d'une instance de la database
+    const db = getDatabase(this.firebaseApp);
+    // Node à monitorer
+    const dataRef = ref(db, 'conversations/deliss_pizz/deliss_pizz/del42_ana_037581');
+
+    onChildAdded(dataRef, (snapshot) => {
+      console.log('new message detected');
+      const data = snapshot.val();
+      console.log(data);
+      // const messageTemplate = document.createElement('message-template');
+      // document.getElementById('messages')?.appendChild(messageTemplate);
+    });
+  }
 }
 
