@@ -107,7 +107,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         end: row.finPoste+":00",
         text: row.event,
         id: 'newEventId',
-        tags: this.getMotifLabel(row.motif)
+        tags: this.getMotifLabel(row.motif),
+        resource: row.lieu
       }
       this.addEvent(this.newEvent);
       /*return {
