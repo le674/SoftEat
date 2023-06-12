@@ -98,21 +98,36 @@ export class CalendarViewComponent implements AfterViewInit {
       ]
     }),
     dayBeginsHour : 8,
-    dayEndsHour : 22,
+    dayEndsHour : 24,
     onBeforeEventRender: args => {
-      if (args.data.tags === "important") {
-        args.data.barColor = "#ff0000"; // red color for important events
-        args.data.html = "<span class='important-event'>" + args.data.text + "</span>";
-        args.data.toolTip = "This is an important event.";
+      if (args.data.tags === "Maladie") {
+        args.data.barColor = "#ff0000"; // duration bar
+        args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background
+        //args.data.backColor = "rgba(255, 0, 0, 0.2)"; // background 
+        //args.data.toolTip = "This is an important event.";
+      } else if (args.data.tags === "Congés") {
+        args.data.barColor = "#ffa500";
+        args.data.barBackColor = "rgba(255, 165, 0, 0.5)"; // duration bar background
+        //args.data.toolTip = "This is a regular event.";
+      } else if (args.data.tags === "Entretien") {
+        args.data.barColor = "#7db52e";
+        args.data.barBackColor = "rgba(121, 181, 46, 0.5)"; // duration bar background
+        //args.data.toolTip = "This is a regular event.";
       } else {
-        args.data.html = args.data.text;
-        args.data.toolTip = "This is a regular event.";
+        //args.data.toolTip = "This is a regular event.";
       }
+      let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + args.data.resource + "</div>" : "";
+      args.data.html = "<span class='event'><strong>" + args.data.tags + "</strong><br>" +
+        resourceHtml + "<br>" +
+        args.data.text + "</span>";
     }
   };
 
   configWeek: DayPilot.CalendarConfig = {
     locale : "fr-fr",
+    width : "110%",
+    heightSpec : "Fixed",
+    height:600,
     eventMoveHandling : "Disabled",
     eventResizeHandling : "Disabled",
     eventArrangement : "SideBySide",
@@ -130,20 +145,8 @@ export class CalendarViewComponent implements AfterViewInit {
       ]
     }),    
     dayBeginsHour : 8,
-    dayEndsHour : 22,
+    dayEndsHour : 24,
     viewType: "Week",
-    onTimeRangeSelected: async (args) => {
-      const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
-      const dp = args.control;
-      dp.clearSelection();
-      if (!modal.result) { return; }
-      dp.events.add(new DayPilot.Event({
-        start: args.start,
-        end: args.end,
-        id: DayPilot.guid(),
-        text: modal.result//modifier ?
-      }));
-    },
     onBeforeEventRender: args => {
       if (args.data.tags === "Maladie") {
         args.data.barColor = "#ff0000"; // duration bar
@@ -186,13 +189,21 @@ export class CalendarViewComponent implements AfterViewInit {
       ]
     }),    
     onBeforeEventRender: args => {
-      if (args.data.tags === "important") {
-        args.data.barColor = "#ff0000"; // red color for important events
-        args.data.html = "<span class='important-event'>" + args.data.text + "</span>";
-        args.data.toolTip = "This is an important event.";
+      if (args.data.tags === "Maladie") {
+        args.data.barColor = "#ff0000"; // duration bar
+        args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background
+        //args.data.backColor = "rgba(255, 0, 0, 0.2)"; // background 
+        //args.data.toolTip = "This is an important event.";
+      } else if (args.data.tags === "Congés") {
+        args.data.barColor = "#ffa500";
+        args.data.barBackColor = "rgba(255, 165, 0, 0.5)"; // duration bar background
+        //args.data.toolTip = "This is a regular event.";
+      } else if (args.data.tags === "Entretien") {
+        args.data.barColor = "#7db52e";
+        args.data.barBackColor = "rgba(121, 181, 46, 0.5)"; // duration bar background
+        //args.data.toolTip = "This is a regular event.";
       } else {
-        args.data.html = args.data.text;
-        args.data.toolTip = "This is a regular event.";
+        //args.data.toolTip = "This is a regular event.";
       }
     }
 
