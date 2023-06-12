@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DayPilot } from 'daypilot-pro-angular';
 import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_FIRESTORE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
 import { environment } from 'src/environments/environment';
-import { child, push, remove, connectDatabaseEmulator, get, set, getDatabase, ref } from 'firebase/database';
+import { child, push, remove, connectDatabaseEmulator, get, set, getDatabase, ref, query, orderByChild, equalTo } from 'firebase/database';
 import { connectFirestoreEmulator, Firestore, getFirestore } from "firebase/firestore";
 import { FirebaseApp, initializeApp } from "@angular/fire/app";
 
@@ -10,9 +10,9 @@ interface Event {
   start: string;
   end: string;
   text: string;
-  id:string;
-  tags:string;
-  resource:string;
+  id: string;
+  tags: string;
+  resource: string;
 }
 
 @Injectable()
@@ -59,9 +59,9 @@ export class CalendarService {
             end: event.end,
             text: event.text,
             id: event.id,
-            tags : event.tags,
+            tags: event.tags,
             resource: event.resource,
-           });
+          });
         }
         return false; // regarde le prochain event
       });
@@ -69,6 +69,8 @@ export class CalendarService {
 
     return this.events;
   }
+
+
 
   async add_event(prop: string, user: string, newEvent: DayPilot.EventData): Promise<void> {
     // Chemin vers la BDD
@@ -83,12 +85,12 @@ export class CalendarService {
 
     // Crée l'événement
     const event = {
-        start: startString,
-        end: endString,
-        text: newEvent.text,
-        id: id,
-        tags: newEvent.tags,
-        resource: newEvent.resource,
+      start: startString,
+      end: endString,
+      text: newEvent.text,
+      id: id,
+      tags: newEvent.tags,
+      resource: newEvent.resource,
     };
 
     await set(eventRef, event);
@@ -101,5 +103,27 @@ export class CalendarService {
     // Remove the event
     await remove(ref(this.db, path));
   }
+  async getPath(email: string): Promise<string | null> {
+    const database = getDatabase(this.ofApp); // Get the Realtime Database instance
+
+    // Query the database to find the path based on the email
+    const usersRef = ref(database, 'users');
+    const queryRef = query(usersRef, orderByChild('email'), equalTo(email));
+    const snapshot = await get(queryRef);
+
+    if (snapshot.exists()) {
+      // Get the first matching user's key (assuming there is only one match)
+      const userId = Object.keys(snapshot.val())[0];
+      
+      // Construct the path using the found user ID
+      const path = `${userId}`;
+
+      return path;
+    }
+
+    return null; // Return null if no matching user is found
+  }
+  
+
 
 }
