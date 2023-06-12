@@ -18,10 +18,10 @@ export class AppMessageTemplateComponent implements OnInit {
   separationDateB!: boolean;
   statut!: Statut;
   email!: any;
+  userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2';
   // private http!: HttpClient; // Dois être défini dans le constructeur
   heure!: string;
   firebaseApp: FirebaseApp | undefined;
-  name1!: string[];
   name!: string;
   surname!: string;
 
@@ -33,8 +33,9 @@ export class AppMessageTemplateComponent implements OnInit {
     this.text = "Bonjour la messagerie !";
     this.separationDateB = true;
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
-    this.fetchUserStatus();
+    // this.fetchUserStatus();
     this.fetchTimeServer();
+    this.getEmail();
     this.getName();
   }
 
@@ -45,14 +46,8 @@ export class AppMessageTemplateComponent implements OnInit {
   fetchUserStatus() {
     const db = getDatabase(this.firebaseApp);
 
-    const userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
+    const userStatusRef = ref(db, 'users/foodandboost_prop/' + this.userId + '/statut');
 
-    const userEmailRef = ref(db, 'users/foodandboost_prop/' + userId + '/email');
-    const userStatusRef = ref(db, 'users/foodandboost_prop/' + userId + '/statut');
-
-    onValue(userEmailRef, (snapshot) => {
-      this.email = snapshot.val();
-    });
     onValue(userStatusRef, (snapshot) => {
       const statut = snapshot.val();
       // this.statut.alertes = statut.alertes;
@@ -65,7 +60,10 @@ export class AppMessageTemplateComponent implements OnInit {
       console.log('Une erreur s\'est produite lors de la récupération des statuts :', error);
     });
 
-    this.text = localStorage.getItem("user_email") as string;
+  }
+
+  getEmail() {
+    this.email = localStorage.getItem("user_email") as string;
   }
 
   fetchTimeServer(){
