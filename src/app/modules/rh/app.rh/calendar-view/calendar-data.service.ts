@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DayPilot } from 'daypilot-pro-angular';
 import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_FIRESTORE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
 import { environment } from 'src/environments/environment';
-import { child, push, connectDatabaseEmulator, get, set, getDatabase,  ref } from 'firebase/database';
+import { child, push, remove, connectDatabaseEmulator, get, set, getDatabase, ref } from 'firebase/database';
 import { connectFirestoreEmulator, Firestore, getFirestore } from "firebase/firestore";
 import { FirebaseApp, initializeApp } from "@angular/fire/app";
 
@@ -10,15 +10,15 @@ interface Event {
   start: string;
   end: string;
   text: string;
-  id:string;
-  tags:string;
+  id: string;
+  tags: string;
 }
 
 @Injectable()
 export class CalendarService {
   private firestore: Firestore;
   events: Event[] = [];
-  private firebaseConfig=environment.firebase;
+  private firebaseConfig = environment.firebase;
   private firebaseApp = initializeApp(this.firebaseConfig);
   private db = getDatabase(this.firebaseApp);
 
@@ -53,13 +53,13 @@ export class CalendarService {
       eventsSnapshot.forEach((eventSnapshot) => { //parcoure les events de la BDD
         const event = eventSnapshot.val() as Event;
         if (event.start >= fromDateString && event.start <= toDateString) {
-          this.events.push({ 
+          this.events.push({
             start: event.start,
             end: event.end,
             text: event.text,
             id: event.id,
-            tags : event.tags,
-           });
+            tags: event.tags,
+          });
         }
         return false; // regarde le prochain event
       });
@@ -81,13 +81,22 @@ export class CalendarService {
 
     // Crée l'événement
     const event = {
-        start: startString,
-        end: endString,
-        text: newEvent.text,
-        id: id,
-        tags : newEvent.tags,
+      start: startString,
+      end: endString,
+      text: newEvent.text,
+      id: id,
+      tags: newEvent.tags,
     };
 
     await set(eventRef, event);
-}
+  }
+
+  async remove_event(prop: string, user: string, eventId: string): Promise<void> {
+    // Path to the database
+    const path = `users/${prop}/${user}/planning/events/${eventId}`;
+
+    // Remove the event
+    await remove(ref(this.db, path));
+  }
+
 }
