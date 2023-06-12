@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { initializeApp } from '@angular/fire/app';
 import { getDatabase, ref, onValue, get } from 'firebase/database';
-import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
+import { FirebaseService } from '../../../../services/firebase.service';
+import { FirebaseApp, initializeApp } from "@angular/fire/app";
 
 @Component({
   selector: 'app-navbar',
@@ -23,10 +23,9 @@ export class NavbarComponent implements OnInit {
   selectAllRh: boolean = false;
   selectAllAutres: boolean = false;
 
-  email!: string;
-  role!: string;
+  firebaseApp: FirebaseApp | undefined;
 
-  constructor() {}
+  constructor(firebaseApp: FirebaseApp) {}
 
   ngOnInit(): void {
     this.Categories = [
@@ -89,7 +88,6 @@ export class NavbarComponent implements OnInit {
         }
       });
     }
-    selectAllFlag = !selectAllFlag;
   }
 
   addAllServeurs() {
@@ -127,67 +125,47 @@ export class NavbarComponent implements OnInit {
     this.selectAllGerants = !this.selectAllGerants;
   }
 
-  fetchUser() {
-    const firebaseConfig = {
-      apiKey: 'AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo',
-      authDomain: 'psofteat-65478545498421319564.firebaseapp.com',
-      databaseURL:
-        'https://psofteat-65478545498421319564-default-rtdb.firebaseio.com',
-      projectId: 'psofteat-65478545498421319564',
-      storageBucket: 'psofteat-65478545498421319564.appspot.com',
-      messagingSenderId: '135059251548',
-      appId: '1:135059251548:web:fb05e45e1d1631953f6199',
-      measurementId: 'G-5FBJE9WH0X',
-    };
-    const firebaseApp = initializeApp(firebaseConfig);
-    const db = getDatabase(firebaseApp);
-
-    //const userPath = 'restaurants/ping_11/telecom/employes/';
+  async fetchUser() {
+    const db = getDatabase(this.firebaseApp);
+  
     const userPath = '/users/foodandboost_prop/';
-
-    // Référence au chemin des utilisateurs
     const usersRef = ref(db, userPath);
-
-    // Récupérer les données des utilisateurs
-    get(usersRef)
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          const usersData = snapshot.val();
-          const userIDs = Object.keys(usersData);
-          console.log('User IDs:');
-          console.log(userIDs);
-
-          // A chaque utilisateurs dans le chemin
-          userIDs.forEach((userID) => {
-            const userEmailRef = ref(db, `${userPath}/${userID}/email`);
-            const userRoleRef = ref(db, `${userPath}/${userID}/role`);
-
-            // Récup l'email
-            onValue(userEmailRef, (snapshot) => {
-              this.email = snapshot.val();
-            });
-
-            // Récup le rôle et push dans les bonnes listes
-            onValue(userRoleRef, (roleSnapshot) => {
-              const role = roleSnapshot.val();
-              if (role == 'gerant') {
-                this.Gerants.push({ nom: this.email, selectionne: false });
-                console.log(userID);
-              } else if (role == 'rh') {
-                this.Rh.push({ nom: this.email, selectionne: false });
-              } else if (role == 'serveur') {
-                this.Serveurs.push({ nom: this.email, selectionne: false });
-              } else {
-                this.Autres.push({ nom: this.email, selectionne: false });
-              }
-            });
-          });
-        } else {
-          console.log('No user data found.');
+  
+    try {
+      const snapshot = await get(usersRef);
+      if (snapshot.exists()) {
+        const usersData = snapshot.val();
+        const userIDs = Object.keys(usersData);
+  
+        for (const userID of userIDs) {
+          const userEmailRef = ref(db, `${userPath}/${userID}/email`);
+          const userRoleRef = ref(db, `${userPath}/${userID}/role`);
+  
+          const emailSnapshot = await get(userEmailRef);
+          const email = emailSnapshot.val();
+  
+          const roleSnapshot = await get(userRoleRef);
+          const role = roleSnapshot.val();
+  
+          if (email) {
+            if (role == 'gerant') {
+              this.Gerants.push({ nom: email, selectionne: false });
+              console.log(userID);
+            } else if (role == 'rh') {
+              this.Rh.push({ nom: email, selectionne: false });
+            } else if (role == 'serveur') {
+              this.Serveurs.push({ nom: email, selectionne: false });
+            } else {
+              this.Autres.push({ nom: email, selectionne: false });
+            }
+          }
         }
-      })
-      .catch((error) => {
-        console.error('An error occurred while retrieving user data:', error);
-      });
+      } else {
+        console.log('No user data found.');
+      }
+    } catch (error) {
+      console.error('An error occurred while retrieving user data:', error);
+    }
   }
+  
 }
