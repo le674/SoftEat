@@ -54,23 +54,36 @@ export class FirebaseService {
     //     });
     // }
       
-    fetchUserStatus(userId: string)  { //Promise<Statut>
+    fetchUserStatus(userId: string): Promise<Statut> { 
         const userStatusRef = this.getUserStatusRef(userId);
 
-        onValue(userStatusRef, (snapshot) => {
-            const statut = snapshot.val();
-            this.statut.analyse = statut.analyse;
-            this.statut.budget = statut.budget;
-            this.statut.facture = statut.facture;
-            this.statut.planning = statut.planning;
-            this.statut.stock = statut.stock;
+        return new Promise<Statut>((resolve, reject) => {
+            onValue(userStatusRef, (snapshot) => {
+                const statut = snapshot.val();
+                resolve(statut);
+            }, (error) => {
+                reject(error);
+            });
+            //     this.statut = {is_prop:false,
+            //         stock:"",
+            //         alertes:"",
+            //         analyse:"",
+            //         budget:"",
+            //         facture:"",
+            //         planning:""};
+            //     this.statut.analyse = statut.analyse;
+            //     this.statut.budget = statut.budget;
+            //     this.statut.facture = statut.facture;
+            //     this.statut.planning = statut.planning;
+            //     this.statut.stock = statut.stock;
+            // });
+            // return this.statut;
         });
-        return this.statut;
+        
     }
     
     
 }
-
 
 
   

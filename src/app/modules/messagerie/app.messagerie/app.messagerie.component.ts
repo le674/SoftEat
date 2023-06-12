@@ -15,11 +15,11 @@ export class AppMessagerieComponent implements OnInit {
   notification!: boolean[];
   statut!: Statut;
   userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
-  analyse!: boolean;
-  budget!: boolean;
-  facture!: boolean;
-  planning!: boolean;
-  stock!: boolean; //(this.statut.stock === 'rw');
+  analyseCanal!: boolean;
+  budgetCanal!: boolean;
+  factureCanal!: boolean;
+  planningCanal!: boolean;
+  stockCanal!: boolean; //(this.statut.stock === 'rw');
   inputText!: string;
   firebaseApp: FirebaseApp | undefined;
   
@@ -29,23 +29,20 @@ export class AppMessagerieComponent implements OnInit {
 
   
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> { //: Promise<void>
     this.text = "it works !";
     this.notification = [true, true, true, true, true, true, true];
-    this.statut = this.firebaseService.fetchUserStatus(this.userId);
-    // this.showCanal();
+    this.statut = await this.firebaseService.fetchUserStatus(this.userId); //await
+    this.showCanal();
   }
 
 
   showCanal() {
-    if(this.statut.stock === 'rw' || this.statut.stock === 'r' ) {
-      this.stock = true;
-      console.log(this.stock);
-    }
-    if(this.statut.analyse === 'rw' || this.statut.analyse === 'r' ) this.stock = true;
-    if(this.statut.budget === 'rw' || this.statut.budget === 'r' ) this.budget = true;
-    if(this.statut.facture === 'rw' || this.statut.facture === 'r' ) this.facture = true;
-    if(this.statut.planning === 'rw' || this.statut.planning === 'r' ) this.planning = true;
+    if(this.statut.stock === 'wr' || this.statut.stock === 'rw' || this.statut.stock === 'r' ) this.stockCanal = true;
+    if(this.statut.analyse === 'wr' || this.statut.analyse === 'rw' || this.statut.stock === 'r' ) this.stockCanal = true;
+    if(this.statut.budget === 'wr' || this.statut.budget === 'rw' || this.statut.stock === 'r' ) this.budgetCanal = true;
+    if(this.statut.facture === 'wr' || this.statut.facture === 'rw' || this.statut.stock === 'r' ) this.factureCanal = true;
+    if(this.statut.planning === 'wr' || this.statut.planning === 'rw' || this.statut.stock === 'r' ) this.planningCanal = true;
   }
 
   messageInput = document.getElementById("messageInput");
