@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FirebaseApp,  } from "@angular/fire/app";
+import { Component, Input, OnInit } from '@angular/core';
+import { FirebaseApp } from "@angular/fire/app";
 import { getDatabase, ref, onValue, get} from 'firebase/database';
 import { Statut } from '../../../interfaces/statut';
 import { HttpClient } from '@angular/common/http';
@@ -14,7 +14,7 @@ import { AppMessagerieComponent } from '../app.messagerie/app.messagerie.compone
 
 export class AppMessageTemplateComponent implements OnInit {
 
-  listeMessages!: MessageModel[];
+  @Input() listeMessages!: MessageModel[];
 
   date = new Date();
   text!: string;

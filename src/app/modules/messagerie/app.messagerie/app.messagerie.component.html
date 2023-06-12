@@ -21,8 +21,7 @@
       </div>
       <div id="conversation">
          <div id="messages">
-            <message-template></message-template>
-            <message-template></message-template>
+            <message-template *ngFor="let message of messagerie" [listeMessages]="message"></message-template>
          </div>
          <div id="message_bar">  
             <input type="text" [(ngModel)]="inputText" id="messageInput" autocomplete="off"/>

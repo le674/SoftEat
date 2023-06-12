@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
-import { getDatabase, ref, push, onValue, query, orderByChild, limitToLast, onChildAdded } from 'firebase/database';
+import { getDatabase, ref, push, onChildAdded } from 'firebase/database';
 import { FirebaseApp } from '@angular/fire/app';
-import { AppMessageTemplateComponent } from '../app.message.template/app.message.template.component';
 import { HttpClient } from '@angular/common/http';
 import { MessageModel } from '../messages_models/model';
 
@@ -14,7 +13,6 @@ import { MessageModel } from '../messages_models/model';
 })
 
 export class AppMessagerieComponent implements OnInit {
-  @ViewChild('messages', { read: ViewContainerRef }) messages!: ViewContainerRef;
   text!: string;
   notification!: boolean[];
   statut!: Statut;
