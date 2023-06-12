@@ -47,8 +47,8 @@
           <select #addRepeter required>
             <option disabled selected value="">Répéter</option>
             <option value="repeter-option2">Cette semaine</option>
-            <option value="repeter-option3">Ce mois</option>
-            <option value="repeter-option4">?</option>
+            <option value="repeter-option3">Chaque semaine</option>
+            <option value="repeter-option4">Chaque jour</option>
             <option value="repeter-option1">Non</option>
           </select>
         </td>
@@ -75,8 +75,8 @@
         <td class="col-xs-5"><select [(ngModel)]="row.repeter">
             <option disabled selected value="">Répéter</option>
             <option value="repeter-option2" [selected]="row.repeter === 'repeter-option2'">Cette semaine</option>
-            <option value="repeter-option3" [selected]="row.repeter === 'repeter-option3'">Ce mois</option>
-            <option value="repeter-option4" [selected]="row.repeter === 'repeter-option4'">?</option>
+            <option value="repeter-option3" [selected]="row.repeter === 'repeter-option3'">Chaque semaine</option>
+            <option value="repeter-option4" [selected]="row.repeter === 'repeter-option4'">Chaque jour</option>
             <option value="repeter-option1" [selected]="row.repeter === 'repeter-option1'">Non</option>
           </select></td>
         <td class="col-xs-1 text-center">

@@ -74,14 +74,25 @@ export class CalendarViewComponent implements AfterViewInit {
       }));
     },
     onBeforeEventRender: args => {
-      if (args.data.tags === "important") {
-        args.data.barColor = "#ff0000"; // red color for important events
-        args.data.html = "<span class='important-event'>" + args.data.text + "</span>";
+      if (args.data.tags === "Maladie") {
+        args.data.barColor = "#ff0000"; // duration bar
+        args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background
+        args.data.backColor = "rgba(255, 0, 0, 0.2)"; // background 
         args.data.toolTip = "This is an important event.";
+      } else if(args.data.tags === "Congés") {
+        args.data.barColor = "#ffa500";
+        args.data.html = args.data.text;
+        args.data.toolTip = "This is a regular event.";
+      } else if(args.data.tags === "Entretien") {
+        args.data.barColor = "#7db52e";
+        args.data.html = args.data.text;
+        args.data.toolTip = "This is a regular event.";
       } else {
         args.data.html = args.data.text;
         args.data.toolTip = "This is a regular event.";
       }
+      args.data.html = "<span class='event'><strong>"+ args.data.tags + "</strong><br>" 
+      + args.data.text + "</span>";
     }
   };
 
