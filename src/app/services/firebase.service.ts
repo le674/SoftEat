@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp, initializeApp } from '@angular/fire/app';
-import { getDatabase, ref, onValue, get } from 'firebase/database';
+import { getDatabase, ref, onValue, get, DatabaseReference } from 'firebase/database';
 import { Statut } from '../interfaces/statut';
 
 
@@ -61,7 +61,24 @@ export class FirebaseService {
             }
         });
     }
+
+
+    async getUserDataReference(user_email: string): Promise<DatabaseReference> { // | null
+        const usersRef = ref(this.db, 'users/foodandboost_prop');
+        const usersSnapShot = await get(usersRef); // Ici : Erreur permission dinied
       
+        return new Promise<DatabaseReference>((resolve, reject) => { // | null
+            if (usersSnapShot.exists()) {
+                usersSnapShot.forEach((userSnapShot) => {
+                    const user = userSnapShot.val();
+                    if (user.email == user_email) {
+                        resolve(userSnapShot.ref);
+                    }
+                });
+            }
+            // resolve(null); // Si aucun utilisateur ne correspond à l'email fourni
+        });
+      }
     
     
 }

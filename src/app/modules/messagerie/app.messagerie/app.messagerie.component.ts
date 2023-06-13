@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
-import { getDatabase, ref, push, onChildAdded } from 'firebase/database';
+import { User } from '../../../interfaces/user';
+import { getDatabase, ref, push, set, onValue, onChildAdded, DatabaseReference} from 'firebase/database';
 import { FirebaseApp } from '@angular/fire/app';
 import { HttpClient } from '@angular/common/http';
 import { MessageModel } from '../messages_models/model';
@@ -109,5 +110,37 @@ export class AppMessagerieComponent implements OnInit {
   getMessagerie(): MessageModel[]{
     return this.messagerie;
   }
+
+
+
+  updateUnreadMessages(channelId: string, emails: string[]): void {
+    const db = getDatabase(this.firebaseApp);
+
+    emails.forEach(email => {
+      this.firebaseService.getUserDataReference(email)
+        .then((userRef: DatabaseReference | null) => {
+          if (userRef) {
+            onValue(userRef, (snapshot) => {
+              const user: User = snapshot.val();
+              const unreadMessages = user.unreadMessages || {};
+              unreadMessages[channelId] = (unreadMessages[channelId] || 0) + 1;
+  
+              set(userRef, { unreadMessages })
+              .then(() => {
+                console.log("User's notification updated successfully");
+              })
+              .catch(error => {
+                console.error("Error updating user's notification:", error);
+              });
+            });
+          }
+        })
+        .catch(error => {
+          // Gestion de l'erreur
+        });
+    });
+  }
+
+
 }
 

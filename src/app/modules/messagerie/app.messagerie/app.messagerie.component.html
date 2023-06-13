@@ -22,6 +22,7 @@
       <div id="conversation">
          <div id="messages">
             <message-template *ngFor="let message of messagerie" [listeMessages]="message"></message-template>
+            <button (click)="updateUnreadMessages('ana', ['telecom1@gmail.coom'])">Ajouter une notification sur cette conversation pour telecom1</button>
          </div>
          <div id="message_bar">  
             <input type="text" [(ngModel)]="inputText" id="messageInput" autocomplete="off"/>
