@@ -27,8 +27,7 @@ export class AppMessageTemplateComponent implements OnInit {
   surname!: string;
 
 
-  constructor(
-    private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.message = "received";
