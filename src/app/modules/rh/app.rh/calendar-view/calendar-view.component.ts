@@ -17,14 +17,23 @@ import { EventFormComponent } from '../event-form/event-form.component'; // Impo
   templateUrl: './calendar-view.component.html',
   styleUrls: ['./calendar-view.component.css']
 })
-export class CalendarViewComponent implements AfterViewInit {
+export class CalendarViewComponent implements AfterViewInit, OnInit {
   @ViewChild("day") day!: DayPilotCalendarComponent;
   @ViewChild("week") week!: DayPilotCalendarComponent;
   @ViewChild("month") month!: DayPilotMonthComponent;
   @ViewChild("navigator") nav!: DayPilotNavigatorComponent;
+  users !: string;
 
   constructor(private ds: CalendarService, private dialog: MatDialog) {
     this.viewWeek();
+  }
+
+  ngOnInit(): void {
+    this.ds.currentData.subscribe(data => {
+      console.log(data)
+      this.users = data;
+      this.loadEvents(this.users);
+    });
   }
 
   events: DayPilot.EventData[] = [];
@@ -36,7 +45,7 @@ export class CalendarViewComponent implements AfterViewInit {
     cellWidth: 25,
     cellHeight: 25,
     onVisibleRangeChanged: args => {
-      this.loadEvents("0uNzmnBI0jYYspF4wNXdRd2xw9Q2");
+      this.loadEvents(this.users);
     }
   };
 
@@ -91,8 +100,8 @@ export class CalendarViewComponent implements AfterViewInit {
           image : "../../../../assets/images/trash.png",
           onClick: async (args) => { 
             var e = args.source;
-            await this.ds.remove_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', e.id()); 
-            this.loadEvents("0uNzmnBI0jYYspF4wNXdRd2xw9Q2");
+            await this.ds.remove_event('foodandboost_prop', 'telecom1@gmail.coom', e.id()); 
+            this.loadEvents(this.users);
           }
         }
       ]
@@ -138,8 +147,8 @@ export class CalendarViewComponent implements AfterViewInit {
           image : "../../../../assets/images/trash.png",
           onClick: async (args) => { 
             var e = args.source;
-            await this.ds.remove_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', e.id()); 
-            this.loadEvents("0uNzmnBI0jYYspF4wNXdRd2xw9Q2");
+            await this.ds.remove_event('foodandboost_prop', 'telecom1@gmail.coom', e.id()); 
+            this.loadEvents(this.users);
           }
         }
       ]
@@ -182,8 +191,8 @@ export class CalendarViewComponent implements AfterViewInit {
           image : "../../../../assets/images/trash.png", 
           onClick: async (args) => { 
             var e = args.source;
-            await this.ds.remove_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', e.id()); 
-            this.loadEvents("0uNzmnBI0jYYspF4wNXdRd2xw9Q2");
+            await this.ds.remove_event('foodandboost_prop', 'telecom1@gmail.coom', e.id()); 
+            this.loadEvents(this.users);
           }
         }
       ]
@@ -212,13 +221,13 @@ export class CalendarViewComponent implements AfterViewInit {
   
 
   ngAfterViewInit(): void {
-    this.loadEvents("0uNzmnBI0jYYspF4wNXdRd2xw9Q2");
+    this.loadEvents("");
   }
 
-  loadEvents(user : string): void {
-    const froom = this.nav.control.visibleStart();
-    const to = this.nav.control.visibleEnd();
-    from(this.ds.getEvents(froom, to, "foodandboost_prop", user)).subscribe(result => {
+  loadEvents(users : string): void {
+    //const froom = this.nav.control.visibleStart();
+    //const to = this.nav.control.visibleEnd();
+    from(this.ds.getEventsFromAllUsers("foodandboost_prop", users)).subscribe(result => {
       this.events = result;
     });
   }
@@ -243,16 +252,16 @@ export class CalendarViewComponent implements AfterViewInit {
     this.configWeek.visible = false;
     this.configMonth.visible = true;
   }
-  addEvent(): void {
-    this.ds.add_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', {
-      start: DayPilot.Date.today(),
-      end: DayPilot.Date.today().addDays(1),
-      text: 'New Event',
-      id: 'newEventId',
-      tags: 'conge',
-    });
-    this.loadEvents("0uNzmnBI0jYYspF4wNXdRd2xw9Q2");
-  }
+  // addEvent(): void {
+  //   this.ds.add_event('foodandboost_prop', 'telecom1@gmail.coom', {
+  //     start: DayPilot.Date.today(),
+  //     end: DayPilot.Date.today().addDays(1),
+  //     text: 'New Event',
+  //     id: 'newEventId',
+  //     tags: 'conge',
+  //   });
+  //   this.loadEvents("telecom1@gmail.coom");
+  // }
 
 
   openEventForm(): void {
@@ -275,7 +284,7 @@ export class CalendarViewComponent implements AfterViewInit {
   onDialogClosed(): void {
     // This method will be called when the dialog is closed
     // You can perform any desired actions here
-    this.loadEvents("0uNzmnBI0jYYspF4wNXdRd2xw9Q2");
+    this.loadEvents(this.users);
     // Add your code here
   }
 

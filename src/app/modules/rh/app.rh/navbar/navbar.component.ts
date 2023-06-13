@@ -23,10 +23,11 @@ export class NavbarComponent implements OnInit {
   selectAllGerants: boolean = false;
   selectAllRh: boolean = false;
   selectAllAutres: boolean = false;
+  new_users !: string;
 
   firebaseApp: FirebaseApp | undefined;
 
-  constructor(firebaseApp: FirebaseApp, private ds : CalendarService) {}
+  constructor(firebaseApp: FirebaseApp, private calendarService : CalendarService) {}
 
   ngOnInit(): void {
     this.Categories = [
@@ -41,6 +42,7 @@ export class NavbarComponent implements OnInit {
     this.Autres = [];
 
     this.select = [];
+    this.new_users = "";
 
     this.fetchUser();
   }
@@ -59,10 +61,15 @@ export class NavbarComponent implements OnInit {
       const index = this.select.indexOf(liste.nom);
       if (index !== -1) {
         this.select.splice(index, 1);
+        this.new_users = this.select.join(",");
+        console.log(this.new_users)
+        this.calendarService.changeUsers(this.new_users);
       }
     } else {
       this.select.push(liste.nom);
-      //this.ds.getEvents()
+      this.new_users = this.select.join(",");
+      console.log(this.new_users)
+      this.calendarService.changeUsers(this.new_users);
     }
 
     liste.selectionne = !liste.selectionne;
@@ -100,6 +107,9 @@ export class NavbarComponent implements OnInit {
       'selectionne'
     );
     this.selectAllServeurs = !this.selectAllServeurs;
+    this.new_users = this.select.join(",");
+      console.log(this.new_users)
+      this.calendarService.changeUsers(this.new_users);
   }
 
   addAllAutres() {
@@ -110,11 +120,17 @@ export class NavbarComponent implements OnInit {
       'selectionne'
     );
     this.selectAllAutres = !this.selectAllAutres;
+    this.new_users = this.select.join(",");
+      console.log(this.new_users)
+      this.calendarService.changeUsers(this.new_users);
   }
 
   addAllRh() {
     this.addAllItems(this.Rh, this.selectAllRh, this.select, 'selectionne');
     this.selectAllRh = !this.selectAllRh;
+    this.new_users = this.select.join(",");
+      console.log(this.new_users)
+      this.calendarService.changeUsers(this.new_users);
   }
 
   addAllGerants() {
@@ -125,6 +141,9 @@ export class NavbarComponent implements OnInit {
       'selectionne'
     );
     this.selectAllGerants = !this.selectAllGerants;
+    this.new_users = this.select.join(",");
+      console.log(this.new_users)
+      this.calendarService.changeUsers(this.new_users);
   }
 
   async fetchUser() {
