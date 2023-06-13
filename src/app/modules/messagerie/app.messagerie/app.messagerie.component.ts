@@ -138,7 +138,7 @@ export class AppMessagerieComponent implements OnInit {
   scroll() {
     const el_msg = document.getElementById('messages');
     if(el_msg) {
-
+      el_msg.scrollTop = el_msg.scrollHeight;
     }
   }
 }
