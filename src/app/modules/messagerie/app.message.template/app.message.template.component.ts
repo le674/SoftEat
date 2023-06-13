@@ -33,13 +33,11 @@ export class AppMessageTemplateComponent implements OnInit {
     private messagerie: AppMessagerieComponent,
     private firebaseService: FirebaseService) { }
 
-  ngOnInit(): void { // async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.message = "received";
     this.separationDateB = true;
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
-    // this.fetchUserStatus();
     this.fetchTimeServer();
-    // this.email = getEmail();
     this.email = this.firebaseService.getEmailLocalStorage();
     this.getName();
   }
@@ -48,24 +46,6 @@ export class AppMessageTemplateComponent implements OnInit {
     this.separationDateB = !this.separationDateB;
   }
 
-  // fetchUserStatus() {
-  //   const db = getDatabase(this.firebaseApp);
-
-  //   const userStatusRef = ref(db, 'users/foodandboost_prop/' + this.userId + '/statut');
-
-  //   onValue(userStatusRef, (snapshot) => {
-  //     const statut = snapshot.val();
-  //     // this.statut.alertes = statut.alertes;
-  //     this.statut.analyse = statut.analyse;
-  //     this.statut.budget = statut.budget;
-  //     this.statut.facture = statut.facture;
-  //     this.statut.planning = statut.planning;
-  //     this.statut.stock = statut.stock;
-  //   }, (error) => {
-  //     console.log('Une erreur s\'est produite lors de la récupération des statuts :', error);
-  //   });
-
-  // }
 
   getEmail() {
     this.email = localStorage.getItem("user_email") as string;

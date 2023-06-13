@@ -38,14 +38,11 @@ export class FirebaseService {
         return email;
     }
       
-    getUserStatusRef(userId: string): any {
-        return ref(this.db, `users/foodandboost_prop/${userId}/statut`);
-    }
 
       
     async getUserStatutsLocalStorage(email: string): Promise<Statut> { 
         const usersRef = ref(this.db, 'users/foodandboost_prop');
-        const usersSnapShot = await get(usersRef);
+        const usersSnapShot = await get(usersRef); // Ici : Erreur permission dinied
 
         return new Promise<Statut>((resolve, reject) => {
             if (usersSnapShot.exists()) {
@@ -65,19 +62,6 @@ export class FirebaseService {
         });
     }
       
-    fetchUserStatus(userId: string): Promise<Statut> { 
-        const userStatusRef = this.getUserStatusRef(userId);
-
-        return new Promise<Statut>((resolve, reject) => {
-            onValue(userStatusRef, (snapshot) => {
-                const statut = snapshot.val();
-                resolve(statut);
-            }, (error) => {
-                reject(error);
-            });
-        });
-        
-    }
     
     
 }
