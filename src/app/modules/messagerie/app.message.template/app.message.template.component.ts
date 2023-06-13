@@ -27,13 +27,13 @@ export class AppMessageTemplateComponent implements OnInit {
   surname!: string;
 
 
-  constructor(private http: HttpClient, firebaseApp: FirebaseApp, private firebaseService: FirebaseService) { }
+  constructor(
+    private http: HttpClient) { }
 
   ngOnInit(): void {
     this.message = "received";
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
     this.fetchTimeServer();
-    this.email = this.firebaseService.getEmailLocalStorage();
     this.getName();
   }
 
@@ -42,8 +42,25 @@ export class AppMessageTemplateComponent implements OnInit {
   }
 
 
+  fetchUserStatus(){
+    const db = getDatabase(this.firebaseApp);
+    const userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
+    const userStatusRef = ref(db, 'users/foodandboost_prop/' + userId + '/statut');
 
+    this.email = localStorage.getItem("user_email") as string;
 
+    onValue(userStatusRef, (snapshot) => {
+      const statut = snapshot.val();
+      // this.statut.alertes = statut.alertes;
+      this.statut.analyse = statut.analyse;
+      this.statut.budget = statut.budget;
+      this.statut.facture = statut.facture;
+      this.statut.planning = statut.planning;
+      this.statut.stock = statut.stock;
+    }, (error) => {
+      console.log('Une erreur s\'est produite lors de la récupération des statuts :', error);
+    });
+  }
 
   //recuperation heure du serveur
   fetchTimeServer(){
