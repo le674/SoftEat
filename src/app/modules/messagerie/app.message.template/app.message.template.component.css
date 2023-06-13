@@ -8,12 +8,6 @@
   justify-content: center;
 
 }
-.separationTime {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-
-}
 
 .message {
   display: flex;

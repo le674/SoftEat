@@ -5,6 +5,7 @@ import { getDatabase, ref, push, onChildAdded } from 'firebase/database';
 import { FirebaseApp } from '@angular/fire/app';
 import { HttpClient } from '@angular/common/http';
 import { MessageModel } from '../messages_models/model';
+import { AppMessageTemplateComponent } from '../app.message.template/app.message.template.component';
 
 @Component({
   selector: 'app-messagerie',
@@ -13,7 +14,6 @@ import { MessageModel } from '../messages_models/model';
 })
 
 export class AppMessagerieComponent implements OnInit {
-  text!: string;
   notification!: boolean[];
   statut!: Statut;
   userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
@@ -26,16 +26,17 @@ export class AppMessagerieComponent implements OnInit {
   firebaseApp: FirebaseApp | undefined;
   http!: HttpClient;
   messagerie!: MessageModel[];
+  messageTemplate!: AppMessageTemplateComponent;
   
-  constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService, http: HttpClient) {  
+  constructor(messageTemplate: AppMessageTemplateComponent, firebaseApp: FirebaseApp, private firebaseService: FirebaseService, http: HttpClient) {  
     this.firebaseApp = firebaseApp;
     this.fetchData();
     this.http = http;
     this.messagerie = [];
+    this.messageTemplate = messageTemplate;
   }
 
   async ngOnInit(): Promise<void> { //: Promise<void>
-    this.text = "it works !";
     this.notification = [true, true, true, true, true, true, true];
     this.statut = await this.firebaseService.fetchUserStatus(this.userId); //await
     this.showCanal();
@@ -61,7 +62,7 @@ export class AppMessagerieComponent implements OnInit {
       const newMessage = {
         auteur: localStorage.getItem("user_email"),
         contenu: this.inputText,
-        horodatage: new Date().getTime()
+        horodatage: this.messageTemplate.fetchTimeServer()
       }
       //Ecriture du message dans la BDD
       const nodeRef = ref(db, `conversations/deliss_pizz/deliss_pizz/del42_ana_037581`);
