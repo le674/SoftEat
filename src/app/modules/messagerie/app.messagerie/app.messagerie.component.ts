@@ -43,6 +43,7 @@ export class AppMessagerieComponent implements OnInit {
     this.firebaseApp = firebaseApp;
     this.fetchData();
     this.messagerie = [];
+    this.messageTemplate = messageTemplate;
   }
 
   async ngOnInit(): Promise<void> { //: Promise<void>
@@ -96,7 +97,7 @@ export class AppMessagerieComponent implements OnInit {
       const newMessage = {
         auteur: localStorage.getItem("user_email"),
         contenu: this.inputText,
-        horodatage: this.fetchTimeServer()
+        horodatage: this.messageTemplate.fetchTimeServer()
       }
       //Ecriture du message dans la BDD
       const nodeRef = ref(db, this.convActive);
