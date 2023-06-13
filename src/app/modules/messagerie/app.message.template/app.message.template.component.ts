@@ -1,37 +1,43 @@
-import { Component, OnInit } from '@angular/core';
-import { FirebaseApp, initializeApp } from "@angular/fire/app";
-import { getDatabase, ref, onValue} from 'firebase/database';
+import { Component, Input, OnInit } from '@angular/core';
+import { FirebaseApp } from "@angular/fire/app";
+import { getDatabase, ref, onValue, get} from 'firebase/database';
 import { Statut } from '../../../interfaces/statut';
 import { HttpClient } from '@angular/common/http';
-import { FirebaseService } from '../../../services/firebase.service';
-
-
+import { MessageModel } from '../messages_models/model';
+import { AppMessagerieComponent } from '../app.messagerie/app.messagerie.component';
 @Component({
   selector: 'message-template',
   templateUrl: './app.message.template.component.html',
   styleUrls: ['./app.message.template.component.css']
 })
+
 export class AppMessageTemplateComponent implements OnInit {
+
+  @Input() listeMessages!: MessageModel;
+
   date = new Date();
-  text!: string;
   message!: string;
   separationDateB!: boolean;
   statut!: Statut;
   email!: any;
-  // private http!: HttpClient; // Dois être défini dans le constructeur
   heure!: string;
   firebaseApp: FirebaseApp | undefined;
+  name1!: string[];
+  name!: string;
+  surname!: string;
 
 
-  constructor(private http: HttpClient, firebaseApp: FirebaseApp) { }
+  constructor(
+    private http: HttpClient,
+    private messagerie: AppMessagerieComponent) { }
 
   ngOnInit(): void {
     this.message = "received";
-    this.text = "Bonjour la messagerie !";
     this.separationDateB = true;
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
     this.fetchUserStatus();
     this.fetchTimeServer();
+    this.getName();
   }
 
   updateSeparationDate(){
@@ -46,9 +52,14 @@ export class AppMessageTemplateComponent implements OnInit {
     const userEmailRef = ref(db, 'users/foodandboost_prop/' + userId + '/email');
     const userStatusRef = ref(db, 'users/foodandboost_prop/' + userId + '/statut');
 
+    this.email = localStorage.getItem("user_email") as string;
+
+    /*
     onValue(userEmailRef, (snapshot) => {
       this.email = snapshot.val();
     });
+    */
+
     onValue(userStatusRef, (snapshot) => {
       const statut = snapshot.val();
       // this.statut.alertes = statut.alertes;
@@ -60,16 +71,9 @@ export class AppMessageTemplateComponent implements OnInit {
     }, (error) => {
       console.log('Une erreur s\'est produite lors de la récupération des statuts :', error);
     });
-
-    // this.text = "Voici mes statuts :\n alertes : " + this.statut.alertes 
-    // + ",\n analyse : " + this.statut.analyse + ",\n budget : " 
-    // + this.statut.budget + ",\n facture : " + this.statut.facture 
-    // + ",\n planning : " + this.statut.planning + ",\n stock : " 
-    // + this.statut.stock + ".";
-    // const userConversations = ref(db, 'restaurants/' + )
-    this.text = localStorage.getItem("user_email") as string;
   }
 
+  //recuperation heure du serveur
   fetchTimeServer(){
     this.http.get('http://worldtimeapi.org/api/timezone/Europe/Paris').subscribe((data: any) => {
       const utcDateTime = data.utc_datetime.slice(11,16); //"utc_datetime": "2023-06-06T12:50:44.493419+00:00"
@@ -87,4 +91,24 @@ export class AppMessageTemplateComponent implements OnInit {
     });
   }
 
+
+  async getName(): Promise<void> { //: Promise<string>
+    const db = getDatabase(this.firebaseApp);
+    const usersRef = ref(db, 'users/foodandboost_prop');
+    const usersSnapShot = await get(usersRef);
+
+    if (usersSnapShot.exists()) {
+
+      usersSnapShot.forEach((userSnapShot) => {
+        const user = userSnapShot.val();
+        if (user.email == this.email) {
+          this.name = user.nom;
+          this.surname = user.prenom;
+        }
+      });
+    }
+
+  }
 }
+
+

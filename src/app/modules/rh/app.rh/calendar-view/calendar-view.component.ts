@@ -23,6 +23,10 @@ export class CalendarViewComponent implements AfterViewInit {
   @ViewChild("month") month!: DayPilotMonthComponent;
   @ViewChild("navigator") nav!: DayPilotNavigatorComponent;
 
+  constructor(private ds: CalendarService, private dialog: MatDialog) {
+    this.viewWeek();
+  }
+
   events: DayPilot.EventData[] = [];
 
   date = DayPilot.Date.today();
@@ -40,6 +44,35 @@ export class CalendarViewComponent implements AfterViewInit {
     this.date = DayPilot.Date.today().addDays(1);
   }
 
+  previous(){
+    if (this.configNavigator.selectMode == "Day"){
+      this.date = this.date.addDays(-1);
+      this.changeDate(this.date);
+    }
+    if (this.configNavigator.selectMode == "Week"){
+      this.date = this.date.addDays(-7);
+      this.changeDate(this.date);
+    }
+    if (this.configNavigator.selectMode == "Month"){
+      this.date = this.date.addMonths(-1)
+      this.changeDate(this.date);
+    }
+  }
+
+  next(){
+    if (this.configNavigator.selectMode == "Day"){
+      this.date = this.date.addDays(1);
+      this.changeDate(this.date);
+    }
+    if (this.configNavigator.selectMode == "Week"){
+      this.date = this.date.addDays(7);
+      this.changeDate(this.date);
+    }
+    if (this.configNavigator.selectMode == "Month"){
+      this.date = this.date.addMonths(1)
+      this.changeDate(this.date);
+    }
+  }
   changeDate(date: DayPilot.Date): void {
     this.configDay.startDate = date;
     this.configWeek.startDate = date;
@@ -47,6 +80,23 @@ export class CalendarViewComponent implements AfterViewInit {
   }
 
   configDay: DayPilot.CalendarConfig = {
+    locale : "fr-fr",
+    eventArrangement : "SideBySide",
+    contextMenu : new DayPilot.Menu({
+      items: [
+        {
+          text:"Supprimer",
+          image : "../../../../assets/images/trash.png",
+          onClick: async (args) => { 
+            var e = args.source;
+            await this.ds.remove_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', e.id()); 
+            this.loadEvents();
+          }
+        }
+      ]
+    }),
+    dayBeginsHour : 8,
+    dayEndsHour : 22,
     onBeforeEventRender: args => {
       if (args.data.tags === "important") {
         args.data.barColor = "#ff0000"; // red color for important events
@@ -60,6 +110,23 @@ export class CalendarViewComponent implements AfterViewInit {
   };
 
   configWeek: DayPilot.CalendarConfig = {
+    locale : "fr-fr",
+    eventArrangement : "SideBySide",
+    contextMenu : new DayPilot.Menu({
+      items: [
+        {
+          text:"Supprimer", 
+          image : "../../../../assets/images/trash.png",
+          onClick: async (args) => { 
+            var e = args.source;
+            await this.ds.remove_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', e.id()); 
+            this.loadEvents();
+          }
+        }
+      ]
+    }),    
+    dayBeginsHour : 8,
+    dayEndsHour : 22,
     viewType: "Week",
     onTimeRangeSelected: async (args) => {
       const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
@@ -74,18 +141,44 @@ export class CalendarViewComponent implements AfterViewInit {
       }));
     },
     onBeforeEventRender: args => {
-      if (args.data.tags === "important") {
-        args.data.barColor = "#ff0000"; // red color for important events
-        args.data.html = "<span class='important-event'>" + args.data.text + "</span>";
-        args.data.toolTip = "This is an important event.";
+      if (args.data.tags === "Maladie") {
+        args.data.barColor = "#ff0000"; // duration bar
+        args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background
+        //args.data.backColor = "rgba(255, 0, 0, 0.2)"; // background 
+        //args.data.toolTip = "This is an important event.";
+      } else if (args.data.tags === "Congés") {
+        args.data.barColor = "#ffa500";
+        args.data.barBackColor = "rgba(255, 165, 0, 0.5)"; // duration bar background
+        //args.data.toolTip = "This is a regular event.";
+      } else if (args.data.tags === "Entretien") {
+        args.data.barColor = "#7db52e";
+        args.data.barBackColor = "rgba(121, 181, 46, 0.5)"; // duration bar background
+        //args.data.toolTip = "This is a regular event.";
       } else {
-        args.data.html = args.data.text;
-        args.data.toolTip = "This is a regular event.";
+        //args.data.toolTip = "This is a regular event.";
       }
+      let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + args.data.resource + "</div>" : "";
+      args.data.html = "<span class='event'><strong>" + args.data.tags + "</strong><br>" +
+        resourceHtml + "<br>" +
+        args.data.text + "</span>";
     }
   };
 
   configMonth: DayPilot.MonthConfig = {
+    locale : "fr-fr",
+    contextMenu : new DayPilot.Menu({
+      items: [
+        {
+          text:"Supprimer",
+          image : "../../../../assets/images/trash.png", 
+          onClick: async (args) => { 
+            var e = args.source;
+            await this.ds.remove_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', e.id()); 
+            this.loadEvents();
+          }
+        }
+      ]
+    }),    
     onBeforeEventRender: args => {
       if (args.data.tags === "important") {
         args.data.barColor = "#ff0000"; // red color for important events
@@ -99,9 +192,7 @@ export class CalendarViewComponent implements AfterViewInit {
 
   };
 
-  constructor(private ds: CalendarService, private dialog: MatDialog) {
-    this.viewWeek();
-  }
+  
 
   ngAfterViewInit(): void {
     this.loadEvents();
@@ -149,10 +240,28 @@ export class CalendarViewComponent implements AfterViewInit {
 
   openEventForm(): void {
     const dialogRef = this.dialog.open(EventFormComponent, {
-      width: '85vw', height: '85vh', // Set the width of the dialog as per your requirements
-      // You can also configure other properties of the dialog, such as height, position, etc.
+      width: '85vw',
+      height: '85vh',
+      // Set the width and height of the dialog as per your requirements
+      // You can also configure other properties of the dialog, such as position, etc.
     });
-}
+
+    dialogRef.afterClosed().subscribe(result => {
+      // This code block will be executed when the dialog is closed
+      // You can perform any desired actions here
+      console.log('Dialog closed with result:', result);
+      // Call your method here that you want to be executed when the dialog is closed
+      this.onDialogClosed();
+    });
+  }
+
+  onDialogClosed(): void {
+    // This method will be called when the dialog is closed
+    // You can perform any desired actions here
+    this.loadEvents();
+    // Add your code here
+  }
+
 }
 
 

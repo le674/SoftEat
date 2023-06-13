@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DayPilot } from 'daypilot-pro-angular';
 import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_FIRESTORE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
 import { environment } from 'src/environments/environment';
-import { child, push, connectDatabaseEmulator, get, set, getDatabase,  ref } from 'firebase/database';
+import { child, push, remove, connectDatabaseEmulator, get, set, getDatabase, ref, query, orderByChild, equalTo } from 'firebase/database';
 import { connectFirestoreEmulator, Firestore, getFirestore } from "firebase/firestore";
 import { FirebaseApp, initializeApp } from "@angular/fire/app";
 
@@ -10,15 +10,16 @@ interface Event {
   start: string;
   end: string;
   text: string;
-  id:string;
-  tags:string;
+  id: string;
+  tags: string;
+  resource: string;
 }
 
 @Injectable()
 export class CalendarService {
   private firestore: Firestore;
   events: Event[] = [];
-  private firebaseConfig=environment.firebase;
+  private firebaseConfig = environment.firebase;
   private firebaseApp = initializeApp(this.firebaseConfig);
   private db = getDatabase(this.firebaseApp);
 
@@ -50,16 +51,17 @@ export class CalendarService {
 
     if (eventsSnapshot.exists()) {
       this.events = [];
-      eventsSnapshot.forEach((eventSnapshot) => { //parcoure les events de la BDD
+      eventsSnapshot.forEach((eventSnapshot) => { //parcourt les events de la BDD
         const event = eventSnapshot.val() as Event;
         if (event.start >= fromDateString && event.start <= toDateString) {
-          this.events.push({ 
+          this.events.push({
             start: event.start,
             end: event.end,
             text: event.text,
             id: event.id,
-            tags : event.tags,
-           });
+            tags: event.tags,
+            resource: event.resource,
+          });
         }
         return false; // regarde le prochain event
       });
@@ -67,6 +69,8 @@ export class CalendarService {
 
     return this.events;
   }
+
+
 
   async add_event(prop: string, user: string, newEvent: DayPilot.EventData): Promise<void> {
     // Chemin vers la BDD
@@ -81,13 +85,45 @@ export class CalendarService {
 
     // Crée l'événement
     const event = {
-        start: startString,
-        end: endString,
-        text: newEvent.text,
-        id: id,
-        tags : newEvent.tags,
+      start: startString,
+      end: endString,
+      text: newEvent.text,
+      id: id,
+      tags: newEvent.tags,
+      resource: newEvent.resource,
     };
 
     await set(eventRef, event);
-}
+  }
+
+  async remove_event(prop: string, user: string, eventId: string): Promise<void> {
+    // Path to the database
+    const path = `users/${prop}/${user}/planning/events/${eventId}`;
+
+    // Remove the event
+    await remove(ref(this.db, path));
+  }
+  async getPath(email: string): Promise<string | null> {
+    const database = getDatabase(this.ofApp); // Get the Realtime Database instance
+
+    // Query the database to find the path based on the email
+    const usersRef = ref(database, 'users');
+    const queryRef = query(usersRef, orderByChild('email'), equalTo(email));
+    const snapshot = await get(queryRef);
+
+    if (snapshot.exists()) {
+      // Get the first matching user's key (assuming there is only one match)
+      const userId = Object.keys(snapshot.val())[0];
+      
+      // Construct the path using the found user ID
+      const path = `${userId}`;
+
+      return path;
+    }
+
+    return null; // Return null if no matching user is found
+  }
+  
+
+
 }

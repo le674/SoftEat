@@ -7,6 +7,10 @@ import {
 } from '@angular/core';
 import { FirebaseApp, initializeApp } from '@angular/fire/app';
 import { getDatabase, ref, onValue, get } from 'firebase/database';
+import { DayPilot } from "daypilot-pro-angular";
+import { CalendarService } from "../calendar-view/calendar-data.service";
+import { MatDialogRef } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-event-form',
@@ -22,17 +26,23 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   @ViewChild('addFinPoste') addFinPosteInput!: ElementRef<HTMLInputElement>;
   @ViewChild('addRepeter') addRepeterSelect!: ElementRef<HTMLSelectElement>;
   dateWidth = '150px'; // Default width
+
   Categories!: String[];
   Serveurs!: { nom: String }[];
   Gerants!: { nom: String }[];
   Rh!: { nom: String }[];
   Autres!: { nom: String }[];
   firebaseApp: FirebaseApp | undefined;
-  constructor(firebaseApp: FirebaseApp) {}
+  newEvent?: DayPilot.EventData; 
+  constructor(private calendar: CalendarService, public dialogRef: MatDialogRef<EventFormComponent>, firebaseApp: FirebaseApp) {
+    this.dialogRef = dialogRef;
+  }
+
 
   /* Les deux premières méthodes ajoutent automatiquement des majuscules sur 
-  le premier caractère des champs Personnel, Evenement et Lieu pour uniformiser */
+  le premier caractère du champ Evenement uniformiser */
   ngOnInit(): void {
+
     this.Categories = ['Serveurs', 'Rh', 'Gérants', 'Autres'];
 
     this.Serveurs = [];
@@ -46,10 +56,16 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       this.addEventInput.nativeElement,
       this.addLieuInput.nativeElement,
     ];
-    
-    inputFields.forEach((input) => {
-      input.addEventListener('input', () => {
-        this.truncateInputValue(input);
+
+    setTimeout(() => {
+      const inputFields: HTMLInputElement[] = [
+        this.addEventInput.nativeElement
+      ];
+
+      inputFields.forEach((input) => {
+        input.addEventListener('input', () => {
+          this.truncateInputValue(input);
+        });
       });
     });
   }
@@ -60,7 +76,9 @@ export class EventFormComponent implements OnInit, AfterViewInit {
 
   /* Les 2 méthodes suivantes permettent de rendre l'espace occupé par la date responsive*/
   ngAfterViewInit(): void {
-    this.calculateInputWidth();
+    setTimeout(() => {
+      this.calculateInputWidth();
+    });
   }
 
   calculateInputWidth(): void {
@@ -91,7 +109,15 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     };
     this.rows.push(newRow);
   }
-
+  resetFormFields(): void {
+    this.addPersonnelInput.nativeElement.value = '';
+    this.addMotifInput.nativeElement.value = '';
+    this.addEventInput.nativeElement.value = '';
+    this.addLieuInput.nativeElement.value = '';
+    this.addPrisePosteInput.nativeElement.value = '';
+    this.addFinPosteInput.nativeElement.value = '';
+    this.addRepeterSelect.nativeElement.value = '';
+  }
   deleteRow(index: number): void {
     this.rows.splice(index, 1);
   }
@@ -99,6 +125,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   isFieldFilled(
     inputRef: ElementRef<HTMLInputElement | HTMLSelectElement>
   ): boolean {
+
     const value = inputRef.nativeElement.value;
     if (inputRef.nativeElement.tagName.toLowerCase() === 'select') {
       return value !== '';
@@ -131,14 +158,67 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     this.resetFormFields();
   }
 
-  resetFormFields(): void {
-    this.addPersonnelInput.nativeElement.value = '';
-    this.addMotifInput.nativeElement.value = '';
-    this.addEventInput.nativeElement.value = '';
-    this.addLieuInput.nativeElement.value = '';
-    this.addPrisePosteInput.nativeElement.value = '';
-    this.addFinPosteInput.nativeElement.value = '';
-    this.addRepeterSelect.nativeElement.value = '';
+
+  async saveRows(): Promise<void> {
+  // Retrieve the information of the rows
+  for (const row of this.rows) {
+    this.newEvent = {
+      start: row.prisePoste + ":00",
+      end: row.finPoste + ":00",
+      text: row.event,
+      id: 'newEventId',
+      tags: this.getMotifLabel(row.motif),
+      resource: row.lieu
+    };
+    console.log('Personnel:', row.personnel);
+    const userPath: string | null = await this.calendar.getPath(row.personnel);
+    console.log("Path : ", userPath);
+    if (userPath) {
+      await this.addEvent(userPath, this.newEvent); // Wait for the event to be added
+    }
+  }
+  this.closeDialog();
+}
+
+  
+  
+  getMotifLabel(value: string): string {
+    switch (value) {
+      case 'motif-option1':
+        return 'Travail';
+      case 'motif-option2':
+        return 'Congés';
+      case 'motif-option3':
+        return 'Entretien';
+      case 'motif-option4':
+        return 'Maladie';
+      default:
+        return '';
+    }
+  }
+
+  getRepeterLabel(value: string): string {
+    switch (value) {
+      case 'repeter-option1':
+        return 'Non';
+      case 'repeter-option2':
+        return 'Cette semaine';
+      case 'repeter-option3':
+        return 'Ce mois';
+      case 'repeter-option4':
+        return '?';
+      default:
+        return '';
+    }
+  }
+
+  addEvent(userId: string, newEvent: DayPilot.EventData): void {
+    const prop = 'foodandboost_prop'; // Assuming the property name is fixed
+    this.calendar.add_event(prop, userId, newEvent);
+  }
+  
+  closeDialog(): void {
+    this.dialogRef.close(); // Close the dialog
   }
 
   async fetchUser() {
@@ -202,7 +282,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
 export interface Row {
   personnel: string;
   motif: string;
-  event?: string;
+  event: string;
   lieu: string;
   prisePoste: string;
   finPoste: string;
