@@ -1,9 +1,9 @@
 <div class="messagerie">
   <div *ngIf ="separationDateB" class="separationDate">
-    <span>{{ date | date }} </span>
+    <span>{{ fetchTimeServer() | date }} </span>
   </div>
   <div *ngIf ="separationDateB" class="separationTime">
-    <span>{{ date | date : 'HH:mm'}}</span>
+    <span>{{ fetchTimeServer() | date : 'HH:mm'}}</span>
   </div>
   <div class="message">
     <div class="message_outer">

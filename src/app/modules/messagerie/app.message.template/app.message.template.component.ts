@@ -15,7 +15,6 @@ export class AppMessageTemplateComponent implements OnInit {
 
   @Input() listeMessages!: MessageModel;
 
-  date = new Date();
   message!: string;
   separationDateB!: boolean;
   statut!: Statut;
@@ -64,7 +63,7 @@ export class AppMessageTemplateComponent implements OnInit {
   }
 
   //recuperation heure du serveur
-  fetchTimeServer(){
+  fetchTimeServer(): string {
     this.http.get('http://worldtimeapi.org/api/timezone/Europe/Paris').subscribe((data: any) => {
       const utcDateTime = data.utc_datetime.slice(11,16); //"utc_datetime": "2023-06-06T12:50:44.493419+00:00"
       const utcOffset = data.utc_offset; //"utc_offset": "+02:00"
@@ -77,8 +76,8 @@ export class AppMessageTemplateComponent implements OnInit {
         hours -= 24;
       };
       this.heure = hours.toString().padStart(2, '0') + ':' + utcHourSplit[1];
-
     });
+    return this.heure;
   }
 
 
