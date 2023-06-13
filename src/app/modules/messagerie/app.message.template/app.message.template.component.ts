@@ -25,9 +25,10 @@ export class AppMessageTemplateComponent implements OnInit {
   firebaseApp: FirebaseApp | undefined;
   name!: string;
   surname!: string;
+  datePipe = new DatePipe('fr-FR');
+  just_once = true;
 
-
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
     this.message = "received";
