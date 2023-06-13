@@ -3,6 +3,7 @@ import { FirebaseApp } from "@angular/fire/app";
 import { getDatabase, ref, onValue, get} from 'firebase/database';
 import { Statut } from '../../../interfaces/statut';
 import { MessageModel } from '../messages_models/model';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'message-template',
@@ -23,21 +24,29 @@ export class AppMessageTemplateComponent implements OnInit {
   name1!: string[];
   name!: string;
   surname!: string;
+  datePipe = new DatePipe('fr-FR');
+  just_once = true;
 
-
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
     this.message = "received";
-    this.separationDateB = true;
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
     this.fetchUserStatus();
     this.fetchTimeServer();
     this.getName();
+    this.updateSeparationDate();
   }
 
   updateSeparationDate() {
-    this.separationDateB = !this.separationDateB;
+    console.log(typeof(this.datePipe.transform(this.heure, 'HH:mm')));
+    if((this.datePipe.transform(this.heure, 'HH:mm') == "00:00") && (this.just_once)) {
+      this.separationDateB = true;
+      this.just_once = false;
+    } else {
+      this.separationDateB = false;
+      this.just_once = true;
+    }
   }
 
   fetchUserStatus() {
