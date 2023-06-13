@@ -168,7 +168,6 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         tags: this.getMotifLabel(row.motif),
         resource: row.lieu
       };
-      console.log('personnel:', row.personnel);
       const repetitionOption = row.repeter;
       const startDate = new Date(row.prisePoste);
       const endDate = new Date(row.finPoste);
