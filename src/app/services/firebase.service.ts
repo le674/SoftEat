@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp, initializeApp } from '@angular/fire/app';
-import { getDatabase, ref, onValue } from 'firebase/database';
+import { getDatabase, ref, onValue, get } from 'firebase/database';
 import { Statut } from '../interfaces/statut';
 
 
@@ -33,26 +33,37 @@ export class FirebaseService {
         return this.db;
     }
       
-    // getUserEmailRef(userId: string): any {
-    //     return ref(this.db, `users/foodandboost_prop/${userId}/email`);
-    // }
+    getEmailLocalStorage() {
+        const email = localStorage.getItem("user_email") as string;
+        return email;
+    }
       
     getUserStatusRef(userId: string): any {
         return ref(this.db, `users/foodandboost_prop/${userId}/statut`);
     }
+
       
-    // fetchUserEmail(userId: string): Promise<string> {
-    //     const userEmailRef = this.getUserEmailRef(userId);
-      
-    //     return new Promise<string>((resolve, reject) => {
-    //         onValue(userEmailRef, (snapshot) => {
-    //         const email = snapshot.val();
-    //         resolve(email);
-    //     }, (error) => {
-    //         reject(error);
-    //     });
-    //     });
-    // }
+    async getUserStatutsLocalStorage(email: string): Promise<Statut> { 
+        const usersRef = ref(this.db, 'users/foodandboost_prop');
+        const usersSnapShot = await get(usersRef);
+
+        return new Promise<Statut>((resolve, reject) => {
+            if (usersSnapShot.exists()) {
+                usersSnapShot.forEach((userSnapShot) => {
+                    const user = userSnapShot.val();
+                    if (user.email == email) {
+                        onValue(userSnapShot.ref, (snapshot) => {
+                            const userContent = snapshot.val();
+                            const userStatut = userContent.statut;
+                            resolve(userStatut);
+                        }, (error) => {
+                            reject(error);
+                        });
+                    }
+                });
+            }
+        });
+    }
       
     fetchUserStatus(userId: string): Promise<Statut> { 
         const userStatusRef = this.getUserStatusRef(userId);
@@ -64,20 +75,6 @@ export class FirebaseService {
             }, (error) => {
                 reject(error);
             });
-            //     this.statut = {is_prop:false,
-            //         stock:"",
-            //         alertes:"",
-            //         analyse:"",
-            //         budget:"",
-            //         facture:"",
-            //         planning:""};
-            //     this.statut.analyse = statut.analyse;
-            //     this.statut.budget = statut.budget;
-            //     this.statut.facture = statut.facture;
-            //     this.statut.planning = statut.planning;
-            //     this.statut.stock = statut.stock;
-            // });
-            // return this.statut;
         });
         
     }

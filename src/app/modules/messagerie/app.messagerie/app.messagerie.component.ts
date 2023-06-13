@@ -24,7 +24,8 @@ export class AppMessagerieComponent implements OnInit {
 
   notification!: boolean[];
   statut!: Statut;
-  userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
+  //userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
+  email!: string;
   analyseCanal = true;
   budgetCanal = true;
   factureCanal = true;
@@ -46,9 +47,9 @@ export class AppMessagerieComponent implements OnInit {
 
   async ngOnInit(): Promise<void> { //: Promise<void>
     this.notification = [true, true, true, true, true, true, true];
-    this.statut = await this.firebaseService.fetchUserStatus(this.userId); //await
+    this.email = this.firebaseService.getEmailLocalStorage();
+    this.statut = await this.firebaseService.getUserStatutsLocalStorage(this.email); //await
     //this.showCanal();
-    this.fetchTimeServer();
   }
 
   /*

@@ -26,14 +26,16 @@ export class AppMessageTemplateComponent implements OnInit {
   name!: string;
   surname!: string;
 
-  constructor() {}
 
-  ngOnInit(): void {
+  constructor(private http: HttpClient, firebaseApp: FirebaseApp, private firebaseService: FirebaseService) { }
+
+  ngOnInit(): void { // async ngOnInit(): Promise<void> {
     this.message = "received";
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
     // this.fetchUserStatus();
     this.fetchTimeServer();
-    this.getEmail();
+    // this.email = getEmail();
+    this.email = this.firebaseService.getEmailLocalStorage();
     this.getName();
   }
 
