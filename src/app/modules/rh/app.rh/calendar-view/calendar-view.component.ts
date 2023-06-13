@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Input } from '@angular/core';
 import {
   DayPilot,
   DayPilotCalendarComponent,
@@ -11,7 +11,6 @@ import { from } from 'rxjs'
 import { MatDialog } from '@angular/material/dialog'; // Import MatDialog for opening a dialog
 import { EventFormComponent } from '../event-form/event-form.component'; // Import the EventFormComponent
 
-
 @Component({
   selector: 'app-calendar-view',
   templateUrl: './calendar-view.component.html',
@@ -23,6 +22,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
   @ViewChild("month") month!: DayPilotMonthComponent;
   @ViewChild("navigator") nav!: DayPilotNavigatorComponent;
   users !: string;
+  @Input() userRole!:string;
 
   constructor(private ds: CalendarService, private dialog: MatDialog) {
     this.viewWeek();

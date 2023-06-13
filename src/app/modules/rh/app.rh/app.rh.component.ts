@@ -9,7 +9,7 @@ import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
   styleUrls: ['./app.rh.component.css']
 })
 export class AppRhComponent implements OnInit {
-currentUserRole: any;
+currentUserRole!: string;
 
   constructor() { }
 
@@ -47,6 +47,9 @@ currentUserRole: any;
         this.currentUserRole = roleSnapshot.val();
       });
     });
+  }
+  getUserRole(): string{
+    return this.currentUserRole;
   }
 
 }

@@ -4,7 +4,7 @@
       <app-hbar *ngIf="currentUserRole != 'gerant'"></app-hbar>
     </div>
     <div class="content">
-      <app-calendar-view></app-calendar-view>
+      <app-calendar-view [userRole]="currentUserRole"></app-calendar-view>
     </div>
   </div>
   
