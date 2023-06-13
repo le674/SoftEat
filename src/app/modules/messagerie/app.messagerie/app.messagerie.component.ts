@@ -28,12 +28,11 @@ export class AppMessagerieComponent implements OnInit {
   messagerie!: MessageModel[];
   messageTemplate!: AppMessageTemplateComponent;
   
-  constructor(messageTemplate: AppMessageTemplateComponent, firebaseApp: FirebaseApp, private firebaseService: FirebaseService, http: HttpClient) {  
+  constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService, http: HttpClient) {  
     this.firebaseApp = firebaseApp;
     this.fetchData();
     this.http = http;
     this.messagerie = [];
-    this.messageTemplate = messageTemplate;
   }
 
   async ngOnInit(): Promise<void> { //: Promise<void>
