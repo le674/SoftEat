@@ -79,7 +79,7 @@ export class AppMessagerieComponent implements OnInit {
       const newMessage = {
         auteur: localStorage.getItem("user_email"),
         contenu: this.inputText,
-        horodatage: this.messageTemplate.fetchTimeServer()
+        horodatage: new Date().getTime()
       }
       //Ecriture du message dans la BDD
       const nodeRef = ref(db, this.convActive);
