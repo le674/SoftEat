@@ -5,6 +5,7 @@ import { Statut } from '../../../interfaces/statut';
 import { HttpClient } from '@angular/common/http';
 import { MessageModel } from '../messages_models/model';
 import { AppMessagerieComponent } from '../app.messagerie/app.messagerie.component';
+import { FirebaseService } from 'src/app/services/firebase.service';
 @Component({
   selector: 'message-template',
   templateUrl: './app.message.template.component.html',
@@ -22,21 +23,21 @@ export class AppMessageTemplateComponent implements OnInit {
   email!: any;
   heure!: string;
   firebaseApp: FirebaseApp | undefined;
-  name1!: string[];
   name!: string;
   surname!: string;
 
 
   constructor(
     private http: HttpClient,
-    private messagerie: AppMessagerieComponent) { }
+    private messagerie: AppMessagerieComponent,
+    private firebaseService: FirebaseService) { }
 
   ngOnInit(): void {
     this.message = "received";
     this.separationDateB = true;
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
-    this.fetchUserStatus();
     this.fetchTimeServer();
+    this.email = this.firebaseService.getEmailLocalStorage();
     this.getName();
   }
 
@@ -44,34 +45,9 @@ export class AppMessageTemplateComponent implements OnInit {
     this.separationDateB = !this.separationDateB;
   }
 
-  fetchUserStatus() {
-    const db = getDatabase(this.firebaseApp);
 
-    const userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
 
-    const userEmailRef = ref(db, 'users/foodandboost_prop/' + userId + '/email');
-    const userStatusRef = ref(db, 'users/foodandboost_prop/' + userId + '/statut');
 
-    this.email = localStorage.getItem("user_email") as string;
-
-    /*
-    onValue(userEmailRef, (snapshot) => {
-      this.email = snapshot.val();
-    });
-    */
-
-    onValue(userStatusRef, (snapshot) => {
-      const statut = snapshot.val();
-      // this.statut.alertes = statut.alertes;
-      this.statut.analyse = statut.analyse;
-      this.statut.budget = statut.budget;
-      this.statut.facture = statut.facture;
-      this.statut.planning = statut.planning;
-      this.statut.stock = statut.stock;
-    }, (error) => {
-      console.log('Une erreur s\'est produite lors de la récupération des statuts :', error);
-    });
-  }
 
   //recuperation heure du serveur
   fetchTimeServer(){
