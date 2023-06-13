@@ -23,6 +23,10 @@ export class CalendarViewComponent implements AfterViewInit {
   @ViewChild("month") month!: DayPilotMonthComponent;
   @ViewChild("navigator") nav!: DayPilotNavigatorComponent;
 
+  constructor(private ds: CalendarService, private dialog: MatDialog) {
+    this.viewWeek();
+  }
+
   events: DayPilot.EventData[] = [];
 
   date = DayPilot.Date.today();
@@ -40,6 +44,35 @@ export class CalendarViewComponent implements AfterViewInit {
     this.date = DayPilot.Date.today().addDays(1);
   }
 
+  previous(){
+    if (this.configNavigator.selectMode == "Day"){
+      this.date = this.date.addDays(-1);
+      this.changeDate(this.date);
+    }
+    if (this.configNavigator.selectMode == "Week"){
+      this.date = this.date.addDays(-7);
+      this.changeDate(this.date);
+    }
+    if (this.configNavigator.selectMode == "Month"){
+      this.date = this.date.addMonths(-1)
+      this.changeDate(this.date);
+    }
+  }
+
+  next(){
+    if (this.configNavigator.selectMode == "Day"){
+      this.date = this.date.addDays(1);
+      this.changeDate(this.date);
+    }
+    if (this.configNavigator.selectMode == "Week"){
+      this.date = this.date.addDays(7);
+      this.changeDate(this.date);
+    }
+    if (this.configNavigator.selectMode == "Month"){
+      this.date = this.date.addMonths(1)
+      this.changeDate(this.date);
+    }
+  }
   changeDate(date: DayPilot.Date): void {
     this.configDay.startDate = date;
     this.configWeek.startDate = date;
@@ -48,6 +81,20 @@ export class CalendarViewComponent implements AfterViewInit {
 
   configDay: DayPilot.CalendarConfig = {
     locale : "fr-fr",
+    eventArrangement : "SideBySide",
+    contextMenu : new DayPilot.Menu({
+      items: [
+        {
+          text:"Supprimer",
+          image : "../../../../assets/images/trash.png",
+          onClick: async (args) => { 
+            var e = args.source;
+            await this.ds.remove_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', e.id()); 
+            this.loadEvents();
+          }
+        }
+      ]
+    }),
     dayBeginsHour : 8,
     dayEndsHour : 22,
     onBeforeEventRender: args => {
@@ -64,6 +111,20 @@ export class CalendarViewComponent implements AfterViewInit {
 
   configWeek: DayPilot.CalendarConfig = {
     locale : "fr-fr",
+    eventArrangement : "SideBySide",
+    contextMenu : new DayPilot.Menu({
+      items: [
+        {
+          text:"Supprimer", 
+          image : "../../../../assets/images/trash.png",
+          onClick: async (args) => { 
+            var e = args.source;
+            await this.ds.remove_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', e.id()); 
+            this.loadEvents();
+          }
+        }
+      ]
+    }),    
     dayBeginsHour : 8,
     dayEndsHour : 22,
     viewType: "Week",
@@ -105,6 +166,19 @@ export class CalendarViewComponent implements AfterViewInit {
 
   configMonth: DayPilot.MonthConfig = {
     locale : "fr-fr",
+    contextMenu : new DayPilot.Menu({
+      items: [
+        {
+          text:"Supprimer",
+          image : "../../../../assets/images/trash.png", 
+          onClick: async (args) => { 
+            var e = args.source;
+            await this.ds.remove_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', e.id()); 
+            this.loadEvents();
+          }
+        }
+      ]
+    }),    
     onBeforeEventRender: args => {
       if (args.data.tags === "important") {
         args.data.barColor = "#ff0000"; // red color for important events
@@ -118,9 +192,7 @@ export class CalendarViewComponent implements AfterViewInit {
 
   };
 
-  constructor(private ds: CalendarService, private dialog: MatDialog) {
-    this.viewWeek();
-  }
+  
 
   ngAfterViewInit(): void {
     this.loadEvents();

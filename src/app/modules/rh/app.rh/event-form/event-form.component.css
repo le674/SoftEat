@@ -33,3 +33,7 @@ button {
   outline: none;
   color: #fff;
 }
+
+.width-block {
+  width: 200px;
+}
