@@ -21,7 +21,6 @@ export class AppMessageTemplateComponent implements OnInit {
   separationDateB!: boolean;
   statut!: Statut;
   email!: any;
-  userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2';
   heure!: string;
   firebaseApp: FirebaseApp | undefined;
   name!: string;
@@ -46,10 +45,29 @@ export class AppMessageTemplateComponent implements OnInit {
     this.separationDateB = !this.separationDateB;
   }
 
-
   getEmail() {
     this.email = localStorage.getItem("user_email") as string;
   }
+
+  // fetchUserStatus() {
+  //   const db = getDatabase(this.firebaseApp);
+
+  //   const userStatusRef = ref(db, 'users/foodandboost_prop/' + this.userId + '/statut');
+
+  //   onValue(userStatusRef, (snapshot) => {
+  //     const statut = snapshot.val();
+  //     // this.statut.alertes = statut.alertes;
+  //     this.statut.analyse = statut.analyse;
+  //     this.statut.budget = statut.budget;
+  //     this.statut.facture = statut.facture;
+  //     this.statut.planning = statut.planning;
+  //     this.statut.stock = statut.stock;
+  //   }, (error) => {
+  //     console.log('Une erreur s\'est produite lors de la récupération des statuts :', error);
+  //   });
+
+    // this.text = localStorage.getItem("user_email") as string;
+  // }
 
   //recuperation heure du serveur
   fetchTimeServer(){
