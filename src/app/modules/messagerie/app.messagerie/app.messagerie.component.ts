@@ -43,7 +43,6 @@ export class AppMessagerieComponent implements OnInit {
     this.firebaseApp = firebaseApp;
     this.fetchData();
     this.messagerie = [];
-    this.messageTemplate = messageTemplate;
   }
 
   async ngOnInit(): Promise<void> { //: Promise<void>
@@ -51,6 +50,7 @@ export class AppMessagerieComponent implements OnInit {
     this.email = this.firebaseService.getEmailLocalStorage();
     this.statut = await this.firebaseService.getUserStatutsLocalStorage(this.email); //await
     //this.showCanal();
+    this.fetchTimeServer();
   }
 
   /*
@@ -96,7 +96,7 @@ export class AppMessagerieComponent implements OnInit {
       const newMessage = {
         auteur: localStorage.getItem("user_email"),
         contenu: this.inputText,
-        horodatage: this.messageTemplate.fetchTimeServer()
+        horodatage: this.fetchTimeServer()
       }
       //Ecriture du message dans la BDD
       const nodeRef = ref(db, this.convActive);
@@ -119,7 +119,7 @@ export class AppMessagerieComponent implements OnInit {
     onChildAdded(dataRef, (snapshot) => {
       console.log('new message detected');
       const data = snapshot.val();
-      const donneesMessage= new MessageModel();
+      const donneesMessage = new MessageModel();
       donneesMessage.auteur = data.auteur;
       donneesMessage.contenu = data.contenu;
       donneesMessage.horodatage = data.horodatage;

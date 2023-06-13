@@ -19,21 +19,16 @@ export class AppMessageTemplateComponent implements OnInit {
   message!: string;
   statut!: Statut;
   email!: any;
-  userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2';
-  // private http!: HttpClient; // Dois être défini dans le constructeur
-  heure!: number;
   firebaseApp: FirebaseApp | undefined;
   name!: string;
   surname!: string;
-  datePipe = new DatePipe('fr-FR');
-  just_once = true;
 
   constructor() {}
 
   ngOnInit(): void {
     this.message = "received";
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
-    this.fetchTimeServer();
+    this.fetchUserStatus();
     this.getName();
   }
 
@@ -57,20 +52,6 @@ export class AppMessageTemplateComponent implements OnInit {
       console.log('Une erreur s\'est produite lors de la récupération des statuts :', error);
     });
   }
-
-  //recuperation heure du serveur
-  fetchTimeServer(): number {
-    const db = getDatabase();
-    onValue(ref(db, '.info/serverTimeOffset'), (snapshot) => {
-      const offset: number = snapshot.val() || 0;
-      this.heure = Date.now() + offset;
-    })
-    return this.heure;
-  }
-
-  
-
-
 
   async getName(): Promise<void> { //: Promise<string>
     const db = getDatabase(this.firebaseApp);
