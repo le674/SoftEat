@@ -232,27 +232,25 @@ export class EventFormComponent implements OnInit, AfterViewInit {
 
             const currentDate = new Date(firstDayOfMonth);
             while (currentDate <= lastDayOfMonth) {
-              // Check if the current date is a weekday (1-5)
-              if (currentDate.getDay() >= 1 && currentDate.getDay() <= 5) {
-                const weekStart = new Date(currentDate);
-                weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1); // Set to Monday
-                const weekEnd = new Date(weekStart);
-                weekEnd.setDate(weekStart.getDate() + 4); // Set to Friday
+              // Check if the current date is a weekday or Saturday (Monday to Saturday)
+              if (currentDate.getDay() >= 1 && currentDate.getDay() <= 6) {
+                this.newEvent.start = this.formatDate(currentDate) + 'T' + row.prisePoste.split('T')[1] + ':00';
+                this.newEvent.end = this.formatDate(currentDate) + 'T' + row.finPoste.split('T')[1] + ':00';
 
-                const weekDate = new Date(weekStart);
-                while (weekDate <= weekEnd) {
-                  this.newEvent.start = this.formatDate(weekDate) + 'T' + row.prisePoste.split('T')[1] + ':00';
-                  this.newEvent.end = this.formatDate(weekDate) + 'T' + row.finPoste.split('T')[1] + ':00';
-
-                  const userPath: string | null = await this.calendar.getPath(row.personnel);
-                  if (userPath) {
-                    await this.addEvent(userPath, this.newEvent);
-                  }
-
-                  weekDate.setDate(weekDate.getDate() + 1); // Move to the next day in the week
+                const userPath: string | null = await this.calendar.getPath(row.personnel);
+                if (userPath) {
+                  await this.addEvent(userPath, this.newEvent);
                 }
               }
-              currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+
+              // Move to the next day
+              currentDate.setDate(currentDate.getDate() + 1);
+
+              // Check if the next day is Sunday
+              if (currentDate.getDay() === 0) {
+                // Skip Sunday and move to the next day (Monday)
+                currentDate.setDate(currentDate.getDate() + 1);
+              }
             }
           } else {
             // Handle the case where the start and end dates are not the same day
