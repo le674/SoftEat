@@ -102,30 +102,154 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     this.resetFormFields();
   }
 
-
   async saveRows(): Promise<void> {
-  // Retrieve the information of the rows
-  for (const row of this.rows) {
-    this.newEvent = {
-      start: row.prisePoste + ":00",
-      end: row.finPoste + ":00",
-      text: row.event,
-      id: 'newEventId',
-      tags: this.getMotifLabel(row.motif),
-      resource: row.lieu
-    };
-    console.log('Personnel:', row.personnel);
-    const userPath: string | null = await this.calendar.getPath(row.personnel);
-    console.log("Path : ", userPath);
-    if (userPath) {
-      await this.addEvent(userPath, this.newEvent); // Wait for the event to be added
-    }
-  }
-  this.closeDialog();
-}
+    for (const row of this.rows) {
+      this.newEvent = {
+        start: row.prisePoste + ":00",
+        end: row.finPoste + ":00",
+        text: row.event,
+        id: 'newEventId',
+        tags: this.getMotifLabel(row.motif),
+        resource: row.lieu
+      };
 
-  
-  
+      const repetitionOption = row.repeter;
+      const startDate = new Date(row.prisePoste);
+      const endDate = new Date(row.finPoste);
+      switch (repetitionOption) {
+        case 'repeter-option2': // Répeter cette semaine
+          // Check if the start and end dates are the same day
+          if (this.isSameDay(startDate, endDate)) {
+            const weekStart = new Date(startDate);
+            const weekEnd = new Date(startDate);
+            weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1); // Set to Monday
+            weekEnd.setDate(weekStart.getDate() + 5); // Set to Saturday
+
+            const currentDate = new Date(weekStart);
+            while (currentDate <= weekEnd) {
+              this.newEvent.start = this.formatDate(currentDate) + 'T' + row.prisePoste.split('T')[1] + ':00';
+              this.newEvent.end = this.formatDate(currentDate) + 'T' + row.finPoste.split('T')[1] + ':00';
+
+              const userPath: string | null = await this.calendar.getPath(row.personnel);
+              if (userPath) {
+                await this.addEvent(userPath, this.newEvent);
+              }
+
+              currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+            }
+          } else {
+            // Handle the case where the start and end dates are not the same day
+            console.log('Event spans multiple days. Skipping repetition.');
+          }
+          break;
+        case 'repeter-option3': // Répeter chaque semaine
+          // Check if the start and end dates are the same day
+          if (this.isSameDay(startDate, endDate)) {
+            const currentMonth = startDate.getMonth();
+            const firstDayOfMonth = new Date(startDate.getFullYear(), currentMonth, 1);
+            const lastDayOfMonth = new Date(startDate.getFullYear(), currentMonth + 1, 0);
+
+            const currentDate = new Date(firstDayOfMonth);
+            while (currentDate <= lastDayOfMonth) {
+              if (currentDate.getDay() === startDate.getDay()) {
+                this.newEvent.start = this.formatDate(currentDate) + 'T' + row.prisePoste.split('T')[1] + ':00';
+                this.newEvent.end = this.formatDate(currentDate) + 'T' + row.finPoste.split('T')[1] + ':00';
+
+                const userPath: string | null = await this.calendar.getPath(row.personnel);
+                if (userPath) {
+                  await this.addEvent(userPath, this.newEvent);
+                }
+              }
+              currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+            }
+          } else {
+            // Handle the case where the start and end dates are not the same day
+            console.log('Event spans multiple days. Skipping repetition.');
+          }
+          break;
+        case 'repeter-option4': // Répéter chaque jour
+          // Check if the start and end dates are the same day
+          if (this.isSameDay(startDate, endDate)) {
+            const currentMonth = startDate.getMonth();
+            const firstDayOfMonth = new Date(startDate.getFullYear(), currentMonth, 1);
+            const lastDayOfMonth = new Date(startDate.getFullYear(), currentMonth + 1, 0);
+
+            const currentDate = new Date(firstDayOfMonth);
+            while (currentDate <= lastDayOfMonth) {
+              // Check if the current date is a weekday (1-5)
+              if (currentDate.getDay() >= 1 && currentDate.getDay() <= 5) {
+                const weekStart = new Date(currentDate);
+                weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1); // Set to Monday
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekStart.getDate() + 4); // Set to Friday
+
+                const weekDate = new Date(weekStart);
+                while (weekDate <= weekEnd) {
+                  this.newEvent.start = this.formatDate(weekDate) + 'T' + row.prisePoste.split('T')[1] + ':00';
+                  this.newEvent.end = this.formatDate(weekDate) + 'T' + row.finPoste.split('T')[1] + ':00';
+
+                  const userPath: string | null = await this.calendar.getPath(row.personnel);
+                  if (userPath) {
+                    await this.addEvent(userPath, this.newEvent);
+                  }
+
+                  weekDate.setDate(weekDate.getDate() + 1); // Move to the next day in the week
+                }
+              }
+              currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+            }
+          } else {
+            // Handle the case where the start and end dates are not the same day
+            console.log('Event spans multiple days. Skipping repetition.');
+          }
+          break;
+        default: // Ne pas répéter
+          const userPath: string | null = await this.calendar.getPath(row.personnel);
+          if (userPath) {
+            await this.addEvent(userPath, this.newEvent);
+          }
+          break;
+      }
+    }
+    this.closeDialog();
+  }
+
+  private getWeekNumber(date: Date): number {
+    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+    const daysOffset = firstDayOfYear.getDay() - 1;
+    const firstMondayOfYear = new Date(date.getFullYear(), 0, 1 + (daysOffset <= 0 ? 7 : daysOffset));
+    const daysSinceFirstMonday = Math.floor((date.getTime() - firstMondayOfYear.getTime()) / 86400000);
+    return Math.ceil((daysSinceFirstMonday + firstMondayOfYear.getDay() + 1) / 7);
+  }
+
+  private getDateFromWeekNumber(weekNumber: number, dayOfWeek: number): Date {
+    const year = new Date().getFullYear();
+    const januaryFirst = new Date(year, 0, 1);
+    const daysOffset = januaryFirst.getDay() - 1;
+    const firstMondayOfYear = new Date(year, 0, 1 + (daysOffset <= 0 ? 7 : daysOffset));
+    const firstDayOfDesiredWeek = new Date(year, 0, (weekNumber - 1) * 7 + firstMondayOfYear.getDate());
+    const desiredDay = new Date(firstDayOfDesiredWeek.setDate(firstDayOfDesiredWeek.getDate() + dayOfWeek - 1));
+    return desiredDay;
+  }
+
+  private isSameDay(date1: Date, date2: Date): boolean {
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
+  }
+
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
+
+
+
+
   getMotifLabel(value: string): string {
     switch (value) {
       case 'motif-option1':
@@ -160,7 +284,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     const prop = 'foodandboost_prop'; // Assuming the property name is fixed
     this.calendar.add_event(prop, userId, newEvent);
   }
-  
+
   closeDialog(): void {
     this.dialogRef.close(); // Close the dialog
   }
