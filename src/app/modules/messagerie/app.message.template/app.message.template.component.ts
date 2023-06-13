@@ -37,27 +37,50 @@ export class AppMessageTemplateComponent implements OnInit {
     this.getName();
   }
 
-  fetchUserStatus() {
-    const db = getDatabase(this.firebaseApp);
-
-    const userStatusRef = ref(db, 'users/foodandboost_prop/' + this.userId + '/statut');
-
-    onValue(userStatusRef, (snapshot) => {
-      const statut = snapshot.val();
-      // this.statut.alertes = statut.alertes;
-      this.statut.analyse = statut.analyse;
-      this.statut.budget = statut.budget;
-      this.statut.facture = statut.facture;
-      this.statut.planning = statut.planning;
-      this.statut.stock = statut.stock;
-    }, (error) => {
-      console.log('Une erreur s\'est produite lors de la récupération des statuts :', error);
-    });
-
+  updateSeparationDate(){
+    this.separationDateB = !this.separationDateB;
   }
 
   getEmail() {
     this.email = localStorage.getItem("user_email") as string;
+  }
+
+  // fetchUserStatus() {
+  //   const db = getDatabase(this.firebaseApp);
+
+  //   const userStatusRef = ref(db, 'users/foodandboost_prop/' + this.userId + '/statut');
+
+  //   onValue(userStatusRef, (snapshot) => {
+  //     const statut = snapshot.val();
+  //     // this.statut.alertes = statut.alertes;
+  //     this.statut.analyse = statut.analyse;
+  //     this.statut.budget = statut.budget;
+  //     this.statut.facture = statut.facture;
+  //     this.statut.planning = statut.planning;
+  //     this.statut.stock = statut.stock;
+  //   }, (error) => {
+  //     console.log('Une erreur s\'est produite lors de la récupération des statuts :', error);
+  //   });
+
+    // this.text = localStorage.getItem("user_email") as string;
+  // }
+
+  //recuperation heure du serveur
+  fetchTimeServer(){
+    this.http.get('http://worldtimeapi.org/api/timezone/Europe/Paris').subscribe((data: any) => {
+      const utcDateTime = data.utc_datetime.slice(11,16); //"utc_datetime": "2023-06-06T12:50:44.493419+00:00"
+      const utcOffset = data.utc_offset; //"utc_offset": "+02:00"
+      const offsetHours = parseInt(utcOffset.slice(1, 3), 10);
+      const utcHourSplit = utcDateTime.split(':');
+      
+      const hoursInt = parseInt(utcHourSplit[0], 10);
+      let hours = hoursInt + offsetHours;
+      if (hours >= 24) {
+        hours -= 24;
+      };
+      this.heure = hours.toString().padStart(2, '0') + ':' + utcHourSplit[1];
+
+    });
   }
 
   async getName(): Promise<void> { //: Promise<string>
