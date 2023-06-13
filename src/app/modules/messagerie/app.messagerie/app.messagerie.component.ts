@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
 import { getDatabase, ref, push, onChildAdded } from 'firebase/database';
@@ -32,10 +32,7 @@ export class AppMessagerieComponent implements OnInit {
     this.fetchData();
     this.http = http;
     this.messagerie = [];
-
   }
-
-  
 
   async ngOnInit(): Promise<void> { //: Promise<void>
     this.text = "it works !";
@@ -43,7 +40,6 @@ export class AppMessagerieComponent implements OnInit {
     this.statut = await this.firebaseService.fetchUserStatus(this.userId); //await
     this.showCanal();
   }
-
 
   showCanal() {
     if(this.statut.stock === 'wr' || this.statut.stock === 'rw' || this.statut.stock === 'r' ) this.stockCanal = true;
@@ -53,13 +49,9 @@ export class AppMessagerieComponent implements OnInit {
     if(this.statut.planning === 'wr' || this.statut.planning === 'rw' || this.statut.stock === 'r' ) this.planningCanal = true;
   }
 
-  messageInput = document.getElementById("messageInput");
-
   updateNotification(index: number){
     this.notification[index] = !this.notification[index];
   }
-  
-
   
   sendMessage(){
     if(this.inputText != '') {
@@ -67,7 +59,7 @@ export class AppMessagerieComponent implements OnInit {
 
       //Création du nouveau message
       const newMessage = {
-        auteur: 'matthieu',
+        auteur: localStorage.getItem("user_email"),
         contenu: this.inputText,
         horodatage: new Date().getTime()
       }
