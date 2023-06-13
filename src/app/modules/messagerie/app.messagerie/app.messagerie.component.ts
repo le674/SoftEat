@@ -62,7 +62,6 @@ export class AppMessagerieComponent implements OnInit {
     if(this.statut.planning === 'wr' || this.statut.planning === 'rw' || this.statut.stock === 'r' ) this.planningCanal = true;
   }
   */
-
   messageInput = document.getElementById("messageInput");
 
   updateNotification(index: number){
