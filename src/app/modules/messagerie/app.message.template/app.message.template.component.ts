@@ -21,24 +21,19 @@ export class AppMessageTemplateComponent implements OnInit {
   email!: any;
   userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2';
   // private http!: HttpClient; // Dois être défini dans le constructeur
-  heure!: string;
+  heure!: number;
   firebaseApp: FirebaseApp | undefined;
   name!: string;
   surname!: string;
 
 
-  constructor(
-    private http: HttpClient) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.message = "received";
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
     this.fetchTimeServer();
     this.getName();
-  }
-
-  updateSeparationDate(){
-    this.separationDateB = !this.separationDateB;
   }
 
 
@@ -63,22 +58,18 @@ export class AppMessageTemplateComponent implements OnInit {
   }
 
   //recuperation heure du serveur
-  fetchTimeServer(){
-    this.http.get('http://worldtimeapi.org/api/timezone/Europe/Paris').subscribe((data: any) => {
-      const utcDateTime = data.utc_datetime.slice(11,16); //"utc_datetime": "2023-06-06T12:50:44.493419+00:00"
-      const utcOffset = data.utc_offset; //"utc_offset": "+02:00"
-      const offsetHours = parseInt(utcOffset.slice(1, 3), 10);
-      const utcHourSplit = utcDateTime.split(':');
-      
-      const hoursInt = parseInt(utcHourSplit[0], 10);
-      let hours = hoursInt + offsetHours;
-      if (hours >= 24) {
-        hours -= 24;
-      };
-      this.heure = hours.toString().padStart(2, '0') + ':' + utcHourSplit[1];
-
-    });
+  fetchTimeServer(): number {
+    const db = getDatabase();
+    onValue(ref(db, '.info/serverTimeOffset'), (snapshot) => {
+      const offset: number = snapshot.val() || 0;
+      this.heure = Date.now() + offset;
+    })
+    return this.heure;
   }
+
+  
+
+
 
   async getName(): Promise<void> { //: Promise<string>
     const db = getDatabase(this.firebaseApp);
