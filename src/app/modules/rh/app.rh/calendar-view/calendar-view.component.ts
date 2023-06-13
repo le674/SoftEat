@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Input } from '@angular/core';
 import {
   DayPilot,
   DayPilotCalendarComponent,
@@ -16,11 +16,13 @@ import { EventFormComponent } from '../event-form/event-form.component'; // Impo
   templateUrl: './calendar-view.component.html',
   styleUrls: ['./calendar-view.component.css'],
 })
-export class CalendarViewComponent implements AfterViewInit {
-  @ViewChild('day') day!: DayPilotCalendarComponent;
-  @ViewChild('week') week!: DayPilotCalendarComponent;
-  @ViewChild('month') month!: DayPilotMonthComponent;
-  @ViewChild('navigator') nav!: DayPilotNavigatorComponent;
+export class CalendarViewComponent implements AfterViewInit, OnInit {
+  @ViewChild("day") day!: DayPilotCalendarComponent;
+  @ViewChild("week") week!: DayPilotCalendarComponent;
+  @ViewChild("month") month!: DayPilotMonthComponent;
+  @ViewChild("navigator") nav!: DayPilotNavigatorComponent;
+  users !: string;
+  @Input() userRole!:string;
 
   constructor(private ds: CalendarService, private dialog: MatDialog) {
     this.viewWeek();
