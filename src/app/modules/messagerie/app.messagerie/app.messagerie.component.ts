@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
 import { User } from '../../../interfaces/user';
-import { getDatabase, ref, push, set, onValue, onChildAdded, DatabaseReference} from 'firebase/database';
+import { getDatabase, ref, push, update, onValue, onChildAdded, DatabaseReference} from 'firebase/database';
 import { FirebaseApp } from '@angular/fire/app';
 import { HttpClient } from '@angular/common/http';
 import { MessageModel } from '../messages_models/model';
@@ -113,7 +113,7 @@ export class AppMessagerieComponent implements OnInit {
 
 
 
-  updateUnreadMessages(channelId: string, emails: string[]): void {
+  updateUnreadMessages(canalId: string, emails: string[]): void {
     const db = getDatabase(this.firebaseApp);
 
     emails.forEach(email => {
@@ -123,15 +123,22 @@ export class AppMessagerieComponent implements OnInit {
             onValue(userRef, (snapshot) => {
               const user: User = snapshot.val();
               const unreadMessages = user.unreadMessages || {};
-              unreadMessages[channelId] = (unreadMessages[channelId] || 0) + 1;
-  
-              set(userRef, { unreadMessages })
-              .then(() => {
+              unreadMessages[canalId] = (unreadMessages[canalId] || 0) + 1;
+              console.log("oui");
+              console.log(user.unreadMessages[canalId]);
+              
+              if (user.unreadMessages[canalId] == 1){
+                update(userRef.ref, { unreadMessages })
                 console.log("User's notification updated successfully");
-              })
-              .catch(error => {
-                console.error("Error updating user's notification:", error);
-              });
+                
+              }
+              // update(userRef.ref, { unreadMessages })
+              // .then(() => {
+              //   console.log("User's notification updated successfully");
+              // })
+              // .catch(error => {
+              //   console.error("Error updating user's notification:", error);
+              // });
             });
           }
         })
