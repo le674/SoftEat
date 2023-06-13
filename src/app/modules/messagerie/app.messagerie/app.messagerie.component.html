@@ -48,11 +48,15 @@
       </div>
       <div id="conversation">
          <div id="messages">
+            <div *ngIf="separationDateB" class="separationDate">
+               <span>{{ fetchTimeServer() | date: 'E dd MMMM yyyy' }}</span>
+             </div>
             <message-template *ngFor="let message of messagerie" [listeMessages]="message"></message-template>
+            <span id="down"></span>
          </div>
          <div id="message_bar">  
             <input type="text" [(ngModel)]="inputText" id="messageInput" autocomplete="off"/>
-            <button (click)="sendMessage()" id="send"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+            <button (click)="sendMessage()" id="send" ><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
          </div>
       </div>
    </div>

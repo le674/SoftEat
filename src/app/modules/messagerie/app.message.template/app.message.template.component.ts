@@ -16,16 +16,12 @@ export class AppMessageTemplateComponent implements OnInit {
   @Input() listeMessages!: MessageModel;
 
   message!: string;
-  separationDateB!: boolean;
   statut!: Statut;
   email!: any;
-  heure!: number;
   firebaseApp: FirebaseApp | undefined;
   name1!: string[];
   name!: string;
   surname!: string;
-  datePipe = new DatePipe('fr-FR');
-  just_once = true;
 
   constructor() {}
 
@@ -33,20 +29,7 @@ export class AppMessageTemplateComponent implements OnInit {
     this.message = "received";
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
     this.fetchUserStatus();
-    this.fetchTimeServer();
     this.getName();
-    this.updateSeparationDate();
-  }
-
-  updateSeparationDate() {
-    console.log(typeof(this.datePipe.transform(this.heure, 'HH:mm')));
-    if((this.datePipe.transform(this.heure, 'HH:mm') == "00:00") && (this.just_once)) {
-      this.separationDateB = true;
-      this.just_once = false;
-    } else {
-      this.separationDateB = false;
-      this.just_once = true;
-    }
   }
 
   fetchUserStatus() {
@@ -70,20 +53,6 @@ export class AppMessageTemplateComponent implements OnInit {
     });
   }
 
-  //recuperation heure du serveur
-  fetchTimeServer(): number {
-    const db = getDatabase();
-    onValue(ref(db, '.info/serverTimeOffset'), (snapshot) => {
-      const offset: number = snapshot.val() || 0;
-      this.heure = Date.now() + offset;
-    })
-    return this.heure;
-  }
-
-  
-
-
-
   async getName(): Promise<void> { //: Promise<string>
     const db = getDatabase(this.firebaseApp);
     const usersRef = ref(db, 'users/foodandboost_prop');
@@ -99,7 +68,6 @@ export class AppMessageTemplateComponent implements OnInit {
         }
       });
     }
-
   }
 }
 

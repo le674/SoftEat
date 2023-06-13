@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
-import { getDatabase, ref, push, onChildAdded } from 'firebase/database';
+import { getDatabase, ref, push, onChildAdded, onValue } from 'firebase/database';
 import { FirebaseApp } from '@angular/fire/app';
-import { HttpClient } from '@angular/common/http';
 import { MessageModel } from '../messages_models/model';
-import { AppMessageTemplateComponent } from '../app.message.template/app.message.template.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-messagerie',
@@ -24,14 +23,16 @@ export class AppMessagerieComponent implements OnInit {
   stockCanal = true;
   inputText!: string;
   firebaseApp: FirebaseApp | undefined;
-  http!: HttpClient;
-  messagerie!: MessageModel[];
-
   
-  constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService, http: HttpClient) {  
+  messagerie!: MessageModel[];
+  datePipe = new DatePipe('fr-FR');
+  just_once = true;
+  separationDateB!: boolean;
+  heure!: number;
+
+  constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService) {  
     this.firebaseApp = firebaseApp;
     this.fetchData();
-    this.http = http;
     this.messagerie = [];
   }
 
@@ -39,6 +40,8 @@ export class AppMessagerieComponent implements OnInit {
     this.notification = [true, true, true, true, true, true, true];
     this.statut = await this.firebaseService.fetchUserStatus(this.userId); //await
     //this.showCanal();
+    this.fetchTimeServer();
+    this.updateSeparationDate();
   }
 
   /*
@@ -69,7 +72,22 @@ export class AppMessagerieComponent implements OnInit {
   updateNotification(index: number){
     this.notification[index] = !this.notification[index];
   }
-  
+
+  //recuperation heure du serveur
+  fetchTimeServer(): number {
+    const db = getDatabase();
+    onValue(ref(db, '.info/serverTimeOffset'), (snapshot) => {
+      const offset: number = snapshot.val() || 0;
+      this.heure = Date.now() + offset;
+    })
+    return this.heure;
+  }
+
+  updateSeparationDate() {
+    if((this.datePipe.transform(this.fetchTimeServer(), 'HH:mm') == "00:00")) {
+      this.separationDateB = true;
+    }
+  }
   
   sendMessage(){
     if(this.inputText != '') {
@@ -79,7 +97,7 @@ export class AppMessagerieComponent implements OnInit {
       const newMessage = {
         auteur: localStorage.getItem("user_email"),
         contenu: this.inputText,
-        horodatage: new Date().getTime()
+        horodatage: this.fetchTimeServer()
       }
       //Ecriture du message dans la BDD
       const nodeRef = ref(db, this.convActive);
@@ -91,6 +109,8 @@ export class AppMessagerieComponent implements OnInit {
       });
     }
     this.inputText = "";
+    this.separationDateB = false;
+    this.scroll();
   }
 
   fetchData() {
@@ -102,7 +122,7 @@ export class AppMessagerieComponent implements OnInit {
     onChildAdded(dataRef, (snapshot) => {
       console.log('new message detected');
       const data = snapshot.val();
-      const donneesMessage= new MessageModel();
+      const donneesMessage = new MessageModel();
       donneesMessage.auteur = data.auteur;
       donneesMessage.contenu = data.contenu;
       donneesMessage.horodatage = data.horodatage;
@@ -112,6 +132,14 @@ export class AppMessagerieComponent implements OnInit {
 
   getMessagerie(): MessageModel[]{
     return this.messagerie;
+  }
+
+  //Scroll quand un message est envoyé
+  scroll() {
+    const el_msg = document.getElementById('messages');
+    if(el_msg) {
+
+    }
   }
 }
 
