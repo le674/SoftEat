@@ -92,15 +92,11 @@ export class AppMessagerieComponent implements OnInit {
     onChildAdded(dataRef, (snapshot) => {
       console.log('new message detected');
       const data = snapshot.val();
-      //console.log(data);
       const donneesMessage= new MessageModel();
       donneesMessage.auteur = data.auteur;
       donneesMessage.contenu = data.contenu;
       donneesMessage.horodatage = data.horodatage;
       this.messagerie.push(donneesMessage);
-      //console.log(this.messagerie);
-      //Ajouter msg au DOM
-
     });
   }
 

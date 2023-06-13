@@ -4,7 +4,7 @@ import { getDatabase, ref, onValue, get} from 'firebase/database';
 import { Statut } from '../../../interfaces/statut';
 import { HttpClient } from '@angular/common/http';
 import { MessageModel } from '../messages_models/model';
-import { AppMessagerieComponent } from '../app.messagerie/app.messagerie.component';
+
 @Component({
   selector: 'message-template',
   templateUrl: './app.message.template.component.html',
@@ -28,8 +28,7 @@ export class AppMessageTemplateComponent implements OnInit {
 
 
   constructor(
-    private http: HttpClient,
-    private messagerie: AppMessagerieComponent) { }
+    private http: HttpClient) { }
 
   ngOnInit(): void {
     this.message = "received";
@@ -48,17 +47,9 @@ export class AppMessageTemplateComponent implements OnInit {
     const db = getDatabase(this.firebaseApp);
 
     const userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
-
-    const userEmailRef = ref(db, 'users/foodandboost_prop/' + userId + '/email');
     const userStatusRef = ref(db, 'users/foodandboost_prop/' + userId + '/statut');
 
     this.email = localStorage.getItem("user_email") as string;
-
-    /*
-    onValue(userEmailRef, (snapshot) => {
-      this.email = snapshot.val();
-    });
-    */
 
     onValue(userStatusRef, (snapshot) => {
       const statut = snapshot.val();
