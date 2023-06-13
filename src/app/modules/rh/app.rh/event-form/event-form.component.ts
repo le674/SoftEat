@@ -1,14 +1,22 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+} from '@angular/core';
+import { FirebaseApp, initializeApp } from '@angular/fire/app';
+import { getDatabase, ref, onValue, get } from 'firebase/database';
 import { DayPilot } from "daypilot-pro-angular";
 import { CalendarService } from "../calendar-view/calendar-data.service";
 import { MatDialogRef } from '@angular/material/dialog';
 
+
 @Component({
   selector: 'app-event-form',
   templateUrl: './event-form.component.html',
-  styleUrls: ['./event-form.component.css']
+  styleUrls: ['./event-form.component.css'],
 })
-
 export class EventFormComponent implements OnInit, AfterViewInit {
   @ViewChild('addPersonnel') addPersonnelInput!: ElementRef<HTMLInputElement>;
   @ViewChild('addMotif') addMotifInput!: ElementRef<HTMLInputElement>;
@@ -18,22 +26,46 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   @ViewChild('addFinPoste') addFinPosteInput!: ElementRef<HTMLInputElement>;
   @ViewChild('addRepeter') addRepeterSelect!: ElementRef<HTMLSelectElement>;
   dateWidth = '150px'; // Default width
-  newEvent? : DayPilot.EventData;
 
-  constructor(private calendar: CalendarService, public dialogRef: MatDialogRef<EventFormComponent>) {
+  Categories!: String[];
+  Serveurs!: { nom: String }[];
+  Gerants!: { nom: String }[];
+  Rh!: { nom: String }[];
+  Autres!: { nom: String }[];
+  firebaseApp: FirebaseApp | undefined;
+  newEvent?: DayPilot.EventData; 
+  constructor(private calendar: CalendarService, public dialogRef: MatDialogRef<EventFormComponent>, firebaseApp: FirebaseApp) {
     this.dialogRef = dialogRef;
   }
+
 
   /* Les deux premières méthodes ajoutent automatiquement des majuscules sur 
   le premier caractère du champ Evenement uniformiser */
   ngOnInit(): void {
+
+    this.Categories = ['Serveurs', 'Rh', 'Gérants', 'Autres'];
+
+    this.Serveurs = [];
+    this.Gerants = [];
+    this.Rh = [];
+    this.Autres = [];
+
+    this.fetchUser();
     const inputFields: HTMLInputElement[] = [
-      this.addEventInput.nativeElement
+      this.addPersonnelInput.nativeElement,
+      this.addEventInput.nativeElement,
+      this.addLieuInput.nativeElement,
     ];
 
-    inputFields.forEach((input) => {
-      input.addEventListener('input', () => {
-        this.truncateInputValue(input);
+    setTimeout(() => {
+      const inputFields: HTMLInputElement[] = [
+        this.addEventInput.nativeElement
+      ];
+
+      inputFields.forEach((input) => {
+        input.addEventListener('input', () => {
+          this.truncateInputValue(input);
+        });
       });
     });
   }
@@ -44,7 +76,9 @@ export class EventFormComponent implements OnInit, AfterViewInit {
 
   /* Les 2 méthodes suivantes permettent de rendre l'espace occupé par la date responsive*/
   ngAfterViewInit(): void {
-    this.calculateInputWidth();
+    setTimeout(() => {
+      this.calculateInputWidth();
+    });
   }
 
   calculateInputWidth(): void {
@@ -55,9 +89,24 @@ export class EventFormComponent implements OnInit, AfterViewInit {
 
   rows: Row[] = [];
 
-  addRow(personnel: string, motif: string, event: string, lieu: string,
-    prisePoste: string, finPoste: string, repeter: string): void {
-    const newRow: Row = { personnel, motif, event, lieu, prisePoste, finPoste, repeter };
+  addRow(
+    personnel: string,
+    motif: string,
+    event: string,
+    lieu: string,
+    prisePoste: string,
+    finPoste: string,
+    repeter: string
+  ): void {
+    const newRow: Row = {
+      personnel,
+      motif,
+      event,
+      lieu,
+      prisePoste,
+      finPoste,
+      repeter,
+    };
     this.rows.push(newRow);
   }
   resetFormFields(): void {
@@ -73,8 +122,10 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     this.rows.splice(index, 1);
   }
 
-  //Permet de définir les champs obligatoires
-  isFieldFilled(inputRef: ElementRef<HTMLInputElement | HTMLSelectElement>): boolean {
+  isFieldFilled(
+    inputRef: ElementRef<HTMLInputElement | HTMLSelectElement>
+  ): boolean {
+
     const value = inputRef.nativeElement.value;
     if (inputRef.nativeElement.tagName.toLowerCase() === 'select') {
       return value !== '';
@@ -82,16 +133,25 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     return value.trim() !== '';
   }
 
-  onClickAdd(personnel: string, motif: string, event: string, lieu: string,
-    prisePoste: string, finPoste: string, repeter: string): void {
-    if (!this.isFieldFilled(this.addPersonnelInput) ||
+  onClickAdd(
+    personnel: string,
+    motif: string,
+    event: string,
+    lieu: string,
+    prisePoste: string,
+    finPoste: string,
+    repeter: string
+  ): void {
+    if (
+      !this.isFieldFilled(this.addPersonnelInput) ||
       !this.isFieldFilled(this.addMotifInput) ||
       !this.isFieldFilled(this.addLieuInput) ||
       !this.isFieldFilled(this.addPrisePosteInput) ||
       !this.isFieldFilled(this.addFinPosteInput) ||
-      !this.isFieldFilled(this.addRepeterSelect)) {
+      !this.isFieldFilled(this.addRepeterSelect)
+    ) {
       // Show the popup or perform any required validation logic
-      alert("Renseignez les champs obligatoires marqués par un astérisque (*)");
+      alert('Renseignez les champs obligatoires marqués par un astérisque (*)');
       return;
     }
     this.addRow(personnel, motif, event, lieu, prisePoste, finPoste, repeter);
@@ -99,34 +159,28 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   }
 
 
-  saveRows(): void {
-    // Retrieve the information of the rows
-    const rowInfo = this.rows.map(row => {
-      this.newEvent = {
-        start: row.prisePoste+":00",
-        end: row.finPoste+":00",
-        text: row.event,
-        id: 'newEventId',
-        tags: this.getMotifLabel(row.motif),
-        resource: row.lieu
-      }
-      this.addEvent(this.newEvent);
-      /*return {
-        personnel: row.personnel,
-        motif: this.getMotifLabel(row.motif),
-        event: row.event,
-        lieu: row.lieu,
-        prisePoste: row.prisePoste,
-        finPoste: row.finPoste,
-        repeter: this.getRepeterLabel(row.repeter)
-      };*/
-    });
-    this.closeDialog();
-    //this.calendar.closeEventForm();
-    // Display the information
-    //const infoText = JSON.stringify(rowInfo, null, 2); // Convert the information to a formatted JSON string
-    //alert(infoText); // You can replace this with any other display method you prefer
+  async saveRows(): Promise<void> {
+  // Retrieve the information of the rows
+  for (const row of this.rows) {
+    this.newEvent = {
+      start: row.prisePoste + ":00",
+      end: row.finPoste + ":00",
+      text: row.event,
+      id: 'newEventId',
+      tags: this.getMotifLabel(row.motif),
+      resource: row.lieu
+    };
+    console.log('Personnel:', row.personnel);
+    const userPath: string | null = await this.calendar.getPath(row.personnel);
+    console.log("Path : ", userPath);
+    if (userPath) {
+      await this.addEvent(userPath, this.newEvent); // Wait for the event to be added
+    }
   }
+  this.closeDialog();
+}
+
+  
   
   getMotifLabel(value: string): string {
     switch (value) {
@@ -142,7 +196,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         return '';
     }
   }
-  
+
   getRepeterLabel(value: string): string {
     switch (value) {
       case 'repeter-option1':
@@ -158,12 +212,70 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     }
   }
 
-  addEvent(newEvent : DayPilot.EventData): void {
-    this.calendar.add_event('foodandboost_prop', '0uNzmnBI0jYYspF4wNXdRd2xw9Q2', newEvent);
-    //this.loadEvents();
+  addEvent(userId: string, newEvent: DayPilot.EventData): void {
+    const prop = 'foodandboost_prop'; // Assuming the property name is fixed
+    this.calendar.add_event(prop, userId, newEvent);
   }
+  
   closeDialog(): void {
     this.dialogRef.close(); // Close the dialog
+  }
+
+  async fetchUser() {
+    const db = getDatabase(this.firebaseApp);
+
+    const userPath = '/users/foodandboost_prop/';
+    const usersRef = ref(db, userPath);
+
+    try {
+      const snapshot = await get(usersRef);
+      if (snapshot.exists()) {
+        const usersData = snapshot.val();
+        const userIDs = Object.keys(usersData);
+
+        for (const userID of userIDs) {
+          const userEmailRef = ref(db, `${userPath}/${userID}/email`);
+          const userRoleRef = ref(db, `${userPath}/${userID}/role`);
+
+          const emailSnapshot = await get(userEmailRef);
+          const email = emailSnapshot.val();
+
+          const roleSnapshot = await get(userRoleRef);
+          const role = roleSnapshot.val();
+
+          if (email) {
+            if (role == 'gerant') {
+              this.Gerants.push({ nom: email });
+            } else if (role == 'rh') {
+              this.Rh.push({ nom: email });
+            } else if (role == 'serveur') {
+              this.Serveurs.push({ nom: email });
+            } else {
+              this.Autres.push({ nom: email });
+            }
+          }
+        }
+      } else {
+        console.log('No user data found.');
+      }
+    } catch (error) {
+      console.error('An error occurred while retrieving user data:', error);
+    }
+  }
+
+  getCategoryUsers(category: String): { nom: String; }[] {
+    switch (category) {
+      case 'Serveurs':
+        return this.Serveurs;
+      case 'Gérants':
+        return this.Gerants;
+      case 'Rh':
+        return this.Rh;
+      case 'Autres':
+        return this.Autres;
+      default:
+        return [];
+    }
   }
 }
 

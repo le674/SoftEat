@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
-import { getDatabase, ref, push } from 'firebase/database';
+import { getDatabase, ref, push, onChildAdded } from 'firebase/database';
 import { FirebaseApp } from '@angular/fire/app';
+import { HttpClient } from '@angular/common/http';
+import { MessageModel } from '../messages_models/model';
 
 @Component({
   selector: 'app-messagerie',
@@ -23,9 +25,15 @@ export class AppMessagerieComponent implements OnInit {
   stockCanal!: boolean; //(this.statut.stock === 'rw');
   inputText!: string;
   firebaseApp: FirebaseApp | undefined;
+  http!: HttpClient;
+  messagerie!: MessageModel[];
   
-  constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService) {  
+  constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService, http: HttpClient) {  
     this.firebaseApp = firebaseApp;
+    this.fetchData();
+    this.http = http;
+    this.messagerie = [];
+
   }
 
   
@@ -77,5 +85,29 @@ export class AppMessagerieComponent implements OnInit {
     this.inputText = "";
   }
 
+  fetchData() {
+    // Création d'une instance de la database
+    const db = getDatabase(this.firebaseApp);
+    // Node à monitorer
+    const dataRef = ref(db, 'conversations/deliss_pizz/deliss_pizz/del42_ana_037581');
+
+    onChildAdded(dataRef, (snapshot) => {
+      console.log('new message detected');
+      const data = snapshot.val();
+      //console.log(data);
+      const donneesMessage= new MessageModel();
+      donneesMessage.auteur = data.auteur;
+      donneesMessage.contenu = data.contenu;
+      donneesMessage.horodatage = data.horodatage;
+      this.messagerie.push(donneesMessage);
+      //console.log(this.messagerie);
+      //Ajouter msg au DOM
+
+    });
+  }
+
+  getMessagerie(): MessageModel[]{
+    return this.messagerie;
+  }
 }
 
