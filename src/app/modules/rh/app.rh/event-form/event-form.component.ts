@@ -217,24 +217,26 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         const userIDs = Object.keys(usersData);
 
         for (const userID of userIDs) {
-          const userEmailRef = ref(db, `${userPath}/${userID}/email`);
+          const userPrenomRef = ref(db, `${userPath}/${userID}/prenom`);
+          const userNomRef = ref(db, `${userPath}/${userID}/nom`);
           const userRoleRef = ref(db, `${userPath}/${userID}/role`);
 
-          const emailSnapshot = await get(userEmailRef);
-          const email = emailSnapshot.val();
+          const prenomSnapshot = await get(userPrenomRef);
+          const nomSnapshot = await get(userNomRef);
+          const nomComplet = prenomSnapshot.val() + " " + nomSnapshot.val();
 
           const roleSnapshot = await get(userRoleRef);
           const role = roleSnapshot.val();
 
-          if (email) {
+          if (nomComplet) {
             if (role == 'gerant') {
-              this.Gerants.push({ nom: email });
+              this.Gerants.push({ nom: nomComplet });
             } else if (role == 'rh') {
-              this.Rh.push({ nom: email });
+              this.Rh.push({ nom: nomComplet });
             } else if (role == 'serveur') {
-              this.Serveurs.push({ nom: email });
+              this.Serveurs.push({ nom: nomComplet });
             } else {
-              this.Autres.push({ nom: email });
+              this.Autres.push({ nom: nomComplet });
             }
           }
         }
