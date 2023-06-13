@@ -17,16 +17,16 @@ export class AppMessagerieComponent implements OnInit {
   notification!: boolean[];
   statut!: Statut;
   userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
-  analyseCanal!: boolean;
-  budgetCanal!: boolean;
-  factureCanal!: boolean;
-  planningCanal!: boolean;
-  stockCanal!: boolean; //(this.statut.stock === 'rw');
+  analyseCanal = true;
+  budgetCanal = true;
+  factureCanal = true;
+  planningCanal = true;
+  stockCanal = true;
   inputText!: string;
   firebaseApp: FirebaseApp | undefined;
   http!: HttpClient;
   messagerie!: MessageModel[];
-  messageTemplate!: AppMessageTemplateComponent;
+
   
   constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService, http: HttpClient) {  
     this.firebaseApp = firebaseApp;
@@ -38,9 +38,10 @@ export class AppMessagerieComponent implements OnInit {
   async ngOnInit(): Promise<void> { //: Promise<void>
     this.notification = [true, true, true, true, true, true, true];
     this.statut = await this.firebaseService.fetchUserStatus(this.userId); //await
-    this.showCanal();
+    //this.showCanal();
   }
 
+  /*
   showCanal() {
     if(this.statut.stock === 'wr' || this.statut.stock === 'rw' || this.statut.stock === 'r' ) this.stockCanal = true;
     if(this.statut.analyse === 'wr' || this.statut.analyse === 'rw' || this.statut.stock === 'r' ) this.stockCanal = true;
@@ -48,10 +49,27 @@ export class AppMessagerieComponent implements OnInit {
     if(this.statut.facture === 'wr' || this.statut.facture === 'rw' || this.statut.stock === 'r' ) this.factureCanal = true;
     if(this.statut.planning === 'wr' || this.statut.planning === 'rw' || this.statut.stock === 'r' ) this.planningCanal = true;
   }
+  */
+  
+  anaConv = "conversations/deliss_pizz/deliss_pizz/del42_ana_037581";
+  comConv = "conversations/deliss_pizz/deliss_pizz/del42_com_238402";
+  facConv = "conversations/deliss_pizz/deliss_pizz/del42_fac_238402";
+  invConv = "conversations/deliss_pizz/deliss_pizz/del42_inv_684939";
+  recConv = "conversations/deliss_pizz/deliss_pizz/del42_rec_937590";
+  convActive = this.anaConv;  
+
+  /*
+  selectConv(conversation: string){
+
+    this.convActive = conversation;
+  }
+  */
+  messageInput = document.getElementById("messageInput");
 
   updateNotification(index: number){
     this.notification[index] = !this.notification[index];
   }
+  
   
   sendMessage(){
     if(this.inputText != '') {
@@ -64,7 +82,7 @@ export class AppMessagerieComponent implements OnInit {
         horodatage: this.messageTemplate.fetchTimeServer()
       }
       //Ecriture du message dans la BDD
-      const nodeRef = ref(db, `conversations/deliss_pizz/deliss_pizz/del42_ana_037581`);
+      const nodeRef = ref(db, this.convActive);
       push(nodeRef, newMessage).then(() => {
         console.log("New message with custom name created successfully");
       })
@@ -79,7 +97,7 @@ export class AppMessagerieComponent implements OnInit {
     // Création d'une instance de la database
     const db = getDatabase(this.firebaseApp);
     // Node à monitorer
-    const dataRef = ref(db, 'conversations/deliss_pizz/deliss_pizz/del42_ana_037581');
+    const dataRef = ref(db, this.convActive);
 
     onChildAdded(dataRef, (snapshot) => {
       console.log('new message detected');
