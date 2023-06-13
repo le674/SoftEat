@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, Input } from '@angular/core';
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
 import { getDatabase, ref, push, onChildAdded, onValue } from 'firebase/database';
@@ -12,7 +12,16 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./app.messagerie.component.css']
 })
 
-export class AppMessagerieComponent implements OnInit {
+export class AppMessagerieComponent implements OnInit, OnChanges {
+
+  anaConv = "conversations/deliss_pizz/deliss_pizz/del42_ana_037581";
+  comConv = "conversations/deliss_pizz/deliss_pizz/del42_com_238402";
+  facConv = "conversations/deliss_pizz/deliss_pizz/del42_fac_238402";
+  invConv = "conversations/deliss_pizz/deliss_pizz/del42_inv_684939";
+  recConv = "conversations/deliss_pizz/deliss_pizz/del42_rec_937590";
+
+  @Input() convActive: string = 'conversations/deliss_pizz/deliss_pizz/del42_ana_037581' ; // Propriété d'entrée pour convActive
+
   notification!: boolean[];
   statut!: Statut;
   userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
@@ -29,6 +38,15 @@ export class AppMessagerieComponent implements OnInit {
   just_once = true;
   separationDateB!: boolean;
   heure!: number;
+
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    // Vérifier si convActive a changé
+    if (changes['convActive'] /*&& !changes.convActive.firstChange*/) {
+      console.log(this.convActive);
+      this.messagerie=[];
+      this.fetchData(); // Appeler fetchData() lorsque convActive change
+    }
+  }
 
   constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService) {  
     this.firebaseApp = firebaseApp;
@@ -53,20 +71,7 @@ export class AppMessagerieComponent implements OnInit {
     if(this.statut.planning === 'wr' || this.statut.planning === 'rw' || this.statut.stock === 'r' ) this.planningCanal = true;
   }
   */
-  
-  anaConv = "conversations/deliss_pizz/deliss_pizz/del42_ana_037581";
-  comConv = "conversations/deliss_pizz/deliss_pizz/del42_com_238402";
-  facConv = "conversations/deliss_pizz/deliss_pizz/del42_fac_238402";
-  invConv = "conversations/deliss_pizz/deliss_pizz/del42_inv_684939";
-  recConv = "conversations/deliss_pizz/deliss_pizz/del42_rec_937590";
-  convActive = this.anaConv;  
 
-  /*
-  selectConv(conversation: string){
-
-    this.convActive = conversation;
-  }
-  */
   messageInput = document.getElementById("messageInput");
 
   updateNotification(index: number){
@@ -102,7 +107,12 @@ export class AppMessagerieComponent implements OnInit {
       //Ecriture du message dans la BDD
       const nodeRef = ref(db, this.convActive);
       push(nodeRef, newMessage).then(() => {
+        this.messagerie=[];
+
         console.log("New message with custom name created successfully");
+        console.log(this.convActive);
+        this.fetchData();
+
       })
       .catch((error) => {
         console.error("Error creating new message:", error);
@@ -113,12 +123,12 @@ export class AppMessagerieComponent implements OnInit {
     this.scroll();
   }
 
-  fetchData() {
+  async fetchData() {
     // Création d'une instance de la database
     const db = getDatabase(this.firebaseApp);
     // Node à monitorer
     const dataRef = ref(db, this.convActive);
-
+    this.messagerie=[];
     onChildAdded(dataRef, (snapshot) => {
       console.log('new message detected');
       const data = snapshot.val();
