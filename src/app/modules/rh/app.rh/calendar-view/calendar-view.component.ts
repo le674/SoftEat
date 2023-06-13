@@ -40,6 +40,76 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
 
   date = DayPilot.Date.today();
 
+  bubble = new DayPilot.Bubble({
+    zIndex: 500,
+    onLoad: function (args) {
+      const start = new Date(args.source.data.start);
+      const end = new Date(args.source.data.end);
+
+      const startTime =
+        start.getHours().toString().padStart(2, '0') +
+        ':' +
+        start.getMinutes().toString().padStart(2, '0');
+      const endTime =
+        end.getHours().toString().padStart(2, '0') +
+        ':' +
+        end.getMinutes().toString().padStart(2, '0');
+
+      let bubbleContent =
+        '<div class="custom-bubble">' +
+        '<strong>' +
+        args.source.data.tags +
+        '</strong><br>';
+
+      if (args.source.data.resource) {
+        bubbleContent += '<div>Lieu : ' + args.source.data.resource + '</div>';
+      }
+
+      bubbleContent +=
+        '<div>Description : ' +
+        args.source.data.text +
+        '</div>' +
+        '<div>' +
+        startTime +
+        ' - ' +
+        endTime +
+        '</div>';
+
+      const duration = Math.floor(
+        (end.getTime() - start.getTime()) / (1000 * 60)
+      ); // Difference in minutes
+      const durationHours = Math.floor(duration / 60);
+      const durationMinutes = duration % 60;
+
+      if (durationHours > 0 || durationMinutes > 0) {
+        let durationText = '';
+
+        if (durationHours > 0) {
+          durationText += durationHours + ' heure';
+          if (durationHours > 1) {
+            durationText += 's';
+          }
+        }
+
+        if (durationMinutes > 0) {
+          if (durationText !== '') {
+            durationText += ' ';
+          }
+          durationText += durationMinutes + ' minute';
+          if (durationMinutes > 1) {
+            durationText += 's';
+          }
+        }
+
+        bubbleContent += '<div>Durée : ' + durationText + '</div>';
+      }
+
+      bubbleContent += '</div>';
+
+      args.html = bubbleContent;
+    },
+  });
+
   configNavigator: DayPilot.NavigatorConfig = {
     showMonths: 1,
     cellWidth: 25,
@@ -93,6 +163,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     eventMoveHandling : "Disabled",
     eventResizeHandling : "Disabled",
     eventArrangement : "SideBySide",
+    bubble:this.bubble,
     contextMenu : new DayPilot.Menu({
       items: [
         {
@@ -140,6 +211,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     eventMoveHandling : "Disabled",
     eventResizeHandling : "Disabled",
     eventArrangement : "SideBySide",
+    bubble:this.bubble,
     contextMenu : new DayPilot.Menu({
       items: [
         {
@@ -184,6 +256,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     locale : "fr-fr",
     eventMoveHandling : "Disabled",
     eventResizeHandling : "Disabled",
+    bubble:this.bubble,
     contextMenu : new DayPilot.Menu({
       items: [
         {
