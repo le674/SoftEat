@@ -11,12 +11,13 @@ import { CalendarService } from '../calendar-view/calendar-data.service';
 })
 export class NavbarComponent implements OnInit {
   Categories!: { nom: string; open: boolean; buttonname: String }[];
-  Serveurs!: { nom: String; selectionne: boolean }[];
-  Gerants!: { nom: String; selectionne: boolean }[];
-  Rh!: { nom: String; selectionne: boolean }[];
-  Autres!: { nom: String; selectionne: boolean }[];
+  Serveurs!: { nom: String; selectionne: boolean; mail : String }[];
+  Gerants!: { nom: String; selectionne: boolean; mail : String }[];
+  Rh!: { nom: String; selectionne: boolean; mail : String }[];
+  Autres!: { nom: String; selectionne: boolean; mail : string }[];
 
   select!: string[];
+  selectMail!:string[];
   isChecked: any;
   selectAll: boolean = false;
   selectAllServeurs: boolean = false;
@@ -42,6 +43,7 @@ export class NavbarComponent implements OnInit {
     this.Autres = [];
 
     this.select = [];
+    this.selectMail = [];
     this.new_users = "";
 
     this.fetchUser();
@@ -59,15 +61,18 @@ export class NavbarComponent implements OnInit {
   selectEmployee(liste: any) {
     if (liste.selectionne) {
       const index = this.select.indexOf(liste.nom);
-      if (index !== -1) {
+      const indexMail = this.selectMail.indexOf(liste.mail)
+      if (index !== -1 && indexMail!== -1) {
         this.select.splice(index, 1);
-        this.new_users = this.select.join(",");
+        this.selectMail.splice(indexMail,1);
+        this.new_users = this.selectMail.join(",");
         console.log(this.new_users)
         this.calendarService.changeUsers(this.new_users);
       }
     } else {
       this.select.push(liste.nom);
-      this.new_users = this.select.join(",");
+      this.selectMail.push(liste.mail)
+      this.new_users = this.selectMail.join(",");
       console.log(this.new_users)
       this.calendarService.changeUsers(this.new_users);
     }
@@ -79,20 +84,24 @@ export class NavbarComponent implements OnInit {
     items: any[],
     selectAllFlag: boolean,
     selectList: string[],
+    selectMailList : string [],
     selectionneProperty: string
   ) {
     if (selectAllFlag) {
       items.forEach((item) => {
         const index = selectList.indexOf(item.nom);
-        if (index !== -1) {
+        const indexMail = selectMailList.indexOf(item.mail)
+        if (index !== -1 && indexMail!==-1) {
           selectList.splice(index, 1);
+          selectMailList.splice(indexMail,1);
           item[selectionneProperty] = !item[selectionneProperty];
         }
       });
     } else {
       items.forEach((item) => {
-        if (!selectList.includes(item.nom)) {
+        if (!selectList.includes(item.nom) && !selectMailList.includes(item.mail)) {
           selectList.push(item.nom);
+          selectMailList.push(item.mail);
           item[selectionneProperty] = !item[selectionneProperty];
         }
       });
@@ -104,10 +113,11 @@ export class NavbarComponent implements OnInit {
       this.Serveurs,
       this.selectAllServeurs,
       this.select,
+      this.selectMail,
       'selectionne'
     );
     this.selectAllServeurs = !this.selectAllServeurs;
-    this.new_users = this.select.join(",");
+    this.new_users = this.selectMail.join(",");
       console.log(this.new_users)
       this.calendarService.changeUsers(this.new_users);
   }
@@ -117,18 +127,19 @@ export class NavbarComponent implements OnInit {
       this.Autres,
       this.selectAllAutres,
       this.select,
+      this.selectMail,
       'selectionne'
     );
     this.selectAllAutres = !this.selectAllAutres;
-    this.new_users = this.select.join(",");
+    this.new_users = this.selectMail.join(",");
       console.log(this.new_users)
       this.calendarService.changeUsers(this.new_users);
   }
 
   addAllRh() {
-    this.addAllItems(this.Rh, this.selectAllRh, this.select, 'selectionne');
+    this.addAllItems(this.Rh, this.selectAllRh, this.select, this.selectMail, 'selectionne');
     this.selectAllRh = !this.selectAllRh;
-    this.new_users = this.select.join(",");
+    this.new_users = this.selectMail.join(",");
       console.log(this.new_users)
       this.calendarService.changeUsers(this.new_users);
   }
@@ -138,10 +149,11 @@ export class NavbarComponent implements OnInit {
       this.Gerants,
       this.selectAllGerants,
       this.select,
+      this.selectMail,
       'selectionne'
     );
     this.selectAllGerants = !this.selectAllGerants;
-    this.new_users = this.select.join(",");
+    this.new_users = this.selectMail.join(",");
       console.log(this.new_users)
       this.calendarService.changeUsers(this.new_users);
   }
@@ -162,6 +174,7 @@ export class NavbarComponent implements OnInit {
           const userRoleRef = ref(db, `${userPath}/${userID}/role`);
           const userPrenomRef = ref(db, `${userPath}/${userID}/prenom`);
           const userNomRef = ref(db, `${userPath}/${userID}/nom`);
+          const userMailRef = ref(db, `${userPath}/${userID}/email`);
           
           const prenomSnapshot = await get(userPrenomRef);
           const nomSnapshot = await get(userNomRef);
@@ -169,16 +182,19 @@ export class NavbarComponent implements OnInit {
   
           const roleSnapshot = await get(userRoleRef);
           const role = roleSnapshot.val();
-  
+          
+          const mailSnapshot = await get(userMailRef);
+          const user_mail = mailSnapshot.val();
+
           if (nomComplet) {
             if (role == 'gerant') {
-              this.Gerants.push({ nom: nomComplet, selectionne: false });
+              this.Gerants.push({ nom: nomComplet, selectionne: false, mail : user_mail });
             } else if (role == 'rh') {
-              this.Rh.push({ nom: nomComplet, selectionne: false });
+              this.Rh.push({ nom: nomComplet, selectionne: false, mail : user_mail });
             } else if (role == 'serveur') {
-              this.Serveurs.push({ nom: nomComplet, selectionne: false });
+              this.Serveurs.push({ nom: nomComplet, selectionne: false, mail : user_mail });
             } else {
-              this.Autres.push({ nom: nomComplet, selectionne: false });
+              this.Autres.push({ nom: nomComplet, selectionne: false, mail : user_mail });
             }
           }
         }
