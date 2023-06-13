@@ -17,7 +17,7 @@
           <select #addPersonnel required class="width-block">
             <option disabled selected value="">Personnel</option>
             <optgroup *ngFor="let category of Categories" [label]="category">
-              <option *ngFor="let user of getCategoryUsers(category)" [value]="user.nom">{{ user.nom }}</option>
+              <option *ngFor="let user of getCategoryUsers(category)" [value]="user.email">{{ user.nom }}</option>
             </optgroup>
           </select>
         </td>

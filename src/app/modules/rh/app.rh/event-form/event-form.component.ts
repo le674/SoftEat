@@ -28,10 +28,10 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   dateWidth = '150px'; // Default width
 
   Categories!: String[];
-  Serveurs!: { nom: String }[];
-  Gerants!: { nom: String }[];
-  Rh!: { nom: String }[];
-  Autres!: { nom: String }[];
+  Serveurs!: { nom: String, email: String }[];
+  Gerants!: { nom: String, email: String }[];
+  Rh!: { nom: String, email: String }[];
+  Autres!: { nom: String, email: String }[];
   firebaseApp: FirebaseApp | undefined;
   newEvent?: DayPilot.EventData; 
   constructor(private calendar: CalendarService, public dialogRef: MatDialogRef<EventFormComponent>, firebaseApp: FirebaseApp) {
@@ -168,7 +168,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
         tags: this.getMotifLabel(row.motif),
         resource: row.lieu
       };
-
+      console.log('personnel:', row.personnel);
       const repetitionOption = row.repeter;
       const startDate = new Date(row.prisePoste);
       const endDate = new Date(row.finPoste);
@@ -359,6 +359,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
           const userPrenomRef = ref(db, `${userPath}/${userID}/prenom`);
           const userNomRef = ref(db, `${userPath}/${userID}/nom`);
           const userRoleRef = ref(db, `${userPath}/${userID}/role`);
+          const userMailRef = ref(db, `${userPath}/${userID}/email`);
 
           const prenomSnapshot = await get(userPrenomRef);
           const nomSnapshot = await get(userNomRef);
@@ -366,16 +367,17 @@ export class EventFormComponent implements OnInit, AfterViewInit {
 
           const roleSnapshot = await get(userRoleRef);
           const role = roleSnapshot.val();
+          const mail = (await get(userMailRef)).val();
 
           if (nomComplet) {
             if (role == 'gerant') {
-              this.Gerants.push({ nom: nomComplet });
+              this.Gerants.push({ nom: nomComplet, email: mail });
             } else if (role == 'rh') {
-              this.Rh.push({ nom: nomComplet });
+              this.Rh.push({ nom: nomComplet, email: mail });
             } else if (role == 'serveur') {
-              this.Serveurs.push({ nom: nomComplet });
+              this.Serveurs.push({ nom: nomComplet, email: mail });
             } else {
-              this.Autres.push({ nom: nomComplet });
+              this.Autres.push({ nom: nomComplet, email: mail });
             }
           }
         }
@@ -387,7 +389,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getCategoryUsers(category: String): { nom: String; }[] {
+  getCategoryUsers(category: String): { nom: String, email: String; }[] {
     switch (category) {
       case 'Serveurs':
         return this.Serveurs;
