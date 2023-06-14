@@ -47,12 +47,11 @@
 
       </div>
       <div id="conversation">
-         <div id="messages">
+         <div id="messages" #scrollMe>
             <div *ngIf="newDay" class="separationDate">
                <span>{{ this.date | date: 'E dd MMMM yyyy' }}</span>
              </div>
             <message-template *ngFor="let message of messagerie" [listeMessages]="message"></message-template>
-            <span id="down"></span>
          </div>
          <div id="message_bar">  
             <input type="text" [(ngModel)]="inputText" (keydown.enter)="sendMessage()" id="messageInput" autocomplete="off"/>

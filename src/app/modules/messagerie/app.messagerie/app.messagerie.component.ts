@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
 import { getDatabase, ref, push, onChildAdded, onValue } from 'firebase/database';
@@ -12,7 +12,8 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./app.messagerie.component.css']
 })
 
-export class AppMessagerieComponent implements OnInit {
+export class AppMessagerieComponent implements OnInit, AfterViewChecked {
+  @ViewChild('scrollMe') private scrollContainer!: ElementRef;
 
   anaConv = "conversations/deliss_pizz/deliss_pizz/del42_ana_037581";
   comConv = "conversations/deliss_pizz/deliss_pizz/del42_com_238402";
@@ -51,6 +52,11 @@ export class AppMessagerieComponent implements OnInit {
     this.statut = await this.firebaseService.getUserStatutsLocalStorage(this.email); //await
     //this.showCanal();
     this.fetchTimeServer();
+    this.scrollToBottom();
+  }
+
+  ngAfterViewChecked(): void {
+    this.scrollToBottom();
   }
 
   /*
@@ -107,7 +113,6 @@ export class AppMessagerieComponent implements OnInit {
       });
     }
     this.inputText = "";
-    this.scroll();
   }
 
   async fetchData() {
@@ -132,11 +137,10 @@ export class AppMessagerieComponent implements OnInit {
   }
 
   //Scroll quand un message est envoyé
-  scroll() {
-    const el_msg = document.getElementById('messages');
-    if(el_msg) {
-      el_msg.scrollTop = el_msg.scrollHeight;
-    }
+  scrollToBottom() {
+    try {
+      this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+    } catch(error) {}
   }
 }
 
