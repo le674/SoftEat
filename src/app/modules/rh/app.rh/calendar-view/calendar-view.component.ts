@@ -36,6 +36,12 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     });
   }
 
+
+  moisEnTouteLettre = [
+    "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet",
+    "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+  ];
+
   events: DayPilot.EventData[] = [];
 
   date = DayPilot.Date.today();
@@ -56,7 +62,8 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
         end.getMinutes().toString().padStart(2, '0');
 
       let bubbleContent =
-        '<div class="custom-bubble">' +
+
+        '<div>' +
         '<strong>' +
         args.source.data.tags +
         '</strong><br>';
@@ -180,21 +187,23 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     dayBeginsHour : 8,
     dayEndsHour : 24,
     onBeforeEventRender: args => {
-      if (args.data.tags === "Maladie") {
-        args.data.barColor = "#ff0000"; // duration bar
-        args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background
-        //args.data.backColor = "rgba(255, 0, 0, 0.2)"; // background 
-        //args.data.toolTip = "This is an important event.";
-      } else if (args.data.tags === "Congés") {
-        args.data.barColor = "#ffa500";
-        args.data.barBackColor = "rgba(255, 165, 0, 0.5)"; // duration bar background
-        //args.data.toolTip = "This is a regular event.";
-      } else if (args.data.tags === "Entretien") {
-        args.data.barColor = "#7db52e";
-        args.data.barBackColor = "rgba(121, 181, 46, 0.5)"; // duration bar background
-        //args.data.toolTip = "This is a regular event.";
-      } else {
-        //args.data.toolTip = "This is a regular event.";
+      switch (args.data.tags) {
+        case "Maladie":
+          args.data.barColor = "#ff0000"; // duration bar color
+          args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background color
+          //args.data.backColor = "rgba(255, 0, 0, 0.2)";
+          break;
+        case "Congés":
+          args.data.barColor = "#ffa500";
+          args.data.barBackColor = "rgba(255, 165, 0, 0.5)";
+          break;
+        case "Entretien":
+          args.data.barColor = "#7db52e";
+          args.data.barBackColor = "rgba(121, 181, 46, 0.5)";
+          break;
+        default: // Travail
+          //args.data.toolTip = "This is a regular event.";
+          break;
       }
       let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + args.data.resource + "</div>" : "";
       args.data.html = "<span class='event'><strong>" + args.data.tags + "</strong><br>" +
@@ -229,21 +238,23 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     dayEndsHour : 24,
     viewType: "Week",
     onBeforeEventRender: args => {
-      if (args.data.tags === "Maladie") {
-        args.data.barColor = "#ff0000"; // duration bar
-        args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background
-        //args.data.backColor = "rgba(255, 0, 0, 0.2)"; // background 
-        //args.data.toolTip = "This is an important event.";
-      } else if (args.data.tags === "Congés") {
-        args.data.barColor = "#ffa500";
-        args.data.barBackColor = "rgba(255, 165, 0, 0.5)"; // duration bar background
-        //args.data.toolTip = "This is a regular event.";
-      } else if (args.data.tags === "Entretien") {
-        args.data.barColor = "#7db52e";
-        args.data.barBackColor = "rgba(121, 181, 46, 0.5)"; // duration bar background
-        //args.data.toolTip = "This is a regular event.";
-      } else {
-        //args.data.toolTip = "This is a regular event.";
+      switch (args.data.tags) {
+        case "Maladie":
+          args.data.barColor = "#ff0000"; // duration bar color
+          args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background color
+          //args.data.backColor = "rgba(255, 0, 0, 0.2)";
+          break;
+        case "Congés":
+          args.data.barColor = "#ffa500";
+          args.data.barBackColor = "rgba(255, 165, 0, 0.5)";
+          break;
+        case "Entretien":
+          args.data.barColor = "#7db52e";
+          args.data.barBackColor = "rgba(121, 181, 46, 0.5)";
+          break;
+        default: // Travail
+          //args.data.toolTip = "This is a regular event.";
+          break;
       }
       let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + args.data.resource + "</div>" : "";
       args.data.html = "<span class='event'><strong>" + args.data.tags + "</strong><br>" +
@@ -271,24 +282,25 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
       ]
     }),    
     onBeforeEventRender: args => {
-      if (args.data.tags === "Maladie") {
-        args.data.barColor = "#ff0000"; // duration bar
-        args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background
-        //args.data.backColor = "rgba(255, 0, 0, 0.2)"; // background 
-        //args.data.toolTip = "This is an important event.";
-      } else if (args.data.tags === "Congés") {
-        args.data.barColor = "#ffa500";
-        args.data.barBackColor = "rgba(255, 165, 0, 0.5)"; // duration bar background
-        //args.data.toolTip = "This is a regular event.";
-      } else if (args.data.tags === "Entretien") {
-        args.data.barColor = "#7db52e";
-        args.data.barBackColor = "rgba(121, 181, 46, 0.5)"; // duration bar background
-        //args.data.toolTip = "This is a regular event.";
-      } else {
-        //args.data.toolTip = "This is a regular event.";
+      switch (args.data.tags) {
+        case "Maladie":
+          args.data.barColor = "#ff0000"; // duration bar color
+          args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background color
+          //args.data.backColor = "rgba(255, 0, 0, 0.2)";
+          break;
+        case "Congés":
+          args.data.barColor = "#ffa500";
+          args.data.barBackColor = "rgba(255, 165, 0, 0.5)";
+          break;
+        case "Entretien":
+          args.data.barColor = "#7db52e";
+          args.data.barBackColor = "rgba(121, 181, 46, 0.5)";
+          break;
+        default: // Travail
+          //args.data.toolTip = "This is a regular event.";
+          break;
       }
     }
-
   };
 
   
@@ -311,32 +323,20 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     this.configWeek.visible = false;
     this.configMonth.visible = false;
   }
-
   viewWeek(): void {
     this.configNavigator.selectMode = "Week";
     this.configDay.visible = false;
     this.configWeek.visible = true;
     this.configMonth.visible = false;
   }
-
   viewMonth(): void {
     this.configNavigator.selectMode = "Month";
     this.configDay.visible = false;
     this.configWeek.visible = false;
     this.configMonth.visible = true;
   }
-  // addEvent(): void {
-  //   this.ds.add_event('foodandboost_prop', 'telecom1@gmail.coom', {
-  //     start: DayPilot.Date.today(),
-  //     end: DayPilot.Date.today().addDays(1),
-  //     text: 'New Event',
-  //     id: 'newEventId',
-  //     tags: 'conge',
-  //   });
-  //   this.loadEvents("telecom1@gmail.coom");
-  // }
-
-
+ 
+  //ouvre le form "ajouter un évènement"
   openEventForm(): void {
     const dialogRef = this.dialog.open(EventFormComponent, {
       width: '85vw',
@@ -353,7 +353,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
       this.onDialogClosed();
     });
   }
-
+  //recharge les évènements pour actualiser le calendrier à la fermeture du form
   onDialogClosed(): void {
     // This method will be called when the dialog is closed
     // You can perform any desired actions here
@@ -362,5 +362,3 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
   }
 
 }
-
-
