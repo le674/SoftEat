@@ -24,10 +24,8 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
 
   @Input() convActive: string = 'conversations/deliss_pizz/deliss_pizz/del42_ana_037581' ; // Propriété d'entrée pour convActive
 
-  // notification!: boolean[];
   notification!: {[canal: string]: boolean};
   statut!: Statut;
-  //userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
   email!: string;
   analyseCanal = true;
   budgetCanal = true;
@@ -54,7 +52,6 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     this.statut = await this.firebaseService.getUserStatutsLocalStorage(this.email); //await
     await this.updateUserNotification(this.email);
     //this.showCanal();
-    console.log(this.notification['ana']);
     this.fetchTimeServer();
     this.scrollToBottom();
   }
@@ -197,7 +194,8 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       this.updateUserNotification(this.email);
   
   }
-
+  
+  // NOTIFICATIONS (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
   async updateUserNotification(user_email: string): Promise<void> {
     const db = getDatabase(this.firebaseApp);
 

@@ -27,28 +27,28 @@ export class AppMessageTemplateComponent implements OnInit {
   ngOnInit(): void {
     this.message = "received";
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
-    this.fetchUserStatus();
+    // this.fetchUserStatus();
     this.getName();
   }
 
+// fonction redondante, existe dans firebase.service.ts
+  // fetchUserStatus(){
+  //   const db = getDatabase(this.firebaseApp);
+  //   const userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
+  //   const userStatusRef = ref(db, 'users/foodandboost_prop/' + userId + '/statut');
 
-  fetchUserStatus(){
-    const db = getDatabase(this.firebaseApp);
-    const userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
-    const userStatusRef = ref(db, 'users/foodandboost_prop/' + userId + '/statut');
-
-    onValue(userStatusRef, (snapshot) => {
-      const statut = snapshot.val();
-      // this.statut.alertes = statut.alertes;
-      this.statut.analyse = statut.analyse;
-      this.statut.budget = statut.budget;
-      this.statut.facture = statut.facture;
-      this.statut.planning = statut.planning;
-      this.statut.stock = statut.stock;
-    }, (error) => {
-      console.log('Une erreur s\'est produite lors de la récupération des statuts :', error);
-    });
-  }
+  //   onValue(userStatusRef, (snapshot) => {
+  //     const statut = snapshot.val();
+  //     // this.statut.alertes = statut.alertes;
+  //     this.statut.analyse = statut.analyse;
+  //     this.statut.budget = statut.budget;
+  //     this.statut.facture = statut.facture;
+  //     this.statut.planning = statut.planning;
+  //     this.statut.stock = statut.stock;
+  //   }, (error) => {
+  //     console.log('Une erreur s\'est produite lors de la récupération des statuts :', error);
+  //   });
+  // }
 
   async getName(): Promise<void> { //: Promise<string>
     const db = getDatabase(this.firebaseApp);
