@@ -7,13 +7,42 @@
    <div id="content">
       <div id="conversation_list">
          <ul>
-            <li *ngIf="stockCanal"><a class="#inventaire">Inventaire<span *ngIf="notification['inv']" class="notification-badge"></span></a></li>
-            <li *ngIf="stockCanal"><a class="#recette">Recette<span *ngIf="notification['rec']" class="notification-badge"></span></a></li>
-            <li *ngIf="analyseCanal"><a class="#analyse">Analyse<span *ngIf="notification['ana']" class="notification-badge"></span></a></li>
-            <li *ngIf="budgetCanal"><a class="#comptabilité">Comptabilité<span *ngIf="notification['com']" class="notification-badge"></span></a></li>
-            <li *ngIf="factureCanal"><a class="#Factures">Factures<span *ngIf="notification['fac']" class="notification-badge"></span></a></li>
-            <li *ngIf="planningCanal"><a class="#rh">EMPLOYES<span *ngIf="notification['plan']" class="notification-badge"></span></a></li>
-            <li><a class="#ressourcesh">Ressources Humaines<span *ngIf="notification['rh']" class="notification-badge"></span></a></li>
+            <li *ngIf="stockCanal">
+               <a [class.active]="convActive === invConv" (click)="convActive=this.invConv; fetchData()">Inventaire
+                  <!-- <button (click)="updateNotification(0)"> update </button> -->
+                  <span *ngIf="notification['inv']" class="notification-badge"></span>
+               </a>
+            </li>
+            <li *ngIf="stockCanal">
+               <a [class.active]="convActive === recConv" (click)="convActive=this.recConv ; fetchData()">Recette
+                  <span *ngIf="notification['rec']" class="notification-badge"></span>               
+               </a>
+            </li>
+            <li *ngIf="analyseCanal">
+               <a [class.active]="convActive === anaConv" (click)="convActive=this.anaConv ; fetchData()">Analyse
+                  <span *ngIf="notification['ana']" class="notification-badge"></span>               
+               </a>
+            </li>
+            <li *ngIf="budgetCanal">
+               <a [class.active]="convActive === comConv" (click)="convActive=this.comConv; fetchData()">Comptabilité
+                  <span *ngIf="notification['com']" class="notification-badge"></span>               
+               </a>
+            </li>
+            <li *ngIf="factureCanal">
+               <a [class.active]="convActive === facConv" (click)="convActive=this.facConv; fetchData()">Factures
+                  <span *ngIf="notification['fac']" class="notification-badge"></span>               
+               </a>
+            </li>
+            <li *ngIf="planningCanal">
+               <a class="#rh">EMPLOYES
+                  <span *ngIf="notification['plan']" class="notification-badge"></span>               
+               </a>
+            </li>
+            <li>
+               <a class="#ressourcesh">Ressources Humaines
+                  <span *ngIf="notification['rh']" class="notification-badge"></span>               
+               </a>
+            </li>
          </ul>
 
       </div>
