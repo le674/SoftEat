@@ -59,14 +59,7 @@ button {
 /* Styles pour mettre des informations à droite et à gauche de la case */
 .center-container {
   display: flex;
-}
-
-.left {
-  margin-right: auto;
-}
-
-.right {
-  margin-left: auto;
+  justify-content: space-between;
 }
 
 table {
