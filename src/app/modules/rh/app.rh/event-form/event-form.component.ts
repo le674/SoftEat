@@ -163,10 +163,10 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       this.newEvent = {
         start: row.prisePoste + ":00",
         end: row.finPoste + ":00",
-        text: row.event,
+        text: row.lieu +'\n' +row.event,
         id: 'newEventId',
         tags: this.getMotifLabel(row.motif),
-        resource: row.lieu
+        resource: row.personnel
       };
       const repetitionOption = row.repeter;
       const startDate = new Date(row.prisePoste);
