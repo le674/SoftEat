@@ -11,6 +11,7 @@
       <button (click)="next()">></button>
       <!--<button (click)="addEvent()">Add Event</button>--> 
       <button (click)="openEventForm()" class="addEvent" *ngIf="userRole == 'gerant'">Ajouter un événement<!--<i class="fa-tag"></i>--> </button>
+      <span *ngIf="this.configNavigator.selectMode == 'Month'">{{moisEnTouteLettre[this.date.getMonth()]}}</span>
     </div>
 
       <daypilot-calendar [config]="configDay" [events]="events" #day></daypilot-calendar>

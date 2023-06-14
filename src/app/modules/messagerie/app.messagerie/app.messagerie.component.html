@@ -10,49 +10,50 @@
             <li *ngIf="stockCanal">
                <a [class.active]="convActive === invConv" (click)="convActive=this.invConv; fetchData()">Inventaire
                   <!-- <button (click)="updateNotification(0)"> update </button> -->
-                  <span *ngIf="notification[0]" class="notification-badge"></span>
+                  <span *ngIf="notification['inv']" class="notification-badge"></span>
                </a>
             </li>
             <li *ngIf="stockCanal">
                <a [class.active]="convActive === recConv" (click)="convActive=this.recConv ; fetchData()">Recette
-                  <span *ngIf="notification[1]" class="notification-badge"></span>
+                  <span *ngIf="notification['rec']" class="notification-badge"></span>               
                </a>
             </li>
             <li *ngIf="analyseCanal">
                <a [class.active]="convActive === anaConv" (click)="convActive=this.anaConv ; fetchData()">Analyse
-                  <span *ngIf="notification[2]" class="notification-badge"></span>
+                  <span *ngIf="notification['ana']" class="notification-badge"></span>               
                </a>
             </li>
             <li *ngIf="budgetCanal">
                <a [class.active]="convActive === comConv" (click)="convActive=this.comConv; fetchData()">Comptabilité
-                  <span *ngIf="notification[3]" class="notification-badge"></span>
+                  <span *ngIf="notification['com']" class="notification-badge"></span>               
                </a>
             </li>
             <li *ngIf="factureCanal">
                <a [class.active]="convActive === facConv" (click)="convActive=this.facConv; fetchData()">Factures
-                  <span *ngIf="notification[4]" class="notification-badge"></span>
+                  <span *ngIf="notification['fac']" class="notification-badge"></span>               
                </a>
             </li>
             <li *ngIf="planningCanal">
                <a class="#rh">EMPLOYES
-                  <span *ngIf="notification[5]" class="notification-badge"></span>
+                  <span *ngIf="notification['plan']" class="notification-badge"></span>               
                </a>
             </li>
             <li>
                <a class="#ressourcesh">Ressources Humaines
-                  <span *ngIf="notification[6]" class="notification-badge"></span>
+                  <span *ngIf="notification['rh']" class="notification-badge"></span>               
                </a>
             </li>
          </ul>
 
       </div>
       <div id="conversation">
-         <div id="messages">
+         <div id="messages" #scrollMe>
             <div *ngIf="newDay" class="separationDate">
                <span>{{ this.date | date: 'E dd MMMM yyyy' }}</span>
              </div>
             <message-template *ngFor="let message of messagerie" [listeMessages]="message"></message-template>
-            <span id="down"></span>
+            <button (click)="updateUnreadMessages('inv', ['telecom1@gmail.coom'])">Ajouter une notification sur la conversation `inv` pour telecom1</button>
+            <button (click)="markCanalAsRead('inv', 'telecom1@gmail.coom')">Retirer la notification sur la conversation `inv` pour telecom1</button>
          </div>
          <div id="message_bar">  
             <input type="text" [(ngModel)]="inputText" (keydown.enter)="sendMessage()" id="messageInput" autocomplete="off"/>

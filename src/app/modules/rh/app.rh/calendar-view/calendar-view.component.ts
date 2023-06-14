@@ -178,7 +178,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
           image : "../../../../assets/images/trash.png",
           onClick: async (args) => { 
             var e = args.source;
-            await this.ds.remove_event('foodandboost_prop', 'telecom1@gmail.coom', e.id()); 
+            await this.ds.remove_event('foodandboost_prop', e.resource() , e.id()); 
             this.loadEvents(this.users);
           }
         }
@@ -242,7 +242,8 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
           image : "../../../../assets/images/trash.png",
           onClick: async (args) => { 
             var e = args.source;
-            await this.ds.remove_event('foodandboost_prop', 'telecom1@gmail.coom', e.id()); 
+            //console.log('e.resource() :', e.resource());
+            await this.ds.remove_event('foodandboost_prop', e.resource() , e.id()); 
             this.loadEvents(this.users);
           }
         }
@@ -303,7 +304,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
           image : "../../../../assets/images/trash.png", 
           onClick: async (args) => { 
             var e = args.source;
-            await this.ds.remove_event('foodandboost_prop', 'telecom1@gmail.coom', e.id()); 
+            await this.ds.remove_event('foodandboost_prop', e.resource() , e.id()); 
             this.loadEvents(this.users);
           }
         }

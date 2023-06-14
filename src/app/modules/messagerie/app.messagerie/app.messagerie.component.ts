@@ -1,7 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
-import { getDatabase, ref, push, onChildAdded, onValue } from 'firebase/database';
+import { User } from '../../../interfaces/user';
+import { getDatabase, ref, push, update, get, onChildAdded, onValue, DatabaseReference} from 'firebase/database';
 import { FirebaseApp } from '@angular/fire/app';
 import { MessageModel } from '../messages_models/model';
 import { DatePipe } from '@angular/common';
@@ -12,7 +13,8 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./app.messagerie.component.css']
 })
 
-export class AppMessagerieComponent implements OnInit {
+export class AppMessagerieComponent implements OnInit, AfterViewChecked {
+  @ViewChild('scrollMe') private scrollContainer!: ElementRef;
 
   anaConv = "conversations/deliss_pizz/deliss_pizz/del42_ana_037581";
   comConv = "conversations/deliss_pizz/deliss_pizz/del42_com_238402";
@@ -22,9 +24,8 @@ export class AppMessagerieComponent implements OnInit {
 
   @Input() convActive: string = 'conversations/deliss_pizz/deliss_pizz/del42_ana_037581' ; // Propriété d'entrée pour convActive
 
-  notification!: boolean[];
+  notification!: {[canal: string]: boolean};
   statut!: Statut;
-  //userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
   email!: string;
   analyseCanal = true;
   budgetCanal = true;
@@ -46,11 +47,17 @@ export class AppMessagerieComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> { //: Promise<void>
-    this.notification = [true, true, true, true, true, true, true];
+    this.notification = { 'ana': false, 'com': false, 'fac': false, 'inv': false, 'rec': false, 'plan': false, 'rh': false};
     this.email = this.firebaseService.getEmailLocalStorage();
     this.statut = await this.firebaseService.getUserStatutsLocalStorage(this.email); //await
+    await this.updateUserNotification(this.email);
     //this.showCanal();
     this.fetchTimeServer();
+    this.scrollToBottom();
+  }
+
+  ngAfterViewChecked(): void {
+    this.scrollToBottom();
   }
 
   /*
@@ -64,9 +71,6 @@ export class AppMessagerieComponent implements OnInit {
   */
   messageInput = document.getElementById("messageInput");
 
-  updateNotification(index: number){
-    this.notification[index] = !this.notification[index];
-  }
 
   //recuperation heure du serveur
   fetchTimeServer(): number {
@@ -107,7 +111,6 @@ export class AppMessagerieComponent implements OnInit {
       });
     }
     this.inputText = "";
-    this.scroll();
   }
 
   async fetchData() {
@@ -117,13 +120,17 @@ export class AppMessagerieComponent implements OnInit {
     const dataRef = ref(db, this.convActive);
     this.messagerie = [];
     onChildAdded(dataRef, (snapshot) => {
-      console.log('new message detected');
       const data = snapshot.val();
-      const donneesMessage = new MessageModel();
-      donneesMessage.auteur = data.auteur;
-      donneesMessage.contenu = data.contenu;
-      donneesMessage.horodatage = data.horodatage;
-      this.messagerie.push(donneesMessage);
+      const existingMessageIndex = this.messagerie.findIndex(
+        (message) => message.horodatage === data.horodatage
+      );
+      if (existingMessageIndex === -1) {
+        const donneesMessage = new MessageModel();
+        donneesMessage.auteur = data.auteur;
+        donneesMessage.contenu = data.contenu;
+        donneesMessage.horodatage = data.horodatage;
+        this.messagerie.push(donneesMessage);
+      }
     });
   }
 
@@ -131,12 +138,100 @@ export class AppMessagerieComponent implements OnInit {
     return this.messagerie;
   }
 
+
+
+  // NOTIFICATIONS (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
+  updateUnreadMessages(canalId: string, users_email: string[]): void {
+    const db = getDatabase(this.firebaseApp);
+
+    users_email.forEach(email => {
+      this.firebaseService.getUserDataReference(email)
+        .then((userRef: DatabaseReference | null) => {
+          if (userRef) {
+            get(userRef)
+              .then((snapshot) => {
+              const user: User = snapshot.val();
+              const notificationCanaux = user.notificationCanaux || {};
+              notificationCanaux[canalId] = 1;
+              update(userRef.ref, { notificationCanaux })
+                .then(() => {
+                  console.log("User's notification updated successfully");
+                })
+                .catch(error => {
+                  console.error("Error updating user's notification:", error);
+                });
+            });
+          }
+        })
+        .catch(error => {
+          // Gestion de l'erreur
+        });
+        this.updateUserNotification(this.email);
+    });
+  }
+
+  // NOTIFICATIONS (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
+  markCanalAsRead(canalId: string, user_email: string): void {
+    const db = getDatabase(this.firebaseApp);
+
+    this.firebaseService.getUserDataReference(user_email)
+      .then((userRef: DatabaseReference | null) => {
+        if (userRef) {
+          get(userRef)
+            .then((snapshot) => {
+            const user: User = snapshot.val();
+            const notificationCanaux = user.notificationCanaux || {};
+            notificationCanaux[canalId] = 0;
+            update(userRef.ref, { notificationCanaux })
+                .then(() => {
+                  console.log("User's notification marked as read");
+                })
+                .catch(error => {
+                  console.error("Error updating user's notification:", error);
+                });
+          });
+        }
+      })
+      .catch(error => {
+        // Gestion de l'erreur
+      });
+      this.updateUserNotification(this.email);
+  
+  }
+  
+  // NOTIFICATIONS (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
+  async updateUserNotification(user_email: string): Promise<void> {
+    const db = getDatabase(this.firebaseApp);
+
+    this.firebaseService.getUserDataReference(user_email)
+      .then((userRef: DatabaseReference | null) => {
+        if (userRef) {
+          get(userRef)
+            .then((snapshot) => {
+              const userSnapShot = snapshot.val();
+              const notificationCanaux = userSnapShot.notificationCanaux;
+              for (const canal of Object.keys(notificationCanaux)) {
+                if (notificationCanaux[canal as keyof typeof notificationCanaux] == 0) {
+                  this.notification[canal] = false;
+                } else {
+                  this.notification[canal] = true;
+                }
+                // console.log(`${canal}: ${notificationCanaux[canal as keyof typeof notificationCanaux]}`);
+              }
+            });
+        }
+      })
+      .catch(error => {
+        // Gestion de l'erreur
+      });
+  }
+
+
+
   //Scroll quand un message est envoyé
-  scroll() {
-    const el_msg = document.getElementById('messages');
-    if(el_msg) {
-      el_msg.scrollTop = el_msg.scrollHeight;
-    }
+  scrollToBottom() {
+    try {
+      this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+    } catch(error) {}
   }
 }
-
