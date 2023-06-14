@@ -15,7 +15,8 @@ import { MessageModel } from '../messages_models/model';
 
 export class AppMessagerieComponent implements OnInit {
   text!: string;
-  notification!: boolean[];
+  // notification!: boolean[];
+  notification!: {[canal: string]: boolean};
   statut!: Statut;
   // userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
   email!: string;
@@ -28,12 +29,14 @@ export class AppMessagerieComponent implements OnInit {
   firebaseApp: FirebaseApp | undefined;
   http!: HttpClient;
   messagerie!: MessageModel[];
+  isDataLoaded: boolean = false;
   
   constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService, http: HttpClient) {  
     this.firebaseApp = firebaseApp;
     this.fetchData();
     this.http = http;
     this.messagerie = [];
+    
 
   }
 
@@ -41,10 +44,14 @@ export class AppMessagerieComponent implements OnInit {
 
   async ngOnInit(): Promise<void> { //: Promise<void>
     this.text = "it works !";
-    this.notification = [true, true, true, true, true, true, true];
+    // this.notification = [true, true, true, true, true, true, true];
+    this.notification = { 'ana': false, 'com': false, 'fac': false, 'inv': false, 'rec': false, 'plan': false, 'rh': false};
     this.email = this.firebaseService.getEmailLocalStorage();
     this.statut = await this.firebaseService.getUserStatutsLocalStorage(this.email); //await
+    await this.updateUserNotification(this.email);
     this.showCanal();
+    this.isDataLoaded = true;
+    console.log(this.notification['ana']);
   }
 
 
@@ -58,9 +65,9 @@ export class AppMessagerieComponent implements OnInit {
 
   messageInput = document.getElementById("messageInput");
 
-  updateNotification(index: number){
-    this.notification[index] = !this.notification[index];
-  }
+  // updateNotification(canal: string){
+  //   this.notification[canal] = !this.notification[canal];
+  // }
   
 
   
@@ -167,6 +174,32 @@ export class AppMessagerieComponent implements OnInit {
         // Gestion de l'erreur
       });
   
+  }
+
+  async updateUserNotification(user_email: string): Promise<void> {
+    const db = getDatabase(this.firebaseApp);
+
+    this.firebaseService.getUserDataReference(user_email)
+      .then((userRef: DatabaseReference | null) => {
+        if (userRef) {
+          get(userRef)
+            .then((snapshot) => {
+              const userSnapShot = snapshot.val();
+              const notificationCanaux = userSnapShot.notificationCanaux;
+              for (const canal of Object.keys(notificationCanaux)) {
+                if (notificationCanaux[canal as keyof typeof notificationCanaux] == 0) {
+                  this.notification[canal] = false;
+                } else {
+                  this.notification[canal] = true;
+                }
+                // console.log(`${canal}: ${notificationCanaux[canal as keyof typeof notificationCanaux]}`);
+              }
+            });
+        }
+      })
+      .catch(error => {
+        // Gestion de l'erreur
+      });
   }
 
 
