@@ -36,6 +36,11 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     });
   }
 
+  moisEnTouteLettre = [
+    "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet",
+    "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+  ];
+
   events: DayPilot.EventData[] = [];
 
   date = DayPilot.Date.today();
@@ -56,7 +61,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
         end.getMinutes().toString().padStart(2, '0');
 
       let bubbleContent =
-        '<div class="custom-bubble">' +
+        '<div>' +
         '<strong>' +
         args.source.data.tags +
         '</strong><br>';
@@ -288,7 +293,6 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
         //args.data.toolTip = "This is a regular event.";
       }
     }
-
   };
 
   
