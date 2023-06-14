@@ -44,7 +44,6 @@ h1 {
   height: 100%;  /*hauteur maximale pour la section de conversation */
   overflow-y: auto;  /* afficher une barre de défilement si la section dépasse la hauteur maximale */
   padding: 10px;
-
 }
 
 #message_bar {
@@ -64,6 +63,19 @@ h1 {
 
 #messageInput:focus {
   outline: none;
+}
+
+.separationDate {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.separationDate>span {
+  padding-left: 3px;
+  padding-right: 3px;
+  background-color: rgb(211, 211, 211);
+  border-radius: 50px;
 }
 
 #message_bar>button {
