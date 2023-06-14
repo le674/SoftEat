@@ -49,8 +49,6 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   }
 
   async ngOnInit(): Promise<void> { //: Promise<void>
-    this.text = "it works !";
-    // this.notification = [true, true, true, true, true, true, true];
     this.notification = { 'ana': false, 'com': false, 'fac': false, 'inv': false, 'rec': false, 'plan': false, 'rh': false};
     this.email = this.firebaseService.getEmailLocalStorage();
     this.statut = await this.firebaseService.getUserStatutsLocalStorage(this.email); //await
@@ -138,7 +136,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   getMessagerie(): MessageModel[]{
     return this.messagerie;
   }
-}
+
 
 
   // NOTIFICATIONS (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
@@ -234,4 +232,4 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
     } catch(error) {}
   }
-
+}
