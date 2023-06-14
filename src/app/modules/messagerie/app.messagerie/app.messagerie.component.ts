@@ -145,6 +145,7 @@ export class AppMessagerieComponent implements OnInit {
         .catch(error => {
           // Gestion de l'erreur
         });
+        this.updateUserNotification(this.email);
     });
   }
 
@@ -173,6 +174,7 @@ export class AppMessagerieComponent implements OnInit {
       .catch(error => {
         // Gestion de l'erreur
       });
+      this.updateUserNotification(this.email);
   
   }
 
