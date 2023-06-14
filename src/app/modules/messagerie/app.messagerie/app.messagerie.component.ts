@@ -35,9 +35,8 @@ export class AppMessagerieComponent implements OnInit {
   
   messagerie!: MessageModel[];
   datePipe = new DatePipe('fr-FR');
-  just_once = true;
-  separationDateB!: boolean;
-  heure!: number;
+  newDay!: boolean;
+  date!: number;
 
   constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService) {  
     this.firebaseApp = firebaseApp;
@@ -50,7 +49,6 @@ export class AppMessagerieComponent implements OnInit {
     this.statut = await this.firebaseService.fetchUserStatus(this.userId); //await
     //this.showCanal();
     this.fetchTimeServer();
-    this.updateSeparationDate();
   }
 
   /*
@@ -74,21 +72,24 @@ export class AppMessagerieComponent implements OnInit {
     const db = getDatabase();
     onValue(ref(db, '.info/serverTimeOffset'), (snapshot) => {
       const offset: number = snapshot.val() || 0;
-      this.heure = Date.now() + offset;
+      this.date = Date.now() + offset;
     })
-    return this.heure;
-  }
-
-  updateSeparationDate() {
-    if((this.datePipe.transform(this.fetchTimeServer(), 'HH:mm') == "00:00")) {
-      this.separationDateB = true;
-    }
+    return this.date;
   }
 
 
   sendMessage(){
     if(this.inputText != '') {
       const db = getDatabase(this.firebaseApp);
+
+      //Si le message est écrit un nouveau jour
+      const current_day = new Date(this.fetchTimeServer()).getDay();
+      const last_msg_day = new Date(this.messagerie[this.messagerie.length-1].horodatage).getDay();
+      if(current_day != last_msg_day) {
+        this.newDay = true;
+      } else {
+        this.newDay = false;
+      }
 
       //Création du nouveau message
       const newMessage = {
@@ -105,7 +106,6 @@ export class AppMessagerieComponent implements OnInit {
       });
     }
     this.inputText = "";
-    this.separationDateB = false;
     this.scroll();
   }
 
@@ -114,7 +114,7 @@ export class AppMessagerieComponent implements OnInit {
     const db = getDatabase(this.firebaseApp);
     // Node à monitorer
     const dataRef = ref(db, this.convActive);
-    this.messagerie=[];
+    this.messagerie = [];
     onChildAdded(dataRef, (snapshot) => {
       console.log('new message detected');
       const data = snapshot.val();

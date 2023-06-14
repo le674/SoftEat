@@ -48,8 +48,8 @@
       </div>
       <div id="conversation">
          <div id="messages">
-            <div *ngIf="separationDateB" class="separationDate">
-               <span>{{ fetchTimeServer() | date: 'E dd MMMM yyyy' }}</span>
+            <div *ngIf="newDay" class="separationDate">
+               <span>{{ this.date | date: 'E dd MMMM yyyy' }}</span>
              </div>
             <message-template *ngFor="let message of messagerie" [listeMessages]="message"></message-template>
             <span id="down"></span>
