@@ -27,6 +27,8 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   notification!: {[canal: string]: boolean};
   statut!: Statut;
   email!: string;
+  surname!: string;
+  name!: string;
   analyseCanal = true;
   budgetCanal = true;
   factureCanal = true;
@@ -49,6 +51,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   async ngOnInit(): Promise<void> { //: Promise<void>
     this.notification = { 'ana': false, 'com': false, 'fac': false, 'inv': false, 'rec': false, 'plan': false, 'rh': false};
     this.email = this.firebaseService.getEmailLocalStorage();
+    this.getName();
     this.statut = await this.firebaseService.getUserStatutsLocalStorage(this.email); //await
     await this.updateUserNotification(this.email);
     //this.showCanal();
@@ -100,7 +103,9 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       const newMessage = {
         auteur: localStorage.getItem("user_email"),
         contenu: this.inputText,
-        horodatage: this.fetchTimeServer()
+        horodatage: this.fetchTimeServer(),
+        nom : this.name,
+        prenom : this.surname
       }
       //Ecriture du message dans la BDD
       const nodeRef = ref(db, this.convActive);
@@ -126,6 +131,8 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       donneesMessage.auteur = data.auteur;
       donneesMessage.contenu = data.contenu;
       donneesMessage.horodatage = data.horodatage;
+      donneesMessage.nom = data.nom;
+      donneesMessage.prenom = data.prenom;
       this.messagerie.push(donneesMessage);
     });
   }
@@ -229,5 +236,23 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     try {
       this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
     } catch(error) {}
+  }
+
+  // Obtenir le nom et prénom du LocalStorage
+  async getName(): Promise<void> { //: Promise<string>
+    const db = getDatabase(this.firebaseApp);
+    const usersRef = ref(db, 'users/foodandboost_prop');
+    const usersSnapShot = await get(usersRef);
+
+    if (usersSnapShot.exists()) {
+
+      usersSnapShot.forEach((userSnapShot) => {
+        const user = userSnapShot.val();
+        if (user.email == this.email) {
+          this.name = user.nom;
+          this.surname = user.prenom;
+        }
+      });
+    }
   }
 }
