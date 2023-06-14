@@ -8,28 +8,28 @@
       <div id="conversation_list">
          <ul>
             <li *ngIf="stockCanal">
-               <a [class.active]="convActive === invConv" (click)="convActive=this.invConv">Inventaire
+               <a [class.active]="convActive === invConv" (click)="convActive=this.invConv; fetchData()">Inventaire
                   <!-- <button (click)="updateNotification(0)"> update </button> -->
                   <span *ngIf="notification[0]" class="notification-badge"></span>
                </a>
             </li>
             <li *ngIf="stockCanal">
-               <a [class.active]="convActive === recConv" (click)="convActive=this.recConv">Recette
+               <a [class.active]="convActive === recConv" (click)="convActive=this.recConv ; fetchData()">Recette
                   <span *ngIf="notification[1]" class="notification-badge"></span>
                </a>
             </li>
             <li *ngIf="analyseCanal">
-               <a [class.active]="convActive === anaConv" (click)="convActive=this.anaConv">Analyse
+               <a [class.active]="convActive === anaConv" (click)="convActive=this.anaConv ; fetchData()">Analyse
                   <span *ngIf="notification[2]" class="notification-badge"></span>
                </a>
             </li>
             <li *ngIf="budgetCanal">
-               <a [class.active]="convActive === comConv" (click)="convActive=this.comConv">Comptabilité
+               <a [class.active]="convActive === comConv" (click)="convActive=this.comConv; fetchData()">Comptabilité
                   <span *ngIf="notification[3]" class="notification-badge"></span>
                </a>
             </li>
             <li *ngIf="factureCanal">
-               <a [class.active]="convActive === facConv" (click)="convActive=this.facConv">Factures
+               <a [class.active]="convActive === facConv" (click)="convActive=this.facConv; fetchData()">Factures
                   <span *ngIf="notification[4]" class="notification-badge"></span>
                </a>
             </li>

@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
 import { getDatabase, ref, push, onChildAdded, onValue } from 'firebase/database';
@@ -12,7 +12,7 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./app.messagerie.component.css']
 })
 
-export class AppMessagerieComponent implements OnInit, OnChanges {
+export class AppMessagerieComponent implements OnInit {
 
   anaConv = "conversations/deliss_pizz/deliss_pizz/del42_ana_037581";
   comConv = "conversations/deliss_pizz/deliss_pizz/del42_com_238402";
@@ -38,15 +38,6 @@ export class AppMessagerieComponent implements OnInit, OnChanges {
   just_once = true;
   separationDateB!: boolean;
   heure!: number;
-
-  async ngOnChanges(changes: SimpleChanges): Promise<void> {
-    // Vérifier si convActive a changé
-    if (changes['convActive'] /*&& !changes.convActive.firstChange*/) {
-      console.log(this.convActive);
-      this.messagerie=[];
-      this.fetchData(); // Appeler fetchData() lorsque convActive change
-    }
-  }
 
   constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService) {  
     this.firebaseApp = firebaseApp;
@@ -93,7 +84,8 @@ export class AppMessagerieComponent implements OnInit, OnChanges {
       this.separationDateB = true;
     }
   }
-  
+
+
   sendMessage(){
     if(this.inputText != '') {
       const db = getDatabase(this.firebaseApp);
@@ -107,12 +99,6 @@ export class AppMessagerieComponent implements OnInit, OnChanges {
       //Ecriture du message dans la BDD
       const nodeRef = ref(db, this.convActive);
       push(nodeRef, newMessage).then(() => {
-        this.messagerie=[];
-
-        console.log("New message with custom name created successfully");
-        console.log(this.convActive);
-        this.fetchData();
-
       })
       .catch((error) => {
         console.error("Error creating new message:", error);
