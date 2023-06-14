@@ -128,7 +128,7 @@ export class CalendarService {
     // Path to the database
     const userToken : string | null = await this.getPath(userMail);
     const path = `users/${prop}/${userToken}/planning/events/${eventId}`;
-
+    console.log('Id:', eventId, '\n user:', userMail);
     // Remove the event
     await remove(ref(this.db, path));
   }
