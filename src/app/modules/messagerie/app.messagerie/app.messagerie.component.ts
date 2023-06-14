@@ -120,13 +120,17 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     const dataRef = ref(db, this.convActive);
     this.messagerie = [];
     onChildAdded(dataRef, (snapshot) => {
-      console.log('new message detected');
       const data = snapshot.val();
-      const donneesMessage = new MessageModel();
-      donneesMessage.auteur = data.auteur;
-      donneesMessage.contenu = data.contenu;
-      donneesMessage.horodatage = data.horodatage;
-      this.messagerie.push(donneesMessage);
+      const existingMessageIndex = this.messagerie.findIndex(
+        (message) => message.horodatage === data.horodatage
+      );
+      if (existingMessageIndex === -1) {
+        const donneesMessage = new MessageModel();
+        donneesMessage.auteur = data.auteur;
+        donneesMessage.contenu = data.contenu;
+        donneesMessage.horodatage = data.horodatage;
+        this.messagerie.push(donneesMessage);
+      }
     });
   }
 
