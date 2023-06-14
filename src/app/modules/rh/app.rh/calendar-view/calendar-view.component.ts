@@ -3,10 +3,10 @@ import {
   DayPilot,
   DayPilotCalendarComponent,
   DayPilotMonthComponent,
-  DayPilotNavigatorComponent,
-} from 'daypilot-pro-angular';
-import { CalendarService } from './calendar-data.service';
-import { from } from 'rxjs';
+  DayPilotNavigatorComponent
+} from "daypilot-pro-angular";
+import { CalendarService } from "./calendar-data.service";
+import { from } from 'rxjs'
 
 import { MatDialog } from '@angular/material/dialog'; // Import MatDialog for opening a dialog
 import { EventFormComponent } from '../event-form/event-form.component'; // Import the EventFormComponent
@@ -14,7 +14,7 @@ import { EventFormComponent } from '../event-form/event-form.component'; // Impo
 @Component({
   selector: 'app-calendar-view',
   templateUrl: './calendar-view.component.html',
-  styleUrls: ['./calendar-view.component.css'],
+  styleUrls: ['./calendar-view.component.css']
 })
 export class CalendarViewComponent implements AfterViewInit, OnInit {
   @ViewChild("day") day!: DayPilotCalendarComponent;
@@ -114,35 +114,41 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     showMonths: 1,
     cellWidth: 25,
     cellHeight: 25,
-    onVisibleRangeChanged: (args) => {
-      this.loadEvents();
-    },
+    onVisibleRangeChanged: args => {
+      this.loadEvents(this.users);
+    }
+  };
 
-  previous() {
-    if (this.configNavigator.selectMode == 'Day') {
+  selectTomorrow() {
+    this.date = DayPilot.Date.today().addDays(1);
+  }
+
+  previous(){
+    if (this.configNavigator.selectMode == "Day"){
+      this.date = this.date.addDays(-1);
       this.changeDate(this.date);
     }
-    if (this.configNavigator.selectMode == 'Week') {
+    if (this.configNavigator.selectMode == "Week"){
       this.date = this.date.addDays(-7);
       this.changeDate(this.date);
     }
-    if (this.configNavigator.selectMode == 'Month') {
-      this.date = this.date.addMonths(-1);
+    if (this.configNavigator.selectMode == "Month"){
+      this.date = this.date.addMonths(-1)
       this.changeDate(this.date);
     }
   }
 
-  next() {
-    if (this.configNavigator.selectMode == 'Day') {
+  next(){
+    if (this.configNavigator.selectMode == "Day"){
       this.date = this.date.addDays(1);
       this.changeDate(this.date);
     }
-    if (this.configNavigator.selectMode == 'Week') {
+    if (this.configNavigator.selectMode == "Week"){
       this.date = this.date.addDays(7);
       this.changeDate(this.date);
     }
-    if (this.configNavigator.selectMode == 'Month') {
-      this.date = this.date.addMonths(1);
+    if (this.configNavigator.selectMode == "Month"){
+      this.date = this.date.addMonths(1)
       this.changeDate(this.date);
     }
   }
@@ -153,183 +159,168 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
   }
 
   configDay: DayPilot.CalendarConfig = {
-    locale: 'fr-fr',
-    eventArrangement: 'SideBySide',
-    contextMenu: new DayPilot.Menu({
+    locale : "fr-fr",
+    eventMoveHandling : "Disabled",
+    eventResizeHandling : "Disabled",
+    eventArrangement : "SideBySide",
+    bubble:this.bubble,
+    contextMenu : new DayPilot.Menu({
       items: [
         {
-          text: 'Supprimer',
-          image: '../../../../assets/images/trash.png',
-          onClick: async (args) => {
+          text:"Supprimer",
+          image : "../../../../assets/images/trash.png",
+          onClick: async (args) => { 
             var e = args.source;
-            await this.ds.remove_event(
-              'foodandboost_prop',
-              '0uNzmnBI0jYYspF4wNXdRd2xw9Q2',
-              e.id()
-            );
-            this.loadEvents();
-          },
-        },
-      ],
+            await this.ds.remove_event('foodandboost_prop', 'telecom1@gmail.coom', e.id()); 
+            this.loadEvents(this.users);
+          }
+        }
+      ]
     }),
-    dayBeginsHour: 8,
-    dayEndsHour: 22,
-    bubble: this.bubble,
-    onBeforeEventRender: (args) => {
-      if (args.data.tags === 'important') {
-        args.data.barColor = '#ff0000'; // red color for important events
-        args.data.html =
-          "<span class='important-event'>" + args.data.text + '</span>';
-        args.data.toolTip = 'This is an important event.';
+    dayBeginsHour : 8,
+    dayEndsHour : 24,
+    onBeforeEventRender: args => {
+      if (args.data.tags === "Maladie") {
+        args.data.barColor = "#ff0000"; // duration bar
+        args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background
+        //args.data.backColor = "rgba(255, 0, 0, 0.2)"; // background 
+        //args.data.toolTip = "This is an important event.";
+      } else if (args.data.tags === "Congés") {
+        args.data.barColor = "#ffa500";
+        args.data.barBackColor = "rgba(255, 165, 0, 0.5)"; // duration bar background
+        //args.data.toolTip = "This is a regular event.";
+      } else if (args.data.tags === "Entretien") {
+        args.data.barColor = "#7db52e";
+        args.data.barBackColor = "rgba(121, 181, 46, 0.5)"; // duration bar background
+        //args.data.toolTip = "This is a regular event.";
       } else {
-        args.data.html = args.data.text;
-        args.data.toolTip = 'This is a regular event.';
+        //args.data.toolTip = "This is a regular event.";
       }
-    },
+      let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + args.data.resource + "</div>" : "";
+      args.data.html = "<span class='event'><strong>" + args.data.tags + "</strong><br>" +
+        resourceHtml + "<br>" +
+        args.data.text + "</span>";
+    }
   };
 
   configWeek: DayPilot.CalendarConfig = {
-    locale: 'fr-fr',
-    eventArrangement: 'SideBySide',
-    contextMenu: new DayPilot.Menu({
+    locale : "fr-fr",
+    width : "110%",
+    heightSpec : "Fixed",
+    height:600,
+    eventMoveHandling : "Disabled",
+    eventResizeHandling : "Disabled",
+    eventArrangement : "SideBySide",
+    bubble:this.bubble,
+    contextMenu : new DayPilot.Menu({
       items: [
         {
-          text: 'Supprimer',
-          image: '../../../../assets/images/trash.png',
-          onClick: async (args) => {
+          text:"Supprimer", 
+          image : "../../../../assets/images/trash.png",
+          onClick: async (args) => { 
             var e = args.source;
-            await this.ds.remove_event(
-              'foodandboost_prop',
-              '0uNzmnBI0jYYspF4wNXdRd2xw9Q2',
-              e.id()
-            );
-            this.loadEvents();
-          },
-        },
-      ],
-    }),
-    dayBeginsHour: 8,
-    dayEndsHour: 22,
-    viewType: 'Week',
-    bubble: this.bubble,
-    onTimeRangeSelected: async (args) => {
-      const modal = await DayPilot.Modal.prompt(
-        'Create a new event:',
-        'Event 1'
-      );
-      const dp = args.control;
-      dp.clearSelection();
-      if (!modal.result) {
-        return;
-      }
-      dp.events.add(
-        new DayPilot.Event({
-          start: args.start,
-          end: args.end,
-          id: DayPilot.guid(),
-          text: modal.result, //modifier ?
-        })
-      );
-    },
-    onBeforeEventRender: (args) => {
-      if (args.data.tags === 'Maladie') {
-        args.data.barColor = '#ff0000'; // duration bar
-        args.data.barBackColor = 'rgba(255, 0, 0, 0.5)'; // duration bar background
-        //args.data.backColor = "rgba(255, 0, 0, 0.2)"; // background
+            await this.ds.remove_event('foodandboost_prop', 'telecom1@gmail.coom', e.id()); 
+            this.loadEvents(this.users);
+          }
+        }
+      ]
+    }),    
+    dayBeginsHour : 8,
+    dayEndsHour : 24,
+    viewType: "Week",
+    onBeforeEventRender: args => {
+      if (args.data.tags === "Maladie") {
+        args.data.barColor = "#ff0000"; // duration bar
+        args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background
+        //args.data.backColor = "rgba(255, 0, 0, 0.2)"; // background 
         //args.data.toolTip = "This is an important event.";
-      } else if (args.data.tags === 'Congés') {
-        args.data.barColor = '#ffa500';
-        args.data.barBackColor = 'rgba(255, 165, 0, 0.5)'; // duration bar background
+      } else if (args.data.tags === "Congés") {
+        args.data.barColor = "#ffa500";
+        args.data.barBackColor = "rgba(255, 165, 0, 0.5)"; // duration bar background
         //args.data.toolTip = "This is a regular event.";
-      } else if (args.data.tags === 'Entretien') {
-        args.data.barColor = '#7db52e';
-        args.data.barBackColor = 'rgba(121, 181, 46, 0.5)'; // duration bar background
+      } else if (args.data.tags === "Entretien") {
+        args.data.barColor = "#7db52e";
+        args.data.barBackColor = "rgba(121, 181, 46, 0.5)"; // duration bar background
         //args.data.toolTip = "This is a regular event.";
       } else {
         //args.data.toolTip = "This is a regular event.";
       }
-      let resourceHtml = args.data.resource
-        ? "<div style='font-style: italic;'>" + args.data.resource + '</div>'
-        : '';
-      args.data.html =
-        "<span class='event'><strong>" +
-        args.data.tags +
-        '</strong><br>' +
-        resourceHtml +
-        '<br>' +
-        args.data.text +
-        '</span>';
-    },
+      let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + args.data.resource + "</div>" : "";
+      args.data.html = "<span class='event'><strong>" + args.data.tags + "</strong><br>" +
+        resourceHtml + "<br>" +
+        args.data.text + "</span>";
+    }
   };
 
   configMonth: DayPilot.MonthConfig = {
-    locale: 'fr-fr',
-    bubble: this.bubble,
-    contextMenu: new DayPilot.Menu({
+    locale : "fr-fr",
+    eventMoveHandling : "Disabled",
+    eventResizeHandling : "Disabled",
+    bubble:this.bubble,
+    contextMenu : new DayPilot.Menu({
       items: [
         {
-          text: 'Supprimer',
-          image: '../../../../assets/images/trash.png',
-          onClick: async (args) => {
+          text:"Supprimer",
+          image : "../../../../assets/images/trash.png", 
+          onClick: async (args) => { 
             var e = args.source;
-            await this.ds.remove_event(
-              'foodandboost_prop',
-              '0uNzmnBI0jYYspF4wNXdRd2xw9Q2',
-              e.id()
-            );
-            this.loadEvents();
-          },
-        },
-      ],
-    }),
-    onBeforeEventRender: (args) => {
-      if (args.data.tags === 'important') {
-        args.data.barColor = '#ff0000'; // red color for important events
-        args.data.html =
-          "<span class='important-event'>" + args.data.text + '</span>';
-        args.data.toolTip = 'This is an important event.';
+            await this.ds.remove_event('foodandboost_prop', 'telecom1@gmail.coom', e.id()); 
+            this.loadEvents(this.users);
+          }
+        }
+      ]
+    }),    
+    onBeforeEventRender: args => {
+      if (args.data.tags === "Maladie") {
+        args.data.barColor = "#ff0000"; // duration bar
+        args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background
+        //args.data.backColor = "rgba(255, 0, 0, 0.2)"; // background 
+        //args.data.toolTip = "This is an important event.";
+      } else if (args.data.tags === "Congés") {
+        args.data.barColor = "#ffa500";
+        args.data.barBackColor = "rgba(255, 165, 0, 0.5)"; // duration bar background
+        //args.data.toolTip = "This is a regular event.";
+      } else if (args.data.tags === "Entretien") {
+        args.data.barColor = "#7db52e";
+        args.data.barBackColor = "rgba(121, 181, 46, 0.5)"; // duration bar background
+        //args.data.toolTip = "This is a regular event.";
       } else {
-        args.data.html = args.data.text;
-        args.data.toolTip = 'This is a regular event.';
+        //args.data.toolTip = "This is a regular event.";
       }
-    },
+    }
+
   };
+
+  
 
   ngAfterViewInit(): void {
     this.loadEvents("");
   }
 
-  loadEvents(): void {
-    const froom = this.nav.control.visibleStart();
-    const to = this.nav.control.visibleEnd();
-    from(
-      this.ds.getEvents(
-        froom,
-        to,
-        'foodandboost_prop',
-        '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'
-      )
-    ).subscribe((result) => {
+  loadEvents(users : string): void {
+    //const froom = this.nav.control.visibleStart();
+    //const to = this.nav.control.visibleEnd();
+    from(this.ds.getEventsFromAllUsers("foodandboost_prop", users)).subscribe(result => {
       this.events = result;
     });
   }
 
   viewDay(): void {
-    this.configNavigator.selectMode = 'Day';
+    this.configNavigator.selectMode = "Day";
     this.configDay.visible = true;
     this.configWeek.visible = false;
     this.configMonth.visible = false;
   }
 
   viewWeek(): void {
-    this.configNavigator.selectMode = 'Week';
+    this.configNavigator.selectMode = "Week";
     this.configDay.visible = false;
     this.configWeek.visible = true;
     this.configMonth.visible = false;
   }
 
   viewMonth(): void {
-    this.configNavigator.selectMode = 'Month';
+    this.configNavigator.selectMode = "Month";
     this.configDay.visible = false;
     this.configWeek.visible = false;
     this.configMonth.visible = true;
@@ -345,6 +336,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
   //   this.loadEvents("telecom1@gmail.coom");
   // }
 
+
   openEventForm(): void {
     const dialogRef = this.dialog.open(EventFormComponent, {
       width: '85vw',
@@ -353,7 +345,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
       // You can also configure other properties of the dialog, such as position, etc.
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(result => {
       // This code block will be executed when the dialog is closed
       // You can perform any desired actions here
       console.log('Dialog closed with result:', result);
@@ -368,4 +360,5 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     this.loadEvents(this.users);
     // Add your code here
   }
+
 }

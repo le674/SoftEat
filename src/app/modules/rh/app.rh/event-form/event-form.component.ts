@@ -7,6 +7,10 @@ import {
 } from '@angular/core';
 import { FirebaseApp, initializeApp } from '@angular/fire/app';
 import { getDatabase, ref, onValue, get } from 'firebase/database';
+import { DayPilot } from "daypilot-pro-angular";
+import { CalendarService } from "../calendar-view/calendar-data.service";
+import { MatDialogRef } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-event-form',
@@ -22,17 +26,23 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   @ViewChild('addFinPoste') addFinPosteInput!: ElementRef<HTMLInputElement>;
   @ViewChild('addRepeter') addRepeterSelect!: ElementRef<HTMLSelectElement>;
   dateWidth = '150px'; // Default width
+
   Categories!: String[];
   Serveurs!: { nom: String }[];
   Gerants!: { nom: String }[];
   Rh!: { nom: String }[];
   Autres!: { nom: String }[];
   firebaseApp: FirebaseApp | undefined;
-  constructor(firebaseApp: FirebaseApp) {}
+  newEvent?: DayPilot.EventData; 
+  constructor(private calendar: CalendarService, public dialogRef: MatDialogRef<EventFormComponent>, firebaseApp: FirebaseApp) {
+    this.dialogRef = dialogRef;
+  }
+
 
   /* Les deux premières méthodes ajoutent automatiquement des majuscules sur 
   le premier caractère du champ Evenement uniformiser */
   ngOnInit(): void {
+
     this.Categories = ['Serveurs', 'Rh', 'Gérants', 'Autres'];
 
     this.Serveurs = [];
@@ -46,10 +56,16 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       this.addEventInput.nativeElement,
       this.addLieuInput.nativeElement,
     ];
-    
-    inputFields.forEach((input) => {
-      input.addEventListener('input', () => {
-        this.truncateInputValue(input);
+
+    setTimeout(() => {
+      const inputFields: HTMLInputElement[] = [
+        this.addEventInput.nativeElement
+      ];
+
+      inputFields.forEach((input) => {
+        input.addEventListener('input', () => {
+          this.truncateInputValue(input);
+        });
       });
     });
   }
@@ -109,6 +125,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   isFieldFilled(
     inputRef: ElementRef<HTMLInputElement | HTMLSelectElement>
   ): boolean {
+
     const value = inputRef.nativeElement.value;
     if (inputRef.nativeElement.tagName.toLowerCase() === 'select') {
       return value !== '';
