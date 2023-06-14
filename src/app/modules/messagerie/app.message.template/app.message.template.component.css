@@ -2,19 +2,6 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.separationDate {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-
-}
-.separationTime {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-
-}
-
 .message {
   display: flex;
   flex-direction: column;

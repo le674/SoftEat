@@ -36,6 +36,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     });
   }
 
+
   moisEnTouteLettre = [
     "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet",
     "Août", "Septembre", "Octobre", "Novembre", "Décembre"
@@ -61,6 +62,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
         end.getMinutes().toString().padStart(2, '0');
 
       let bubbleContent =
+
         '<div>' +
         '<strong>' +
         args.source.data.tags +
@@ -366,5 +368,3 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
   }
 
 }
-
-

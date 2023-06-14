@@ -4,15 +4,14 @@
     </div>
     <div class="content">
       <div class="buttons">
-        <button (click)="viewDay()" [class]="this.configNavigator.selectMode == 'Day' ? 'selected' : ''">Jour</button>
-        <button (click)="viewWeek()" [class]="this.configNavigator.selectMode == 'Week' ? 'selected' : ''">Semaine</button>
-        <button (click)="viewMonth()" [class]="this.configNavigator.selectMode == 'Month' ? 'selected' : ''">Mois</button>
-        <button (click)="previous()"><</button>
-        <button (click)="next()">></button>
-        <!--<button (click)="addEvent()">Add Event</button>--> 
-        <button (click)="openEventForm()" class="addEvent" *ngIf="userRole == 'gerant'">Ajouter un événement<!--<i class="fa-tag"></i>--> </button>
-        <span *ngIf="this.configNavigator.selectMode == 'Month'">{{moisEnTouteLettre[this.date.getMonth()]}}</span>
-      </div>
+      <button (click)="viewDay()" [class]="this.configNavigator.selectMode == 'Day' ? 'selected' : ''">Day</button>
+      <button (click)="viewWeek()" [class]="this.configNavigator.selectMode == 'Week' ? 'selected' : ''">Week</button>
+      <button (click)="viewMonth()" [class]="this.configNavigator.selectMode == 'Month' ? 'selected' : ''">Month</button>
+      <button (click)="previous()"></button>
+      <button (click)="next()">></button>
+      <!--<button (click)="addEvent()">Add Event</button>--> 
+      <button (click)="openEventForm()" class="addEvent" *ngIf="userRole == 'gerant'">Ajouter un événement<!--<i class="fa-tag"></i>--> </button>
+    </div>
 
       <daypilot-calendar [config]="configDay" [events]="events" #day></daypilot-calendar>
       <daypilot-calendar class="calendar" [config]="configWeek" [events]="events" #week></daypilot-calendar>

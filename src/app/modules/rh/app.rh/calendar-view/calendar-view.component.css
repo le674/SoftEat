@@ -30,11 +30,11 @@ button {
 
 .calendar {
     width: 800px !important;
-    height: 800px !important;
+    height : 800px !important;
 }
 
 .addEvent {
-    width: 110px;
+    width : 110px;
 }
 
 button.selected {
