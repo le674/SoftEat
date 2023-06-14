@@ -9,7 +9,11 @@ import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
   styleUrls: ['./app.rh.component.css']
 })
 export class AppRhComponent implements OnInit {
-currentUserRole: any;
+currentUserRole!: string;
+currentUserMail!:string;
+currentUserPrenom!:string;
+currentUserNom!:string;
+currentUserNomComplet!:string;
 
   constructor() { }
 
@@ -43,10 +47,28 @@ currentUserRole: any;
       console.log(user);*/
       let userdat = user?.uid;
       const role = ref(db, `${userPath}/${userdat}/role`);
+      const mail = ref(db,`${userPath}/${userdat}/email`);
+      const prenom = ref(db, `${userPath}/${userdat}/prenom`);
+      const nom = ref(db, `${userPath}/${userdat}/nom`);
       onValue(role, (roleSnapshot) => {
         this.currentUserRole = roleSnapshot.val();
       });
+      onValue(mail, (mailSnapshot) => {
+        this.currentUserMail = mailSnapshot.val();
+      });
+      onValue(prenom, (prenomSnapshot) => {
+        this.currentUserPrenom = prenomSnapshot.val();
+      });
+      onValue(nom, (nomSnapshot) => {
+        this.currentUserNom = nomSnapshot.val();
+      });
+      this.currentUserNomComplet = this.currentUserPrenom + " " + this.currentUserNom;
     });
   }
-
+  getUserRole(): string{
+    return this.currentUserRole;
+  }
+  getUserMail(): string{
+    return this.currentUserMail;
+  }
 }

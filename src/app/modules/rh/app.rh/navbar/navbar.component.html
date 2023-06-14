@@ -6,8 +6,8 @@
         <table>
             <tr *ngFor="let categories of Categories">
                 <div class="center-container">
-                    <div class="left categ">{{categories.nom}}</div>
-                    <button (click)="openCategories(categories)" class="right">{{categories.buttonname}}</button>
+                    <div class="categ">{{categories.nom}}</div>
+                    <button (click)="openCategories(categories)">{{categories.buttonname}}</button>
                 </div>
                 <div [ngSwitch]="categories.nom">
 
@@ -15,16 +15,14 @@
                         <ul *ngIf="categories.open">
                             <li>
                                 <div class="center-container">
-                                    <div class="left">Sélectionner tout</div>
-                                    <input type="checkbox" [checked]="selectAllServeurs" (click)="addAllServeurs()"
-                                        class="right">
+                                    <div>Sélectionner tout</div>
+                                    <input type="checkbox" [checked]="selectAllServeurs" (click)="addAllServeurs()">
                                 </div>
                             </li>
                             <li *ngFor="let liste of Serveurs">
                                 <div class="center-container">
-                                    <div class="left">{{liste.nom}}</div>
-                                    <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)"
-                                        class="right">
+                                    <div>{{liste.nom}}</div>
+                                    <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)">
                                 </div>
                             </li>
                         </ul>
@@ -34,16 +32,16 @@
                         <ul *ngIf="categories.open">
                             <li>
                                 <div class="center-container">
-                                    <div class="left">Sélectionner tout</div>
+                                    <div>Sélectionner tout</div>
                                     <input type="checkbox" [checked]="selectAllGerants" (click)="addAllGerants()"
-                                        class="right">
+                                        >
                                 </div>
                             </li>
                             <li *ngFor="let liste of Gerants">
                                 <div class="center-container">
-                                    <div class="left">{{liste.nom}}</div>
+                                    <div>{{liste.nom}}</div>
                                     <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)"
-                                        class="right">
+                                        >
                                 </div>
                             </li>
                         </ul>
@@ -53,15 +51,14 @@
                         <ul *ngIf="categories.open">
                             <li>
                                 <div class="center-container">
-                                    <div class="left">Sélectionner tout</div>
-                                    <input type="checkbox" [checked]="selectAllRh" (click)="addAllRh()" class="right">
+                                    <div>Sélectionner tout</div>
+                                    <input type="checkbox" [checked]="selectAllRh" (click)="addAllRh()">
                                 </div>
                             </li>
                             <li *ngFor="let liste of Rh">
                                 <div class="center-container">
-                                    <div class="left">{{liste.nom}}</div>
-                                    <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)"
-                                        class="right">
+                                    <div>{{liste.nom}}</div>
+                                    <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)">
                                 </div>
                             </li>
                         </ul>
@@ -71,16 +68,14 @@
                         <ul *ngIf="categories.open">
                             <li>
                                 <div class="center-container">
-                                    <div class="left">Sélectionner tout</div>
-                                    <input type="checkbox" [checked]="selectAllAutres" (click)="addAllAutres()"
-                                        class="right">
+                                    <div>Sélectionner tout</div>
+                                    <input type="checkbox" [checked]="selectAllAutres" (click)="addAllAutres()">
                                 </div>
                             </li>
                             <li *ngFor="let liste of Autres">
                                 <div class="center-container">
-                                    <div class="left">{{liste.nom}}</div>
-                                    <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)"
-                                        class="right">
+                                    <div>{{liste.nom}}</div>
+                                    <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)">
                                 </div>
                             </li>
                         </ul>
@@ -90,10 +85,9 @@
         </table>
     </div>
 </div>
-<!--
-    <br>
+
+    <!-- <br>
 Employés Selectionnés :
 <span *ngFor="let element of select">
     {{element}}
-</span>
--->
+</span> -->

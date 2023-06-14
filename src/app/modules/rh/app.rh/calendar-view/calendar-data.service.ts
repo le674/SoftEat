@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { child, push, remove, connectDatabaseEmulator, get, set, getDatabase, ref, query, orderByChild, equalTo } from 'firebase/database';
 import { connectFirestoreEmulator, Firestore, getFirestore } from "firebase/firestore";
 import { FirebaseApp, initializeApp } from "@angular/fire/app";
+import { BehaviorSubject } from 'rxjs';
 
 interface Event {
   start: string;
@@ -18,10 +19,13 @@ interface Event {
 @Injectable()
 export class CalendarService {
   private firestore: Firestore;
-  events: Event[] = [];
+  events: DayPilot.EventData[] = [];
   private firebaseConfig = environment.firebase;
   private firebaseApp = initializeApp(this.firebaseConfig);
   private db = getDatabase(this.firebaseApp);
+  private currentUser = localStorage.getItem("user_email") as string;
+  private users = new BehaviorSubject<string>(this.currentUser)
+  currentData = this.users.asObservable();
 
   constructor(private ofApp: FirebaseApp) {
     //this.db = getDatabase(ofApp);
@@ -40,20 +44,44 @@ export class CalendarService {
     }
   }
 
+  async getEventsFromAllUsers(prop: string, usersMails: string): Promise<DayPilot.EventData[]> {
+    
+    if (usersMails === "") {
+      this.events = [];
+      return this.events;
+    }
+    
+    // Split the string into an array of emails
+    const emails = usersMails.split(",");
+  
+    let allEvents: DayPilot.EventData[] = []; // Create a new array to store all events
+    
+    for (const userMail of emails) {
+      console.log(`Fetching events for user: ${userMail}`); // Log the email
+      const userEvents = await this.getEvents(prop, userMail.trim());
+      console.log(`Events for user ${userMail}:`, userEvents); // Log the returned events
+  
+      allEvents = [...allEvents, ...userEvents]; // Add the user's events to the allEvents array
+    }
+  
+    this.events = allEvents; // Assign the collected events to this.events
+    return this.events;
+  }
+  
 
-  async getEvents(from: DayPilot.Date, to: DayPilot.Date, prop: string, user: string): Promise<DayPilot.EventData[]> {
+  async getEvents(prop: string, userMail: string): Promise<DayPilot.EventData[]> {
     // converti le DayPilot.Date en date ISO string
-    const fromDateString = from.toString("yyyy-MM-dd");
-    const toDateString = to.toString("yyyy-MM-dd");
-
-    const path = `users/${prop}/${user}/planning/events` //chemin vers la BDD
+    //const fromDateString = from.toString("yyyy-MM-dd");
+    //const toDateString = to.toString("yyyy-MM-dd");
+    this.events = [];
+    const userToken : string | null = await this.getPath(userMail);
+    const path = `users/${prop}/${userToken}/planning/events` //chemin vers la BDD
     const eventsSnapshot = await get(child(ref(this.db), path)); //ensemble des events
 
     if (eventsSnapshot.exists()) {
-      this.events = [];
       eventsSnapshot.forEach((eventSnapshot) => { //parcourt les events de la BDD
         const event = eventSnapshot.val() as Event;
-        if (event.start >= fromDateString && event.start <= toDateString) {
+        //if (event.start >= fromDateString && event.start <= toDateString) {
           this.events.push({
             start: event.start,
             end: event.end,
@@ -62,9 +90,10 @@ export class CalendarService {
             tags: event.tags,
             resource: event.resource,
           });
-        }
         return false; // regarde le prochain event
       });
+    } else {
+      return [];
     }
 
     return this.events;
@@ -96,10 +125,11 @@ export class CalendarService {
     await set(eventRef, event);
   }
 
-  async remove_event(prop: string, user: string, eventId: string): Promise<void> {
+  async remove_event(prop: string, userMail: string, eventId: string): Promise<void> {
     // Path to the database
-    const path = `users/${prop}/${user}/planning/events/${eventId}`;
-
+    const userToken : string | null = await this.getPath(userMail);
+    const path = `users/${prop}/${userToken}/planning/events/${eventId}`;
+    console.log('Id:', eventId, '\n user:', userMail);
     // Remove the event
     await remove(ref(this.db, path));
   }
@@ -124,6 +154,9 @@ export class CalendarService {
     return null; // Return null if no matching user is found
   }
   
-
+  changeUsers(newUsers: string) {
+    this.users.next(newUsers);
+    console.log(this.users)
+  }
 
 }
