@@ -23,7 +23,8 @@ export class CalendarService {
   private firebaseConfig = environment.firebase;
   private firebaseApp = initializeApp(this.firebaseConfig);
   private db = getDatabase(this.firebaseApp);
-  private users = new BehaviorSubject<string>('default message')
+  private currentUser = localStorage.getItem("user_email") as string;
+  private users = new BehaviorSubject<string>(this.currentUser)
   currentData = this.users.asObservable();
 
   constructor(private ofApp: FirebaseApp) {

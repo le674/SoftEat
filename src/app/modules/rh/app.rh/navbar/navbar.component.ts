@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { getDatabase, ref, onValue, get } from 'firebase/database';
 import { FirebaseService } from '../../../../services/firebase.service';
 import { FirebaseApp, initializeApp } from "@angular/fire/app";
@@ -25,6 +25,8 @@ export class NavbarComponent implements OnInit {
   selectAllRh: boolean = false;
   selectAllAutres: boolean = false;
   new_users !: string;
+  @Input() userMail!:string;
+  @Input() userNomComplet!:string;
 
   firebaseApp: FirebaseApp | undefined;
 
@@ -47,6 +49,14 @@ export class NavbarComponent implements OnInit {
     this.new_users = "";
 
     this.fetchUser();
+    this.selectUser();
+  }
+
+  selectUser(){
+    this.select.push(this.userNomComplet);
+    console.log(this.userNomComplet);
+    this.selectMail.push(this.userMail);
+    this.new_users = this.selectMail.join(",");
   }
 
   openCategories(categories: any) {
@@ -187,14 +197,26 @@ export class NavbarComponent implements OnInit {
           const user_mail = mailSnapshot.val();
 
           if (nomComplet) {
-            if (role == 'gerant') {
-              this.Gerants.push({ nom: nomComplet, selectionne: false, mail : user_mail });
-            } else if (role == 'rh') {
-              this.Rh.push({ nom: nomComplet, selectionne: false, mail : user_mail });
-            } else if (role == 'serveur') {
-              this.Serveurs.push({ nom: nomComplet, selectionne: false, mail : user_mail });
+            if (user_mail === this.userMail){
+              if (role == 'gerant') {
+                this.Gerants.push({ nom: nomComplet, selectionne: true, mail : user_mail });
+              } else if (role == 'rh') {
+                this.Rh.push({ nom: nomComplet, selectionne: true, mail : user_mail });
+              } else if (role == 'serveur') {
+                this.Serveurs.push({ nom: nomComplet, selectionne: true, mail : user_mail });
+              } else {
+                this.Autres.push({ nom: nomComplet, selectionne: true, mail : user_mail });
+              }
             } else {
-              this.Autres.push({ nom: nomComplet, selectionne: false, mail : user_mail });
+              if (role == 'gerant') {
+                this.Gerants.push({ nom: nomComplet, selectionne: false, mail : user_mail });
+              } else if (role == 'rh') {
+                this.Rh.push({ nom: nomComplet, selectionne: false, mail : user_mail });
+              } else if (role == 'serveur') {
+                this.Serveurs.push({ nom: nomComplet, selectionne: false, mail : user_mail });
+              } else {
+                this.Autres.push({ nom: nomComplet, selectionne: false, mail : user_mail });
+              }
             }
           }
         }
