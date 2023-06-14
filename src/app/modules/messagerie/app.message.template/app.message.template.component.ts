@@ -4,7 +4,6 @@ import { getDatabase, ref, onValue, get} from 'firebase/database';
 import { Statut } from '../../../interfaces/statut';
 import { MessageModel } from '../messages_models/model';
 import { DatePipe } from '@angular/common';
-
 @Component({
   selector: 'message-template',
   templateUrl: './app.message.template.component.html',
@@ -37,8 +36,6 @@ export class AppMessageTemplateComponent implements OnInit {
     const db = getDatabase(this.firebaseApp);
     const userId = '0uNzmnBI0jYYspF4wNXdRd2xw9Q2'; //  ID de l'utilisateur à récupérer
     const userStatusRef = ref(db, 'users/foodandboost_prop/' + userId + '/statut');
-
-    this.email = localStorage.getItem("user_email") as string;
 
     onValue(userStatusRef, (snapshot) => {
       const statut = snapshot.val();
