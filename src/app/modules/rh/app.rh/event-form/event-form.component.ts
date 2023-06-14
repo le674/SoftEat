@@ -267,24 +267,6 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     this.closeDialog();
   }
 
-  private getWeekNumber(date: Date): number {
-    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-    const daysOffset = firstDayOfYear.getDay() - 1;
-    const firstMondayOfYear = new Date(date.getFullYear(), 0, 1 + (daysOffset <= 0 ? 7 : daysOffset));
-    const daysSinceFirstMonday = Math.floor((date.getTime() - firstMondayOfYear.getTime()) / 86400000);
-    return Math.ceil((daysSinceFirstMonday + firstMondayOfYear.getDay() + 1) / 7);
-  }
-
-  private getDateFromWeekNumber(weekNumber: number, dayOfWeek: number): Date {
-    const year = new Date().getFullYear();
-    const januaryFirst = new Date(year, 0, 1);
-    const daysOffset = januaryFirst.getDay() - 1;
-    const firstMondayOfYear = new Date(year, 0, 1 + (daysOffset <= 0 ? 7 : daysOffset));
-    const firstDayOfDesiredWeek = new Date(year, 0, (weekNumber - 1) * 7 + firstMondayOfYear.getDate());
-    const desiredDay = new Date(firstDayOfDesiredWeek.setDate(firstDayOfDesiredWeek.getDate() + dayOfWeek - 1));
-    return desiredDay;
-  }
-
   private isSameDay(date1: Date, date2: Date): boolean {
     return (
       date1.getFullYear() === date2.getFullYear() &&
@@ -299,9 +281,6 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
   }
-
-
-
 
   getMotifLabel(value: string): string {
     switch (value) {
