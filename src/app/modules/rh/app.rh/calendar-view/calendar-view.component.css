@@ -14,6 +14,7 @@
 
 .buttons {
     margin-bottom: 10px;
+    display: flex;
 }
 
 button {
@@ -29,11 +30,11 @@ button {
 
 .calendar {
     width: 800px !important;
-    height : 800px !important;
+    height: 800px !important;
 }
 
 .addEvent {
-    width : 110px;
+    width: 110px;
 }
 
 button.selected {
@@ -43,4 +44,14 @@ button.selected {
 .important-event {
     font-weight: bold;
     color: darkblue;
-  }
+}
+
+span {
+    /* Ajoutez ici les styles spécifiques pour le span */
+    font-weight: bold;
+    font-size: 35px;
+    color: rgb(98, 143, 35);
+    flex-grow: 1;
+    align-self: center;
+    text-align: center;
+}
