@@ -55,7 +55,7 @@
             <span id="down"></span>
          </div>
          <div id="message_bar">  
-            <input type="text" [(ngModel)]="inputText" id="messageInput" autocomplete="off"/>
+            <input type="text" [(ngModel)]="inputText" (keydown.enter)="sendMessage()" id="messageInput" autocomplete="off"/>
             <button (click)="sendMessage()" id="send" ><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
          </div>
       </div>
