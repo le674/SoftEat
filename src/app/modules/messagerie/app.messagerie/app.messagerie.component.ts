@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
 import { User } from '../../../interfaces/user';
-import { getDatabase, ref, push, update, onValue, onChildAdded, DatabaseReference} from 'firebase/database';
+import { getDatabase, ref, push, update, onValue, get, onChildAdded, DatabaseReference} from 'firebase/database';
 import { FirebaseApp } from '@angular/fire/app';
 import { HttpClient } from '@angular/common/http';
 import { MessageModel } from '../messages_models/model';
@@ -112,33 +112,26 @@ export class AppMessagerieComponent implements OnInit {
   }
 
 
-
-  updateUnreadMessages(canalId: string, emails: string[]): void {
+  // NOTIFICATIONS (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
+  updateUnreadMessages(canalId: string, users_email: string[]): void {
     const db = getDatabase(this.firebaseApp);
 
-    emails.forEach(email => {
+    users_email.forEach(email => {
       this.firebaseService.getUserDataReference(email)
         .then((userRef: DatabaseReference | null) => {
           if (userRef) {
-            onValue(userRef, (snapshot) => {
+            get(userRef)
+              .then((snapshot) => {
               const user: User = snapshot.val();
-              const unreadMessages = user.unreadMessages || {};
-              unreadMessages[canalId] = (unreadMessages[canalId] || 0) + 1;
-              console.log("oui");
-              console.log(user.unreadMessages[canalId]);
-              
-              if (user.unreadMessages[canalId] == 1){
-                update(userRef.ref, { unreadMessages })
-                console.log("User's notification updated successfully");
-                
-              }
-              // update(userRef.ref, { unreadMessages })
-              // .then(() => {
-              //   console.log("User's notification updated successfully");
-              // })
-              // .catch(error => {
-              //   console.error("Error updating user's notification:", error);
-              // });
+              const notificationCanaux = user.notificationCanaux || {};
+              notificationCanaux[canalId] = 1;
+              update(userRef.ref, { notificationCanaux })
+                .then(() => {
+                  console.log("User's notification updated successfully");
+                })
+                .catch(error => {
+                  console.error("Error updating user's notification:", error);
+                });
             });
           }
         })
@@ -146,6 +139,34 @@ export class AppMessagerieComponent implements OnInit {
           // Gestion de l'erreur
         });
     });
+  }
+
+  // NOTIFICATIONS (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
+  markCanalAsRead(canalId: string, user_email: string): void {
+    const db = getDatabase(this.firebaseApp);
+
+    this.firebaseService.getUserDataReference(user_email)
+      .then((userRef: DatabaseReference | null) => {
+        if (userRef) {
+          get(userRef)
+            .then((snapshot) => {
+            const user: User = snapshot.val();
+            const notificationCanaux = user.notificationCanaux || {};
+            notificationCanaux[canalId] = 0;
+            update(userRef.ref, { notificationCanaux })
+                .then(() => {
+                  console.log("User's notification marked as read");
+                })
+                .catch(error => {
+                  console.error("Error updating user's notification:", error);
+                });
+          });
+        }
+      })
+      .catch(error => {
+        // Gestion de l'erreur
+      });
+  
   }
 
 
