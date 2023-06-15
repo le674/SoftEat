@@ -39,7 +39,7 @@
                </a>
             </li>
             <li>
-               <a class="#ressourcesh">Ressources Humaines
+               <a [class.active]="convActive === currentUserConv" (click)="convActive=this.currentUserConv; fetchData()">Ressources Humaines
                   <span *ngIf="notification['rh']" class="notification-badge"></span>               
                </a>
             </li>
