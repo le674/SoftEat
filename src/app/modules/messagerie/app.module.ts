@@ -4,11 +4,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppMessageTemplateComponent } from './app.message.template/app.message.template.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AppMessagerieDateTemplateComponent } from './app.messagerie.date.template/app.messagerie.date.template/app.messagerie.date.template.component';
 
 @NgModule({
   declarations: [
     AppMessagerieComponent,
-    AppMessageTemplateComponent
+    AppMessageTemplateComponent,
+    AppMessagerieDateTemplateComponent
   ],
   imports:[ 
     AppRoutingModule,

@@ -48,10 +48,12 @@
       </div>
       <div id="conversation">
          <div id="messages" #scrollMe>
-            <div *ngIf="newDay" class="separationDate">
-               <span>{{ this.date | date: 'E dd MMMM yyyy' }}</span>
-             </div>
-            <message-template *ngFor="let message of messagerie" [listeMessages]="message"></message-template>
+            <div *ngFor="let message of messagerie">
+               <div *ngIf="message.newDay">
+                  <message-date-template [date]="date"></message-date-template>
+               </div>
+               <message-template [listeMessages]="message"></message-template>
+            </div>
             <button (click)="updateUnreadMessages('inv', ['telecom1@gmail.coom'])">Ajouter une notification sur la conversation `inv` pour telecom1</button>
             <button (click)="markCanalAsRead('inv', 'telecom1@gmail.coom')">Retirer la notification sur la conversation `inv` pour telecom1</button>
          </div>

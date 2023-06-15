@@ -1,0 +1,12 @@
+div {
+	display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+a {
+  padding-left: 1%;
+  padding-right: 1%;
+  background-color: rgb(175, 175, 175);
+  border-radius: 50px;
+}
