@@ -153,6 +153,9 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       // Show the popup or perform any required validation logic
       alert('Renseignez les champs obligatoires marqués par un astérisque (*)');
       return;
+    } else if(new Date(finPoste) < new Date(prisePoste)){
+      alert('La date de fin de poste est antérieure à la date de prise de poste');
+      return;
     }
     this.addRow(personnel, motif, event, lieu, prisePoste, finPoste, repeter);
     this.resetFormFields();
