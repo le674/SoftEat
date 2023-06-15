@@ -163,7 +163,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       this.newEvent = {
         start: row.prisePoste + ":00",
         end: row.finPoste + ":00",
-        text: row.lieu +'\n' +row.event,
+        text: row.lieu +', ' +row.event, // la ', ' permet le parsing du text pour l'affichage lieu/description
         id: 'newEventId',
         tags: this.getMotifLabel(row.motif),
         resource: row.personnel
