@@ -182,7 +182,21 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
             this.loadEvents(this.users);
           }
         }
-      ]
+      ],
+      onShow: (args) => {
+        var e = args.source;
+        if (this.userRole!=='gerant') {
+          if (args.menu && args.menu.items && args.menu.items[0]) {
+            args.menu.items[0].disabled = true;
+          }
+        }
+        else {
+          if (args.menu && args.menu.items && args.menu.items[0]) {
+            args.menu.items[0].disabled = false;
+          }
+        }
+        console.log(this.userRole);  // Accessing userRole here
+      }       
     }),
     dayBeginsHour : 8,
     dayEndsHour : 24,
@@ -233,7 +247,21 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
             this.loadEvents(this.users);
           }
         }
-      ]
+      ],
+      onShow: (args) => {
+        var e = args.source;
+        if (this.userRole!=='gerant') {
+          if (args.menu && args.menu.items && args.menu.items[0]) {
+            args.menu.items[0].hidden = true;
+          }
+        }
+        else {
+          if (args.menu && args.menu.items && args.menu.items[0]) {
+            args.menu.items[0].hidden = false;
+          }
+        }
+        console.log(this.userRole);  // Accessing userRole here
+      }
     }),    
     dayBeginsHour : 8,
     dayEndsHour : 24,

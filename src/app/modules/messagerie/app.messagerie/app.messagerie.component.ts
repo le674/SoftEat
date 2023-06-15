@@ -3,6 +3,7 @@ import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
 import { User } from '../../../interfaces/user';
 import { getDatabase, ref, push, update, get, onChildAdded, onValue, DatabaseReference} from 'firebase/database';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { MessageModel } from '../messages_models/model';
 import { DatePipe } from '@angular/common';
@@ -34,6 +35,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   factureCanal = true;
   planningCanal = true;
   stockCanal = true;
+  currentUserConv!: string;
   inputText!: string;
   firebaseApp: FirebaseApp | undefined;
   
@@ -57,6 +59,22 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     //this.showCanal();
     this.fetchTimeServer();
     this.scrollToBottom();
+    
+    //emplacement des données de l'utilisateur
+    const userPath = '/users/foodandboost_prop/';
+    const db = getDatabase();
+    const auth = getAuth(this.firebaseApp);
+
+    onAuthStateChanged(auth, (currentUser) => {
+    let user = currentUser;
+    let userdat = user?.uid;
+    const conv = ref(db, `${userPath}/${userdat}/convPrivee`);
+    onValue(conv, (convSnapshot) => {
+      this.currentUserConv = "".concat("conversations/deliss_pizz/employes/",convSnapshot.val());
+    });
+    //retour console de sa conversation
+    console.log(this.currentUserConv);
+    });
   }
 
   ngAfterViewChecked(): void {
@@ -92,13 +110,15 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
 
       //Si le message est écrit un nouveau jour
       const current_day = new Date(this.fetchTimeServer()).getDay();
+      /*
+
       const last_msg_day = new Date(this.messagerie[this.messagerie.length-1].horodatage).getDay();
       if(current_day != last_msg_day) {
         this.newDay = true;
       } else {
         this.newDay = false;
       }
-
+      */
       //Création du nouveau message
       const newMessage = {
         auteur: localStorage.getItem("user_email"),
@@ -125,15 +145,19 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     const dataRef = ref(db, this.convActive);
     this.messagerie = [];
     onChildAdded(dataRef, (snapshot) => {
-      console.log('new message detected');
       const data = snapshot.val();
-      const donneesMessage = new MessageModel();
-      donneesMessage.auteur = data.auteur;
-      donneesMessage.contenu = data.contenu;
-      donneesMessage.horodatage = data.horodatage;
+      const existingMessageIndex = this.messagerie.findIndex(
+        (message) => message.horodatage === data.horodatage
+      );
+      if (existingMessageIndex === -1) {
+        const donneesMessage = new MessageModel();
+        donneesMessage.auteur = data.auteur;
+        donneesMessage.contenu = data.contenu;
+        donneesMessage.horodatage = data.horodatage;
       donneesMessage.nom = data.nom;
       donneesMessage.prenom = data.prenom;
-      this.messagerie.push(donneesMessage);
+        this.messagerie.push(donneesMessage);
+      }
     });
   }
 
