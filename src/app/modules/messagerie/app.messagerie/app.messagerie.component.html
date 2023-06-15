@@ -72,12 +72,8 @@
                <span>{{ this.date | date: 'E dd MMMM yyyy' }}</span>
              </div>
             <message-template *ngFor="let message of messagerie" [listeMessages]="message"></message-template>
-            <button (click)="updateUnreadMessages('inv', ['telecom1@gmail.coom', 'valentin.pontiggia@gmail.com'])">Ajouter une notification sur la conversation `inv` pour telecom1</button>
-            <button (click)="updateUnreadMessages('rec', ['telecom1@gmail.coom', 'valentin.pontiggia@gmail.com'])">a</button>
-            <button (click)="updateUnreadMessages('ana', ['telecom1@gmail.coom', 'valentin.pontiggia@gmail.com'])">b</button>
-            <button (click)="updateUnreadMessages('com', ['telecom1@gmail.coom', 'valentin.pontiggia@gmail.com'])">c</button>
-            <button (click)="updateUnreadMessages('fac', ['telecom1@gmail.coom', 'valentin.pontiggia@gmail.com'])">d</button>
-            <button (click)="markCanalAsRead('inv', 'telecom1@gmail.coom')">Retirer la notification sur la conversation `inv` pour telecom1</button>
+            <!-- <button (click)="updateUnreadMessages('inv', ['telecom1@gmail.coom', 'valentin.pontiggia@gmail.com'])">Ajouter une notification sur la conversation `inv` pour telecom1</button>
+            <button (click)="markCanalAsRead('inv', 'telecom1@gmail.coom')">Retirer la notification sur la conversation `inv` pour telecom1</button> -->
          </div>
          <div id="message_bar">  
             <input type="text" [(ngModel)]="inputText" (keydown.enter)="sendMessage()" id="messageInput" autocomplete="off"/>
