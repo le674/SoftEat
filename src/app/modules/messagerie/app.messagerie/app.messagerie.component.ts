@@ -37,7 +37,6 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   
   messagerie!: MessageModel[];
   datePipe = new DatePipe('fr-FR');
-  newDay!: boolean;
   date!: number;
   last_msg!: MessageModel[];
 
@@ -91,7 +90,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       const newMessage = {
         auteur: localStorage.getItem("user_email"),
         contenu: this.inputText,
-        horodatage: this.fetchTimeServer()
+        horodatage: /*new Date(2023, 5, 17, 15, 0).getTime()*/this.fetchTimeServer()
       }
       //Ecriture du message dans la BDD
       const nodeRef = ref(db, this.convActive);
@@ -128,7 +127,6 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
           console.log("this : ", this_message_date, "previous : ", previous_msg_date);
           if((this_message_date.getDay() !== previous_msg_date.getDay()) || (this_message_date.getMonth() !== previous_msg_date.getMonth()) || (this_message_date.getFullYear() !== previous_msg_date.getFullYear())) {
             donneesMessage.newDay = true;
-            this.date = donneesMessage.horodatage;
           } else {
             donneesMessage.newDay = false;
           }
