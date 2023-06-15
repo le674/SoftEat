@@ -13,6 +13,7 @@ currentUserRole!: string;
 currentUserMail!:string;
 currentUserPrenom!:string;
 currentUserNom!:string;
+currentUserConges!:string;
 currentUserNomComplet!:string;
 
   constructor() { }
@@ -50,6 +51,7 @@ currentUserNomComplet!:string;
       const mail = ref(db,`${userPath}/${userdat}/email`);
       const prenom = ref(db, `${userPath}/${userdat}/prenom`);
       const nom = ref(db, `${userPath}/${userdat}/nom`);
+      const conges = ref(db, `${userPath}/${userdat}/conges`);
       onValue(role, (roleSnapshot) => {
         this.currentUserRole = roleSnapshot.val();
       });
@@ -62,6 +64,9 @@ currentUserNomComplet!:string;
       onValue(nom, (nomSnapshot) => {
         this.currentUserNom = nomSnapshot.val();
       });
+      onValue(conges, (congesSnapshot) => {
+        this.currentUserConges= congesSnapshot.val();
+      });
       this.currentUserNomComplet = this.currentUserPrenom + " " + this.currentUserNom;
     });
   }
@@ -70,5 +75,11 @@ currentUserNomComplet!:string;
   }
   getUserMail(): string{
     return this.currentUserMail;
+  }
+  async getUserConges(): Promise<string>{
+    while(this.currentUserConges === undefined){
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    return this.currentUserConges;
   }
 }

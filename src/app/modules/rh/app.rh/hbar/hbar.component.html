@@ -5,7 +5,7 @@
             <p> Total : 6 semaines
                 <!-- mes semaines à l'année : {{ user.congés.total }} au lieu du "6 semaines" -->
             </p>
-            <p> Restant : <span [ngStyle]="{ color: 'rgb(0, ' + 185 + ', 0)' }" style="margin-left: 2px;"> 4 semaines
+            <p> Restant : <span [ngStyle]="{ color: 'rgb(0, ' + 185 + ', 0)' }" style="margin-left: 2px;">{{this.conges}}
                     <!-- mes semaines restantes de congés : {{ user.congés.dispo }} au lieu du "4 semaines" -->
                 </span> </p>
         </div>
