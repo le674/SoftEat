@@ -59,6 +59,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     this.getName();
     this.statut = await this.firebaseService.getUserStatutsLocalStorage(this.email); //await
     await this.updateUserNotification(this.email);
+    this.markCanalAsRead(this.canalActiveId, this.email);
     //this.showCanal();
     this.fetchTimeServer();
     this.scrollToBottom();
