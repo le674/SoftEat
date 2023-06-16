@@ -45,6 +45,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   messagerie!: MessageInfos[];
   convEmployes!: string[];
   selector!: string;
+
   date!: number;
 
   author_is_me!: boolean[];
