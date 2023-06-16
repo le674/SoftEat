@@ -130,6 +130,8 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
           } else {
             donneesMessage.newDay = false;
           }
+        } else {
+          donneesMessage.newDay = true;
         }
         this.messagerie.push(donneesMessage);
       }
