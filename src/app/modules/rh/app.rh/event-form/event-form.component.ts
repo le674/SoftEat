@@ -153,6 +153,9 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       // Show the popup or perform any required validation logic
       alert('Renseignez les champs obligatoires marqués par un astérisque (*)');
       return;
+    } else if(new Date(finPoste) < new Date(prisePoste)){
+      alert('La date de fin de poste est antérieure à la date de prise de poste');
+      return;
     }
     this.addRow(personnel, motif, event, lieu, prisePoste, finPoste, repeter);
     this.resetFormFields();
@@ -163,7 +166,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       this.newEvent = {
         start: row.prisePoste + ":00",
         end: row.finPoste + ":00",
-        text: row.lieu +'\n' +row.event,
+        text: row.lieu +', ' +row.event, // la ', ' permet le parsing du text pour l'affichage lieu/description
         id: 'newEventId',
         tags: this.getMotifLabel(row.motif),
         resource: row.personnel

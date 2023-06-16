@@ -28,7 +28,7 @@ export class AppMessageTemplateComponent implements OnInit {
     this.message = "received";
     this.statut = {is_prop:false, stock:"", alertes:"", analyse:"", budget:"", facture:"", planning:""};
     // this.fetchUserStatus();
-    this.getName();
+    // this.getName();
   }
 
 // fonction redondante, existe dans firebase.service.ts
@@ -50,6 +50,7 @@ export class AppMessageTemplateComponent implements OnInit {
   //   });
   // }
 
+  // fonction redondante, existe dans messagerie.component.ts
   async getName(): Promise<void> { //: Promise<string>
     const db = getDatabase(this.firebaseApp);
     const usersRef = ref(db, 'users/foodandboost_prop');
