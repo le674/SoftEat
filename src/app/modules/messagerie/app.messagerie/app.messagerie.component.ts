@@ -2,10 +2,9 @@ import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewChecked } fro
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
 import { User } from '../../../interfaces/user';
-import { getDatabase, ref, push, update, get, onChildAdded, onValue, DatabaseReference, Database, limitToLast, query, DataSnapshot} from 'firebase/database';
+import { getDatabase, ref, push, update, get, onChildAdded, onValue, DatabaseReference } from 'firebase/database';
 import { FirebaseApp } from '@angular/fire/app';
 import { MessageModel } from '../messages_models/model';
-import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-messagerie',
@@ -36,9 +35,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   firebaseApp: FirebaseApp | undefined;
   
   messagerie!: MessageModel[];
-  datePipe = new DatePipe('fr-FR');
   date!: number;
-  last_msg!: MessageModel[];
 
   constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService) {  
     this.firebaseApp = firebaseApp;
@@ -90,7 +87,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       const newMessage = {
         auteur: localStorage.getItem("user_email"),
         contenu: this.inputText,
-        horodatage: /*new Date(2023, 5, 17, 15, 0).getTime()*/this.fetchTimeServer()
+        horodatage: this.fetchTimeServer()
       }
       //Ecriture du message dans la BDD
       const nodeRef = ref(db, this.convActive);
