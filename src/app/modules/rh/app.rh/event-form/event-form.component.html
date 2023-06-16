@@ -61,7 +61,12 @@
         </td>
       </tr>
       <tr *ngFor="let row of rows; let i=index">
-        <td class="col-xs-3"><input [(ngModel)]="row.personnel" class="form-control editable" /></td>
+        <td class="col-xs-3"><select [(ngModel)]="row.personnel">
+            <option disabled selected value="">Personnel</option>
+            <optgroup *ngFor="let category of Categories" [label]="category">
+              <option *ngFor="let user of getCategoryUsers(category)" [value]="user.email" [selected]="row.personnel">{{ user.nom }}</option>
+            </optgroup>
+          </select></td>
         <td class="col-xs-5"><select [(ngModel)]="row.motif">
             <option disabled selected value="">Motif</option>
             <option value="motif-option1" [selected]="row.motif === 'motif-option1'">Travail</option>
