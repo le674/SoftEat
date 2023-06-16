@@ -43,8 +43,6 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   firebaseApp: FirebaseApp | undefined;
   
   messagerie!: MessageModel[];
-  datePipe = new DatePipe('fr-FR');
-  newDay!: boolean;
   date!: number;
 
   constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService) {  
@@ -121,17 +119,6 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     if(this.inputText != '') {
       const db = getDatabase(this.firebaseApp);
 
-      //Si le message est écrit un nouveau jour
-      const current_day = new Date(this.fetchTimeServer()).getDay();
-      /*
-
-      const last_msg_day = new Date(this.messagerie[this.messagerie.length-1].horodatage).getDay();
-      if(current_day != last_msg_day) {
-        this.newDay = true;
-      } else {
-        this.newDay = false;
-      }
-      */
       //Création du nouveau message
       const newMessage = {
         auteur: localStorage.getItem("user_email"),
@@ -159,7 +146,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   async fetchData() {
     // Création d'une instance de la database
     const db = getDatabase(this.firebaseApp);
-    // Node à monitorer
+    // Node à monitorerRessources Humaines 
     const dataRef = ref(db, this.convActive);
     this.messagerie = [];
     onChildAdded(dataRef, (snapshot) => {
@@ -172,6 +159,20 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
         donneesMessage.auteur = data.auteur;
         donneesMessage.contenu = data.contenu;
         donneesMessage.horodatage = data.horodatage;
+
+        //On vérifie si le message date du même jour :
+        if(this.messagerie.length >= 1) {
+          const this_message_date = new Date(data.horodatage);
+          const previous_msg_date = new Date(this.messagerie[this.messagerie.length-1].horodatage);
+          console.log("this : ", this_message_date, "previous : ", previous_msg_date);
+          if((this_message_date.getDay() !== previous_msg_date.getDay()) || (this_message_date.getMonth() !== previous_msg_date.getMonth()) || (this_message_date.getFullYear() !== previous_msg_date.getFullYear())) {
+            donneesMessage.newDay = true;
+          } else {
+            donneesMessage.newDay = false;
+          }
+        } else {
+          donneesMessage.newDay = true;
+        }
         donneesMessage.nom = data.nom;
         donneesMessage.prenom = data.prenom;
         this.messagerie.push(donneesMessage);

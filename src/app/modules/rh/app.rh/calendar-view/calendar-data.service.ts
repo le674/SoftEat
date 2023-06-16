@@ -18,7 +18,6 @@ interface Event {
 
 @Injectable()
 export class CalendarService {
-  private firestore: Firestore;
   events: DayPilot.EventData[] = [];
   private firebaseConfig = environment.firebase;
   private firebaseApp = initializeApp(this.firebaseConfig);
@@ -26,20 +25,15 @@ export class CalendarService {
   private currentUser = localStorage.getItem("user_email") as string;
   private users = new BehaviorSubject<string>(this.currentUser)
   currentData = this.users.asObservable();
+  private statusSubject = new BehaviorSubject<string>('');
+  statusService = this.statusSubject.asObservable();
+
 
   constructor(private ofApp: FirebaseApp) {
-    //this.db = getDatabase(ofApp);
-    this.firestore = getFirestore(ofApp);
     if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
       try {
         connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
       } catch (error) {
-
-      }
-      try {
-        connectFirestoreEmulator(this.firestore, FIREBASE_FIRESTORE_EMULATOR_HOST.host, FIREBASE_FIRESTORE_EMULATOR_HOST.port);
-      } catch (error) {
-
       }
     }
   }
@@ -49,30 +43,26 @@ export class CalendarService {
     if (usersMails === "") {
       this.events = [];
       return this.events;
-    }
+    } //Evite les erreurs dans le cas où aucun utilisateur n'est sélectionné
     
-    // Split the string into an array of emails
+    // Sépare le string de mails d'utilisateurs en liste de mails
     const emails = usersMails.split(",");
   
-    let allEvents: DayPilot.EventData[] = []; // Create a new array to store all events
+    let allEvents: DayPilot.EventData[] = []; // Crée un nouveau tableau pour enregistrer tous les événements
     
     for (const userMail of emails) {
-      console.log(`Fetching events for user: ${userMail}`); // Log the email
-      const userEvents = await this.getEvents(prop, userMail.trim());
-      console.log(`Events for user ${userMail}:`, userEvents); // Log the returned events
-  
-      allEvents = [...allEvents, ...userEvents]; // Add the user's events to the allEvents array
+      const userEvents = await this.getEvents(prop, userMail.trim());  
+      allEvents = [...allEvents, ...userEvents]; // Ajoute les événements de l'utilisateur au tableau d'événements
     }
   
-    this.events = allEvents; // Assign the collected events to this.events
+    this.events = allEvents;
     return this.events;
   }
   
 
   async getEvents(prop: string, userMail: string): Promise<DayPilot.EventData[]> {
-    // converti le DayPilot.Date en date ISO string
-    //const fromDateString = from.toString("yyyy-MM-dd");
-    //const toDateString = to.toString("yyyy-MM-dd");
+    this.statusSubject.next('Chargement...');
+    console.log('Emitting loading status...');
     this.events = [];
     const userToken : string | null = await this.getPath(userMail);
     const path = `users/${prop}/${userToken}/planning/events` //chemin vers la BDD
@@ -81,7 +71,6 @@ export class CalendarService {
     if (eventsSnapshot.exists()) {
       eventsSnapshot.forEach((eventSnapshot) => { //parcourt les events de la BDD
         const event = eventSnapshot.val() as Event;
-        //if (event.start >= fromDateString && event.start <= toDateString) {
           this.events.push({
             start: event.start,
             end: event.end,
@@ -89,19 +78,21 @@ export class CalendarService {
             id: event.id,
             tags: event.tags,
             resource: event.resource,
-          });
+          }); //ajoute chaque événement trouvé à la liste d'événements à afficher
         return false; // regarde le prochain event
       });
     } else {
       return [];
     }
-
+    this.statusSubject.next('');
+    console.log('Emitting final status...');
     return this.events;
   }
 
-
-
   async add_event(prop: string, user: string, newEvent: DayPilot.EventData): Promise<void> {
+    
+    this.statusSubject.next('Ajout des événements...');
+
     // Chemin vers la BDD
     const path = `users/${prop}/${user}/planning/events`;
 
@@ -123,40 +114,37 @@ export class CalendarService {
     };
 
     await set(eventRef, event);
+    this.statusSubject.next('');
   }
 
   async remove_event(prop: string, userMail: string, eventId: string): Promise<void> {
-    // Path to the database
+    // Chemin vers la BDD
     const userToken : string | null = await this.getPath(userMail);
     const path = `users/${prop}/${userToken}/planning/events/${eventId}`;
-    //console.log('Id:', eventId, '\n user:', userMail);
-    // Remove the event
+    // Supprime l'événement
     await remove(ref(this.db, path));
   }
   async getPath(email: string): Promise<string | null> {
-    const database = getDatabase(this.ofApp); // Get the Realtime Database instance
+    const database = getDatabase(this.ofApp);
 
-    // Query the database to find the path based on the email
+    // Cherche le chemin dans la BDD à partir de l'email
     const usersRef = ref(database, 'users');
     const queryRef = query(usersRef, orderByChild('email'), equalTo(email));
     const snapshot = await get(queryRef);
 
     if (snapshot.exists()) {
-      // Get the first matching user's key (assuming there is only one match)
+      // Prend le premier ID utilisateur qui correspond
       const userId = Object.keys(snapshot.val())[0];
       
-      // Construct the path using the found user ID
+      // Le chemin devient l'ID de l'utilisateur
       const path = `${userId}`;
-
       return path;
     }
 
-    return null; // Return null if no matching user is found
+    return null; // Retourne null si aucun utilisateur ne correspond au mail
   }
   
-  changeUsers(newUsers: string) {
+  changeUsers(newUsers: string) { //Change la liste d'utilisateurs sélectionnés dynamiquement
     this.users.next(newUsers);
-    console.log(this.users)
   }
-
 }

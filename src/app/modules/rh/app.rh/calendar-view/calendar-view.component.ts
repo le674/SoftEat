@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Input, OnDestroy } from '@angular/core';
 import {
   DayPilot,
   DayPilotCalendarComponent,
@@ -6,33 +6,38 @@ import {
   DayPilotNavigatorComponent
 } from "daypilot-pro-angular";
 import { CalendarService } from "./calendar-data.service";
-import { from } from 'rxjs'
+import { from, Subscription } from 'rxjs'
 
-import { MatDialog } from '@angular/material/dialog'; // Import MatDialog for opening a dialog
-import { EventFormComponent } from '../event-form/event-form.component'; // Import the EventFormComponent
-
+import { MatDialog } from '@angular/material/dialog';
+import { EventFormComponent } from '../event-form/event-form.component';
 @Component({
   selector: 'app-calendar-view',
   templateUrl: './calendar-view.component.html',
   styleUrls: ['./calendar-view.component.css']
 })
-export class CalendarViewComponent implements AfterViewInit, OnInit {
+export class CalendarViewComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild("day") day!: DayPilotCalendarComponent;
   @ViewChild("week") week!: DayPilotCalendarComponent;
   @ViewChild("month") month!: DayPilotMonthComponent;
-  @ViewChild("navigator") nav!: DayPilotNavigatorComponent;
   users !: string;
   @Input() userRole!:string;
+  status: string = '';
+  statusSubscription!: Subscription;
 
   constructor(private ds: CalendarService, private dialog: MatDialog) {
-    this.viewWeek();
+    this.viewWeek(); //Configuration de calendrier par semaine à l'initialisation
   }
 
+  //Charge les événements de l'utilisateur actuel à l'initialisation
   ngOnInit(): void {
     this.ds.currentData.subscribe(data => {
-      console.log(data)
       this.users = data;
       this.loadEvents(this.users);
+      this.statusSubscription = this.ds.statusService.subscribe(
+        (status) => {
+          this.status = status;
+        }
+      );
     });
   }
 
@@ -43,12 +48,18 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
   ];
 
   events: DayPilot.EventData[] = [];
-
   date = DayPilot.Date.today();
 
+  //Mise en forme de la bulle d'information des événements
   bubble = new DayPilot.Bubble({
     zIndex: 500,
     onLoad: function (args) {
+      // Trouver l'index de la première virgule
+      const commaIndex = args.source.data.text.indexOf(',');
+      // Extraire la première partie du texte
+      const lieu = args.source.data.text.slice(0, commaIndex).trim();
+      // Extraire la deuxième partie du texte
+      const description = args.source.data.text.slice(commaIndex + 1).trim();
       const start = new Date(args.source.data.start);
       const end = new Date(args.source.data.end);
 
@@ -69,12 +80,16 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
         '</strong><br>';
 
       if (args.source.data.resource) {
-        bubbleContent += '<div>Lieu : ' + args.source.data.resource + '</div>';
+        bubbleContent += '<div>Personnel : ' + args.source.data.resource + '</div>';
+      }
+
+      if (lieu) {
+        bubbleContent += '<div>Lieu : ' + lieu + '</div>';
       }
 
       bubbleContent +=
         '<div>Description : ' +
-        args.source.data.text +
+        description +
         '</div>' +
         '<div>' +
         startTime +
@@ -82,6 +97,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
         endTime +
         '</div>';
 
+        // Permet d'afficher la durée totale de l'événement
       const duration = Math.floor(
         (end.getTime() - start.getTime()) / (1000 * 60)
       ); // Difference in minutes
@@ -118,76 +134,74 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
   });
 
   configNavigator: DayPilot.NavigatorConfig = {
-    showMonths: 1,
-    cellWidth: 25,
-    cellHeight: 25,
-    onVisibleRangeChanged: args => {
-      this.loadEvents(this.users);
-    }
-  };
+  }; //Permet de garder en mémoire quelle configuration (jour/semaine/mois) est sélectionnée
 
   selectTomorrow() {
     this.date = DayPilot.Date.today().addDays(1);
   }
 
+  //Passer au jour/semaine/mois précédent
   previous(){
     if (this.configNavigator.selectMode == "Day"){
       this.date = this.date.addDays(-1);
       this.changeDate(this.date);
     }
-    if (this.configNavigator.selectMode == "Week"){
+    if (this.configNavigator.selectMode == "Week") {
       this.date = this.date.addDays(-7);
       this.changeDate(this.date);
     }
-    if (this.configNavigator.selectMode == "Month"){
+    if (this.configNavigator.selectMode == "Month") {
       this.date = this.date.addMonths(-1)
       this.changeDate(this.date);
     }
   }
 
+  //Passer au jour/semaine/mois suivant
   next(){
     if (this.configNavigator.selectMode == "Day"){
       this.date = this.date.addDays(1);
       this.changeDate(this.date);
     }
-    if (this.configNavigator.selectMode == "Week"){
+    if (this.configNavigator.selectMode == "Week") {
       this.date = this.date.addDays(7);
       this.changeDate(this.date);
     }
-    if (this.configNavigator.selectMode == "Month"){
+    if (this.configNavigator.selectMode == "Month") {
       this.date = this.date.addMonths(1)
       this.changeDate(this.date);
     }
   }
+
   changeDate(date: DayPilot.Date): void {
     this.configDay.startDate = date;
     this.configWeek.startDate = date;
     this.configMonth.startDate = date;
   }
 
+  //Option pour la configuration par "Jour"
   configDay: DayPilot.CalendarConfig = {
-    locale : "fr-fr",
-    eventMoveHandling : "Disabled",
-    eventResizeHandling : "Disabled",
-    eventArrangement : "SideBySide",
-    bubble:this.bubble,
+    locale : "fr-fr", //heure française
+    eventMoveHandling : "Disabled", 
+    eventResizeHandling : "Disabled", //désactivation des interactions utilisateur sur les événements
+    eventArrangement : "SideBySide",  //les événements qui se chevauchent ne se superposent pas
+    bubble:this.bubble, //affichage de la bulle d'information des événements
     contextMenu : new DayPilot.Menu({
       items: [
         {
-          text:"Supprimer",
-          image : "../../../../assets/images/trash.png",
-          onClick: async (args) => { 
+          text: "Supprimer",
+          image: "../../../../assets/images/trash.png",
+          onClick: async (args) => {
             var e = args.source;
-            await this.ds.remove_event('foodandboost_prop', e.resource() , e.id()); 
+            await this.ds.remove_event('foodandboost_prop', e.resource(), e.id());
             this.loadEvents(this.users);
           }
         }
-      ],
+      ], //Permet de supprimer l'événement sur lequel on a fait un clic droit
       onShow: (args) => {
         var e = args.source;
         if (this.userRole!=='gerant') {
           if (args.menu && args.menu.items && args.menu.items[0]) {
-            args.menu.items[0].disabled = true;
+            args.menu.items[0].disabled = true; //Désactivation de cette option si l'utilisateur n'est pas gerant
           }
         }
         else {
@@ -195,17 +209,15 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
             args.menu.items[0].disabled = false;
           }
         }
-        console.log(this.userRole);  // Accessing userRole here
       }       
     }),
-    dayBeginsHour : 8,
-    dayEndsHour : 24,
+    dayBeginsHour: 8,
+    dayEndsHour: 24,
     onBeforeEventRender: args => {
       switch (args.data.tags) {
         case "Maladie":
           args.data.barColor = "#ff0000"; // duration bar color
           args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background color
-          //args.data.backColor = "rgba(255, 0, 0, 0.2)";
           break;
         case "Congés":
           args.data.barColor = "#ffa500";
@@ -216,33 +228,37 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
           args.data.barBackColor = "rgba(121, 181, 46, 0.5)";
           break;
         default: // Travail
-          //args.data.toolTip = "This is a regular event.";
           break;
       }
-      let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + args.data.resource + "</div>" : "";
+      // Trouver l'index de la première virgule
+      const commaIndex = args.data.text.indexOf(',');
+      // Extraire la première partie du texte
+      const lieu = args.data.text.slice(0, commaIndex).trim();
+      // Extraire la deuxième partie du texte
+      const evenement = args.data.text.slice(commaIndex + 1).trim();
+      let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + lieu + "</div>" : "";
       args.data.html = "<span class='event'><strong>" + args.data.tags + "</strong><br>" +
         resourceHtml + "<br>" +
-        args.data.text + "</span>";
+        args.data.text + "</span>"; //Mise en forme du texte à afficher dans l'événement
     }
   };
 
   configWeek: DayPilot.CalendarConfig = {
-    locale : "fr-fr",
-    width : "110%",
-    heightSpec : "Fixed",
-    height:600,
-    eventMoveHandling : "Disabled",
-    eventResizeHandling : "Disabled",
-    eventArrangement : "SideBySide",
-    bubble:this.bubble,
-    contextMenu : new DayPilot.Menu({
+    locale: "fr-fr",
+    width: "110%",
+    heightSpec: "Fixed",
+    height: 600,
+    eventMoveHandling: "Disabled",
+    eventResizeHandling: "Disabled",
+    eventArrangement: "SideBySide",
+    bubble: this.bubble,
+    contextMenu: new DayPilot.Menu({
       items: [
         {
-          text:"Supprimer", 
-          image : "../../../../assets/images/trash.png",
-          onClick: async (args) => { 
+          text: "Supprimer",
+          image: "../../../../assets/images/trash.png",
+          onClick: async (args) => {
             var e = args.source;
-            //console.log('e.resource() :', e.resource());
             await this.ds.remove_event('foodandboost_prop', e.resource() , e.id()); 
             this.loadEvents(this.users);
           }
@@ -271,7 +287,6 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
         case "Maladie":
           args.data.barColor = "#ff0000"; // duration bar color
           args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background color
-          //args.data.backColor = "rgba(255, 0, 0, 0.2)";
           break;
         case "Congés":
           args.data.barColor = "#ffa500";
@@ -282,40 +297,44 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
           args.data.barBackColor = "rgba(121, 181, 46, 0.5)";
           break;
         default: // Travail
-          //args.data.toolTip = "This is a regular event.";
           break;
       }
-      let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + args.data.resource + "</div>" : "";
+      // Trouver l'index de la première virgule
+      const commaIndex = args.data.text.indexOf(',');
+      // Extraire la première partie du texte
+      const lieu = args.data.text.slice(0, commaIndex).trim();
+      // Extraire la deuxième partie du texte
+      const evenement = args.data.text.slice(commaIndex + 1).trim();
+      let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + lieu + "</div>" : "";
       args.data.html = "<span class='event'><strong>" + args.data.tags + "</strong><br>" +
         resourceHtml + "<br>" +
-        args.data.text + "</span>";
+        evenement + "</span>";
     }
   };
 
   configMonth: DayPilot.MonthConfig = {
-    locale : "fr-fr",
-    eventMoveHandling : "Disabled",
-    eventResizeHandling : "Disabled",
-    bubble:this.bubble,
-    contextMenu : new DayPilot.Menu({
+    locale: "fr-fr",
+    eventMoveHandling: "Disabled",
+    eventResizeHandling: "Disabled",
+    bubble: this.bubble,
+    contextMenu: new DayPilot.Menu({
       items: [
         {
-          text:"Supprimer",
-          image : "../../../../assets/images/trash.png", 
-          onClick: async (args) => { 
+          text: "Supprimer",
+          image: "../../../../assets/images/trash.png",
+          onClick: async (args) => {
             var e = args.source;
-            await this.ds.remove_event('foodandboost_prop', e.resource() , e.id()); 
+            await this.ds.remove_event('foodandboost_prop', e.resource(), e.id());
             this.loadEvents(this.users);
           }
         }
       ]
-    }),    
+    }),
     onBeforeEventRender: args => {
       switch (args.data.tags) {
         case "Maladie":
           args.data.barColor = "#ff0000"; // duration bar color
           args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background color
-          //args.data.backColor = "rgba(255, 0, 0, 0.2)";
           break;
         case "Congés":
           args.data.barColor = "#ffa500";
@@ -326,26 +345,24 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
           args.data.barBackColor = "rgba(121, 181, 46, 0.5)";
           break;
         default: // Travail
-          //args.data.toolTip = "This is a regular event.";
           break;
       }
     }
   };
 
-  
+
 
   ngAfterViewInit(): void {
     this.loadEvents("");
   }
 
+  //Chargement des événements des utilisateurs sélectionnés
   loadEvents(users : string): void {
-    //const froom = this.nav.control.visibleStart();
-    //const to = this.nav.control.visibleEnd();
     from(this.ds.getEventsFromAllUsers("foodandboost_prop", users)).subscribe(result => {
       this.events = result;
     });
   }
-
+  //Changements entre les différentes configurations
   viewDay(): void {
     this.configNavigator.selectMode = "Day";
     this.configDay.visible = true;
@@ -364,30 +381,23 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     this.configWeek.visible = false;
     this.configMonth.visible = true;
   }
- 
+
   //ouvre le form "ajouter un évènement"
   openEventForm(): void {
     const dialogRef = this.dialog.open(EventFormComponent, {
       width: '85vw',
       height: '85vh',
-      // Set the width and height of the dialog as per your requirements
-      // You can also configure other properties of the dialog, such as position, etc.
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // This code block will be executed when the dialog is closed
-      // You can perform any desired actions here
-      console.log('Dialog closed with result:', result);
-      // Call your method here that you want to be executed when the dialog is closed
       this.onDialogClosed();
     });
   }
   //recharge les évènements pour actualiser le calendrier à la fermeture du form
   onDialogClosed(): void {
-    // This method will be called when the dialog is closed
-    // You can perform any desired actions here
     this.loadEvents(this.users);
-    // Add your code here
   }
-
+  ngOnDestroy() {
+    this.statusSubscription.unsubscribe();
+  } 
 }
