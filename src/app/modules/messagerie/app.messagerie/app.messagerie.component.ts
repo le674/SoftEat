@@ -153,13 +153,15 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       //Ecriture du message dans la BDD
       const nodeRef = ref(db, this.convActive);
       push(nodeRef, newMessage).then(() => {
+        this.updateUnreadMessages(this.canalActiveId, this.convListUsers[this.canalActiveId]);
+        this.markCanalAsRead(this.canalActiveId, this.email);
       })
       .catch((error) => {
         console.error("Error creating new message:", error);
       });
       //Envoie de la notification à tous les Users
-      this.updateUnreadMessages(this.canalActiveId, this.convListUsers[this.canalActiveId]);
-      this.markCanalAsRead(this.canalActiveId, this.email);
+      
+      
     }
     this.inputText = "";
   }
