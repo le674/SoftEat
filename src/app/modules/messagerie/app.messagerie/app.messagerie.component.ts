@@ -130,14 +130,14 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       //Ecriture du message dans la BDD
       const nodeRef = ref(db, this.convActive);
       push(nodeRef, newMessage).then(() => {
+        //Envoie de la notification à tous les Users
         this.updateUnreadMessages(this.canalActiveId, this.convListUsers[this.canalActiveId]);
         this.markCanalAsRead(this.canalActiveId, this.email);
       })
       .catch((error) => {
         console.error("Error creating new message:", error);
       });
-      //Envoie de la notification à tous les Users
-      console.log("test notif envoie");
+      
       
     }
     this.inputText = "";
@@ -304,7 +304,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   }
 
   // Obtenir le nom et prénom du LocalStorage
-  async getName(): Promise<void> { //: Promise<string>
+  async getName(): Promise<void> {
     const db = getDatabase(this.firebaseApp);
     const usersRef = ref(db, 'users/foodandboost_prop');
     const usersSnapShot = await get(usersRef);
