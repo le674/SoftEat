@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Input, OnDestroy } from '@angular/core';
 import {
   DayPilot,
   DayPilotCalendarComponent,
@@ -6,7 +6,7 @@ import {
   DayPilotNavigatorComponent
 } from "daypilot-pro-angular";
 import { CalendarService } from "./calendar-data.service";
-import { from } from 'rxjs'
+import { from, Subscription } from 'rxjs'
 
 import { MatDialog } from '@angular/material/dialog'; // Import MatDialog for opening a dialog
 import { EventFormComponent } from '../event-form/event-form.component'; // Import the EventFormComponent
@@ -16,13 +16,15 @@ import { EventFormComponent } from '../event-form/event-form.component'; // Impo
   templateUrl: './calendar-view.component.html',
   styleUrls: ['./calendar-view.component.css']
 })
-export class CalendarViewComponent implements AfterViewInit, OnInit {
+export class CalendarViewComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild("day") day!: DayPilotCalendarComponent;
   @ViewChild("week") week!: DayPilotCalendarComponent;
   @ViewChild("month") month!: DayPilotMonthComponent;
   @ViewChild("navigator") nav!: DayPilotNavigatorComponent;
   users !: string;
   @Input() userRole!:string;
+  status: string = '';
+  statusSubscription!: Subscription;
 
   constructor(private ds: CalendarService, private dialog: MatDialog) {
     this.viewWeek();
@@ -33,6 +35,11 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
       console.log(data)
       this.users = data;
       this.loadEvents(this.users);
+      this.statusSubscription = this.ds.statusService.subscribe(
+        (status) => {
+          this.status = status;
+        }
+      );
     });
   }
 
@@ -43,7 +50,6 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
   ];
 
   events: DayPilot.EventData[] = [];
-
   date = DayPilot.Date.today();
 
   bubble = new DayPilot.Bubble({
@@ -390,4 +396,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     // Add your code here
   }
 
+  ngOnDestroy() {
+    this.statusSubscription.unsubscribe();
+  }  
 }
