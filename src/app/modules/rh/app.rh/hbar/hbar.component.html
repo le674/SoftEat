@@ -2,12 +2,10 @@
     <h1> Congés Payés </h1>
     <div id="hbar" class="flex-container">
         <div style="flex-grow: 0.2" id="restants">
-            <p *ngIf="(+this.conges)>1"> Restant : <span [ngStyle]="{ color: 'rgb(0, ' + 185 + ', 0)' }"
-                    style="margin-left: 2px;">{{this.conges}} Semaines
-                </span> </p>
-            <p *ngIf="(+this.conges)<=1"> Restant : <span [ngStyle]="{ color: 'rgb(0, ' + 185 + ', 0)' }"
-                style="margin-left: 2px;">{{this.conges}} Semaine
-                </span> </p>
+            <p> Total : 6 semaines</p>
+            <p *ngIf="conges > 1">Restant: <span [ngStyle]="getCongesColorStyle(conges)">{{ conges }} Jours</span></p>
+            <p *ngIf="conges <= 1">Restant: <span [ngStyle]="getCongesColorStyle(conges)">{{ conges }} Jour</span></p>
+            
         </div>
         <div style="flex-grow: 1" id="motif">
             <button #autofillConge (click)="autofillInput(autofillConge.innerText)">Congés</button>
