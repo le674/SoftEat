@@ -78,7 +78,34 @@ export class FirebaseService {
             }
             // resolve(null); // Si aucun utilisateur ne correspond à l'email fourni
         });
-      }
+    }
+
+    async fetchConvListUsers(): Promise<{ [canal: string]: string[] }> { // Promise<any>
+        const usersRef = ref(this.db, 'users/foodandboost_prop');
+        const usersSnapShot = await get(usersRef); // Ici : Erreur permission dinied
+        const convListUsers = { 'ana': [''], 'com': [''], 'fac': [''], 'inv': [''], 'rec': [''], 'plan': [''], 'rh': ['']};
+
+        return new Promise<{ [canal: string]: string[] }>((resolve, reject) => {
+            if (usersSnapShot.exists()) {
+                usersSnapShot.forEach((userSnapShot) => {
+                    const user = userSnapShot.val() ;
+                    const userStatuts = user.statut;
+                    const user_email = user.email;
+                    //
+                    if(userStatuts.stock === 'wr' || userStatuts.stock === 'rw' || userStatuts.stock === 'r') { //userStatuts.stock.includes('w') || userStatuts.stock.includes('r')
+                        convListUsers['inv'].push(user_email);
+                        convListUsers['rec'].push(user_email);
+                    };
+                    if(userStatuts.analyse === 'wr' || userStatuts.analyse === 'rw' || userStatuts.analyse === 'r' ) convListUsers['ana'].push(user_email);
+                    if(userStatuts.budget === 'wr' || userStatuts.budget === 'rw' || userStatuts.budget === 'r' ) convListUsers['com'].push(user_email);
+                    if(userStatuts.facture === 'wr' || userStatuts.facture === 'rw' || userStatuts.facture === 'r' ) convListUsers['fac'].push(user_email);;
+                    if(userStatuts.planning === 'wr' || userStatuts.planning === 'rw' || userStatuts.planning === 'r' ) convListUsers['plan'].push(user_email);
+                    
+                });
+                resolve(convListUsers);
+            }
+        });
+    }
     
     
 }

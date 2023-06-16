@@ -25,9 +25,13 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
 
   @Input() convActive: string = 'conversations/deliss_pizz/deliss_pizz/del42_ana_037581' ; // Propriété d'entrée pour convActive
 
+  canalActiveId = 'ana';
   notification!: {[canal: string]: boolean};
+  convListUsers!: {[canal: string]: string[]};
   statut!: Statut;
   email!: string;
+  surname!: string;
+  name!: string;
   analyseCanal = true;
   budgetCanal = true;
   factureCanal = true;
@@ -51,8 +55,11 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   async ngOnInit(): Promise<void> { //: Promise<void>
     this.notification = { 'ana': false, 'com': false, 'fac': false, 'inv': false, 'rec': false, 'plan': false, 'rh': false};
     this.email = this.firebaseService.getEmailLocalStorage();
+    this.convListUsers = await this.firebaseService.fetchConvListUsers();
+    this.getName();
     this.statut = await this.firebaseService.getUserStatutsLocalStorage(this.email); //await
     await this.updateUserNotification(this.email);
+    this.markCanalAsRead(this.canalActiveId, this.email);
     //this.showCanal();
     this.fetchTimeServer();
     this.scrollToBottom();
@@ -81,10 +88,10 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   /*
   showCanal() {
     if(this.statut.stock === 'wr' || this.statut.stock === 'rw' || this.statut.stock === 'r' ) this.stockCanal = true;
-    if(this.statut.analyse === 'wr' || this.statut.analyse === 'rw' || this.statut.stock === 'r' ) this.stockCanal = true;
-    if(this.statut.budget === 'wr' || this.statut.budget === 'rw' || this.statut.stock === 'r' ) this.budgetCanal = true;
-    if(this.statut.facture === 'wr' || this.statut.facture === 'rw' || this.statut.stock === 'r' ) this.factureCanal = true;
-    if(this.statut.planning === 'wr' || this.statut.planning === 'rw' || this.statut.stock === 'r' ) this.planningCanal = true;
+    if(this.statut.analyse === 'wr' || this.statut.analyse === 'rw' || this.statut.analyse === 'r' ) this.stockCanal = true;
+    if(this.statut.budget === 'wr' || this.statut.budget === 'rw' || this.statut.budget === 'r' ) this.budgetCanal = true;
+    if(this.statut.facture === 'wr' || this.statut.facture === 'rw' || this.statut.facture === 'r' ) this.factureCanal = true;
+    if(this.statut.planning === 'wr' || this.statut.planning === 'rw' || this.statut.planning === 'r' ) this.planningCanal = true;
   }
   */
   messageInput = document.getElementById("messageInput");
@@ -98,6 +105,13 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       this.date = Date.now() + offset;
     })
     return this.date;
+  }
+
+  switchChannel(convActive: string, canalId: string){
+    this.convActive=convActive;
+    this.fetchData();
+    this.markCanalAsRead(canalId, this.email);
+    this.canalActiveId = canalId;
   }
 
 
@@ -120,7 +134,9 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       const newMessage = {
         auteur: localStorage.getItem("user_email"),
         contenu: this.inputText,
-        horodatage: this.fetchTimeServer()
+        horodatage: this.fetchTimeServer(),
+        nom : this.name,
+        prenom : this.surname
       }
       //Ecriture du message dans la BDD
       const nodeRef = ref(db, this.convActive);
@@ -129,6 +145,9 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       .catch((error) => {
         console.error("Error creating new message:", error);
       });
+      //Envoie de la notification à tous les Users
+      this.updateUnreadMessages(this.canalActiveId, this.convListUsers[this.canalActiveId]);
+      this.markCanalAsRead(this.canalActiveId, this.email);
     }
     this.inputText = "";
   }
@@ -149,6 +168,8 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
         donneesMessage.auteur = data.auteur;
         donneesMessage.contenu = data.contenu;
         donneesMessage.horodatage = data.horodatage;
+        donneesMessage.nom = data.nom;
+        donneesMessage.prenom = data.prenom;
         this.messagerie.push(donneesMessage);
       }
     });
@@ -161,7 +182,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
 
 
   // NOTIFICATIONS (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
-  updateUnreadMessages(canalId: string, users_email: string[]): void {
+  async updateUnreadMessages(canalId: string, users_email: string[]): Promise<void> {
     const db = getDatabase(this.firebaseApp);
 
     users_email.forEach(email => {
@@ -186,12 +207,12 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
         .catch(error => {
           // Gestion de l'erreur
         });
-        this.updateUserNotification(this.email);
     });
+    await this.updateUserNotification(this.email);
   }
 
   // NOTIFICATIONS (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
-  markCanalAsRead(canalId: string, user_email: string): void {
+  async markCanalAsRead(canalId: string, user_email: string): Promise<void> {
     const db = getDatabase(this.firebaseApp);
 
     this.firebaseService.getUserDataReference(user_email)
@@ -215,7 +236,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       .catch(error => {
         // Gestion de l'erreur
       });
-      this.updateUserNotification(this.email);
+      await this.updateUserNotification(this.email);
   
   }
   
@@ -253,5 +274,23 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     try {
       this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
     } catch(error) {}
+  }
+
+  // Obtenir le nom et prénom du LocalStorage
+  async getName(): Promise<void> { //: Promise<string>
+    const db = getDatabase(this.firebaseApp);
+    const usersRef = ref(db, 'users/foodandboost_prop');
+    const usersSnapShot = await get(usersRef);
+
+    if (usersSnapShot.exists()) {
+
+      usersSnapShot.forEach((userSnapShot) => {
+        const user = userSnapShot.val();
+        if (user.email == this.email) {
+          this.name = user.nom;
+          this.surname = user.prenom;
+        }
+      });
+    }
   }
 }
