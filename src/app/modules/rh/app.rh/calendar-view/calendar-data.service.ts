@@ -25,6 +25,9 @@ export class CalendarService {
   private currentUser = localStorage.getItem("user_email") as string;
   private users = new BehaviorSubject<string>(this.currentUser)
   currentData = this.users.asObservable();
+  private statusSubject = new BehaviorSubject<string>('');
+  statusService = this.statusSubject.asObservable();
+
 
   constructor(private ofApp: FirebaseApp) {
     if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
@@ -58,6 +61,11 @@ export class CalendarService {
   
 
   async getEvents(prop: string, userMail: string): Promise<DayPilot.EventData[]> {
+    // converti le DayPilot.Date en date ISO string
+    //const fromDateString = from.toString("yyyy-MM-dd");
+    //const toDateString = to.toString("yyyy-MM-dd");
+    this.statusSubject.next('Chargement...');
+    console.log('Emitting loading status...');
     this.events = [];
     const userToken : string | null = await this.getPath(userMail);
     const path = `users/${prop}/${userToken}/planning/events` //chemin vers la BDD
@@ -79,10 +87,15 @@ export class CalendarService {
     } else {
       return [];
     }
+    this.statusSubject.next('');
+    console.log('Emitting final status...');
     return this.events;
   }
 
   async add_event(prop: string, user: string, newEvent: DayPilot.EventData): Promise<void> {
+    
+    this.statusSubject.next('Ajout des événements...');
+
     // Chemin vers la BDD
     const path = `users/${prop}/${user}/planning/events`;
 
@@ -104,10 +117,11 @@ export class CalendarService {
     };
 
     await set(eventRef, event);
+    this.statusSubject.next('');
   }
 
-  async remove_event(prop: string, userMail: string, eventId: string): Promise<void> {
-    // Chemin vers la BDD
+  async remove_event(prop: string, userMail: string, eventId: string): Promise<void> {    
+    // Path to the database
     const userToken : string | null = await this.getPath(userMail);
     const path = `users/${prop}/${userToken}/planning/events/${eventId}`;
     // Supprime l'événement

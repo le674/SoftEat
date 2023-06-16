@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Input, OnDestroy } from '@angular/core';
 import {
   DayPilot,
   DayPilotCalendarComponent,
@@ -6,7 +6,7 @@ import {
   DayPilotNavigatorComponent
 } from "daypilot-pro-angular";
 import { CalendarService } from "./calendar-data.service";
-import { from } from 'rxjs'
+import { from, Subscription } from 'rxjs'
 
 import { MatDialog } from '@angular/material/dialog';
 import { EventFormComponent } from '../event-form/event-form.component';
@@ -15,12 +15,14 @@ import { EventFormComponent } from '../event-form/event-form.component';
   templateUrl: './calendar-view.component.html',
   styleUrls: ['./calendar-view.component.css']
 })
-export class CalendarViewComponent implements AfterViewInit, OnInit {
+export class CalendarViewComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild("day") day!: DayPilotCalendarComponent;
   @ViewChild("week") week!: DayPilotCalendarComponent;
   @ViewChild("month") month!: DayPilotMonthComponent;
   users !: string;
-  @Input() userRole!: string;
+  @Input() userRole!:string;
+  status: string = '';
+  statusSubscription!: Subscription;
 
   constructor(private ds: CalendarService, private dialog: MatDialog) {
     this.viewWeek(); //Configuration de calendrier par semaine à l'initialisation
@@ -31,6 +33,11 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     this.ds.currentData.subscribe(data => {
       this.users = data;
       this.loadEvents(this.users);
+      this.statusSubscription = this.ds.statusService.subscribe(
+        (status) => {
+          this.status = status;
+        }
+      );
     });
   }
 
@@ -41,7 +48,6 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
   ];
 
   events: DayPilot.EventData[] = [];
-
   date = DayPilot.Date.today();
 
   //Mise en forme de la bulle d'information des événements
@@ -391,4 +397,8 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
   onDialogClosed(): void {
     this.loadEvents(this.users);
   }
+
+  ngOnDestroy() {
+    this.statusSubscription.unsubscribe();
+  }  
 }
