@@ -20,7 +20,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
   @ViewChild("week") week!: DayPilotCalendarComponent;
   @ViewChild("month") month!: DayPilotMonthComponent;
   users !: string;
-  @Input() userRole!:string;
+  @Input() userRole!: string;
 
   constructor(private ds: CalendarService, private dialog: MatDialog) {
     this.viewWeek(); //Configuration de calendrier par semaine à l'initialisation
@@ -48,6 +48,12 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
   bubble = new DayPilot.Bubble({
     zIndex: 500,
     onLoad: function (args) {
+      // Trouver l'index de la première virgule
+      const commaIndex = args.source.data.text.indexOf(',');
+      // Extraire la première partie du texte
+      const lieu = args.source.data.text.slice(0, commaIndex).trim();
+      // Extraire la deuxième partie du texte
+      const description = args.source.data.text.slice(commaIndex + 1).trim();
       const start = new Date(args.source.data.start);
       const end = new Date(args.source.data.end);
 
@@ -68,12 +74,16 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
         '</strong><br>';
 
       if (args.source.data.resource) {
-        bubbleContent += '<div>Lieu : ' + args.source.data.resource + '</div>';
+        bubbleContent += '<div>Personnel : ' + args.source.data.resource + '</div>';
+      }
+
+      if (lieu) {
+        bubbleContent += '<div>Lieu : ' + lieu + '</div>';
       }
 
       bubbleContent +=
         '<div>Description : ' +
-        args.source.data.text +
+        description +
         '</div>' +
         '<div>' +
         startTime +
@@ -130,11 +140,11 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
       this.date = this.date.addDays(-1);
       this.changeDate(this.date);
     }
-    if (this.configNavigator.selectMode == "Week"){
+    if (this.configNavigator.selectMode == "Week") {
       this.date = this.date.addDays(-7);
       this.changeDate(this.date);
     }
-    if (this.configNavigator.selectMode == "Month"){
+    if (this.configNavigator.selectMode == "Month") {
       this.date = this.date.addMonths(-1)
       this.changeDate(this.date);
     }
@@ -146,11 +156,11 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
       this.date = this.date.addDays(1);
       this.changeDate(this.date);
     }
-    if (this.configNavigator.selectMode == "Week"){
+    if (this.configNavigator.selectMode == "Week") {
       this.date = this.date.addDays(7);
       this.changeDate(this.date);
     }
-    if (this.configNavigator.selectMode == "Month"){
+    if (this.configNavigator.selectMode == "Month") {
       this.date = this.date.addMonths(1)
       this.changeDate(this.date);
     }
@@ -172,11 +182,11 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     contextMenu : new DayPilot.Menu({
       items: [
         {
-          text:"Supprimer",
-          image : "../../../../assets/images/trash.png",
-          onClick: async (args) => { 
+          text: "Supprimer",
+          image: "../../../../assets/images/trash.png",
+          onClick: async (args) => {
             var e = args.source;
-            await this.ds.remove_event('foodandboost_prop', e.resource() , e.id()); 
+            await this.ds.remove_event('foodandboost_prop', e.resource(), e.id());
             this.loadEvents(this.users);
           }
         }
@@ -195,8 +205,8 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
         }
       }       
     }),
-    dayBeginsHour : 8,
-    dayEndsHour : 24,
+    dayBeginsHour: 8,
+    dayEndsHour: 24,
     onBeforeEventRender: args => {
       switch (args.data.tags) {
         case "Maladie":
@@ -214,7 +224,13 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
         default: // Travail
           break;
       }
-      let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + args.data.resource + "</div>" : "";
+      // Trouver l'index de la première virgule
+      const commaIndex = args.data.text.indexOf(',');
+      // Extraire la première partie du texte
+      const lieu = args.data.text.slice(0, commaIndex).trim();
+      // Extraire la deuxième partie du texte
+      const evenement = args.data.text.slice(commaIndex + 1).trim();
+      let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + lieu + "</div>" : "";
       args.data.html = "<span class='event'><strong>" + args.data.tags + "</strong><br>" +
         resourceHtml + "<br>" +
         args.data.text + "</span>"; //Mise en forme du texte à afficher dans l'événement
@@ -222,20 +238,20 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
   };
 
   configWeek: DayPilot.CalendarConfig = {
-    locale : "fr-fr",
-    width : "110%",
-    heightSpec : "Fixed",
-    height:600,
-    eventMoveHandling : "Disabled",
-    eventResizeHandling : "Disabled",
-    eventArrangement : "SideBySide",
-    bubble:this.bubble,
-    contextMenu : new DayPilot.Menu({
+    locale: "fr-fr",
+    width: "110%",
+    heightSpec: "Fixed",
+    height: 600,
+    eventMoveHandling: "Disabled",
+    eventResizeHandling: "Disabled",
+    eventArrangement: "SideBySide",
+    bubble: this.bubble,
+    contextMenu: new DayPilot.Menu({
       items: [
         {
-          text:"Supprimer", 
-          image : "../../../../assets/images/trash.png",
-          onClick: async (args) => { 
+          text: "Supprimer",
+          image: "../../../../assets/images/trash.png",
+          onClick: async (args) => {
             var e = args.source;
             await this.ds.remove_event('foodandboost_prop', e.resource() , e.id()); 
             this.loadEvents(this.users);
@@ -277,31 +293,37 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
         default: // Travail
           break;
       }
-      let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + args.data.resource + "</div>" : "";
+      // Trouver l'index de la première virgule
+      const commaIndex = args.data.text.indexOf(',');
+      // Extraire la première partie du texte
+      const lieu = args.data.text.slice(0, commaIndex).trim();
+      // Extraire la deuxième partie du texte
+      const evenement = args.data.text.slice(commaIndex + 1).trim();
+      let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + lieu + "</div>" : "";
       args.data.html = "<span class='event'><strong>" + args.data.tags + "</strong><br>" +
         resourceHtml + "<br>" +
-        args.data.text + "</span>";
+        evenement + "</span>";
     }
   };
 
   configMonth: DayPilot.MonthConfig = {
-    locale : "fr-fr",
-    eventMoveHandling : "Disabled",
-    eventResizeHandling : "Disabled",
-    bubble:this.bubble,
-    contextMenu : new DayPilot.Menu({
+    locale: "fr-fr",
+    eventMoveHandling: "Disabled",
+    eventResizeHandling: "Disabled",
+    bubble: this.bubble,
+    contextMenu: new DayPilot.Menu({
       items: [
         {
-          text:"Supprimer",
-          image : "../../../../assets/images/trash.png", 
-          onClick: async (args) => { 
+          text: "Supprimer",
+          image: "../../../../assets/images/trash.png",
+          onClick: async (args) => {
             var e = args.source;
-            await this.ds.remove_event('foodandboost_prop', e.resource() , e.id()); 
+            await this.ds.remove_event('foodandboost_prop', e.resource(), e.id());
             this.loadEvents(this.users);
           }
         }
       ]
-    }),    
+    }),
     onBeforeEventRender: args => {
       switch (args.data.tags) {
         case "Maladie":
@@ -322,7 +344,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     }
   };
 
-  
+
 
   ngAfterViewInit(): void {
     this.loadEvents("");
@@ -334,7 +356,6 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
       this.events = result;
     });
   }
-
   //Changements entre les différentes configurations
   viewDay(): void {
     this.configNavigator.selectMode = "Day";
@@ -354,7 +375,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     this.configWeek.visible = false;
     this.configMonth.visible = true;
   }
- 
+
   //ouvre le form "ajouter un évènement"
   openEventForm(): void {
     const dialogRef = this.dialog.open(EventFormComponent, {
