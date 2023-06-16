@@ -7,6 +7,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { MessageModel } from '../messages_models/model';
 import { DatePipe } from '@angular/common';
+import { interval, take } from 'rxjs';
 
 @Component({
   selector: 'app-messagerie',
@@ -50,6 +51,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     this.firebaseApp = firebaseApp;
     this.fetchData();
     this.messagerie = [];
+    this.callUpdateUserNotification();
   }
 
   async ngOnInit(): Promise<void> { //: Promise<void>
@@ -115,7 +117,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   }
 
 
-  sendMessage(){
+  async sendMessage(): Promise<void> {
     if(this.inputText != '') {
       const db = getDatabase(this.firebaseApp);
 
@@ -148,7 +150,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
         console.error("Error creating new message:", error);
       });
       //Envoie de la notification à tous les Users
-      
+      console.log("test notif envoie");
       
     }
     this.inputText = "";
@@ -255,8 +257,10 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
               const notificationCanaux = userSnapShot.notificationCanaux;
               for (const canal of Object.keys(notificationCanaux)) {
                 if (notificationCanaux[canal as keyof typeof notificationCanaux] == 0) {
+                  // if (this.notification[canal] = true)  this.notification[canal] = false;
                   this.notification[canal] = false;
                 } else {
+                  // if (this.notification[canal] = false) this.notification[canal] = true;
                   this.notification[canal] = true;
                 }
                 // console.log(`${canal}: ${notificationCanaux[canal as keyof typeof notificationCanaux]}`);
@@ -267,6 +271,26 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       .catch(error => {
         // Gestion de l'erreur
       });
+  }
+
+  //NOTIFICATIONS, Appel de updateUserNotification() toutes les 5 secondes
+  callUpdateUserNotification() {
+    const interval$ = interval(5000);
+    
+    interval$
+    .pipe(take(Infinity))
+    .subscribe(() => {
+      this.updateUserNotification(this.email);
+    //   const convlistUsers = this.convListUsers;
+    //   // for (const canal of Object.keys(convlistUsers)) {
+    //   //   const listUsers = convlistUsers[canal as keyof typeof convlistUsers];
+    //   //   const length = listUsers.length;
+    //   //   for (var i=0; i<length; i++) {
+    //   //     const user_email = listUsers[i];
+    //   //     this.updateUserNotification(user_email);
+    //   //   }
+    //   // }
+    });
   }
 
 

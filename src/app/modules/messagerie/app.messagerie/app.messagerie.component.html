@@ -72,7 +72,7 @@
                <span>{{ this.date | date: 'E dd MMMM yyyy' }}</span>
              </div>
             <message-template *ngFor="let message of messagerie" [listeMessages]="message"></message-template>
-            <!-- <button (click)="updateUnreadMessages('inv', ['telecom1@gmail.coom', 'valentin.pontiggia@gmail.com'])">Ajouter une notification sur la conversation `inv` pour telecom1</button>
+            <!-- <button (click)="updateUnreadMessages('inv', ['telecom1@gmail.coom'])">Ajouter une notification sur la conversation `inv` pour telecom1</button>
             <button (click)="markCanalAsRead('inv', 'telecom1@gmail.coom')">Retirer la notification sur la conversation `inv` pour telecom1</button> -->
          </div>
          <div id="message_bar">  
