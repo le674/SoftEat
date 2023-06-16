@@ -4,9 +4,10 @@ div {
   justify-content: center;
 }
 
-a {
+p {
   padding-left: 1%;
   padding-right: 1%;
   background-color: rgb(125, 181, 46);
   border-radius: 50px;
+  color: black;
 }
