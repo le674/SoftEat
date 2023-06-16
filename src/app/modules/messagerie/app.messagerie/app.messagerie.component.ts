@@ -258,10 +258,8 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
               const notificationCanaux = userSnapShot.notificationCanaux;
               for (const canal of Object.keys(notificationCanaux)) {
                 if (notificationCanaux[canal as keyof typeof notificationCanaux] == 0) {
-                  // if (this.notification[canal] = true)  this.notification[canal] = false;
                   this.notification[canal] = false;
                 } else {
-                  // if (this.notification[canal] = false) this.notification[canal] = true;
                   this.notification[canal] = true;
                 }
                 // console.log(`${canal}: ${notificationCanaux[canal as keyof typeof notificationCanaux]}`);
