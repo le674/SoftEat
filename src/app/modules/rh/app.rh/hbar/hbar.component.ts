@@ -15,7 +15,7 @@ export class HbarComponent implements OnInit {
   @ViewChild('autofillPate') autofillPate!: ElementRef;
   @ViewChild('dateDebut') dateDebutInput!: ElementRef<HTMLInputElement>;
   dateWidth = '150px'; // Default width
-  conges!: string;
+  conges!: number;
   constructor(private cdr: ChangeDetectorRef, private app: AppRhComponent) { }
 
   /* Les 2 méthodes suivantes permettent de rendre l'espace occupé par la date responsive*/ 
@@ -31,9 +31,18 @@ export class HbarComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.conges= await this.app.getUserConges();
+    this.conges = parseInt(await this.app.getUserConges(), 10); // Parse the string as an integer
   }
 
+  getCongesColorStyle(conges: number) {
+    const minConges = 0;
+    const maxConges = 30;
+    const normalizedValue = (conges - minConges) / (maxConges - minConges);
+    const red = Math.round((1 - normalizedValue) * 255);
+    const green = Math.round(normalizedValue * 255);
+    return { color: `rgb(${red}, ${green}, 0)` };
+  }
+  
   autofillInput(value: string): void {
     if (value =="Exceptionnels"){
       this.motif.nativeElement.value = '';
