@@ -8,9 +8,8 @@ import {
 import { CalendarService } from "./calendar-data.service";
 import { from } from 'rxjs'
 
-import { MatDialog } from '@angular/material/dialog'; // Import MatDialog for opening a dialog
-import { EventFormComponent } from '../event-form/event-form.component'; // Import the EventFormComponent
-
+import { MatDialog } from '@angular/material/dialog';
+import { EventFormComponent } from '../event-form/event-form.component';
 @Component({
   selector: 'app-calendar-view',
   templateUrl: './calendar-view.component.html',
@@ -20,17 +19,16 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
   @ViewChild("day") day!: DayPilotCalendarComponent;
   @ViewChild("week") week!: DayPilotCalendarComponent;
   @ViewChild("month") month!: DayPilotMonthComponent;
-  @ViewChild("navigator") nav!: DayPilotNavigatorComponent;
   users !: string;
   @Input() userRole!:string;
 
   constructor(private ds: CalendarService, private dialog: MatDialog) {
-    this.viewWeek();
+    this.viewWeek(); //Configuration de calendrier par semaine à l'initialisation
   }
 
+  //Charge les événements de l'utilisateur actuel à l'initialisation
   ngOnInit(): void {
     this.ds.currentData.subscribe(data => {
-      console.log(data)
       this.users = data;
       this.loadEvents(this.users);
     });
@@ -46,6 +44,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
 
   date = DayPilot.Date.today();
 
+  //Mise en forme de la bulle d'information des événements
   bubble = new DayPilot.Bubble({
     zIndex: 500,
     onLoad: function (args) {
@@ -82,6 +81,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
         endTime +
         '</div>';
 
+        // Permet d'afficher la durée totale de l'événement
       const duration = Math.floor(
         (end.getTime() - start.getTime()) / (1000 * 60)
       ); // Difference in minutes
@@ -118,18 +118,13 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
   });
 
   configNavigator: DayPilot.NavigatorConfig = {
-    showMonths: 1,
-    cellWidth: 25,
-    cellHeight: 25,
-    onVisibleRangeChanged: args => {
-      this.loadEvents(this.users);
-    }
-  };
+  }; //Permet de garder en mémoire quelle configuration (jour/semaine/mois) est sélectionnée
 
   selectTomorrow() {
     this.date = DayPilot.Date.today().addDays(1);
   }
 
+  //Passer au jour/semaine/mois précédent
   previous(){
     if (this.configNavigator.selectMode == "Day"){
       this.date = this.date.addDays(-1);
@@ -145,6 +140,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     }
   }
 
+  //Passer au jour/semaine/mois suivant
   next(){
     if (this.configNavigator.selectMode == "Day"){
       this.date = this.date.addDays(1);
@@ -159,18 +155,20 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
       this.changeDate(this.date);
     }
   }
+
   changeDate(date: DayPilot.Date): void {
     this.configDay.startDate = date;
     this.configWeek.startDate = date;
     this.configMonth.startDate = date;
   }
 
+  //Option pour la configuration par "Jour"
   configDay: DayPilot.CalendarConfig = {
-    locale : "fr-fr",
-    eventMoveHandling : "Disabled",
-    eventResizeHandling : "Disabled",
-    eventArrangement : "SideBySide",
-    bubble:this.bubble,
+    locale : "fr-fr", //heure française
+    eventMoveHandling : "Disabled", 
+    eventResizeHandling : "Disabled", //désactivation des interactions utilisateur sur les événements
+    eventArrangement : "SideBySide",  //les événements qui se chevauchent ne se superposent pas
+    bubble:this.bubble, //affichage de la bulle d'information des événements
     contextMenu : new DayPilot.Menu({
       items: [
         {
@@ -182,7 +180,20 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
             this.loadEvents(this.users);
           }
         }
-      ]
+      ], //Permet de supprimer l'événement sur lequel on a fait un clic droit
+      onShow: (args) => {
+        var e = args.source;
+        if (this.userRole!=='gerant') {
+          if (args.menu && args.menu.items && args.menu.items[0]) {
+            args.menu.items[0].disabled = true; //Désactivation de cette option si l'utilisateur n'est pas gerant
+          }
+        }
+        else {
+          if (args.menu && args.menu.items && args.menu.items[0]) {
+            args.menu.items[0].disabled = false;
+          }
+        }
+      }       
     }),
     dayBeginsHour : 8,
     dayEndsHour : 24,
@@ -191,7 +202,6 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
         case "Maladie":
           args.data.barColor = "#ff0000"; // duration bar color
           args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background color
-          //args.data.backColor = "rgba(255, 0, 0, 0.2)";
           break;
         case "Congés":
           args.data.barColor = "#ffa500";
@@ -202,13 +212,12 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
           args.data.barBackColor = "rgba(121, 181, 46, 0.5)";
           break;
         default: // Travail
-          //args.data.toolTip = "This is a regular event.";
           break;
       }
       let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + args.data.resource + "</div>" : "";
       args.data.html = "<span class='event'><strong>" + args.data.tags + "</strong><br>" +
         resourceHtml + "<br>" +
-        args.data.text + "</span>";
+        args.data.text + "</span>"; //Mise en forme du texte à afficher dans l'événement
     }
   };
 
@@ -228,12 +237,25 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
           image : "../../../../assets/images/trash.png",
           onClick: async (args) => { 
             var e = args.source;
-            //console.log('e.resource() :', e.resource());
             await this.ds.remove_event('foodandboost_prop', e.resource() , e.id()); 
             this.loadEvents(this.users);
           }
         }
-      ]
+      ],
+      onShow: (args) => {
+        var e = args.source;
+        if (this.userRole!=='gerant') {
+          if (args.menu && args.menu.items && args.menu.items[0]) {
+            args.menu.items[0].hidden = true;
+          }
+        }
+        else {
+          if (args.menu && args.menu.items && args.menu.items[0]) {
+            args.menu.items[0].hidden = false;
+          }
+        }
+        console.log(this.userRole);  // Accessing userRole here
+      }
     }),    
     dayBeginsHour : 8,
     dayEndsHour : 24,
@@ -243,7 +265,6 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
         case "Maladie":
           args.data.barColor = "#ff0000"; // duration bar color
           args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background color
-          //args.data.backColor = "rgba(255, 0, 0, 0.2)";
           break;
         case "Congés":
           args.data.barColor = "#ffa500";
@@ -254,7 +275,6 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
           args.data.barBackColor = "rgba(121, 181, 46, 0.5)";
           break;
         default: // Travail
-          //args.data.toolTip = "This is a regular event.";
           break;
       }
       let resourceHtml = args.data.resource ? "<div style='font-style: italic;'>" + args.data.resource + "</div>" : "";
@@ -287,7 +307,6 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
         case "Maladie":
           args.data.barColor = "#ff0000"; // duration bar color
           args.data.barBackColor = "rgba(255, 0, 0, 0.5)"; // duration bar background color
-          //args.data.backColor = "rgba(255, 0, 0, 0.2)";
           break;
         case "Congés":
           args.data.barColor = "#ffa500";
@@ -298,7 +317,6 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
           args.data.barBackColor = "rgba(121, 181, 46, 0.5)";
           break;
         default: // Travail
-          //args.data.toolTip = "This is a regular event.";
           break;
       }
     }
@@ -310,14 +328,14 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     this.loadEvents("");
   }
 
+  //Chargement des événements des utilisateurs sélectionnés
   loadEvents(users : string): void {
-    //const froom = this.nav.control.visibleStart();
-    //const to = this.nav.control.visibleEnd();
     from(this.ds.getEventsFromAllUsers("foodandboost_prop", users)).subscribe(result => {
       this.events = result;
     });
   }
 
+  //Changements entre les différentes configurations
   viewDay(): void {
     this.configNavigator.selectMode = "Day";
     this.configDay.visible = true;
@@ -342,24 +360,14 @@ export class CalendarViewComponent implements AfterViewInit, OnInit {
     const dialogRef = this.dialog.open(EventFormComponent, {
       width: '85vw',
       height: '85vh',
-      // Set the width and height of the dialog as per your requirements
-      // You can also configure other properties of the dialog, such as position, etc.
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // This code block will be executed when the dialog is closed
-      // You can perform any desired actions here
-      console.log('Dialog closed with result:', result);
-      // Call your method here that you want to be executed when the dialog is closed
       this.onDialogClosed();
     });
   }
   //recharge les évènements pour actualiser le calendrier à la fermeture du form
   onDialogClosed(): void {
-    // This method will be called when the dialog is closed
-    // You can perform any desired actions here
     this.loadEvents(this.users);
-    // Add your code here
   }
-
 }

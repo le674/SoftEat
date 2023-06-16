@@ -3,4 +3,6 @@ export class MessageModel {
     contenu!: string;
     horodatage!: number;
     newDay!: boolean;
+    nom!: string;
+    prenom!: string
 }

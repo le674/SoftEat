@@ -125,10 +125,17 @@ li a:hover:not(.active) {
 }
 
 .notification-badge {
-  background-color: red;
+  background-color: rgb(255, 0, 255);
   width: 10px;
   height: 10px;
   border-radius: 50%;
   display: inline-block;
   margin-left: 5px;
+  min-width: 10px;
+}
+
+.conversation-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

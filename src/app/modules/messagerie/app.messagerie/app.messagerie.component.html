@@ -8,38 +8,58 @@
       <div id="conversation_list">
          <ul>
             <li *ngIf="stockCanal">
-               <a [class.active]="convActive === invConv" (click)="convActive=this.invConv; fetchData()">Inventaire
-                  <!-- <button (click)="updateNotification(0)"> update </button> -->
+               <a [class.active]="convActive === invConv" (click)="switchChannel(invConv, 'inv')">
+                  <span class="conversation-name">
+                     Inventaire
+                  </span>
                   <span *ngIf="notification['inv']" class="notification-badge"></span>
                </a>
             </li>
             <li *ngIf="stockCanal">
-               <a [class.active]="convActive === recConv" (click)="convActive=this.recConv ; fetchData()">Recette
+               <a [class.active]="convActive === recConv" (click)="switchChannel(recConv, 'rec')">
+                  <span class="conversation-name">
+                     Recette
+                  </span>
                   <span *ngIf="notification['rec']" class="notification-badge"></span>               
                </a>
             </li>
             <li *ngIf="analyseCanal">
-               <a [class.active]="convActive === anaConv" (click)="convActive=this.anaConv ; fetchData()">Analyse
+               <a [class.active]="convActive === anaConv" (click)="switchChannel(anaConv, 'ana')">
+                  <span class="conversation-name">
+                     Analyse
+                  </span>
                   <span *ngIf="notification['ana']" class="notification-badge"></span>               
                </a>
             </li>
             <li *ngIf="budgetCanal">
-               <a [class.active]="convActive === comConv" (click)="convActive=this.comConv; fetchData()">Comptabilité
+               <a [class.active]="convActive === comConv" (click)="switchChannel(comConv, 'com')">
+                  <span class="conversation-name">
+                     Comptabilité
+                  </span>
                   <span *ngIf="notification['com']" class="notification-badge"></span>               
                </a>
             </li>
             <li *ngIf="factureCanal">
-               <a [class.active]="convActive === facConv" (click)="convActive=this.facConv; fetchData()">Factures
+               <a [class.active]="convActive === facConv" (click)="switchChannel(facConv, 'fac')">
+                  <span class="conversation-name">
+                     Factures
+                  </span>
                   <span *ngIf="notification['fac']" class="notification-badge"></span>               
                </a>
             </li>
             <li *ngIf="planningCanal">
-               <a class="#rh">EMPLOYES
+               <a class="#rh">
+                  <span class="conversation-name">
+                     EMPLOYES
+                  </span>
                   <span *ngIf="notification['plan']" class="notification-badge"></span>               
                </a>
             </li>
             <li>
-               <a class="#ressourcesh">Ressources Humaines
+               <a [class.active]="convActive === currentUserConv" (click)="convActive=this.currentUserConv; fetchData()">
+                  <span class="conversation-name">
+                     Ressources Humaines
+                  </span>
                   <span *ngIf="notification['rh']" class="notification-badge"></span>               
                </a>
             </li>
@@ -54,8 +74,8 @@
                </div>
                <message-template [listeMessages]="message"></message-template>
             </div>
-            <button (click)="updateUnreadMessages('inv', ['telecom1@gmail.coom'])">Ajouter une notification sur la conversation `inv` pour telecom1</button>
-            <button (click)="markCanalAsRead('inv', 'telecom1@gmail.coom')">Retirer la notification sur la conversation `inv` pour telecom1</button>
+            <!-- <button (click)="updateUnreadMessages('inv', ['telecom1@gmail.coom'])">Ajouter une notification sur la conversation `inv` pour telecom1</button>
+            <button (click)="markCanalAsRead('inv', 'telecom1@gmail.coom')">Retirer la notification sur la conversation `inv` pour telecom1</button> -->
          </div>
          <div id="message_bar">  
             <input type="text" [(ngModel)]="inputText" (keydown.enter)="sendMessage()" id="messageInput" autocomplete="off"/>

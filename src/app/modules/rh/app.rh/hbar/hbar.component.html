@@ -2,11 +2,11 @@
     <h1> Congés Payés </h1>
     <div id="hbar" class="flex-container">
         <div style="flex-grow: 0.2" id="restants">
-            <p> Total : 6 semaines
-                <!-- mes semaines à l'année : {{ user.congés.total }} au lieu du "6 semaines" -->
-            </p>
-            <p> Restant : <span [ngStyle]="{ color: 'rgb(0, ' + 185 + ', 0)' }" style="margin-left: 2px;"> 4 semaines
-                    <!-- mes semaines restantes de congés : {{ user.congés.dispo }} au lieu du "4 semaines" -->
+            <p *ngIf="(+this.conges)>1"> Restant : <span [ngStyle]="{ color: 'rgb(0, ' + 185 + ', 0)' }"
+                    style="margin-left: 2px;">{{this.conges}} Semaines
+                </span> </p>
+            <p *ngIf="(+this.conges)<=1"> Restant : <span [ngStyle]="{ color: 'rgb(0, ' + 185 + ', 0)' }"
+                style="margin-left: 2px;">{{this.conges}} Semaine
                 </span> </p>
         </div>
         <div style="flex-grow: 1" id="motif">
@@ -21,7 +21,8 @@
             <form>
                 <div class="line">
                     <label for="nom">Motif </label>
-                    <input #motif id="motif" type="text" placeholder="Champ obligatoire*" [style.width]="dateWidth" required>
+                    <input #motif id="motif" type="text" placeholder="Champ obligatoire*" [style.width]="dateWidth"
+                        required>
                 </div>
                 <div class="line">
                     <label for="début">Date début </label>

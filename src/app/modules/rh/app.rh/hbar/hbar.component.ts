@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import {AppRhComponent} from '../app.rh.component'
 
 @Component({
   selector: 'app-hbar',
@@ -14,11 +15,13 @@ export class HbarComponent implements OnInit {
   @ViewChild('autofillPate') autofillPate!: ElementRef;
   @ViewChild('dateDebut') dateDebutInput!: ElementRef<HTMLInputElement>;
   dateWidth = '150px'; // Default width
-  constructor() { }
+  conges!: string;
+  constructor(private cdr: ChangeDetectorRef, private app: AppRhComponent) { }
 
   /* Les 2 méthodes suivantes permettent de rendre l'espace occupé par la date responsive*/ 
   ngAfterViewInit(): void {
     this.calculateInputWidth();
+    this.cdr.detectChanges();
   }
 
   calculateInputWidth(): void {
@@ -27,7 +30,8 @@ export class HbarComponent implements OnInit {
     this.dateWidth = contentWidth;
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.conges= await this.app.getUserConges();
   }
 
   autofillInput(value: string): void {
