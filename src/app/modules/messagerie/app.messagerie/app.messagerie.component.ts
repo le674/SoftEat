@@ -333,9 +333,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       this.updateUserNotification(this.email);
     });
   }
-
-
-
+  
   //Scroll quand un message est envoyé
   async scrollToBottom() {
     try {
