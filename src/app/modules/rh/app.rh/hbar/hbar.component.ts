@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import {AppRhComponent} from '../app.rh.component'
+import { getDatabase, ref, push, update, get, onChildAdded, onValue, DatabaseReference} from 'firebase/database';
 
 @Component({
   selector: 'app-hbar',
@@ -17,9 +18,13 @@ export class HbarComponent implements OnInit {
   @ViewChild('dateDebut') dateDebutInput!: ElementRef<HTMLInputElement>;
   @ViewChild('dateFin') dateFinInput!: ElementRef<HTMLInputElement>;
   dateWidth = '150px'; // Default width
+  // Pour l'affichage de la page
   conges!: number;
   selectedShortenedFileName!: string;
   selectedFileName!: string;
+  // Pour la demande de congés envoyée
+  date!: number;
+
   constructor(private cdr: ChangeDetectorRef, private app: AppRhComponent) { }
 
   /* Les 2 méthodes suivantes permettent de rendre l'espace occupé par la date adapté*/ 
@@ -98,9 +103,49 @@ export class HbarComponent implements OnInit {
       if (this.selectedFileName) {
         message += `\nFichier joint: ${this.selectedFileName}`;
       }
+      this.date = this.fetchTimeServer();
+      message += `\nHeure du mess: ${this.date}`;
   
       alert(message);
     }
   }
   
+
+  //recuperation heure du serveur
+  fetchTimeServer(): number {
+    const db = getDatabase();
+    onValue(ref(db, '.info/serverTimeOffset'), (snapshot) => {
+      const offset: number = snapshot.val() || 0;
+      this.date = Date.now() + offset;
+    })
+    return this.date;
+  }
+
+  /*async sendMessage(): Promise<void> {
+    if(this.inputText != '') {
+      const db = getDatabase(this.firebaseApp);
+
+      //Création du nouveau message
+      const newMessage = {
+        auteur: localStorage.getItem("user_email"),
+        contenu: this.inputText,
+        horodatage: this.fetchTimeServer(),
+        nom : this.name,
+        prenom : this.surname
+      }
+      //Ecriture du message dans la BDD
+      const nodeRef = ref(db, this.convActive);
+      push(nodeRef, newMessage).then(() => {
+        //Envoie de la notification à tous les Users
+        this.updateUnreadMessages(this.canalActiveId, this.convListUsers[this.canalActiveId]);
+        this.markCanalAsRead(this.canalActiveId, this.email);
+      })
+      .catch((error) => {
+        console.error("Error creating new message:", error);
+      });
+      
+      
+    }
+    this.inputText = "";
+  }*/
 }
