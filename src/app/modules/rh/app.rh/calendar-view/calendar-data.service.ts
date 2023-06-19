@@ -122,11 +122,14 @@ export class CalendarService {
        const end = new Date(event.end);
        const diff = end.getTime() - start.getTime();
 
-      // Convert the difference from milliseconds to days
-      const diffInDays = diff / (1000 * 60 * 60 * 24);
+      // Converti la différence de millisecondes en jours
+      let diffInDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+      if (diffInDays==0){ //Si l'employeur ne met un congé que sur des heures de travail par exemple
+        diffInDays=1;
+      }
       const newDays = days-diffInDays;
       console.log(diffInDays);
-      await set (push(child(ref(this.db), pathConges)),newDays);
+      await set (child(ref(this.db), pathConges),newDays);
     }
     await set(eventRef, event);
     this.statusSubject.next('');
