@@ -55,11 +55,21 @@ export class HbarComponent implements OnInit {
   displayFileName(event: any) {
     const fileInput = event.target;
     if (fileInput.files.length > 0) {
-      this.selectedFileName = fileInput.files[0].name;
+      const fileName = fileInput.files[0].name;
+      this.selectedFileName = this.getShortenedFileName(fileName);
     } else {
       this.selectedFileName = '';
     }
   }
+  
+  getShortenedFileName(fileName: string): string {
+    if (fileName.length <= 20) {
+      return fileName;
+    } else {
+      return fileName.substr(0, 17) + '...';
+    }
+  }
+  
   unchooseFile() {
     this.selectedFileName = '';
     // Reset the file input value if needed
@@ -68,10 +78,16 @@ export class HbarComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    if (form.valid) { // Vérifie que les champs obligatoires sont remplis
-    const { motif, dateDebut, dateFin } = form.value;
-    const message = `Motif: ${motif}\nDate début: ${dateDebut}\nDate fin: ${dateFin}`;
-    alert(message);
+    if (form.valid) { // Check if the form is valid
+      const { motif, dateDebut, dateFin } = form.value;
+      let message = `Motif: ${motif}\nDate début: ${dateDebut}\nDate fin: ${dateFin}`;
+  
+      if (this.selectedFileName) {
+        message += `\nFichier joint: ${this.selectedFileName}`;
+      }
+  
+      alert(message);
     }
   }
+  
 }
