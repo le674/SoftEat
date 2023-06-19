@@ -48,10 +48,10 @@
                </a>
             </li>
             <li *ngIf="planningCanal">
-               <div *ngFor="let message of messagerie">
-                  <a [class.active]="convActive===facConv" (click)="processConvEmployes()">
+               <div *ngFor="let employee of convEmployes">
+                  <a [class.active]=" selector == employee " (click)="processConvEmployes(employee)">
                      <span class="conversation-name">
-                        EMPLOYES
+                        {{employee}}
                      </span>
                      <span *ngIf="notification['plan']" class="notification-badge"></span>               
                   </a>

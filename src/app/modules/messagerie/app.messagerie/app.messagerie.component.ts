@@ -42,6 +42,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   
   messagerie!: MessageModel[];
   convEmployes!: string[];
+  selector!: string;
   date!: number;
 
   constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService) {  
@@ -76,20 +77,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     const db = getDatabase();
     const auth = getAuth(this.firebaseApp);
 
-    const emplacementConv = 'conversations/deliss_pizz/employes';
-    const emplacementRef = ref(db, emplacementConv);
-    
-    onValue(emplacementRef, (snapshot) => {
-      const keys: string[] = [];
-      snapshot.forEach((childSnapshot) => {
-        const key = childSnapshot.key;
-        if (key) {
-          keys.push(key);
-        }
-      });
-      this.convEmployes = keys;
-    });
-
+   
 
     onAuthStateChanged(auth, (currentUser) => {
     let user = currentUser;
@@ -102,10 +90,24 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     console.log(this.currentUserConv);
     });
 
+    if (this.planningCanal){
+      const emplacementConv = 'conversations/deliss_pizz/employes';
+      const emplacementRef = ref(db, emplacementConv);
+      
+      onValue(emplacementRef, (snapshot) => {
+      
+        let keys: string[] = Object.keys(snapshot.val());
+        console.log('Clés récupérées:', keys);
+        this.convEmployes=keys;
+      });
+    }
   }
 
-  processConvEmployes() {
+  processConvEmployes(employee: string) {
+    this.selector=employee;
     console.log('Liste des employes' + this.convEmployes);
+    this.convActive="".concat("conversations/deliss_pizz/employes/",employee);
+    this.switchChannel(this.convActive, "");
   }
 
   ngAfterViewChecked(): void {
@@ -126,10 +128,12 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   }
 
   switchChannel(convActive: string, canalId: string){
-    this.processConvEmployes();
+    //this.processConvEmployes();
     this.convActive=convActive;
     this.fetchData();
-    this.markCanalAsRead(canalId, this.email);
+    if(canalId!=""){
+      this.markCanalAsRead(canalId, this.email);
+    }
     this.canalActiveId = canalId;
   }
 
