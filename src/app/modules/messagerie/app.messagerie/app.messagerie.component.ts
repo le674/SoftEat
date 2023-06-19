@@ -152,6 +152,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
 
     // Retirer la notif du canal actif
     if(canalId!=""){
+      this.selector="";
       this.markCanalAsRead(canalId, this.email);
     }
     this.canalActiveId = canalId;
