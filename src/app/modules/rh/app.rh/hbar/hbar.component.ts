@@ -28,8 +28,7 @@ export class HbarComponent implements OnInit {
   firebaseApp: FirebaseApp | undefined;
   date!: number;
   email!: string;
-  surname!: string;
-  name!: string;
+  conv!: string;
 
   constructor(private cdr: ChangeDetectorRef, private app: AppRhComponent,
      firebaseApp: FirebaseApp, private firebaseService: FirebaseService
@@ -53,8 +52,8 @@ export class HbarComponent implements OnInit {
     this.conges = parseInt(await this.app.getUserConges(), 10); // Parse the string as an integer
     this.email = this.firebaseService.getEmailLocalStorage();
     const [emailPrefix] = this.email.split('@');
-    await this.getName();
-    this.convActive = `conversations/deliss_pizz/employes/${emailPrefix}_${this.name}_${this.surname}`;
+    await this.getConv();
+    this.convActive = `conversations/deliss_pizz/employes/${this.conv}`;
   }
 
   getCongesColorStyle(conges: number) {
@@ -117,7 +116,7 @@ export class HbarComponent implements OnInit {
   }
 
   // Obtenir le nom et prénom du LocalStorage
-  async getName(): Promise<void> {
+  async getConv(): Promise<void> {
     const db = getDatabase(this.firebaseApp);
     const usersRef = ref(db, 'users/foodandboost_prop');
     const usersSnapShot = await get(usersRef);
@@ -126,8 +125,7 @@ export class HbarComponent implements OnInit {
       usersSnapShot.forEach((userSnapShot) => {
         const user = userSnapShot.val();
         if (user.email == this.email) {
-          this.name = user.nom;
-          this.surname = user.prenom;
+          this.conv = user.convPrivee;
         } 
       });
     }
