@@ -4,5 +4,5 @@ export class MessageModel {
     horodatage!: number;
     newDay!: boolean;
     nom!: string;
-    prenom!: string
+    prenom!: string;
 }

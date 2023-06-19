@@ -5,7 +5,8 @@ import { User } from '../../../interfaces/user';
 import { getDatabase, ref, push, update, get, onChildAdded, onValue, DatabaseReference} from 'firebase/database';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
-import { MessageModel } from '../messages_models/model';
+import { interval, take } from 'rxjs';
+import { MessageInfos } from '../app.messagerie.message.infos/message-infos';
 
 @Component({
   selector: 'app-messagerie',
@@ -40,13 +41,18 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   inputText!: string;
   firebaseApp: FirebaseApp | undefined;
   
-  messagerie!: MessageModel[];
+  // messagerie!: MessageModel[];
+  messagerie!: MessageInfos[];
   date!: number;
+
+  author_is_me!: boolean[];
+  isBot!: boolean[];
 
   constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService) {  
     this.firebaseApp = firebaseApp;
     this.fetchData();
     this.messagerie = [];
+    this.callUpdateUserNotification();
   }
 
   async ngOnInit(): Promise<void> { //: Promise<void>
@@ -112,7 +118,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   }
 
 
-  sendMessage(){
+  async sendMessage(): Promise<void> {
     if(this.inputText != '') {
       const db = getDatabase(this.firebaseApp);
 
@@ -127,13 +133,15 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       //Ecriture du message dans la BDD
       const nodeRef = ref(db, this.convActive);
       push(nodeRef, newMessage).then(() => {
+        //Envoie de la notification à tous les Users
+        this.updateUnreadMessages(this.canalActiveId, this.convListUsers[this.canalActiveId]);
+        this.markCanalAsRead(this.canalActiveId, this.email);
       })
       .catch((error) => {
         console.error("Error creating new message:", error);
       });
-      //Envoie de la notification à tous les Users
-      this.updateUnreadMessages(this.canalActiveId, this.convListUsers[this.canalActiveId]);
-      this.markCanalAsRead(this.canalActiveId, this.email);
+      
+      
     }
     this.inputText = "";
   }
@@ -147,37 +155,49 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     onChildAdded(dataRef, (snapshot) => {
       const data = snapshot.val();
       const existingMessageIndex = this.messagerie.findIndex(
-        (message) => message.horodatage === data.horodatage
+        (messageInfos) => messageInfos.message.horodatage === data.horodatage
       );
       if (existingMessageIndex === -1) {
-        const donneesMessage = new MessageModel();
-        donneesMessage.auteur = data.auteur;
-        donneesMessage.contenu = data.contenu;
-        donneesMessage.horodatage = data.horodatage;
+        const donneesMessage = new MessageInfos();
+        console.log(donneesMessage);
+        donneesMessage.message.auteur = data.auteur;
+        donneesMessage.message.contenu = data.contenu;
+        donneesMessage.message.horodatage = data.horodatage;
 
         //On vérifie si le message date du même jour :
         if(this.messagerie.length >= 1) {
           const this_message_date = new Date(data.horodatage);
-          const previous_msg_date = new Date(this.messagerie[this.messagerie.length-1].horodatage);
-          console.log("this : ", this_message_date, "previous : ", previous_msg_date);
+          const previous_msg_date = new Date(this.messagerie[this.messagerie.length-1].message.horodatage);
           if((this_message_date.getDay() !== previous_msg_date.getDay()) || (this_message_date.getMonth() !== previous_msg_date.getMonth()) || (this_message_date.getFullYear() !== previous_msg_date.getFullYear())) {
-            donneesMessage.newDay = true;
+            donneesMessage.message.newDay = true;
           } else {
-            donneesMessage.newDay = false;
+            donneesMessage.message.newDay = false;
           }
         } else {
-          donneesMessage.newDay = true;
+          donneesMessage.message.newDay = true;
         }
-        donneesMessage.nom = data.nom;
-        donneesMessage.prenom = data.prenom;
+        donneesMessage.message.nom = data.nom;
+        donneesMessage.message.prenom = data.prenom;
+
+        //Message à gauche ou à droite selon l'auteur
+        if (data.auteur === this.email) {
+          donneesMessage.authorIsMe = true;
+        } else {
+          donneesMessage.authorIsMe = false;
+          if(data.auteur === "softeat@gmail.com") {
+            donneesMessage.isBot = true;
+          } else {
+            donneesMessage.isBot = false;
+          }
+        }
         this.messagerie.push(donneesMessage);
       }
     });
   }
 
-  getMessagerie(): MessageModel[]{
-    return this.messagerie;
-  }
+  // getMessagerie(): MessageModel[]{
+  //   return this.messagerie;
+  // }
 
 
 
@@ -267,6 +287,26 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       });
   }
 
+  //NOTIFICATIONS, Appel de updateUserNotification() toutes les 5 secondes
+  callUpdateUserNotification() {
+    const interval$ = interval(5000);
+    
+    interval$
+    .pipe(take(Infinity))
+    .subscribe(() => {
+      this.updateUserNotification(this.email);
+    //   const convlistUsers = this.convListUsers;
+    //   // for (const canal of Object.keys(convlistUsers)) {
+    //   //   const listUsers = convlistUsers[canal as keyof typeof convlistUsers];
+    //   //   const length = listUsers.length;
+    //   //   for (var i=0; i<length; i++) {
+    //   //     const user_email = listUsers[i];
+    //   //     this.updateUserNotification(user_email);
+    //   //   }
+    //   // }
+    });
+  }
+
 
 
   //Scroll quand un message est envoyé
@@ -277,7 +317,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   }
 
   // Obtenir le nom et prénom du LocalStorage
-  async getName(): Promise<void> { //: Promise<string>
+  async getName(): Promise<void> {
     const db = getDatabase(this.firebaseApp);
     const usersRef = ref(db, 'users/foodandboost_prop');
     const usersSnapShot = await get(usersRef);
@@ -289,7 +329,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
         if (user.email == this.email) {
           this.name = user.nom;
           this.surname = user.prenom;
-        }
+        } 
       });
     }
   }
