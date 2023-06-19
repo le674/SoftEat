@@ -120,12 +120,12 @@ li a.active {
 }
 
 li a:hover:not(.active) {
-  background-color: rgb(125, 181, 46);
+  background-color: rgb(125, 181, 46); /* rgb(125, 181, 46) = hsv(85,75,71) */
   color: white;
 }
 
 .notification-badge {
-  background-color: rgb(255, 0, 255);
+  background-color: rgb(102,45,181); /* rgb(102,45,181) = hsv(265,75,71) */
   width: 10px;
   height: 10px;
   border-radius: 50%;
