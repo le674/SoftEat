@@ -1,6 +1,6 @@
 <div align="center">
 	<div style="display: flex; justify-content: center; align-items: center; background-color: white; padding: 15px; border-radius: 50%; width: 60px; height: 60px">
-		<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/regular/paper-plane.svg" width="50" height="50">
+		<img style="filter: invert(58%) sepia(36%) saturate(716%) hue-rotate(43deg) brightness(99%) contrast(100%);" src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/paper-plane.svg" width="50" height="50">
 	</div>
 	<h2 align="center">Messagerie</h3>
 	<br />
