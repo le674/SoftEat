@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { AppRhComponent } from '../app.rh.component'
 import { getDatabase, ref, push, update, get, onChildAdded, onValue, DatabaseReference } from 'firebase/database';
 import { FirebaseApp } from '@angular/fire/app';
+import { FirebaseService } from 'src/app/services/firebase.service';
 @Component({
   selector: 'app-hbar',
   templateUrl: './hbar.component.html',
@@ -23,11 +24,15 @@ export class HbarComponent implements OnInit {
   selectedShortenedFileName!: string;
   selectedFileName!: string;
   // Pour la demande de congés envoyée
-  @Input() convActive: string = 'conversations/deliss_pizz/employes/telecom3_trois_telecom'; // Propriété d'entrée pour convActive
+  @Input() convActive: string = 'conversations/deliss_pizz/employes/...'; // Propriété d'entrée pour convActive
   firebaseApp: FirebaseApp | undefined;
   date!: number;
+  email!: string;
+  surname!: string;
+  name!: string;
 
-  constructor(private cdr: ChangeDetectorRef, private app: AppRhComponent, firebaseApp: FirebaseApp
+  constructor(private cdr: ChangeDetectorRef, private app: AppRhComponent,
+     firebaseApp: FirebaseApp, private firebaseService: FirebaseService
   ) {
     this.firebaseApp = firebaseApp;
   }
@@ -46,6 +51,10 @@ export class HbarComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.conges = parseInt(await this.app.getUserConges(), 10); // Parse the string as an integer
+    this.email = this.firebaseService.getEmailLocalStorage();
+    const [emailPrefix] = this.email.split('@');
+    await this.getName();
+    this.convActive = `conversations/deliss_pizz/employes/${emailPrefix}_${this.name}_${this.surname}`;
   }
 
   getCongesColorStyle(conges: number) {
@@ -57,12 +66,6 @@ export class HbarComponent implements OnInit {
     return { color: `rgb(${red}, ${green}, 0)` };
   }
 
-  /*autofillInput(value: string): void {
-    if (value =="Exceptionnels"){
-      this.motif.nativeElement.value = '';
-    }else
-      this.motif.nativeElement.value = value;
-  }*/
   autofillInput(value: string): void {
     if (value == "Exceptionnels") {
       this.form.value.motif = '';
@@ -109,11 +112,26 @@ export class HbarComponent implements OnInit {
         message += `\nFichier joint: ${this.selectedFileName}`;
       }
       message += `\nHeure du mess: ${this.date}`;
-      console.log('je vais ajouter un message');
       this.sendMessage(message);
     }
   }
 
+  // Obtenir le nom et prénom du LocalStorage
+  async getName(): Promise<void> {
+    const db = getDatabase(this.firebaseApp);
+    const usersRef = ref(db, 'users/foodandboost_prop');
+    const usersSnapShot = await get(usersRef);
+
+    if (usersSnapShot.exists()) {
+      usersSnapShot.forEach((userSnapShot) => {
+        const user = userSnapShot.val();
+        if (user.email == this.email) {
+          this.name = user.nom;
+          this.surname = user.prenom;
+        } 
+      });
+    }
+  }
 
   //recuperation heure du serveur
   fetchTimeServer(): number {
@@ -127,18 +145,14 @@ export class HbarComponent implements OnInit {
 
   async sendMessage(message: string): Promise<void> {
     const db = getDatabase(this.firebaseApp);
-
     //Création du nouveau message
     const newMessage = {
       auteur: localStorage.getItem("user_email"),
       contenu: message,
       horodatage: this.fetchTimeServer(),
-      //nom: this.name,
-      //prenom: this.surname
     }
     //Ecriture du message dans la BDD
     const nodeRef = ref(db, this.convActive);
     push(nodeRef, newMessage);
-    console.log('jai du ajouter un message askip')
   }
 }
