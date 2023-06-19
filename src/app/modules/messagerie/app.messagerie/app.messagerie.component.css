@@ -65,6 +65,19 @@ h1 {
   outline: none;
 }
 
+.separationDate {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.separationDate>span {
+  padding-left: 3px;
+  padding-right: 3px;
+  background-color: rgb(211, 211, 211);
+  border-radius: 50px;
+}
+
 #message_bar>button {
   color: rgb(125, 181, 46);
   background-color: white;
@@ -131,11 +144,4 @@ li a:hover:not(.active) {
   border-radius: 50%;
   display: inline-block;
   margin-left: 5px;
-  min-width: 10px;
-}
-
-.conversation-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
