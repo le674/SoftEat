@@ -2,10 +2,10 @@
   <div class="message">
     <div class="message_outer">
       <div [ngStyle]="{
-      'flex-direction': message === 'send' ? 'row-reverse' : (message === 'row' ? '#ecc6f8' : 'row')
+      'flex-direction': author_is_me ? 'row-reverse' : 'row'
       }" class="message_inner">
         <div [ngStyle]="{
-        'background-color': message === 'send' ? '#DCF8C6' : (message === 'bot' ? '#ecc6f8' : '#e0e0e0')
+        'background-color': author_is_me ? '#DCF8C6' : (isBot ? '#ecc6f8' : '#e0e0e0')
         }" class="message_bubble" dir="auto">
           <div class="message_infos">
             <div class="name">  

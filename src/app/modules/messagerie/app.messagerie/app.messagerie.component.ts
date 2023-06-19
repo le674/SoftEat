@@ -5,9 +5,8 @@ import { User } from '../../../interfaces/user';
 import { getDatabase, ref, push, update, get, onChildAdded, off, onValue, DatabaseReference} from 'firebase/database';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
-import { MessageModel } from '../messages_models/model';
-import { DatePipe } from '@angular/common';
 import { interval, take } from 'rxjs';
+import { MessageInfos } from '../app.messagerie.message.infos/message-infos';
 
 @Component({
   selector: 'app-messagerie',
@@ -41,9 +40,14 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   currentUserConv!: string;
   inputText!: string;
   firebaseApp: FirebaseApp | undefined;
+  shouldScroll = false;
   
-  messagerie!: MessageModel[];
+  // messagerie!: MessageModel[];
+  messagerie!: MessageInfos[];
   date!: number;
+
+  author_is_me!: boolean[];
+  isBot!: boolean[];
 
   constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService) {  
     this.firebaseApp = firebaseApp;
@@ -82,7 +86,10 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-    this.scrollToBottom();
+    if(this.shouldScroll) {
+      this.scrollToBottom();
+      this.shouldScroll = false;
+    }
   }
 
   /*
@@ -148,10 +155,10 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       .catch((error) => {
         console.error("Error creating new message:", error);
       });
-      
-      
     }
     this.inputText = "";
+    // this.scrollToBottom();
+    this.shouldScroll = true;
   }
 
   async fetchData() {
@@ -164,37 +171,49 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       console.log("dataRef : " + dataRef);
       const data = snapshot.val();
       const existingMessageIndex = this.messagerie.findIndex(
-        (message) => message.horodatage === data.horodatage
+        (messageInfos) => messageInfos.message.horodatage === data.horodatage
       );
       if (existingMessageIndex === -1) {
-        const donneesMessage = new MessageModel();
-        donneesMessage.auteur = data.auteur;
-        donneesMessage.contenu = data.contenu;
-        donneesMessage.horodatage = data.horodatage;
+        const donneesMessage = new MessageInfos();
+        console.log(donneesMessage);
+        donneesMessage.message.auteur = data.auteur;
+        donneesMessage.message.contenu = data.contenu;
+        donneesMessage.message.horodatage = data.horodatage;
 
         //On vérifie si le message date du même jour :
         if(this.messagerie.length >= 1) {
           const this_message_date = new Date(data.horodatage);
-          const previous_msg_date = new Date(this.messagerie[this.messagerie.length-1].horodatage);
-          console.log("this : ", this_message_date, "previous : ", previous_msg_date);
+          const previous_msg_date = new Date(this.messagerie[this.messagerie.length-1].message.horodatage);
           if((this_message_date.getDay() !== previous_msg_date.getDay()) || (this_message_date.getMonth() !== previous_msg_date.getMonth()) || (this_message_date.getFullYear() !== previous_msg_date.getFullYear())) {
-            donneesMessage.newDay = true;
+            donneesMessage.message.newDay = true;
           } else {
-            donneesMessage.newDay = false;
+            donneesMessage.message.newDay = false;
           }
         } else {
-          donneesMessage.newDay = true;
+          donneesMessage.message.newDay = true;
         }
-        donneesMessage.nom = data.nom;
-        donneesMessage.prenom = data.prenom;
+        donneesMessage.message.nom = data.nom;
+        donneesMessage.message.prenom = data.prenom;
+
+        //Message à gauche ou à droite selon l'auteur
+        if (data.auteur === this.email) {
+          donneesMessage.authorIsMe = true;
+        } else {
+          donneesMessage.authorIsMe = false;
+          if(data.auteur === "softeat@gmail.com") {
+            donneesMessage.isBot = true;
+          } else {
+            donneesMessage.isBot = false;
+          }
+        }
         this.messagerie.push(donneesMessage);
       }
     });
   }
 
-  getMessagerie(): MessageModel[]{
-    return this.messagerie;
-  }
+  // getMessagerie(): MessageModel[]{
+  //   return this.messagerie;
+  // }
 
 
 
@@ -307,7 +326,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
 
 
   //Scroll quand un message est envoyé
-  scrollToBottom() {
+  async scrollToBottom() {
     try {
       this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
     } catch(error) {}
@@ -326,7 +345,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
         if (user.email == this.email) {
           this.name = user.nom;
           this.surname = user.prenom;
-        }
+        } 
       });
     }
   }

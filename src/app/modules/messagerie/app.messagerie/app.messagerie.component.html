@@ -68,14 +68,12 @@
       </div>
       <div id="conversation">
          <div id="messages" #scrollMe>
-            <div *ngFor="let message of messagerie">
-               <div *ngIf="message.newDay">
-                  <message-date-template [date]="message.horodatage"></message-date-template>
+            <div *ngFor="let messageInfos of messagerie">
+               <div *ngIf="messageInfos.message.newDay">
+                  <message-date-template [date]="messageInfos.message.horodatage"></message-date-template>
                </div>
-               <message-template [listeMessages]="message"></message-template>
+               <message-template [listeMessages]="messageInfos.message" [author_is_me]="messageInfos.authorIsMe" [isBot]="messageInfos.isBot"></message-template>
             </div>
-            <!-- <button (click)="updateUnreadMessages('inv', ['telecom1@gmail.coom'])">Ajouter une notification sur la conversation `inv` pour telecom1</button>
-            <button (click)="markCanalAsRead('inv', 'telecom1@gmail.coom')">Retirer la notification sur la conversation `inv` pour telecom1</button> -->
          </div>
          <div id="message_bar">  
             <input type="text" [(ngModel)]="inputText" (keydown.enter)="sendMessage()" id="messageInput" autocomplete="off"/>
