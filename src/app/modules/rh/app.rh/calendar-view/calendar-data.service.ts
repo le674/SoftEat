@@ -39,7 +39,8 @@ export class CalendarService {
   }
 
   async getEventsFromAllUsers(prop: string, usersMails: string): Promise<DayPilot.EventData[]> {
-    
+    this.statusSubject.next('Chargement...');
+    console.log('Emitting loading status...');
     if (usersMails === "") {
       this.events = [];
       return this.events;
@@ -56,13 +57,13 @@ export class CalendarService {
     }
   
     this.events = allEvents;
+    this.statusSubject.next('');
+    console.log('Emitting final status...');
     return this.events;
   }
   
 
   async getEvents(prop: string, userMail: string): Promise<DayPilot.EventData[]> {
-    this.statusSubject.next('Chargement...');
-    console.log('Emitting loading status...');
     this.events = [];
     const userToken : string | null = await this.getPath(userMail);
     const path = `users/${prop}/${userToken}/planning/events` //chemin vers la BDD
@@ -84,8 +85,6 @@ export class CalendarService {
     } else {
       return [];
     }
-    this.statusSubject.next('');
-    console.log('Emitting final status...');
     return this.events;
   }
 
