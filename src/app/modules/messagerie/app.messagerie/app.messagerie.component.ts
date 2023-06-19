@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewChecked } fro
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
 import { User } from '../../../interfaces/user';
-import { getDatabase, ref, push, update, get, onChildAdded, onValue, DatabaseReference} from 'firebase/database';
+import { getDatabase, ref, push, update, get, onChildAdded, off, onValue, DatabaseReference} from 'firebase/database';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { MessageModel } from '../messages_models/model';
@@ -108,8 +108,19 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   }
 
   switchChannel(convActive: string, canalId: string){
+    // Arrêter l'écoute des modifications du canal précédent
+    const previousDataRef = ref(getDatabase(this.firebaseApp), this.convActive);
+    off(previousDataRef);
+
+    // Mettre à jour la référence du canal actif
     this.convActive=convActive;
+    // Réinitialiser la liste des messages
+    this.messagerie = [];
+
+    // Démarrer l'écoute des modifications du nouveau canal
     this.fetchData();
+
+    // Retirer la notif du canal actif
     this.markCanalAsRead(canalId, this.email);
     this.canalActiveId = canalId;
   }
@@ -150,6 +161,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     const dataRef = ref(db, this.convActive);
     this.messagerie = [];
     onChildAdded(dataRef, (snapshot) => {
+      console.log("dataRef : " + dataRef);
       const data = snapshot.val();
       const existingMessageIndex = this.messagerie.findIndex(
         (message) => message.horodatage === data.horodatage
