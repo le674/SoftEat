@@ -173,6 +173,7 @@ export class HbarComponent implements OnInit {
       auteur: 'softeat@gmail.com',
       contenu: message,
       horodatage: this.fetchTimeServer(),
+      nom: 'SoftEat',
     }
     //Ecriture du message dans la BDD
     const nodeRef = ref(db, this.convActive);
