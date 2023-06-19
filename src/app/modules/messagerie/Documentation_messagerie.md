@@ -8,22 +8,19 @@
 <br/>
 
 <details>
-  <summary>Table of Contents</summary>
+  <summary>Sommaire</summary>
   <ol>
         <li>
-            <a href="#about-the-project">About The Project</a>
-            <ul>
+            <a href="#structure-de-la-messagerie">Structure de la messagerie</a>
+            <ul style="list-style-type: disc">
                 <li><a href="#the-goal">The goal</a></li>
                 <li><a href="#prerequisites">Prerequisites</a></li>
                 <li><a href="#delivery-and-installation">Delivery and Installation</a></li>
             </ul>
         </li>
         <li>
-            <a href="#what-is-displayed-?">What is displayed ?</a>
-        </li>
-        <li>
-            <a href="#the-pipeline">The Pipeline</a>
-            <ul>
+            <a href="#messages">Messages</a>
+						<ul style="list-style-type: disc">
                 <li><a href="#images">Images</a></li>
                 <li><a href="#unit-test">Unit test</a></li>
                 <li><a href="#lint">Lint</a></li>
@@ -32,7 +29,25 @@
             </ul>
         </li>
         <li>
-            <a href="#authors">Authors</a>
+            <a href="#canaux">Canaux</a>
+            <ul style="list-style-type: disc">
+                <li><a href="#images">Images</a></li>
+                <li><a href="#unit-test">Unit test</a></li>
+                <li><a href="#lint">Lint</a></li>
+                <li><a href="#coverage">Coverage</a></li>
+                <li><a href="#deployment">Deployment</a></li>
+            </ul>
+        </li>
+				<li>
+            <a href="#fonctionnalités">Fonctionnalités</a>
         </li>
   </ol>
 </details>
+
+### Structure de la messagerie
+
+### Messages
+
+### Canaux
+
+### Fonctionnalités
