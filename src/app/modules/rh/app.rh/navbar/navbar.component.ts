@@ -223,6 +223,10 @@ export class NavbarComponent implements OnInit {
       } else {
         console.log('No user data found.');
       }
+      localStorage.setItem('Gérants', JSON.stringify(this.Gerants));
+      localStorage.setItem('Autres', JSON.stringify(this.Autres));
+      localStorage.setItem('Rh', JSON.stringify(this.Rh));
+      localStorage.setItem('Serveurs', JSON.stringify(this.Serveurs));
     } catch (error) {
       console.error('An error occurred while retrieving user data:', error);
     }

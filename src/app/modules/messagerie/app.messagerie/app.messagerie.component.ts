@@ -182,7 +182,6 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       });
     }
     this.inputText = "";
-    // this.scrollToBottom();
     this.shouldScroll = true;
   }
 

@@ -7,13 +7,11 @@
       <button (click)="viewDay()" [class]="this.configNavigator.selectMode == 'Day' ? 'selected' : ''">Day</button>
       <button (click)="viewWeek()" [class]="this.configNavigator.selectMode == 'Week' ? 'selected' : ''">Week</button>
       <button (click)="viewMonth()" [class]="this.configNavigator.selectMode == 'Month' ? 'selected' : ''">Month</button>
-      <button (click)="previous()"><</button>
-      <button (click)="next()">></button>
-      <!--<button (click)="addEvent()">Add Event</button>--> 
+      <button class="navig" (click)="previous()"><</button>
+      <button class="navig" (click)="next()">></button>
       <button (click)="openEventForm()" class="addEvent" *ngIf="userRole == 'gerant'">Ajouter un événement<!--<i class="fa-tag"></i>--> </button>
       <span *ngIf="this.configNavigator.selectMode == 'Month'">{{moisEnTouteLettre[this.date.getMonth()]}}</span>
     </div>
-      <div class="chargement" *ngIf="this.status!=''"><p>{{ status }}</p></div>
       <daypilot-calendar [config]="configDay" [events]="events" #day></daypilot-calendar>
       <daypilot-calendar class="calendar" [config]="configWeek" [events]="events" #week></daypilot-calendar>
       <daypilot-month [config]="configMonth" [events]="events" #month></daypilot-month>

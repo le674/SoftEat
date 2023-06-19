@@ -7,7 +7,7 @@ import {
 } from "daypilot-pro-angular";
 import { CalendarService } from "./calendar-data.service";
 import { from, Subscription } from 'rxjs'
-
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { EventFormComponent } from '../event-form/event-form.component';
 @Component({
@@ -24,7 +24,7 @@ export class CalendarViewComponent implements AfterViewInit, OnInit, OnDestroy {
   status: string = '';
   statusSubscription!: Subscription;
 
-  constructor(private ds: CalendarService, private dialog: MatDialog) {
+  constructor(private ds: CalendarService, private dialog: MatDialog, private snackBar : MatSnackBar) {
     this.viewWeek(); //Configuration de calendrier par semaine à l'initialisation
   }
 
@@ -36,6 +36,12 @@ export class CalendarViewComponent implements AfterViewInit, OnInit, OnDestroy {
       this.statusSubscription = this.ds.statusService.subscribe(
         (status) => {
           this.status = status;
+          if (this.status !==''){
+            this.snackBar.open(this.status);
+          }
+          else {
+            this.snackBar.dismiss();
+          }
         }
       );
     });

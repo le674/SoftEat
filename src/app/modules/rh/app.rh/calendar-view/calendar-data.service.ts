@@ -39,7 +39,8 @@ export class CalendarService {
   }
 
   async getEventsFromAllUsers(prop: string, usersMails: string): Promise<DayPilot.EventData[]> {
-    
+    this.statusSubject.next('Chargement...');
+    console.log('Emitting loading status...');
     if (usersMails === "") {
       this.events = [];
       return this.events;
@@ -56,13 +57,13 @@ export class CalendarService {
     }
   
     this.events = allEvents;
+    this.statusSubject.next('');
+    console.log('Emitting final status...');
     return this.events;
   }
   
 
   async getEvents(prop: string, userMail: string): Promise<DayPilot.EventData[]> {
-    this.statusSubject.next('Chargement...');
-    console.log('Emitting loading status...');
     this.events = [];
     const userToken : string | null = await this.getPath(userMail);
     const path = `users/${prop}/${userToken}/planning/events` //chemin vers la BDD
@@ -84,17 +85,15 @@ export class CalendarService {
     } else {
       return [];
     }
-    this.statusSubject.next('');
-    console.log('Emitting final status...');
     return this.events;
   }
 
   async add_event(prop: string, user: string, newEvent: DayPilot.EventData): Promise<void> {
-    
-    this.statusSubject.next('Ajout des événements...');
-
     // Chemin vers la BDD
     const path = `users/${prop}/${user}/planning/events`;
+    const pathConges = `users/${prop}/${user}/conges`;
+
+    const daysSnapshot = await get(child(ref(this.db), pathConges));
 
     // converti le DayPilot.Date objet en date ISO
     const startString = newEvent.start.toString("yyyy-MM-ddTHH:mm:ss");
@@ -113,8 +112,22 @@ export class CalendarService {
       resource: newEvent.resource,
     };
 
+    if (event.tags=="Congés"){
+       const days = daysSnapshot.val() as number
+       const start = new Date(event.start);
+       const end = new Date(event.end);
+       const diff = end.getTime() - start.getTime();
+
+      // Converti la différence de millisecondes en jours
+      let diffInDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+      if (diffInDays==0){ //Si l'employeur ne met un congé que sur des heures de travail par exemple
+        diffInDays=1;
+      }
+      const newDays = days-diffInDays;
+      console.log(diffInDays);
+      await set (child(ref(this.db), pathConges),newDays);
+    }
     await set(eventRef, event);
-    this.statusSubject.next('');
   }
 
   async remove_event(prop: string, userMail: string, eventId: string): Promise<void> {    
