@@ -28,10 +28,10 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   dateWidth = '150px'; // Default width
 
   Categories!: String[];
-  Serveurs!: { nom: String, email: String }[];
-  Gerants!: { nom: String, email: String }[];
-  Rh!: { nom: String, email: String }[];
-  Autres!: { nom: String, email: String }[];
+  Serveurs!: { nom: String; selectionne: boolean; mail : String }[];
+  Gerants!: { nom: String; selectionne: boolean; mail : String }[];
+  Rh!: { nom: String; selectionne: boolean; mail : String }[];
+  Autres!: { nom: String; selectionne: boolean; mail : String }[];
   firebaseApp: FirebaseApp | undefined;
   newEvent?: DayPilot.EventData; 
   constructor(private calendar: CalendarService, public dialogRef: MatDialogRef<EventFormComponent>, firebaseApp: FirebaseApp) {
@@ -45,12 +45,29 @@ export class EventFormComponent implements OnInit, AfterViewInit {
 
     this.Categories = ['Serveurs', 'Rh', 'Gérants', 'Autres'];
 
-    this.Serveurs = [];
-    this.Gerants = [];
-    this.Rh = [];
-    this.Autres = [];
+    //this.Serveurs = [];
+    const ServeursString = localStorage.getItem('Serveurs');
+    if (ServeursString) {
+      this.Serveurs = JSON.parse(ServeursString);
+    }
+    //this.Gerants = [];
+    const GerantString = localStorage.getItem('Gérants');
+    if (GerantString) {
+      this.Gerants = JSON.parse(GerantString);
+    }
+    //this.Rh = [];
+    const RhString = localStorage.getItem('Rh');
+    if (RhString) {
+      this.Rh = JSON.parse(RhString);
+    }
+    //this.Autres = [];
+    const AutresString = localStorage.getItem('Autres');
+    if (AutresString) {
+      this.Autres = JSON.parse(AutresString);
+    }
+    
 
-    this.fetchUser();
+    //this.fetchUser();
     const inputFields: HTMLInputElement[] = [
       this.addPersonnelInput.nativeElement,
       this.addEventInput.nativeElement,
@@ -324,7 +341,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     this.dialogRef.close(); // Close the dialog
   }
 
-  async fetchUser() {
+  /*async fetchUser() {
     const db = getDatabase(this.firebaseApp);
 
     const userPath = '/users/foodandboost_prop/';
@@ -368,9 +385,9 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     } catch (error) {
       console.error('An error occurred while retrieving user data:', error);
     }
-  }
+  }*/
 
-  getCategoryUsers(category: String): { nom: String, email: String; }[] {
+  getCategoryUsers(category: String): { nom: String; selectionne: boolean; mail : String }[] {
     switch (category) {
       case 'Serveurs':
         return this.Serveurs;

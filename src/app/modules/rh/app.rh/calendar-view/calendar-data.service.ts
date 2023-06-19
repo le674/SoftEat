@@ -130,8 +130,8 @@ export class CalendarService {
     await set(eventRef, event);
   }
 
-  async remove_event(prop: string, userMail: string, eventId: string): Promise<void> {
-    // Chemin vers la BDD
+  async remove_event(prop: string, userMail: string, eventId: string): Promise<void> {    
+    // Path to the database
     const userToken : string | null = await this.getPath(userMail);
     const path = `users/${prop}/${userToken}/planning/events/${eventId}`;
     // Supprime l'événement

@@ -48,12 +48,14 @@
                </a>
             </li>
             <li *ngIf="planningCanal">
-               <a class="#rh">
-                  <span class="conversation-name">
-                     EMPLOYES
-                  </span>
-                  <span *ngIf="notification['plan']" class="notification-badge"></span>               
-               </a>
+               <div *ngFor="let employee of convEmployes">
+                  <a [class.active]=" selector == employee " (click)="processConvEmployes(employee)">
+                     <span class="conversation-name">
+                        {{employee}}
+                     </span>
+                     <span *ngIf="notification['plan']" class="notification-badge"></span>               
+                  </a>
+               </div>
             </li>
             <li>
                <a [class.active]="convActive === currentUserConv" (click)="convActive=this.currentUserConv; fetchData()">
