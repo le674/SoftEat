@@ -44,6 +44,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   
   messagerie!: MessageInfos[];
   convEmployes!: string[];
+  selector!: string;
   date!: number;
 
   author_is_me!: boolean[];
@@ -82,20 +83,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     const db = getDatabase();
     const auth = getAuth(this.firebaseApp);
 
-    const emplacementConv = 'conversations/deliss_pizz/employes';
-    const emplacementRef = ref(db, emplacementConv);
-    
-    onValue(emplacementRef, (snapshot) => {
-      const keys: string[] = [];
-      snapshot.forEach((childSnapshot) => {
-        const key = childSnapshot.key;
-        if (key) {
-          keys.push(key);
-        }
-      });
-      this.convEmployes = keys;
-    });
-
+   
 
     onAuthStateChanged(auth, (currentUser) => {
     let user = currentUser;
@@ -108,10 +96,24 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     console.log(this.currentUserConv);
     });
 
+    if (this.planningCanal){
+      const emplacementConv = 'conversations/deliss_pizz/employes';
+      const emplacementRef = ref(db, emplacementConv);
+      
+      onValue(emplacementRef, (snapshot) => {
+      
+        let keys: string[] = Object.keys(snapshot.val());
+        console.log('Clés récupérées:', keys);
+        this.convEmployes=keys;
+      });
+    }
   }
 
-  processConvEmployes() {
+  processConvEmployes(employee: string) {
+    this.selector=employee;
     console.log('Liste des employes' + this.convEmployes);
+    this.convActive="".concat("conversations/deliss_pizz/employes/",employee);
+    this.switchChannel(this.convActive, "");
   }
 
   ngAfterViewChecked(): void {
@@ -148,7 +150,9 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     this.fetchData();
 
     // Retirer la notif du canal actif
-    this.markCanalAsRead(canalId, this.email);
+    if(canalId!=""){
+      this.markCanalAsRead(canalId, this.email);
+    }
     this.canalActiveId = canalId;
   }
 
@@ -325,15 +329,6 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     .pipe(take(Infinity))
     .subscribe(() => {
       this.updateUserNotification(this.email);
-    //   const convlistUsers = this.convListUsers;
-    //   // for (const canal of Object.keys(convlistUsers)) {
-    //   //   const listUsers = convlistUsers[canal as keyof typeof convlistUsers];
-    //   //   const length = listUsers.length;
-    //   //   for (var i=0; i<length; i++) {
-    //   //     const user_email = listUsers[i];
-    //   //     this.updateUserNotification(user_email);
-    //   //   }
-    //   // }
     });
   }
 
