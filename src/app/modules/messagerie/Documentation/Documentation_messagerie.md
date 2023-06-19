@@ -10,36 +10,34 @@
 <details>
   <summary>Sommaire</summary>
   <ol>
-        <li>
-            <a href="#1-structure-de-la-messagerie">Structure de la messagerie</a>
-            <ol style="list-style-type: lower-alpha">
-                <li><a href="#a-composants">Composants</a></li>
-                <li><a href="#b-modèles">Modèles</a></li>
-            </ol>
-        </li>
-        <li>
-            <a href="#2-messages">Messages</a>
-                <ol style="list-style-type: lower-alpha">
-                <li><a href="#images">Images</a></li>
-                <li><a href="#unit-test">Unit test</a></li>
-                <li><a href="#lint">Lint</a></li>
-                <li><a href="#coverage">Coverage</a></li>
-                <li><a href="#deployment">Deployment</a></li>
-            </ol>
-        </li>
-        <li>
-            <a href="#3-canaux">Canaux</a>
-            <ol style="list-style-type: lower-alpha">
-                <li><a href="#images">Images</a></li>
-                <li><a href="#unit-test">Unit test</a></li>
-                <li><a href="#lint">Lint</a></li>
-                <li><a href="#coverage">Coverage</a></li>
-                <li><a href="#deployment">Deployment</a></li>
-            </ol>
-        </li>
-				<li>
-            <a href="#4-fonctionnalités">Fonctionnalités</a>
-        </li>
+    <li>
+      <a href="#1-structure-de-la-messagerie">Structure de la messagerie</a>
+      <ol style="list-style-type: lower-alpha">
+          <li><a href="#a-composants">Composants</a></li>
+          <li><a href="#b-modèles">Modèles</a></li>
+      </ol>
+    </li>
+    <li>
+      <a href="#2-messages">Messages</a>
+      <ol style="list-style-type: lower-alpha">
+        <li><a href="#a-message-template">Message Template</a></li>
+        <li><a href="#b-date-template">Date Template</a></li>
+        <li><a href="#c-barre-de-saisie">Barre de saisie</a></li>
+      </ol>
+    </li>
+    <li>
+      <a href="#3-canaux">Canaux</a>
+      <ol style="list-style-type: lower-alpha">
+        <li><a href="#images">Images</a></li>
+        <li><a href="#unit-test">Unit test</a></li>
+        <li><a href="#lint">Lint</a></li>
+        <li><a href="#coverage">Coverage</a></li>
+        <li><a href="#deployment">Deployment</a></li>
+      </ol>
+    </li>
+    <li>
+      <a href="#4-fonctionnalités">Fonctionnalités</a>
+    </li>
   </ol>
 </details>
 <br/>
@@ -93,6 +91,22 @@ Le résultat final ressemble à ceci :
 
 ## 2. Messages
 
+### a. Message Template
+
+
+
+### b. Date Template
+
+
+
+### c. Barre de saisie
+
+
+
+---
+
 ## 3. Canaux
+
+---
 
 ## 4. Fonctionnalités
