@@ -95,6 +95,9 @@ export class CalendarService {
 
     // Chemin vers la BDD
     const path = `users/${prop}/${user}/planning/events`;
+    const pathConges = `users/${prop}/${user}/conges`;
+
+    const daysSnapshot = await get(child(ref(this.db), pathConges));
 
     // converti le DayPilot.Date objet en date ISO
     const startString = newEvent.start.toString("yyyy-MM-ddTHH:mm:ss");
@@ -113,6 +116,18 @@ export class CalendarService {
       resource: newEvent.resource,
     };
 
+    if (event.tags=="Congés"){
+       const days = daysSnapshot.val() as number
+       const start = new Date(event.start);
+       const end = new Date(event.end);
+       const diff = end.getTime() - start.getTime();
+
+      // Convert the difference from milliseconds to days
+      const diffInDays = diff / (1000 * 60 * 60 * 24);
+      const newDays = days-diffInDays;
+      console.log(diffInDays);
+      await set (push(child(ref(this.db), pathConges)),newDays);
+    }
     await set(eventRef, event);
     this.statusSubject.next('');
   }
