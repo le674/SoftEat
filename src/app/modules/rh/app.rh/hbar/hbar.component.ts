@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import {AppRhComponent} from '../app.rh.component'
 
 @Component({
@@ -14,11 +15,12 @@ export class HbarComponent implements OnInit {
   @ViewChild('autofillMate') autofillMate!: ElementRef;
   @ViewChild('autofillPate') autofillPate!: ElementRef;
   @ViewChild('dateDebut') dateDebutInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('dateFin') dateFinInput!: ElementRef<HTMLInputElement>;
   dateWidth = '150px'; // Default width
   conges!: number;
   constructor(private cdr: ChangeDetectorRef, private app: AppRhComponent) { }
 
-  /* Les 2 méthodes suivantes permettent de rendre l'espace occupé par la date responsive*/ 
+  /* Les 2 méthodes suivantes permettent de rendre l'espace occupé par la date adapté*/ 
   ngAfterViewInit(): void {
     this.calculateInputWidth();
     this.cdr.detectChanges();
@@ -63,5 +65,13 @@ export class HbarComponent implements OnInit {
     // Reset the file input value if needed
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     fileInput.value = '';
+  }
+
+  onSubmit(form: NgForm) {
+    if (form.valid) { // Vérifie que les champs obligatoires sont remplis
+    const { motif, dateDebut, dateFin } = form.value;
+    const message = `Motif: ${motif}\nDate début: ${dateDebut}\nDate fin: ${dateFin}`;
+    alert(message);
+    }
   }
 }
