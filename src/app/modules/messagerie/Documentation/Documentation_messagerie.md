@@ -11,51 +11,49 @@
   <summary>Sommaire</summary>
   <ol>
         <li>
-            <a href="#structure-de-la-messagerie">Structure de la messagerie</a>
-            <ul style="list-style-type: disc">
-                <li><a href="#composants">Composants</a></li>
-                <li><a href="#modèles">Modèles</a></li>
-            </ul>
+            <a href="#1-structure-de-la-messagerie">Structure de la messagerie</a>
+            <ol style="list-style-type: lower-alpha">
+                <li><a href="#a-composants">Composants</a></li>
+                <li><a href="#b-modèles">Modèles</a></li>
+            </ol>
         </li>
         <li>
-            <a href="#messages">Messages</a>
-						<ul style="list-style-type: disc">
+            <a href="#2-messages">Messages</a>
+                <ol style="list-style-type: lower-alpha">
                 <li><a href="#images">Images</a></li>
                 <li><a href="#unit-test">Unit test</a></li>
                 <li><a href="#lint">Lint</a></li>
                 <li><a href="#coverage">Coverage</a></li>
                 <li><a href="#deployment">Deployment</a></li>
-            </ul>
+            </ol>
         </li>
         <li>
-            <a href="#canaux">Canaux</a>
-            <ul style="list-style-type: disc">
+            <a href="#3-canaux">Canaux</a>
+            <ol style="list-style-type: lower-alpha">
                 <li><a href="#images">Images</a></li>
                 <li><a href="#unit-test">Unit test</a></li>
                 <li><a href="#lint">Lint</a></li>
                 <li><a href="#coverage">Coverage</a></li>
                 <li><a href="#deployment">Deployment</a></li>
-            </ul>
+            </ol>
         </li>
 				<li>
-            <a href="#fonctionnalités">Fonctionnalités</a>
+            <a href="#4-fonctionnalités">Fonctionnalités</a>
         </li>
   </ol>
 </details>
 <br/>
 
-### Structure de la messagerie
+## 1. Structure de la messagerie
 
-#### Composants
+### a. Composants
 
 La messagerie est divisée en 3 composants :
 - un template pour l'objet "message"
 - un template pour l'objet "date"
-- un composant pour la gestion de l'envoi, l'affichage de messages et autres fonctionnalités permettant à la messagerie de fonctionner
+- un composant pour la gestion de l'envoi et l'affichage de messages et autres fonctionnalités permettant à la messagerie de fonctionner
 
-
-
-#### Modèles
+### b. Modèles
 
 Le premier modèle `model.ts` regroupe les informations envoyées dans la base de données lors de l'envoi d'un message : 
 ```ts
@@ -88,10 +86,13 @@ export class MessageInfos {
 >- je ne suis pas auteur : message en gris, affiché à gauche
 >- l'auteur du message est un bot : message ne violet, affiché a gauche
 
+Le résultat final ressemble à ceci :
 ![Exemple de messages](./img/messages_example.png)
 
-### Messages
+---
 
-### Canaux
+## 2. Messages
 
-### Fonctionnalités
+## 3. Canaux
+
+## 4. Fonctionnalités
