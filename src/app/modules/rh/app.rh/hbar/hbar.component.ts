@@ -23,15 +23,18 @@ export class HbarComponent implements OnInit {
   conges!: number;
   selectedShortenedFileName!: string;
   selectedFileName!: string;
-  // Pour la demande de congés envoyée
-  @Input() convActive: string = 'conversations/deliss_pizz/employes/...'; // Propriété d'entrée pour convActive
+  // Pour la demande de congés envoyée, informations sur l'utilisateur courrant
+  @Input() convActive: string = 'conversations/deliss_pizz/employes/...'; // Propriété d'entrée pour la conversation RH
   firebaseApp: FirebaseApp | undefined;
   date!: number;
   email!: string;
   conv!: string;
+  name!: string;
+  surname!: string;
+  role!: string;
 
   constructor(private cdr: ChangeDetectorRef, private app: AppRhComponent,
-     firebaseApp: FirebaseApp, private firebaseService: FirebaseService
+    firebaseApp: FirebaseApp, private firebaseService: FirebaseService
   ) {
     this.firebaseApp = firebaseApp;
   }
@@ -105,17 +108,36 @@ export class HbarComponent implements OnInit {
   onSubmit() {
     if (this.form.valid) { // Check if the form is valid
       const { motif, dateDebut, dateFin } = this.form.value;
-      let message = `Motif: ${motif}\nDate début: ${dateDebut}\nDate fin: ${dateFin}`;
-
+      // Formattage des dates pour l'affichage
+      const formattedDateDebut = new Date(dateDebut).toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
+      const formattedDateFin = new Date(dateFin).toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
+      let message = `Nouvelle demande de congés de ${this.name} ${this.surname} (${this.role}) pour : ${motif}. Les congés seraient effectifs du ${formattedDateDebut} au ${formattedDateFin}.`;
+      // Si fichier joint, le transmettre. Sous quel format ? Comment le stocker ?
       if (this.selectedFileName) {
-        message += `\nFichier joint: ${this.selectedFileName}`;
+        message += `\n Fichier joint: ${this.selectedFileName}`;
       }
-      message += `\nHeure du mess: ${this.date}`;
       this.sendMessage(message);
+      this.clearForm();
     }
   }
 
-  // Obtenir le nom et prénom du LocalStorage
+  clearForm() {
+    this.form.reset(); // Reset the form
+    this.selectedFileName = ''; // Clear the selected file name
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    fileInput.value = ''; // Reset the file input value
+  }
+  
+
+  // Obtenir la conversation rh (privée), le nom et prénom du LocalStorage
   async getConv(): Promise<void> {
     const db = getDatabase(this.firebaseApp);
     const usersRef = ref(db, 'users/foodandboost_prop');
@@ -126,7 +148,10 @@ export class HbarComponent implements OnInit {
         const user = userSnapShot.val();
         if (user.email == this.email) {
           this.conv = user.convPrivee;
-        } 
+          this.name = user.prenom;
+          this.surname = user.nom;
+          this.role = user.role;
+        }
       });
     }
   }
@@ -143,9 +168,9 @@ export class HbarComponent implements OnInit {
 
   async sendMessage(message: string): Promise<void> {
     const db = getDatabase(this.firebaseApp);
-    //Création du nouveau message
+    //Création du nouveau message par un bot
     const newMessage = {
-      auteur: localStorage.getItem("user_email"),
+      auteur: 'softeat@gmail.com',
       contenu: message,
       horodatage: this.fetchTimeServer(),
     }
