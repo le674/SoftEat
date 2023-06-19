@@ -31,16 +31,17 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   email!: string;
   surname!: string;
   name!: string;
-  analyseCanal = true;
-  budgetCanal = true;
-  factureCanal = true;
-  planningCanal = true;
-  stockCanal = true;
+  analyseCanal!: boolean;
+  budgetCanal!: boolean;
+  factureCanal!: boolean;
+  planningCanal!: boolean;
+  stockCanal!: boolean;
   currentUserConv!: string;
   inputText!: string;
   firebaseApp: FirebaseApp | undefined;
   
   messagerie!: MessageModel[];
+  convEmployes!: string[];
   date!: number;
 
   constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService) {  
@@ -49,7 +50,16 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     this.messagerie = [];
   }
 
-  async ngOnInit(): Promise<void> { //: Promise<void>
+  showCanal() {
+    if(this.statut.stock === 'wr' || this.statut.stock === 'rw' || this.statut.stock === 'r' ) this.stockCanal = true;
+    if(this.statut.analyse === 'wr' || this.statut.analyse === 'rw' || this.statut.analyse === 'r' ) this.stockCanal = true;
+    if(this.statut.budget === 'wr' || this.statut.budget === 'rw' || this.statut.budget === 'r' ) this.budgetCanal = true;
+    if(this.statut.facture === 'wr' || this.statut.facture === 'rw' || this.statut.facture === 'r' ) this.factureCanal = true;
+    if(this.statut.planning === 'wr' || this.statut.planning === 'rw' || this.statut.planning === 'r' ) this.planningCanal = true;
+  }
+
+  async ngOnInit(): Promise<void> {
+    
     this.notification = { 'ana': false, 'com': false, 'fac': false, 'inv': false, 'rec': false, 'plan': false, 'rh': false};
     this.email = this.firebaseService.getEmailLocalStorage();
     this.convListUsers = await this.firebaseService.fetchConvListUsers();
@@ -57,7 +67,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     this.statut = await this.firebaseService.getUserStatutsLocalStorage(this.email); //await
     await this.updateUserNotification(this.email);
     this.markCanalAsRead(this.canalActiveId, this.email);
-    //this.showCanal();
+    this.showCanal();
     this.fetchTimeServer();
     this.scrollToBottom();
     
@@ -65,6 +75,21 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     const userPath = '/users/foodandboost_prop/';
     const db = getDatabase();
     const auth = getAuth(this.firebaseApp);
+
+    const emplacementConv = 'conversations/deliss_pizz/employes';
+    const emplacementRef = ref(db, emplacementConv);
+    
+    onValue(emplacementRef, (snapshot) => {
+      const keys: string[] = [];
+      snapshot.forEach((childSnapshot) => {
+        const key = childSnapshot.key;
+        if (key) {
+          keys.push(key);
+        }
+      });
+      this.convEmployes = keys;
+    });
+
 
     onAuthStateChanged(auth, (currentUser) => {
     let user = currentUser;
@@ -76,23 +101,19 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     //retour console de sa conversation
     console.log(this.currentUserConv);
     });
+
+  }
+
+  processConvEmployes() {
+    console.log('Liste des employes' + this.convEmployes);
   }
 
   ngAfterViewChecked(): void {
     this.scrollToBottom();
   }
 
-  /*
-  showCanal() {
-    if(this.statut.stock === 'wr' || this.statut.stock === 'rw' || this.statut.stock === 'r' ) this.stockCanal = true;
-    if(this.statut.analyse === 'wr' || this.statut.analyse === 'rw' || this.statut.analyse === 'r' ) this.stockCanal = true;
-    if(this.statut.budget === 'wr' || this.statut.budget === 'rw' || this.statut.budget === 'r' ) this.budgetCanal = true;
-    if(this.statut.facture === 'wr' || this.statut.facture === 'rw' || this.statut.facture === 'r' ) this.factureCanal = true;
-    if(this.statut.planning === 'wr' || this.statut.planning === 'rw' || this.statut.planning === 'r' ) this.planningCanal = true;
-  }
-  */
+  
   messageInput = document.getElementById("messageInput");
-
 
   //recuperation heure du serveur
   fetchTimeServer(): number {
@@ -105,6 +126,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   }
 
   switchChannel(convActive: string, canalId: string){
+    this.processConvEmployes();
     this.convActive=convActive;
     this.fetchData();
     this.markCanalAsRead(canalId, this.email);
@@ -159,7 +181,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
         if(this.messagerie.length >= 1) {
           const this_message_date = new Date(data.horodatage);
           const previous_msg_date = new Date(this.messagerie[this.messagerie.length-1].horodatage);
-          console.log("this : ", this_message_date, "previous : ", previous_msg_date);
+          //console.log("this : ", this_message_date, "previous : ", previous_msg_date);
           if((this_message_date.getDay() !== previous_msg_date.getDay()) || (this_message_date.getMonth() !== previous_msg_date.getMonth()) || (this_message_date.getFullYear() !== previous_msg_date.getFullYear())) {
             donneesMessage.newDay = true;
           } else {
@@ -225,10 +247,10 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
             notificationCanaux[canalId] = 0;
             update(userRef.ref, { notificationCanaux })
                 .then(() => {
-                  console.log("User's notification marked as read");
+                  //console.log("User's notification marked as read");
                 })
                 .catch(error => {
-                  console.error("Error updating user's notification:", error);
+                  //console.error("Error updating user's notification:", error);
                 });
           });
         }
