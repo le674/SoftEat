@@ -89,9 +89,6 @@ export class CalendarService {
   }
 
   async add_event(prop: string, user: string, newEvent: DayPilot.EventData): Promise<void> {
-    
-    this.statusSubject.next('Ajout des événements...');
-
     // Chemin vers la BDD
     const path = `users/${prop}/${user}/planning/events`;
     const pathConges = `users/${prop}/${user}/conges`;
@@ -131,7 +128,6 @@ export class CalendarService {
       await set (child(ref(this.db), pathConges),newDays);
     }
     await set(eventRef, event);
-    this.statusSubject.next('');
   }
 
   async remove_event(prop: string, userMail: string, eventId: string): Promise<void> {
