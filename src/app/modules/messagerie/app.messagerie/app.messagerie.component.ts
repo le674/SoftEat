@@ -40,6 +40,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   currentUserConv!: string;
   inputText!: string;
   firebaseApp: FirebaseApp | undefined;
+  shouldScroll = false;
   
   convEmployes!: string[];
   selector!: string;
@@ -116,7 +117,10 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-    this.scrollToBottom();
+    if(this.shouldScroll) {
+      this.scrollToBottom();
+      this.shouldScroll = false;
+    }
   }
 
   
@@ -165,10 +169,10 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       .catch((error) => {
         console.error("Error creating new message:", error);
       });
-      
-      
     }
     this.inputText = "";
+    // this.scrollToBottom();
+    this.shouldScroll = true;
   }
 
   async fetchData() {
@@ -329,7 +333,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
 
 
   //Scroll quand un message est envoyé
-  scrollToBottom() {
+  async scrollToBottom() {
     try {
       this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
     } catch(error) {}
