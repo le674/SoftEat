@@ -8,7 +8,7 @@ import {AppRhComponent} from '../app.rh.component'
   styleUrls: ['./hbar.component.css']
 })
 export class HbarComponent implements OnInit {
-  selectedFileName!: string;
+  @ViewChild('form') form!: NgForm; 
   @ViewChild('motif') motif!: ElementRef;
   @ViewChild('autofillConge') autofillConge!: ElementRef;
   @ViewChild('autofillRTT') autofillRTT!: ElementRef;
@@ -18,6 +18,8 @@ export class HbarComponent implements OnInit {
   @ViewChild('dateFin') dateFinInput!: ElementRef<HTMLInputElement>;
   dateWidth = '150px'; // Default width
   conges!: number;
+  selectedShortenedFileName!: string;
+  selectedFileName!: string;
   constructor(private cdr: ChangeDetectorRef, private app: AppRhComponent) { }
 
   /* Les 2 méthodes suivantes permettent de rendre l'espace occupé par la date adapté*/ 
@@ -45,22 +47,33 @@ export class HbarComponent implements OnInit {
     return { color: `rgb(${red}, ${green}, 0)` };
   }
   
-  autofillInput(value: string): void {
+  /*autofillInput(value: string): void {
     if (value =="Exceptionnels"){
       this.motif.nativeElement.value = '';
     }else
       this.motif.nativeElement.value = value;
+  }*/
+  autofillInput(value: string): void {
+    if (value == "Exceptionnels") {
+      this.form.value.motif = '';
+    } else {
+      this.form.value.motif = value;
+    }
   }
+  
 
   displayFileName(event: any) {
     const fileInput = event.target;
     if (fileInput.files.length > 0) {
       const fileName = fileInput.files[0].name;
-      this.selectedFileName = this.getShortenedFileName(fileName);
+      this.selectedFileName = fileName;
+      this.selectedShortenedFileName = this.getShortenedFileName(fileName);
     } else {
       this.selectedFileName = '';
+      this.selectedShortenedFileName = '';
     }
   }
+  
   
   getShortenedFileName(fileName: string): string {
     if (fileName.length <= 20) {
@@ -77,9 +90,9 @@ export class HbarComponent implements OnInit {
     fileInput.value = '';
   }
 
-  onSubmit(form: NgForm) {
-    if (form.valid) { // Check if the form is valid
-      const { motif, dateDebut, dateFin } = form.value;
+  onSubmit() {
+    if (this.form.valid) { // Check if the form is valid
+      const { motif, dateDebut, dateFin } = this.form.value;
       let message = `Motif: ${motif}\nDate début: ${dateDebut}\nDate fin: ${dateFin}`;
   
       if (this.selectedFileName) {

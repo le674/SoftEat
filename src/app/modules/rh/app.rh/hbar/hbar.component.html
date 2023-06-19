@@ -16,7 +16,7 @@
         </div>
         <div style="flex-grow: 5">
             <h2> Demande de congés payés </h2>
-            <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+            <form #form="ngForm" (ngSubmit)="onSubmit()">
                 <div class="line">
                     <label for="motif">Motif</label>
                     <input #motif id="motif" name="motif" type="text" placeholder="Champ obligatoire*"
@@ -38,7 +38,7 @@
                     <label for="fileInput" class="file-label">Joindre un fichier</label>
                 </div>
                 <div *ngIf="selectedFileName" class="file-info">
-                    <p class="selected">{{ selectedFileName }}</p>
+                    <p class="selected">{{ selectedShortenedFileName }}</p>
                     <button class="unchoose-button" (click)="unchooseFile()">&cross;</button>
                 </div>
 
