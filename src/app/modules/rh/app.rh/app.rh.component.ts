@@ -68,7 +68,7 @@ export class AppRhComponent implements OnInit {
         this.currentUserConges = congesSnapshot.val();
       });
       this.currentUserNomComplet =
-        this.currentUserPrenom + ' ' + this.currentUserNom;
+        this.currentUserPrenom + " " + this.currentUserNom;
     });
   }
 

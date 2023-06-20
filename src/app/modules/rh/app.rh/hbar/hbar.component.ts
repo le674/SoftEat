@@ -64,7 +64,6 @@ export class HbarComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.conges = parseInt(await this.app.getUserConges(), 10); // Traduit le string en int
     this.email = this.firebaseService.getEmailLocalStorage();
-    const [emailPrefix] = this.email.split('@');
     await this.getConv();
     this.convActive = `conversations/deliss_pizz/employes/${this.conv}`;
   }
