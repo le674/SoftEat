@@ -5,7 +5,7 @@
             <p> Total : 6 semaines</p>
             <p *ngIf="conges > 1">Restant: <span [ngStyle]="getCongesColorStyle(conges)">{{ conges }} Jours</span></p>
             <p *ngIf="conges <= 1">Restant: <span [ngStyle]="getCongesColorStyle(conges)">{{ conges }} Jour</span></p>
-            
+
         </div>
         <div style="flex-grow: 1" id="motif">
             <button #autofillConge (click)="autofillInput(autofillConge.innerText)">Congés</button>
@@ -16,28 +16,29 @@
         </div>
         <div style="flex-grow: 5">
             <h2> Demande de congés payés </h2>
-            <form>
+            <form #form="ngForm" (ngSubmit)="onSubmit()">
                 <div class="line">
-                    <label for="nom">Motif </label>
-                    <input #motif id="motif" type="text" placeholder="Champ obligatoire*" [style.width]="dateWidth"
-                        required>
+                    <label for="motif">Motif</label>
+                    <input #motif id="motif" name="motif" type="text" placeholder="Champ obligatoire*"
+                        [style.width]="dateWidth" [(ngModel)]="form.value.motif" required>
                 </div>
                 <div class="line">
-                    <label for="début">Date début </label>
-                    <input #dateDebut type="date" id="début" name="début" [style.width]="dateWidth" required>
+                    <label for="dateDebut">Date début</label>
+                    <input #dateDebut id="dateDebut" name="dateDebut" type="date" [style.width]="dateWidth"
+                        [(ngModel)]="form.value.dateDebut" required>
                 </div>
                 <div class="line">
-                    <label for="fin">Date fin </label>
-                    <input #dateFin type="date" id="fin" name="fin" [style.width]="dateWidth" required>
+                    <label for="dateFin">Date fin</label>
+                    <input #dateFin id="dateFin" name="dateFin" type="date" [style.width]="dateWidth"
+                        [(ngModel)]="form.value.dateFin" required>
                 </div>
-
                 <div class="picker">
                     <input type="file" id="fileInput" name="fileInput" class="file-input"
                         (change)="displayFileName($event)">
                     <label for="fileInput" class="file-label">Joindre un fichier</label>
                 </div>
                 <div *ngIf="selectedFileName" class="file-info">
-                    <p class="selected">{{ selectedFileName }}</p>
+                    <p class="selected">{{ selectedShortenedFileName }}</p>
                     <button class="unchoose-button" (click)="unchooseFile()">&cross;</button>
                 </div>
 

@@ -152,6 +152,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
 
     // Retirer la notif du canal actif
     if(canalId!=""){
+      this.selector="";
       this.markCanalAsRead(canalId, this.email);
     }
     this.canalActiveId = canalId;
@@ -192,7 +193,6 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     const dataRef = ref(db, this.convActive);
     this.messagerie = [];
     onChildAdded(dataRef, (snapshot) => {
-      console.log("dataRef : " + dataRef);
       const data = snapshot.val();
       const existingMessageIndex = this.messagerie.findIndex(
         (messageInfos) => messageInfos.message.horodatage === data.horodatage
@@ -231,6 +231,9 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
           }
         }
         this.messagerie.push(donneesMessage);
+        this.scrollToBottom().then(() => {
+          console.log("OUIOUI")
+        });
       }
     });
   }
@@ -332,7 +335,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     });
   }
   
-  //Scroll quand un message est envoyé
+  //Scroll en bas de la messagerie
   async scrollToBottom() {
     try {
       this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
