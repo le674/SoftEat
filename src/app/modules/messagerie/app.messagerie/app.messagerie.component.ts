@@ -5,8 +5,9 @@ import { User } from '../../../interfaces/user';
 import { getDatabase, ref, push, update, get, onChildAdded, off, onValue, DatabaseReference} from 'firebase/database';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
-import { interval, take } from 'rxjs';
+import { delay, interval, take } from 'rxjs';
 import { MessageInfos } from '../app.messagerie.message.infos/message-infos';
+import { waitForAsync } from '@angular/core/testing';
 
 @Component({
   selector: 'app-messagerie',
@@ -41,6 +42,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   inputText!: string;
   firebaseApp: FirebaseApp | undefined;
   shouldScroll = false;
+  maxScroll = 0;
   
   messagerie!: MessageInfos[];
   convEmployes!: string[];
@@ -87,14 +89,14 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
    
 
     onAuthStateChanged(auth, (currentUser) => {
-    let user = currentUser;
-    let userdat = user?.uid;
-    const conv = ref(db, `${userPath}/${userdat}/convPrivee`);
-    onValue(conv, (convSnapshot) => {
-      this.currentUserConv = "".concat("conversations/deliss_pizz/employes/",convSnapshot.val());
-    });
-    //retour console de sa conversation
-    console.log(this.currentUserConv);
+      let user = currentUser;
+      let userdat = user?.uid;
+      const conv = ref(db, `${userPath}/${userdat}/convPrivee`);
+      onValue(conv, (convSnapshot) => {
+        this.currentUserConv = "".concat("conversations/deliss_pizz/employes/",convSnapshot.val());
+      });
+      //retour console de sa conversation
+      // console.log(this.currentUserConv);
     });
 
     if (this.planningCanal){
@@ -104,7 +106,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       onValue(emplacementRef, (snapshot) => {
       
         let keys: string[] = Object.keys(snapshot.val());
-        console.log('Clés récupérées:', keys);
+        // console.log('Clés récupérées:', keys);
         this.convEmployes=keys;
       });
     }
@@ -112,12 +114,24 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
 
   processConvEmployes(employee: string) {
     this.selector=employee;
-    console.log('Liste des employes' + this.convEmployes);
+    // console.log('Liste des employes' + this.convEmployes);
     this.convActive="".concat("conversations/deliss_pizz/employes/",employee);
     this.switchChannel(this.convActive, "");
   }
 
+  /* Scroll la page vers le bas à chaque fois que "shouldScroll" vaut "true" 
+   * et que le scroll a bien été appliqué. On vérifie cela avec la valeur "maxScroll" qui 
+   * décrit la valeur du scroll précédement appliquée. Si elle est différente de la dernière
+   * valeur de scroll appliquée, c'est qu'on a changé de canal ou qu'un nouveau message est apparu.
+   * Dans ces cas-là, on scroll.
+   */
   ngAfterViewChecked(): void {
+    if(this.maxScroll !== this.scrollContainer.nativeElement.scrollHeight) {
+      this.shouldScroll = true;
+    } else {
+      this.shouldScroll = false;
+    }
+
     if(this.shouldScroll) {
       this.scrollToBottom();
       this.shouldScroll = false;
@@ -156,6 +170,8 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       this.markCanalAsRead(canalId, this.email);
     }
     this.canalActiveId = canalId;
+    console.log("shouldscroll");
+    this.maxScroll = 0;
   }
 
 
@@ -193,13 +209,14 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     const dataRef = ref(db, this.convActive);
     this.messagerie = [];
     onChildAdded(dataRef, (snapshot) => {
+      // console.log("dataRef : " + dataRef);
       const data = snapshot.val();
       const existingMessageIndex = this.messagerie.findIndex(
         (messageInfos) => messageInfos.message.horodatage === data.horodatage
       );
       if (existingMessageIndex === -1) {
         const donneesMessage = new MessageInfos();
-        console.log(donneesMessage);
+        // console.log(donneesMessage);
         donneesMessage.message.auteur = data.auteur;
         donneesMessage.message.contenu = data.contenu;
         donneesMessage.message.horodatage = data.horodatage;
@@ -274,27 +291,25 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
 
     this.firebaseService.getUserDataReference(user_email)
       .then((userRef: DatabaseReference | null) => {
-        if (userRef) {
-          get(userRef)
-            .then((snapshot) => {
-            const user: User = snapshot.val();
-            const notificationCanaux = user.notificationCanaux || {};
-            notificationCanaux[canalId] = 0;
-            update(userRef.ref, { notificationCanaux })
-                .then(() => {
-                  //console.log("User's notification marked as read");
-                })
-                .catch(error => {
-                  //console.error("Error updating user's notification:", error);
-                });
-          });
-        }
-      })
-      .catch(error => {
+      if (userRef) {
+        get(userRef)
+          .then((snapshot) => {
+          const user: User = snapshot.val();
+          const notificationCanaux = user.notificationCanaux || {};
+          notificationCanaux[canalId] = 0;
+          update(userRef.ref, { notificationCanaux })
+              .then(() => {
+                //console.log("User's notification marked as read");
+              })
+              .catch(error => {
+                //console.error("Error updating user's notification:", error);
+              });
+        });
+      }
+    }).catch(error => {
         // Gestion de l'erreur
-      });
-      await this.updateUserNotification(this.email);
-  
+    });
+    await this.updateUserNotification(this.email);
   }
   
   // NOTIFICATIONS (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
@@ -335,10 +350,11 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     });
   }
   
-  //Scroll en bas de la messagerie
-  async scrollToBottom() {
+  //Scroll quand un message est envoyé
+  scrollToBottom() {
     try {
       this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+      this.maxScroll = this.scrollContainer.nativeElement.scrollHeight;
     } catch(error) {}
   }
 
