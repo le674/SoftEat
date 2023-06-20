@@ -206,14 +206,14 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       const endDate = new Date(row.finPoste);
       switch (repetitionOption) {
         case 'repeter-option2': // Répeter cette semaine
-          // Check si start et end dates only lieu le même jour
+          // Check si l'évènement a lieu sur un seul jour (début et fin le même jour)
           if (this.isSameDay(startDate, endDate)) {
             const weekStart = new Date(startDate);
             const weekEnd = new Date(startDate);
             weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Début de la semaine = lundi
             weekEnd.setDate(weekStart.getDate() + 6); // Fin de la semaine = samedi
-
             const currentDate = new Date(weekStart);
+            let i = 0;
             while (currentDate <= weekEnd) {
               this.newEvent.start =
                 this.formatDate(currentDate) +
@@ -225,22 +225,21 @@ export class EventFormComponent implements OnInit, AfterViewInit {
                 'T' +
                 row.finPoste.split('T')[1] +
                 ':00';
-
-              const userPath: string | null = await this.calendar.getPath(
-                row.personnel
-              );
+              const userPath: string | null = await this.calendar.getPath(row.personnel);
               if (userPath) {
-                await this.addEvent(userPath, this.newEvent);
+                console.log('passage de boucle : ', i, 'on est le jour : ', currentDate, 'et dans l event : ', this.newEvent.start)
+                this.addEvent(userPath, this.newEvent);
               }
-              currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+              i += 1;
+              currentDate.setDate(currentDate.getDate() + 1); // Se déplace au jour suivant
             }
           } else {
-            // Handle the case where the start and end dates are not the same day
+            // Si le début et la fin d'évènement ont pas lieu le même jour 
             console.log('Event spans multiple days. Skipping repetition.');
           }
           break;
-        case 'repeter-option3': // Répeter chaque semaine
-          // Check if the start and end dates are the same day
+        case 'repeter-option3': // Répeter chaque semaine (du mois courrant de la date)
+          // Check si l'évènement a lieu sur un seul jour (début et fin le même jour)
           if (this.isSameDay(startDate, endDate)) {
             const currentMonth = startDate.getMonth();
             const firstDayOfMonth = new Date(
@@ -253,7 +252,6 @@ export class EventFormComponent implements OnInit, AfterViewInit {
               currentMonth + 1,
               0
             );
-
             const currentDate = new Date(firstDayOfMonth);
             while (currentDate <= lastDayOfMonth) {
               if (currentDate.getDay() === startDate.getDay()) {
@@ -275,15 +273,15 @@ export class EventFormComponent implements OnInit, AfterViewInit {
                   await this.addEvent(userPath, this.newEvent);
                 }
               }
-              currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+              currentDate.setDate(currentDate.getDate() + 1); // Se déplace au jour suivant
             }
           } else {
-            // Handle the case where the start and end dates are not the same day
+            // Si le début et la fin d'évènement ont pas lieu le même jour 
             console.log('Event spans multiple days. Skipping repetition.');
           }
           break;
-        case 'repeter-option4': // Répéter chaque jour
-          // Check if the start and end dates are the same day
+        case 'repeter-option4': // Répéter chaque jour (de travail du mois de la date d'évènement)
+          // Check si l'évènement a lieu sur un seul jour (début et fin le même jour)
           if (this.isSameDay(startDate, endDate)) {
             const currentMonth = startDate.getMonth();
             const firstDayOfMonth = new Date(
@@ -296,10 +294,9 @@ export class EventFormComponent implements OnInit, AfterViewInit {
               currentMonth + 1,
               0
             );
-
             const currentDate = new Date(firstDayOfMonth);
             while (currentDate <= lastDayOfMonth) {
-              // Check if the current date is a weekday or Saturday (Monday to Saturday)
+              // Check si l'évènement a lieu sur un jour de travail (lundi à samedi)
               if (currentDate.getDay() >= 1 && currentDate.getDay() <= 6) {
                 this.newEvent.start =
                   this.formatDate(currentDate) +
@@ -319,18 +316,14 @@ export class EventFormComponent implements OnInit, AfterViewInit {
                   await this.addEvent(userPath, this.newEvent);
                 }
               }
-
-              // Move to the next day
-              currentDate.setDate(currentDate.getDate() + 1);
-
-              // Check if the next day is Sunday
+              currentDate.setDate(currentDate.getDate() + 1); // Se déplace au jour suivant
+              // Vérifie si le prochain jour est Dimanche et le skip si c'est le cas
               if (currentDate.getDay() === 0) {
-                // Skip Sunday and move to the next day (Monday)
                 currentDate.setDate(currentDate.getDate() + 1);
               }
             }
           } else {
-            // Handle the case where the start and end dates are not the same day
+            // Si le début et la fin d'évènement ont pas lieu le même jour 
             console.log('Event spans multiple days. Skipping repetition.');
           }
           break;
@@ -400,6 +393,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     // Ajouter l'évènement au calendrier
     const prop = 'foodandboost_prop'; // Assuming the property name is fixed
     this.calendar.add_event(prop, userId, newEvent);
+    console.log('j ai créé un event : ', newEvent.start);
   }
 
   closeDialog(): void {
