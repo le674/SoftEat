@@ -206,12 +206,12 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       const endDate = new Date(row.finPoste);
       switch (repetitionOption) {
         case 'repeter-option2': // Répeter cette semaine
-          // Check if the start and end dates are the same day
+          // Check si start et end dates only lieu le même jour
           if (this.isSameDay(startDate, endDate)) {
             const weekStart = new Date(startDate);
             const weekEnd = new Date(startDate);
-            weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Set to Monday
-            weekEnd.setDate(weekStart.getDate() + 5); // Set to Saturday
+            weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Début de la semaine = lundi
+            weekEnd.setDate(weekStart.getDate() + 6); // Fin de la semaine = samedi
 
             const currentDate = new Date(weekStart);
             while (currentDate <= weekEnd) {
