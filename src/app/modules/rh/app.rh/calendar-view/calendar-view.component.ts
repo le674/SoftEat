@@ -22,7 +22,9 @@ import { EventFormComponent } from '../event-form/event-form.component';
   templateUrl: './calendar-view.component.html',
   styleUrls: ['./calendar-view.component.css'],
 })
-export class CalendarViewComponent implements AfterViewInit, OnInit, OnDestroy {
+
+export class CalendarViewComponent implements OnInit, OnDestroy {
+
   @ViewChild('day') day!: DayPilotCalendarComponent;
   @ViewChild('week') week!: DayPilotCalendarComponent;
   @ViewChild('month') month!: DayPilotMonthComponent;
@@ -398,10 +400,6 @@ export class CalendarViewComponent implements AfterViewInit, OnInit, OnDestroy {
       }
     },
   };
-
-  ngAfterViewInit(): void {
-    this.loadEvents('');
-  }
 
   //Chargement des événements des utilisateurs sélectionnés
   loadEvents(users: string): void {

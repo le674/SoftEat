@@ -52,14 +52,15 @@ export class HbarComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.conges = parseInt(await this.app.getUserConges(), 10); // Parse the string as an integer
+    this.conges = parseInt(await this.app.getUserConges(), 10); // Traduit le string en int
     this.email = this.firebaseService.getEmailLocalStorage();
     const [emailPrefix] = this.email.split('@');
     await this.getConv();
     this.convActive = `conversations/deliss_pizz/employes/${this.conv}`;
   }
 
-  getCongesColorStyle(conges: number) {
+  // Permet de modifier la couleur des congés restants (rouge plus beaucoup de congés, vert beaucoup de congés, de 1 à 30)
+  getCongesColorStyle(conges: number) { 
     const minConges = 0;
     const maxConges = 30;
     const normalizedValue = (conges - minConges) / (maxConges - minConges);
@@ -100,7 +101,7 @@ export class HbarComponent implements OnInit {
 
   unchooseFile() {
     this.selectedFileName = '';
-    // Reset the file input value if needed
+    // Remise à zéro du champ si il y en a besoin
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     fileInput.value = '';
   }
