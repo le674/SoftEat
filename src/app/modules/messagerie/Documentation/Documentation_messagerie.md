@@ -89,13 +89,21 @@ Le résultat final ressemble à ceci :
 
 ![Schéma du template de message](./img/message-template-schema.png)
 
+Le template prend en argument un objet `MessageInfos` et deux booléens : `authorIsMe` et `isBot`.
+
 ### b. Date Template
 
-
+Le template de la date est une simple div, qui prend en argument un timestamp : 
+```html
+<div>
+	<p>{{ this.date | date: 'E dd MMMM yyyy' }}</p>
+</div>
+```
 
 ### c. Barre de saisie
 
-
+:x: La barre de saisie ne permet pas de retour à la ligne.  
+:heavy_check_mark: Il est possible d'appuyer sur le bouton envoi ou sur la touche "entrée".
 
 ---
 
