@@ -58,7 +58,7 @@
                </div>
             </li>
             <li>
-               <a [class.active]="convActive === currentUserConv" (click)="convActive=this.currentUserConv; fetchData()">
+               <a [class.active]="convActive === currentUserConv" (click)="switchChannel(this.currentUserConv,'rh')">
                   <span class="conversation-name">
                      Ressources Humaines
                   </span>
