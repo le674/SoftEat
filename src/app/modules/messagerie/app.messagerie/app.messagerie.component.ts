@@ -5,9 +5,8 @@ import { User } from '../../../interfaces/user';
 import { getDatabase, ref, push, update, get, onChildAdded, off, onValue, DatabaseReference} from 'firebase/database';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
-import { delay, interval, take } from 'rxjs';
+import { interval, take } from 'rxjs';
 import { MessageInfos } from '../app.messagerie.message.infos/message-infos';
-import { waitForAsync } from '@angular/core/testing';
 
 @Component({
   selector: 'app-messagerie',
@@ -53,6 +52,9 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   author_is_me!: boolean[];
   isBot!: boolean[];
 
+  messageInput = document.getElementById("messageInput");
+
+
   constructor(firebaseApp: FirebaseApp, private firebaseService: FirebaseService) {  
     this.firebaseApp = firebaseApp;
     this.fetchData();
@@ -60,6 +62,9 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     this.callUpdateUserNotification();
   }
 
+  /**
+   * 
+   */
   showCanal() {
     if(this.statut.stock === 'wr' || this.statut.stock === 'rw' || this.statut.stock === 'r' ) this.stockCanal = true;
     if(this.statut.analyse === 'wr' || this.statut.analyse === 'rw' || this.statut.analyse === 'r' ) this.stockCanal = true;
@@ -69,7 +74,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   }
 
   async ngOnInit(): Promise<void> {
-    
+
     this.notification = { 'ana': false, 'com': false, 'fac': false, 'inv': false, 'rec': false, 'plan': false, 'rh': false};
     this.email = this.firebaseService.getEmailLocalStorage();
     this.convListUsers = await this.firebaseService.fetchConvListUsers();
@@ -85,8 +90,6 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     const userPath = '/users/foodandboost_prop/';
     const db = getDatabase();
     const auth = getAuth(this.firebaseApp);
-
-   
 
     onAuthStateChanged(auth, (currentUser) => {
       let user = currentUser;
@@ -112,6 +115,10 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     }
   }
 
+  /**
+   * 
+   * @param employee 
+   */
   processConvEmployes(employee: string) {
     this.selector=employee;
     // console.log('Liste des employes' + this.convEmployes);
@@ -119,7 +126,8 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     this.switchChannel(this.convActive, "");
   }
 
-  /* Scroll la page vers le bas à chaque fois que "shouldScroll" vaut "true" 
+  /**
+   * Scroll la page vers le bas à chaque fois que "shouldScroll" vaut "true" 
    * et que le scroll a bien été appliqué. On vérifie cela avec la valeur "maxScroll" qui 
    * décrit la valeur du scroll précédement appliquée. Si elle est différente de la dernière
    * valeur de scroll appliquée, c'est qu'on a changé de canal ou qu'un nouveau message est apparu.
@@ -138,10 +146,12 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  
-  messageInput = document.getElementById("messageInput");
-
-  //recuperation heure du serveur
+  /**
+   * Récupération de l'heure du serveur Firebase et ajout d'un offset pour avoir l'heure 
+   * française. Ainsi tous les composants de la messagerie partagent la même heure.
+   * 
+   * @returns timestamp (heure française) à l'instant T
+   */
   fetchTimeServer(): number {
     const db = getDatabase();
     onValue(ref(db, '.info/serverTimeOffset'), (snapshot) => {
@@ -151,7 +161,12 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     return this.date;
   }
 
-  switchChannel(convActive: string, canalId: string){
+  /**
+   * 
+   * @param convActive 
+   * @param canalId 
+   */
+  switchChannel(convActive: string, canalId: string) {
     // Arrêter l'écoute des modifications du canal précédent
     const previousDataRef = ref(getDatabase(this.firebaseApp), this.convActive);
     off(previousDataRef);
@@ -174,7 +189,11 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     this.maxScroll = 0;
   }
 
-
+  /**
+   * Déclenche l'envoi d'un message dans la base de données. Récupère l'heure, le nom et prénom 
+   * de l'utilisateur (celui-ci doit avoir son nom et prénom enregistré dans la base de données).
+   * Lorsqu'un message est envoyé, un scroll est appliqué afin de voir apparaître le nouveau message.
+   */
   async sendMessage(): Promise<void> {
     if(this.inputText != '') {
       const db = getDatabase(this.firebaseApp);
@@ -202,18 +221,27 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     this.shouldScroll = true;
   }
 
+  /**
+   * Récupère tous les messages d'un canal. Les message ainsi récupérés sont ajoutés à
+   * un objet de type "MessageInfos" dont le rôle est de passer au DOM les informations
+   * provenant de la base de données.
+   */
   async fetchData() {
     // Création d'une instance de la database
     const db = getDatabase(this.firebaseApp);
     // Node à monitorerRessources Humaines 
     const dataRef = ref(db, this.convActive);
     this.messagerie = [];
+
+    //Pour tous les messages (qui ici sont les "child")
     onChildAdded(dataRef, (snapshot) => {
       // console.log("dataRef : " + dataRef);
       const data = snapshot.val();
       const existingMessageIndex = this.messagerie.findIndex(
         (messageInfos) => messageInfos.message.horodatage === data.horodatage
       );
+
+      //On récupère les informations si et seulement si le message correspond à celui qu'on veut
       if (existingMessageIndex === -1) {
         const donneesMessage = new MessageInfos();
         // console.log(donneesMessage);
@@ -221,7 +249,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
         donneesMessage.message.contenu = data.contenu;
         donneesMessage.message.horodatage = data.horodatage;
 
-        //On vérifie si le message date du même jour :
+        //On vérifie si le message date du même jour que le précédent :
         if(this.messagerie.length >= 1) {
           const this_message_date = new Date(data.horodatage);
           const previous_msg_date = new Date(this.messagerie[this.messagerie.length-1].message.horodatage);
@@ -236,7 +264,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
         donneesMessage.message.nom = data.nom;
         donneesMessage.message.prenom = data.prenom;
 
-        //Message à gauche ou à droite selon l'auteur
+        //On regarde si on met le message à gauche ou à droite de la messagerie selon l'auteur
         if (data.auteur === this.email) {
           donneesMessage.authorIsMe = true;
         } else {
@@ -248,49 +276,45 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
           }
         }
         this.messagerie.push(donneesMessage);
-        this.scrollToBottom().then(() => {
-          console.log("OUIOUI")
-        });
       }
     });
   }
 
-  // NOTIFICATIONS (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
+  /** NOTIFICATIONS :
+   * (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
+   */
   async updateUnreadMessages(canalId: string, users_email: string[]): Promise<void> {
     const db = getDatabase(this.firebaseApp);
 
     users_email.forEach(email => {
-      this.firebaseService.getUserDataReference(email)
-        .then((userRef: DatabaseReference | null) => {
-          if (userRef) {
-            get(userRef)
-              .then((snapshot) => {
-              const user: User = snapshot.val();
-              const notificationCanaux = user.notificationCanaux || {};
-              notificationCanaux[canalId] = 1;
-              update(userRef.ref, { notificationCanaux })
-                .then(() => {
-                  console.log("User's notification updated successfully");
-                })
-                .catch(error => {
-                  console.error("Error updating user's notification:", error);
-                });
+      this.firebaseService.getUserDataReference(email).then((userRef: DatabaseReference | null) => {
+        if (userRef) {
+          get(userRef)
+            .then((snapshot) => {
+            const user: User = snapshot.val();
+            const notificationCanaux = user.notificationCanaux || {};
+            notificationCanaux[canalId] = 1;
+            update(userRef.ref, { notificationCanaux }).then(() => {
+              console.log("User's notification updated successfully");
+            }).catch(error => {
+              console.error("Error updating user's notification:", error);
             });
-          }
-        })
-        .catch(error => {
-          // Gestion de l'erreur
-        });
+          });
+        }
+      }).catch(error => {
+        // Gestion de l'erreur
+      });
     });
     await this.updateUserNotification(this.email);
   }
 
-  // NOTIFICATIONS (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
+  /** NOTIFICATIONS :
+   * (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
+   */
   async markCanalAsRead(canalId: string, user_email: string): Promise<void> {
     const db = getDatabase(this.firebaseApp);
 
-    this.firebaseService.getUserDataReference(user_email)
-      .then((userRef: DatabaseReference | null) => {
+    this.firebaseService.getUserDataReference(user_email).then((userRef: DatabaseReference | null) => {
       if (userRef) {
         get(userRef)
           .then((snapshot) => {
@@ -309,37 +333,38 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     }).catch(error => {
         // Gestion de l'erreur
     });
+      
     await this.updateUserNotification(this.email);
   }
   
-  // NOTIFICATIONS (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
+  /** NOTIFICATIONS :
+   *  (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
+   */
   async updateUserNotification(user_email: string): Promise<void> {
     const db = getDatabase(this.firebaseApp);
 
-    this.firebaseService.getUserDataReference(user_email)
-      .then((userRef: DatabaseReference | null) => {
-        if (userRef) {
-          get(userRef)
-            .then((snapshot) => {
-              const userSnapShot = snapshot.val();
-              const notificationCanaux = userSnapShot.notificationCanaux;
-              for (const canal of Object.keys(notificationCanaux)) {
-                if (notificationCanaux[canal as keyof typeof notificationCanaux] == 0) {
-                  this.notification[canal] = false;
-                } else {
-                  this.notification[canal] = true;
-                }
-                // console.log(`${canal}: ${notificationCanaux[canal as keyof typeof notificationCanaux]}`);
-              }
-            });
-        }
-      })
-      .catch(error => {
-        // Gestion de l'erreur
-      });
+    this.firebaseService.getUserDataReference(user_email).then((userRef: DatabaseReference | null) => {
+      if (userRef) {
+        get(userRef).then((snapshot) => {
+          const userSnapShot = snapshot.val();
+          const notificationCanaux = userSnapShot.notificationCanaux;
+          for (const canal of Object.keys(notificationCanaux)) {
+            if (notificationCanaux[canal as keyof typeof notificationCanaux] == 0) {
+              this.notification[canal] = false;
+            } else {
+              this.notification[canal] = true;
+            }
+          }
+        });
+      }
+    }).catch(error => {
+      // Gestion de l'erreur
+    });
   }
 
-  //NOTIFICATIONS, Appel de updateUserNotification() toutes les 5 secondes
+  /** NOTIFICATIONS :
+   * Appelle updateUserNotification() toutes les 5 secondes.
+   */
   callUpdateUserNotification() {
     const interval$ = interval(5000);
     
@@ -350,7 +375,9 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     });
   }
   
-  //Scroll quand un message est envoyé
+  /**
+   * Scroll en bas de la page. Garde en mémoire la valeur du scroll appliqué.
+   */
   scrollToBottom() {
     try {
       this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
@@ -358,7 +385,9 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
     } catch(error) {}
   }
 
-  // Obtenir le nom et prénom du LocalStorage
+  /**
+   * Récupère le nom et prénom à partir de l'e-mail de l'utilisateur.
+   */ 
   async getName(): Promise<void> {
     const db = getDatabase(this.firebaseApp);
     const usersRef = ref(db, 'users/foodandboost_prop');
