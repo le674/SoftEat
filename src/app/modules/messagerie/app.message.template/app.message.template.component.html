@@ -1,26 +1,24 @@
-<div class="messagerie">
-  <div class="message">
-    <div class="message_outer">
+<div class="message">
+  <div class="message_outer">
+    <div [ngStyle]="{
+    'flex-direction': author_is_me ? 'row-reverse' : 'row'
+    }" class="message_inner">
       <div [ngStyle]="{
-      'flex-direction': author_is_me ? 'row-reverse' : 'row'
-      }" class="message_inner">
-        <div [ngStyle]="{
-        'background-color': author_is_me ? '#DCF8C6' : (isBot ? '#ecc6f8' : '#e0e0e0')
-        }" class="message_bubble" dir="auto">
-          <div class="message_infos">
-            <div class="name">
-              <p>{{ listeMessages.prenom }} {{ listeMessages.nom }}</p>
-            </div>
-            <div class="time_sent">
-              <p> {{ listeMessages.horodatage | date: 'HH:mm'}} </p>
-            </div>
+      'background-color': author_is_me ? '#DCF8C6' : (isBot ? '#ecc6f8' : '#e0e0e0')
+      }" class="message_bubble" dir="auto">
+        <div class="message_infos">
+          <div class="name">
+            <p>{{ listeMessages.prenom }} {{ listeMessages.nom }}</p>
           </div>
-          <div class="message_content">
-            <p>{{ listeMessages.contenu }}</p>
+          <div class="time_sent">
+            <p> {{ listeMessages.horodatage | date: 'HH:mm'}} </p>
           </div>
         </div>
-        <div class="message_spacer"></div>
+        <div class="message_content">
+          <p>{{ listeMessages.contenu }}</p>
+        </div>
       </div>
+      <div class="message_spacer"></div>
     </div>
   </div>
 </div>

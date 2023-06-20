@@ -87,7 +87,7 @@ Le résultat final ressemble à ceci :
 
 ### a. Message Template
 
-
+![Schéma du template de message](./img/message-template-schema.png)
 
 ### b. Date Template
 
@@ -101,3 +101,8 @@ Le résultat final ressemble à ceci :
 
 ## 3. Canaux
 
+### a. Droits et rôles
+
+
+
+### b. Notifications
