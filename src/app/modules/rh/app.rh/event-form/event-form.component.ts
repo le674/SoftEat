@@ -201,7 +201,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
           if (this.isSameDay(startDate, endDate)) {
             const weekStart = new Date(startDate);
             const weekEnd = new Date(startDate);
-            weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1); // Set to Monday
+            weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Set to Monday
             weekEnd.setDate(weekStart.getDate() + 5); // Set to Saturday
 
             const currentDate = new Date(weekStart);
@@ -223,7 +223,6 @@ export class EventFormComponent implements OnInit, AfterViewInit {
               if (userPath) {
                 await this.addEvent(userPath, this.newEvent);
               }
-
               currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
             }
           } else {
