@@ -7,10 +7,9 @@ import {
 } from '@angular/core';
 import { FirebaseApp, initializeApp } from '@angular/fire/app';
 import { getDatabase, ref, onValue, get } from 'firebase/database';
-import { DayPilot } from "daypilot-pro-angular";
-import { CalendarService } from "../calendar-view/calendar-data.service";
+import { DayPilot } from 'daypilot-pro-angular';
+import { CalendarService } from '../calendar-view/calendar-data.service';
 import { MatDialogRef } from '@angular/material/dialog';
-
 
 @Component({
   selector: 'app-event-form',
@@ -28,55 +27,57 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   dateWidth = '150px'; // Default width
 
   Categories!: String[];
-  Serveurs!: { nom: String; selectionne: boolean; mail : String }[];
-  Gerants!: { nom: String; selectionne: boolean; mail : String }[];
-  Rh!: { nom: String; selectionne: boolean; mail : String }[];
-  Autres!: { nom: String; selectionne: boolean; mail : String }[];
+  Serveurs!: { nom: String; selectionne: boolean; mail: String }[];
+  Gerants!: { nom: String; selectionne: boolean; mail: String }[];
+  Rh!: { nom: String; selectionne: boolean; mail: String }[];
+  Autres!: { nom: String; selectionne: boolean; mail: String }[];
   firebaseApp: FirebaseApp | undefined;
-  newEvent?: DayPilot.EventData; 
-  constructor(private calendar: CalendarService, public dialogRef: MatDialogRef<EventFormComponent>, firebaseApp: FirebaseApp) {
+  newEvent?: DayPilot.EventData;
+  constructor(
+    private calendar: CalendarService,
+    public dialogRef: MatDialogRef<EventFormComponent>,
+    firebaseApp: FirebaseApp
+  ) {
     this.dialogRef = dialogRef;
   }
-
 
   /* Les deux premières méthodes ajoutent automatiquement des majuscules sur 
   le premier caractère du champ Evenement uniformiser */
   ngOnInit(): void {
-
+    // Initialisation des catégories
     this.Categories = ['Serveurs', 'Rh', 'Gérants', 'Autres'];
 
-    //this.Serveurs = [];
+    // Récupération des Serveurs depuis le stockage local
     const ServeursString = localStorage.getItem('Serveurs');
     if (ServeursString) {
       this.Serveurs = JSON.parse(ServeursString);
     }
-    //this.Gerants = [];
+    /// Récupération des Gérants depuis le stockage local
     const GerantString = localStorage.getItem('Gérants');
     if (GerantString) {
       this.Gerants = JSON.parse(GerantString);
     }
-    //this.Rh = [];
+    // Récupération des Rh depuis le stockage local
     const RhString = localStorage.getItem('Rh');
     if (RhString) {
       this.Rh = JSON.parse(RhString);
     }
-    //this.Autres = [];
+    // Récupération des Autres depuis le stockage local
     const AutresString = localStorage.getItem('Autres');
     if (AutresString) {
       this.Autres = JSON.parse(AutresString);
     }
-    
 
-    //this.fetchUser();
+    // Configuration des écouteurs d'événements pour les champs de texte
     const inputFields: HTMLInputElement[] = [
       this.addPersonnelInput.nativeElement,
       this.addEventInput.nativeElement,
       this.addLieuInput.nativeElement,
     ];
 
-    setTimeout(() => {
+    setTimeout(() => { // Ajouter un délai avant de configurer les écouteurs d'événements pour les champs de texte
       const inputFields: HTMLInputElement[] = [
-        this.addEventInput.nativeElement
+        this.addEventInput.nativeElement,
       ];
 
       inputFields.forEach((input) => {
@@ -87,7 +88,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     });
   }
 
-  truncateInputValue(input: HTMLInputElement): void {
+  truncateInputValue(input: HTMLInputElement): void { // Mettre le premier caractère en majuscule
     input.value = input.value.charAt(0).toUpperCase() + input.value.slice(1);
   }
 
@@ -106,7 +107,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
 
   rows: Row[] = [];
 
-  addRow(
+  addRow( // Ajouter tous les éléments mis dans le form
     personnel: string,
     motif: string,
     event: string,
@@ -126,7 +127,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     };
     this.rows.push(newRow);
   }
-  resetFormFields(): void {
+
+  resetFormFields(): void { // Remise à zéro des champs du form
     this.addPersonnelInput.nativeElement.value = '';
     this.addMotifInput.nativeElement.value = '';
     this.addEventInput.nativeElement.value = '';
@@ -135,14 +137,14 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     this.addFinPosteInput.nativeElement.value = '';
     this.addRepeterSelect.nativeElement.value = '';
   }
-  deleteRow(index: number): void {
+
+  deleteRow(index: number): void { // Supprimer un évènement enregistré dans le form
     this.rows.splice(index, 1);
   }
 
-  isFieldFilled(
+  isFieldFilled( // Vérifier si l'élément est rempli
     inputRef: ElementRef<HTMLInputElement | HTMLSelectElement>
   ): boolean {
-
     const value = inputRef.nativeElement.value;
     if (inputRef.nativeElement.tagName.toLowerCase() === 'select') {
       return value !== '';
@@ -150,7 +152,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     return value.trim() !== '';
   }
 
-  onClickAdd(
+  onClickAdd( // Lorsqu'on clique sur le + pour ajouter l'évènement
     personnel: string,
     motif: string,
     event: string,
@@ -159,7 +161,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     finPoste: string,
     repeter: string
   ): void {
-    if (
+    if ( // Vérifier si tous les champs obligatoires sont remplis
       !this.isFieldFilled(this.addPersonnelInput) ||
       !this.isFieldFilled(this.addMotifInput) ||
       !this.isFieldFilled(this.addLieuInput) ||
@@ -170,23 +172,25 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       // Show the popup or perform any required validation logic
       alert('Renseignez les champs obligatoires marqués par un astérisque (*)');
       return;
-    } else if(new Date(finPoste) < new Date(prisePoste)){
-      alert('La date de fin de poste est antérieure à la date de prise de poste');
+    } else if (new Date(finPoste) < new Date(prisePoste)) { // Vérifier si la date de prise de poste est antérieure à la date de fin de poste
+      alert(
+        'La date de fin de poste est antérieure à la date de prise de poste'
+      );
       return;
     }
     this.addRow(personnel, motif, event, lieu, prisePoste, finPoste, repeter);
     this.resetFormFields();
   }
 
-  async saveRows(): Promise<void> {
+  async saveRows(): Promise<void> { // Sauvegarde de l'évènement
     for (const row of this.rows) {
       this.newEvent = {
-        start: row.prisePoste + ":00",
-        end: row.finPoste + ":00",
-        text: row.lieu +', ' +row.event, // la ', ' permet le parsing du text pour l'affichage lieu/description
+        start: row.prisePoste + ':00',
+        end: row.finPoste + ':00',
+        text: row.lieu + ', ' + row.event, // la ', ' permet le parsing du text pour l'affichage lieu/description
         id: 'newEventId',
         tags: this.getMotifLabel(row.motif),
-        resource: row.personnel
+        resource: row.personnel,
       };
       const repetitionOption = row.repeter;
       const startDate = new Date(row.prisePoste);
@@ -202,10 +206,20 @@ export class EventFormComponent implements OnInit, AfterViewInit {
 
             const currentDate = new Date(weekStart);
             while (currentDate <= weekEnd) {
-              this.newEvent.start = this.formatDate(currentDate) + 'T' + row.prisePoste.split('T')[1] + ':00';
-              this.newEvent.end = this.formatDate(currentDate) + 'T' + row.finPoste.split('T')[1] + ':00';
+              this.newEvent.start =
+                this.formatDate(currentDate) +
+                'T' +
+                row.prisePoste.split('T')[1] +
+                ':00';
+              this.newEvent.end =
+                this.formatDate(currentDate) +
+                'T' +
+                row.finPoste.split('T')[1] +
+                ':00';
 
-              const userPath: string | null = await this.calendar.getPath(row.personnel);
+              const userPath: string | null = await this.calendar.getPath(
+                row.personnel
+              );
               if (userPath) {
                 await this.addEvent(userPath, this.newEvent);
               }
@@ -221,16 +235,34 @@ export class EventFormComponent implements OnInit, AfterViewInit {
           // Check if the start and end dates are the same day
           if (this.isSameDay(startDate, endDate)) {
             const currentMonth = startDate.getMonth();
-            const firstDayOfMonth = new Date(startDate.getFullYear(), currentMonth, 1);
-            const lastDayOfMonth = new Date(startDate.getFullYear(), currentMonth + 1, 0);
+            const firstDayOfMonth = new Date(
+              startDate.getFullYear(),
+              currentMonth,
+              1
+            );
+            const lastDayOfMonth = new Date(
+              startDate.getFullYear(),
+              currentMonth + 1,
+              0
+            );
 
             const currentDate = new Date(firstDayOfMonth);
             while (currentDate <= lastDayOfMonth) {
               if (currentDate.getDay() === startDate.getDay()) {
-                this.newEvent.start = this.formatDate(currentDate) + 'T' + row.prisePoste.split('T')[1] + ':00';
-                this.newEvent.end = this.formatDate(currentDate) + 'T' + row.finPoste.split('T')[1] + ':00';
+                this.newEvent.start =
+                  this.formatDate(currentDate) +
+                  'T' +
+                  row.prisePoste.split('T')[1] +
+                  ':00';
+                this.newEvent.end =
+                  this.formatDate(currentDate) +
+                  'T' +
+                  row.finPoste.split('T')[1] +
+                  ':00';
 
-                const userPath: string | null = await this.calendar.getPath(row.personnel);
+                const userPath: string | null = await this.calendar.getPath(
+                  row.personnel
+                );
                 if (userPath) {
                   await this.addEvent(userPath, this.newEvent);
                 }
@@ -246,17 +278,35 @@ export class EventFormComponent implements OnInit, AfterViewInit {
           // Check if the start and end dates are the same day
           if (this.isSameDay(startDate, endDate)) {
             const currentMonth = startDate.getMonth();
-            const firstDayOfMonth = new Date(startDate.getFullYear(), currentMonth, 1);
-            const lastDayOfMonth = new Date(startDate.getFullYear(), currentMonth + 1, 0);
+            const firstDayOfMonth = new Date(
+              startDate.getFullYear(),
+              currentMonth,
+              1
+            );
+            const lastDayOfMonth = new Date(
+              startDate.getFullYear(),
+              currentMonth + 1,
+              0
+            );
 
             const currentDate = new Date(firstDayOfMonth);
             while (currentDate <= lastDayOfMonth) {
               // Check if the current date is a weekday or Saturday (Monday to Saturday)
               if (currentDate.getDay() >= 1 && currentDate.getDay() <= 6) {
-                this.newEvent.start = this.formatDate(currentDate) + 'T' + row.prisePoste.split('T')[1] + ':00';
-                this.newEvent.end = this.formatDate(currentDate) + 'T' + row.finPoste.split('T')[1] + ':00';
+                this.newEvent.start =
+                  this.formatDate(currentDate) +
+                  'T' +
+                  row.prisePoste.split('T')[1] +
+                  ':00';
+                this.newEvent.end =
+                  this.formatDate(currentDate) +
+                  'T' +
+                  row.finPoste.split('T')[1] +
+                  ':00';
 
-                const userPath: string | null = await this.calendar.getPath(row.personnel);
+                const userPath: string | null = await this.calendar.getPath(
+                  row.personnel
+                );
                 if (userPath) {
                   await this.addEvent(userPath, this.newEvent);
                 }
@@ -277,7 +327,9 @@ export class EventFormComponent implements OnInit, AfterViewInit {
           }
           break;
         default: // Ne pas répéter
-          const userPath: string | null = await this.calendar.getPath(row.personnel);
+          const userPath: string | null = await this.calendar.getPath(
+            row.personnel
+          );
           if (userPath) {
             await this.addEvent(userPath, this.newEvent);
           }
@@ -287,7 +339,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     this.closeDialog();
   }
 
-  private isSameDay(date1: Date, date2: Date): boolean {
+  private isSameDay(date1: Date, date2: Date): boolean { // Vérif si les deux dates sont les mêmes
     return (
       date1.getFullYear() === date2.getFullYear() &&
       date1.getMonth() === date2.getMonth() &&
@@ -295,14 +347,14 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     );
   }
 
-  private formatDate(date: Date): string {
+  private formatDate(date: Date): string { // Formater la date en string lisible
     const year = date.getFullYear();
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
   }
 
-  getMotifLabel(value: string): string {
+  getMotifLabel(value: string): string { // Retourner le motif selon le choix de l'utilisateur
     switch (value) {
       case 'motif-option1':
         return 'Travail';
@@ -317,7 +369,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getRepeterLabel(value: string): string {
+  getRepeterLabel(value: string): string { // Retourner le champ répéter selon le choix de l'utilisateur
     switch (value) {
       case 'repeter-option1':
         return 'Non';
@@ -332,62 +384,18 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     }
   }
 
-  addEvent(userId: string, newEvent: DayPilot.EventData): void {
+  addEvent(userId: string, newEvent: DayPilot.EventData): void { // Ajouter l'évènement au calendrier
     const prop = 'foodandboost_prop'; // Assuming the property name is fixed
     this.calendar.add_event(prop, userId, newEvent);
   }
 
   closeDialog(): void {
-    this.dialogRef.close(); // Close the dialog
+    this.dialogRef.close(); // Fermer le dialog
   }
 
-  /*async fetchUser() {
-    const db = getDatabase(this.firebaseApp);
-
-    const userPath = '/users/foodandboost_prop/';
-    const usersRef = ref(db, userPath);
-
-    try {
-      const snapshot = await get(usersRef);
-      if (snapshot.exists()) {
-        const usersData = snapshot.val();
-        const userIDs = Object.keys(usersData);
-
-        for (const userID of userIDs) {
-          const userPrenomRef = ref(db, `${userPath}/${userID}/prenom`);
-          const userNomRef = ref(db, `${userPath}/${userID}/nom`);
-          const userRoleRef = ref(db, `${userPath}/${userID}/role`);
-          const userMailRef = ref(db, `${userPath}/${userID}/email`);
-
-          const prenomSnapshot = await get(userPrenomRef);
-          const nomSnapshot = await get(userNomRef);
-          const nomComplet = prenomSnapshot.val() + " " + nomSnapshot.val();
-
-          const roleSnapshot = await get(userRoleRef);
-          const role = roleSnapshot.val();
-          const mail = (await get(userMailRef)).val();
-
-          if (nomComplet) {
-            if (role == 'gerant') {
-              this.Gerants.push({ nom: nomComplet, email: mail });
-            } else if (role == 'rh') {
-              this.Rh.push({ nom: nomComplet, email: mail });
-            } else if (role == 'serveur') {
-              this.Serveurs.push({ nom: nomComplet, email: mail });
-            } else {
-              this.Autres.push({ nom: nomComplet, email: mail });
-            }
-          }
-        }
-      } else {
-        console.log('No user data found.');
-      }
-    } catch (error) {
-      console.error('An error occurred while retrieving user data:', error);
-    }
-  }*/
-
-  getCategoryUsers(category: String): { nom: String; selectionne: boolean; mail : String }[] {
+  getCategoryUsers( // Récupérer la liste des utilisateurs dont on rentre le rôle
+    category: String
+  ): { nom: String; selectionne: boolean; mail: String }[] {
     switch (category) {
       case 'Serveurs':
         return this.Serveurs;
