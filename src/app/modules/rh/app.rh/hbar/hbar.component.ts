@@ -1,13 +1,20 @@
-import { Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef, Input, Inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  Input,
+} from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AppRhComponent } from '../app.rh.component'
-import { getDatabase, ref, push, update, get, onChildAdded, onValue, DatabaseReference } from 'firebase/database';
+import { AppRhComponent } from '../app.rh.component';
+import { getDatabase, ref, push, get, onValue } from 'firebase/database';
 import { FirebaseApp } from '@angular/fire/app';
 import { FirebaseService } from 'src/app/services/firebase.service';
 @Component({
   selector: 'app-hbar',
   templateUrl: './hbar.component.html',
-  styleUrls: ['./hbar.component.css']
+  styleUrls: ['./hbar.component.css'],
 })
 export class HbarComponent implements OnInit {
   @ViewChild('form') form!: NgForm;
@@ -33,8 +40,11 @@ export class HbarComponent implements OnInit {
   surname!: string;
   role!: string;
 
-  constructor(private cdr: ChangeDetectorRef, private app: AppRhComponent,
-    firebaseApp: FirebaseApp, private firebaseService: FirebaseService
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private app: AppRhComponent,
+    firebaseApp: FirebaseApp,
+    private firebaseService: FirebaseService
   ) {
     this.firebaseApp = firebaseApp;
   }
@@ -60,7 +70,7 @@ export class HbarComponent implements OnInit {
   }
 
   // Permet de modifier la couleur des congés restants (rouge plus beaucoup de congés, vert beaucoup de congés, de 1 à 30)
-  getCongesColorStyle(conges: number) { 
+  getCongesColorStyle(conges: number) {
     const minConges = 0;
     const maxConges = 30;
     const normalizedValue = (conges - minConges) / (maxConges - minConges);
@@ -70,13 +80,12 @@ export class HbarComponent implements OnInit {
   }
 
   autofillInput(value: string): void {
-    if (value == "Exceptionnels") {
+    if (value == 'Exceptionnels') {
       this.form.value.motif = '';
     } else {
       this.form.value.motif = value;
     }
   }
-
 
   displayFileName(event: any) {
     const fileInput = event.target;
@@ -89,7 +98,6 @@ export class HbarComponent implements OnInit {
       this.selectedShortenedFileName = '';
     }
   }
-
 
   getShortenedFileName(fileName: string): string {
     if (fileName.length <= 20) {
@@ -107,14 +115,18 @@ export class HbarComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.form.valid) { // Check if the form is valid
+    if (this.form.valid) {
+      // Check if the form is valid
       const { motif, dateDebut, dateFin } = this.form.value;
       // Formattage des dates pour l'affichage
-      const formattedDateDebut = new Date(dateDebut).toLocaleDateString('fr-FR', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      });
+      const formattedDateDebut = new Date(dateDebut).toLocaleDateString(
+        'fr-FR',
+        {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        }
+      );
       const formattedDateFin = new Date(dateFin).toLocaleDateString('fr-FR', {
         day: 'numeric',
         month: 'long',
@@ -136,7 +148,6 @@ export class HbarComponent implements OnInit {
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     fileInput.value = ''; // Reset the file input value
   }
-  
 
   // Obtenir la conversation rh (privée), le nom et prénom du LocalStorage
   async getConv(): Promise<void> {
@@ -163,7 +174,7 @@ export class HbarComponent implements OnInit {
     onValue(ref(db, '.info/serverTimeOffset'), (snapshot) => {
       const offset: number = snapshot.val() || 0;
       this.date = Date.now() + offset;
-    })
+    });
     return this.date;
   }
 
@@ -175,7 +186,7 @@ export class HbarComponent implements OnInit {
       contenu: message,
       horodatage: this.fetchTimeServer(),
       nom: 'SoftEat',
-    }
+    };
     //Ecriture du message dans la BDD
     const nodeRef = ref(db, this.convActive);
     push(nodeRef, newMessage);

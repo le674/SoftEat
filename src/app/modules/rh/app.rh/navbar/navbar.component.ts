@@ -201,8 +201,9 @@ export class NavbarComponent implements OnInit {
         const usersData = snapshot.val();
         const userIDs = Object.keys(usersData);
 
-        for (const userID of userIDs) { // Parcours tous les utilisateurs dans la base de données
-          const userRoleRef = ref(db, `${userPath}/${userID}/role`); 
+        for (const userID of userIDs) {
+          // Parcours tous les utilisateurs dans la base de données
+          const userRoleRef = ref(db, `${userPath}/${userID}/role`);
           const userPrenomRef = ref(db, `${userPath}/${userID}/prenom`);
           const userNomRef = ref(db, `${userPath}/${userID}/nom`);
           const userMailRef = ref(db, `${userPath}/${userID}/email`);
@@ -220,7 +221,8 @@ export class NavbarComponent implements OnInit {
           if (nomComplet) {
             if (user_mail === this.userMail) {
               if (role == 'gerant') {
-                this.Gerants.push({ // Ajout de l'utilisateur dans la liste
+                this.Gerants.push({
+                  // Ajout de l'utilisateur dans la liste
                   nom: nomComplet,
                   selectionne: true,
                   mail: user_mail,

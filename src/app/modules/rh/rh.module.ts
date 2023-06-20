@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatDialogModule } from '@angular/material/dialog'; 
+import { MatDialogModule } from '@angular/material/dialog';
 import { CalendarService } from './app.rh/calendar-view/calendar-data.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { DayPilotModule } from 'daypilot-pro-angular';
@@ -15,11 +15,11 @@ import { CalendarViewComponent } from './app.rh/calendar-view/calendar-view.comp
 
 @NgModule({
   declarations: [
-    AppRhComponent, 
+    AppRhComponent,
     HbarComponent,
     NavbarComponent,
     EventFormComponent,
-    CalendarViewComponent
+    CalendarViewComponent,
   ],
   imports: [
     CommonModule,
@@ -28,14 +28,9 @@ import { CalendarViewComponent } from './app.rh/calendar-view/calendar-view.comp
     MatDialogModule,
     BrowserModule,
     HttpClientModule,
-    DayPilotModule
+    DayPilotModule,
   ],
-  exports: [
-    AppRhComponent,
-    CalendarViewComponent
-  ],
-  providers: [
-    CalendarService
-  ]
+  exports: [AppRhComponent, CalendarViewComponent],
+  providers: [CalendarService],
 })
-export class RhModule { }
+export class RhModule {}

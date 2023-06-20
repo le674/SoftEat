@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   ViewChild,
-  AfterViewInit,
   Input,
   OnDestroy,
 } from '@angular/core';
@@ -10,7 +9,6 @@ import {
   DayPilot,
   DayPilotCalendarComponent,
   DayPilotMonthComponent,
-  DayPilotNavigatorComponent,
 } from 'daypilot-pro-angular';
 import { CalendarService } from './calendar-data.service';
 import { from, Subscription } from 'rxjs';
@@ -22,9 +20,7 @@ import { EventFormComponent } from '../event-form/event-form.component';
   templateUrl: './calendar-view.component.html',
   styleUrls: ['./calendar-view.component.css'],
 })
-
 export class CalendarViewComponent implements OnInit, OnDestroy {
-
   @ViewChild('day') day!: DayPilotCalendarComponent;
   @ViewChild('week') week!: DayPilotCalendarComponent;
   @ViewChild('month') month!: DayPilotMonthComponent;
@@ -133,7 +129,8 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
 
         if (durationHours > 0) {
           durationText += durationHours + ' heure';
-          if (durationHours > 1) { // Au pluriel si il y a plusieurs heures
+          if (durationHours > 1) {
+            // Au pluriel si il y a plusieurs heures
             durationText += 's';
           }
         }
@@ -143,7 +140,8 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
             durationText += ' ';
           }
           durationText += durationMinutes + ' minute';
-          if (durationMinutes > 1) { // Au pluriel si il y a plusieurs minutes
+          if (durationMinutes > 1) {
+            // Au pluriel si il y a plusieurs minutes
             durationText += 's';
           }
         }
@@ -161,7 +159,7 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
 
   // Jour suivant
   selectTomorrow() {
-    this.date = DayPilot.Date.today().addDays(1); 
+    this.date = DayPilot.Date.today().addDays(1);
   }
 
   //Passer au jour/semaine/mois précédent
@@ -409,7 +407,7 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
       }
     );
   }
-  
+
   //Changements entre les différentes configurations
   viewDay(): void {
     this.configNavigator.selectMode = 'Day';
