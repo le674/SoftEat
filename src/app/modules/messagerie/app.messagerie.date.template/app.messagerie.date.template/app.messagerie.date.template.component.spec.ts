@@ -8,9 +8,8 @@ describe('AppMessagerieDateTemplateComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AppMessagerieDateTemplateComponent ]
-    })
-    .compileComponents();
+      declarations: [AppMessagerieDateTemplateComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AppMessagerieDateTemplateComponent);
     component = fixture.componentInstance;

@@ -20,7 +20,7 @@
                   <span class="conversation-name">
                      Recette
                   </span>
-                  <span *ngIf="notification['rec']" class="notification-badge"></span>               
+                  <span *ngIf="notification['rec']" class="notification-badge"></span>
                </a>
             </li>
             <li *ngIf="analyseCanal">
@@ -28,7 +28,7 @@
                   <span class="conversation-name">
                      Analyse
                   </span>
-                  <span *ngIf="notification['ana']" class="notification-badge"></span>               
+                  <span *ngIf="notification['ana']" class="notification-badge"></span>
                </a>
             </li>
             <li *ngIf="budgetCanal">
@@ -36,7 +36,7 @@
                   <span class="conversation-name">
                      Comptabilité
                   </span>
-                  <span *ngIf="notification['com']" class="notification-badge"></span>               
+                  <span *ngIf="notification['com']" class="notification-badge"></span>
                </a>
             </li>
             <li *ngIf="factureCanal">
@@ -44,7 +44,7 @@
                   <span class="conversation-name">
                      Factures
                   </span>
-                  <span *ngIf="notification['fac']" class="notification-badge"></span>               
+                  <span *ngIf="notification['fac']" class="notification-badge"></span>
                </a>
             </li>
             <li *ngIf="planningCanal">
@@ -53,7 +53,7 @@
                      <span class="conversation-name">
                         {{employee}}
                      </span>
-                     <span *ngIf="notification['plan']" class="notification-badge"></span>               
+                     <span *ngIf="notification['plan']" class="notification-badge"></span>
                   </a>
                </div>
             </li>
@@ -62,7 +62,7 @@
                   <span class="conversation-name">
                      Ressources Humaines
                   </span>
-                  <span *ngIf="notification['rh']" class="notification-badge"></span>               
+                  <span *ngIf="notification['rh']" class="notification-badge"></span>
                </a>
             </li>
          </ul>
@@ -74,12 +74,14 @@
                <div *ngIf="messageInfos.message.newDay">
                   <message-date-template [date]="messageInfos.message.horodatage"></message-date-template>
                </div>
-               <message-template [listeMessages]="messageInfos.message" [author_is_me]="messageInfos.authorIsMe" [isBot]="messageInfos.isBot"></message-template>
+               <message-template [listeMessages]="messageInfos.message" [author_is_me]="messageInfos.authorIsMe"
+                  [isBot]="messageInfos.isBot"></message-template>
             </div>
          </div>
-         <div id="message_bar">  
-            <input type="text" [(ngModel)]="inputText" (keydown.enter)="sendMessage()" id="messageInput" autocomplete="off"/>
-            <button (click)="sendMessage()" id="send" ><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+         <div id="message_bar">
+            <input type="text" [(ngModel)]="inputText" (keydown.enter)="sendMessage()" id="messageInput"
+               autocomplete="off" />
+            <button (click)="sendMessage()" id="send"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
          </div>
       </div>
    </div>
