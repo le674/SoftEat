@@ -28,15 +28,9 @@
     <li>
       <a href="#3-canaux">Canaux</a>
       <ol style="list-style-type: lower-alpha">
-        <li><a href="#images">Images</a></li>
-        <li><a href="#unit-test">Unit test</a></li>
-        <li><a href="#lint">Lint</a></li>
-        <li><a href="#coverage">Coverage</a></li>
-        <li><a href="#deployment">Deployment</a></li>
+        <li><a href="#a-droits-et-rôles">Droits et rôles</a></li>
+        <li><a href="#b-notifications">Notifications</a></li>
       </ol>
-    </li>
-    <li>
-      <a href="#4-fonctionnalités">Fonctionnalités</a>
     </li>
   </ol>
 </details>
@@ -107,6 +101,3 @@ Le résultat final ressemble à ceci :
 
 ## 3. Canaux
 
----
-
-## 4. Fonctionnalités

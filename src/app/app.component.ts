@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { FirebaseApp, initializeApp } from "@angular/fire/app";
-import { NavigationEnd, Router } from '@angular/router';
+import { FirebaseApp } from "@angular/fire/app";
+import { Router } from '@angular/router';
 
 
 @Component({

@@ -74,7 +74,7 @@ form>.line {
     margin: 5px;
 }
 
-label{
+label {
     display: flex;
     align-content: center;
     flex-wrap: wrap;
@@ -131,13 +131,13 @@ input::placeholder {
     color: red;
 }
 
-div.submit{
+div.submit {
     display: flex;
     justify-content: center;
 }
 
 /*CSS bouton valider*/
-.mat-stroked-button{
+.mat-stroked-button {
     color: rgb(125, 181, 46);
     background-color: white;
     height: 40px;
@@ -146,7 +146,7 @@ div.submit{
     border-color: rgb(125, 181, 46, 0.5);
 }
 
-.mat-stroked-button:hover{
+.mat-stroked-button:hover {
     background-color: rgb(125, 181, 46);
     color: white;
 }

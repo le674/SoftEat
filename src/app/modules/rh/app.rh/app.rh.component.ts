@@ -1,24 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { initializeApp } from '@angular/fire/app';
-import { getDatabase, ref, onValue, get } from 'firebase/database';
-import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
+import { getDatabase, ref, onValue } from 'firebase/database';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 @Component({
   selector: 'app-rh',
   templateUrl: './app.rh.component.html',
-  styleUrls: ['./app.rh.component.css']
+  styleUrls: ['./app.rh.component.css'],
 })
 export class AppRhComponent implements OnInit {
-currentUserRole!: string;
-currentUserMail!:string;
-currentUserPrenom!:string;
-currentUserNom!:string;
-currentUserConges!:string;
-currentUserNomComplet!:string;
+  currentUserRole!: string;
+  currentUserMail!: string;
+  currentUserPrenom!: string;
+  currentUserNom!: string;
+  currentUserConges!: string;
+  currentUserNomComplet!: string;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
+    // Configuration de la base de données
     const firebaseConfig = {
       apiKey: 'AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo',
       authDomain: 'psofteat-65478545498421319564.firebaseapp.com',
@@ -30,25 +31,24 @@ currentUserNomComplet!:string;
       appId: '1:135059251548:web:fb05e45e1d1631953f6199',
       measurementId: 'G-5FBJE9WH0X',
     };
+    // Récupérer base de données
     const firebaseApp = initializeApp(firebaseConfig);
     const db = getDatabase(firebaseApp);
 
-    //const userPath = 'restaurants/ping_11/telecom/employes/';
     const userPath = '/users/foodandboost_prop/';
 
     // Référence au chemin des utilisateurs
     const usersRef = ref(db, userPath);
 
-    //Current user
+    // Current user
     const auth = getAuth(firebaseApp);
 
+    // Récupérer les infos de l'utilisateur connecté
     onAuthStateChanged(auth, (currentUser) => {
       let user = currentUser;
-      /*console.log('Current user:');
-      console.log(user);*/
       let userdat = user?.uid;
       const role = ref(db, `${userPath}/${userdat}/role`);
-      const mail = ref(db,`${userPath}/${userdat}/email`);
+      const mail = ref(db, `${userPath}/${userdat}/email`);
       const prenom = ref(db, `${userPath}/${userdat}/prenom`);
       const nom = ref(db, `${userPath}/${userdat}/nom`);
       const conges = ref(db, `${userPath}/${userdat}/conges`);
@@ -65,20 +65,27 @@ currentUserNomComplet!:string;
         this.currentUserNom = nomSnapshot.val();
       });
       onValue(conges, (congesSnapshot) => {
-        this.currentUserConges= congesSnapshot.val();
+        this.currentUserConges = congesSnapshot.val();
       });
-      this.currentUserNomComplet = this.currentUserPrenom + " " + this.currentUserNom;
+      this.currentUserNomComplet =
+        this.currentUserPrenom + ' ' + this.currentUserNom;
     });
   }
-  getUserRole(): string{
+
+  // Récupérer le rôle de l'utilisateur courant
+  getUserRole(): string {
     return this.currentUserRole;
   }
-  getUserMail(): string{
+
+  // Récupérer le mail de l'utilisateur courant
+  getUserMail(): string {
     return this.currentUserMail;
   }
-  async getUserConges(): Promise<string>{
-    while(this.currentUserConges === undefined){
-      await new Promise(resolve => setTimeout(resolve, 100));
+
+  // Récupérer les jours de congés restants de l'utilisateur courant
+  async getUserConges(): Promise<string> {
+    while (this.currentUserConges === undefined) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
     return this.currentUserConges;
   }

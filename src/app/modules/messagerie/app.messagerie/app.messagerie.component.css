@@ -24,11 +24,13 @@ h1 {
 }
 
 #conversation_list {
-	display: flex;
-	height: 100%;  /*hauteur maximale pour la section de conversation*/
-	overflow-y: auto;  /* afficher une barre de défilement si la section dépasse la hauteur maximale */
-	background-color: #ffffff;
-	width: 20%;
+  display: flex;
+  height: 100%;
+  /*hauteur maximale pour la section de conversation*/
+  overflow-y: auto;
+  /* afficher une barre de défilement si la section dépasse la hauteur maximale */
+  background-color: #ffffff;
+  width: 20%;
   border-right: 3px solid rgb(125, 181, 46);
 }
 
@@ -41,8 +43,10 @@ h1 {
 #messages {
   background-color: #f4f2f2;
   overflow-wrap: break-word;
-  height: 100%;  /*hauteur maximale pour la section de conversation */
-  overflow-y: auto;  /* afficher une barre de défilement si la section dépasse la hauteur maximale */
+  height: 100%;
+  /*hauteur maximale pour la section de conversation */
+  overflow-y: auto;
+  /* afficher une barre de défilement si la section dépasse la hauteur maximale */
   padding: 10px;
 }
 
@@ -54,11 +58,11 @@ h1 {
 }
 
 #messageInput {
-	border: none;
-	padding: 0.20rem 1rem;
-	flex-grow: 1;
-	border-radius: 3px;
-	margin: 0.25rem;
+  border: none;
+  padding: 0.20rem 1rem;
+  flex-grow: 1;
+  border-radius: 3px;
+  margin: 0.25rem;
 }
 
 #messageInput:focus {
@@ -88,7 +92,7 @@ h1 {
   outline: none;
 }
 
-#message_bar>button:hover{
+#message_bar>button:hover {
   background-color: rgb(125, 181, 46);
   color: white;
 }
@@ -118,13 +122,15 @@ ul li a {
 }
 
 ul li::after {
-	content: '';
-	position: absolute;
-	bottom: 0;
-	left:10%; /* Ajustez cette valeur pour contrôler la position de la ligne partielle */
-	right: 10%; /* Ajustez cette valeur pour contrôler la largeur de la ligne partielle */
-	height: 1px;
-	background-color: rgb(212, 212, 212);
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  /* Ajustez cette valeur pour contrôler la position de la ligne partielle */
+  right: 10%;
+  /* Ajustez cette valeur pour contrôler la largeur de la ligne partielle */
+  height: 1px;
+  background-color: rgb(212, 212, 212);
 }
 
 li a.active {
@@ -133,12 +139,14 @@ li a.active {
 }
 
 li a:hover:not(.active) {
-  background-color: rgb(125, 181, 46); /* rgb(125, 181, 46) = hsv(85,75,71) */
+  background-color: rgb(125, 181, 46);
+  /* rgb(125, 181, 46) = hsv(85,75,71) */
   color: white;
 }
 
 .notification-badge {
-  background-color: rgb(102,45,181); /* rgb(102,45,181) = hsv(265,75,71) */
+  background-color: rgb(102, 45, 181);
+  /* rgb(102,45,181) = hsv(265,75,71) */
   width: 10px;
   height: 10px;
   border-radius: 50%;

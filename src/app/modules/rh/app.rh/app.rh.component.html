@@ -1,6 +1,7 @@
 <div class="container">
   <div class="sidebar">
-    <app-navbar [userMail]="currentUserMail" [userNomComplet]="currentUserNomComplet" *ngIf="currentUserRole == 'gerant'"></app-navbar>
+    <app-navbar [userMail]="currentUserMail" [userNomComplet]="currentUserNomComplet"
+      *ngIf="currentUserRole == 'gerant'"></app-navbar>
     <app-hbar *ngIf="currentUserRole != 'gerant'"></app-hbar>
   </div>
   <div class="content">
