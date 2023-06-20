@@ -26,7 +26,7 @@
       </ol>
     </li>
     <li>
-      <a href="#3-canaux">Canaux</a>
+      <a href="#3-conversations">Conversations</a>
       <ol style="list-style-type: lower-alpha">
         <li><a href="#a-droits-et-rôles">Droits et rôles</a></li>
         <li><a href="#b-notifications">Notifications</a></li>
@@ -99,5 +99,5 @@ Le résultat final ressemble à ceci :
 
 ---
 
-## 3. Canaux
+## 3. Conversations
 

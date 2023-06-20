@@ -27,7 +27,7 @@ export class User {
   public "prev_aliments": string;
   public "time_work": string;
   public "numero": string;
-  notificationCanaux!: { [canal: string]: number};
+  notifConversations!: { [conv: string]: number};
 
   constructor(){
     this.name = ""
@@ -44,7 +44,7 @@ export class User {
     this.statut = Object.assign({"alertes": ""},{"stock": ""},
      {"analyse": ""}, {"budget": ""},{ "facture": ""}, {"planning": ""})
     this.calendar = Object.assign({"id": ""},{"api_key": ""})
-    this.notificationCanaux = { 'ana': 0, 'com': 0, 'fac': 0, 'inv': 0, 'rec': 0}
+    this.notifConversations = { 'ana': 0, 'com': 0, 'fac': 0, 'inv': 0, 'rec': 0}
   }
 
   getStatus(right:string):string[]{

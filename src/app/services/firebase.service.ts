@@ -80,12 +80,12 @@ export class FirebaseService {
         });
     }
 
-    async fetchConvListUsers(): Promise<{ [canal: string]: string[] }> { // Promise<any>
+    async fetchConvListUsers(): Promise<{ [conv: string]: string[] }> { // Promise<any>
         const usersRef = ref(this.db, 'users/foodandboost_prop');
         const usersSnapShot = await get(usersRef); // Ici : Erreur permission dinied
         const convListUsers = { 'ana': [''], 'com': [''], 'fac': [''], 'inv': [''], 'rec': [''], 'plan': [''], 'rh': ['']};
 
-        return new Promise<{ [canal: string]: string[] }>((resolve, reject) => {
+        return new Promise<{ [conv: string]: string[] }>((resolve, reject) => {
             if (usersSnapShot.exists()) {
                 usersSnapShot.forEach((userSnapShot) => {
                     const user = userSnapShot.val() ;

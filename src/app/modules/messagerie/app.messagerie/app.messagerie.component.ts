@@ -42,18 +42,18 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   @Input() convActive: string =
     'conversations/deliss_pizz/deliss_pizz/del42_ana_037581'; // Propriété d'entrée pour convActive
 
-  canalActiveId = 'ana';
-  notification!: { [canal: string]: boolean };
-  convListUsers!: { [canal: string]: string[] };
+  convActiveId = 'ana';
+  notification!: { [conv: string]: boolean };
+  convListUsers!: { [conv: string]: string[] };
   statut!: Statut;
   email!: string;
   surname!: string;
   name!: string;
-  analyseCanal!: boolean;
-  budgetCanal!: boolean;
-  factureCanal!: boolean;
-  planningCanal!: boolean;
-  stockCanal!: boolean;
+  analyseConv!: boolean;
+  budgetConv!: boolean;
+  factureConv!: boolean;
+  planningConv!: boolean;
+  stockConv!: boolean;
   currentUserConv!: string;
   inputText!: string;
   firebaseApp: FirebaseApp | undefined;
@@ -84,37 +84,37 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   /**
    *
    */
-  showCanal() {
+  showconv() {
     if (
       this.statut.stock === 'wr' ||
       this.statut.stock === 'rw' ||
       this.statut.stock === 'r'
     )
-      this.stockCanal = true;
+      this.stockConv = true;
     if (
       this.statut.analyse === 'wr' ||
       this.statut.analyse === 'rw' ||
       this.statut.analyse === 'r'
     )
-      this.stockCanal = true;
+      this.stockConv = true;
     if (
       this.statut.budget === 'wr' ||
       this.statut.budget === 'rw' ||
       this.statut.budget === 'r'
     )
-      this.budgetCanal = true;
+      this.budgetConv = true;
     if (
       this.statut.facture === 'wr' ||
       this.statut.facture === 'rw' ||
       this.statut.facture === 'r'
     )
-      this.factureCanal = true;
+      this.factureConv = true;
     if (
       this.statut.planning === 'wr' ||
       this.statut.planning === 'rw' ||
       this.statut.planning === 'r'
     )
-      this.planningCanal = true;
+      this.planningConv = true;
   }
 
   async ngOnInit(): Promise<void> {
@@ -134,8 +134,8 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       this.email
     ); //await
     await this.updateUserNotification(this.email);
-    this.markCanalAsRead(this.canalActiveId, this.email);
-    this.showCanal();
+    this.markconvAsRead(this.convActiveId, this.email);
+    this.showconv();
     this.fetchTimeServer();
     this.scrollToBottom();
 
@@ -158,7 +158,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       // console.log(this.currentUserConv);
     });
 
-    if (this.planningCanal) {
+    if (this.planningConv) {
       const emplacementConv = 'conversations/deliss_pizz/employes';
       const emplacementRef = ref(db, emplacementConv);
 
@@ -188,7 +188,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
    * Scroll la page vers le bas à chaque fois que "shouldScroll" vaut "true"
    * et que le scroll a bien été appliqué. On vérifie cela avec la valeur "maxScroll" qui
    * décrit la valeur du scroll précédement appliquée. Si elle est différente de la dernière
-   * valeur de scroll appliquée, c'est qu'on a changé de canal ou qu'un nouveau message est apparu.
+   * valeur de scroll appliquée, c'est qu'on a changé de conv ou qu'un nouveau message est apparu.
    * Dans ces cas-là, on scroll.
    */
   ngAfterViewChecked(): void {
@@ -222,27 +222,27 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   /**
    *
    * @param convActive
-   * @param canalId
+   * @param convId
    */
-  switchChannel(convActive: string, canalId: string) {
-    // Arrêter l'écoute des modifications du canal précédent
+  switchChannel(convActive: string, convId: string) {
+    // Arrêter l'écoute des modifications du conv précédent
     const previousDataRef = ref(getDatabase(this.firebaseApp), this.convActive);
     off(previousDataRef);
 
-    // Mettre à jour la référence du canal actif
+    // Mettre à jour la référence du conv actif
     this.convActive = convActive;
     // Réinitialiser la liste des messages
     this.messagerie = [];
 
-    // Démarrer l'écoute des modifications du nouveau canal
+    // Démarrer l'écoute des modifications du nouveau conv
     this.fetchData();
 
-    // Retirer la notif du canal actif
-    if (canalId != '') {
+    // Retirer la notif du conv actif
+    if (convId != '') {
       this.selector = '';
-      this.markCanalAsRead(canalId, this.email);
+      this.markconvAsRead(convId, this.email);
     }
-    this.canalActiveId = canalId;
+    this.convActiveId = convId;
     console.log('shouldscroll');
     this.maxScroll = 0;
   }
@@ -270,10 +270,10 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
         .then(() => {
           //Envoie de la notification à tous les Users
           this.updateUnreadMessages(
-            this.canalActiveId,
-            this.convListUsers[this.canalActiveId]
+            this.convActiveId,
+            this.convListUsers[this.convActiveId]
           );
-          this.markCanalAsRead(this.canalActiveId, this.email);
+          this.markconvAsRead(this.convActiveId, this.email);
         })
         .catch((error) => {
           console.error('Error creating new message:', error);
@@ -284,7 +284,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
   }
 
   /**
-   * Récupère tous les messages d'un canal. Les message ainsi récupérés sont ajoutés à
+   * Récupère tous les messages d'un conv. Les message ainsi récupérés sont ajoutés à
    * un objet de type "MessageInfos" dont le rôle est de passer au DOM les informations
    * provenant de la base de données.
    */
@@ -350,9 +350,13 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
 
   /** NOTIFICATIONS :
    * (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
+   * Met à 1 la clé de la conversation (transmise par convId) et ce pour tous les Users participants 
+   * à cette conversation (transmis par users_email[]).
+   * L'appel de this.updateUserNotification(this.email) actualise le badge de la notification de
+   * toutes ses conversations, immédiatement et n'attend pas la boucle de 5 secondes.
    */
   async updateUnreadMessages(
-    canalId: string,
+    convId: string,
     users_email: string[]
   ): Promise<void> {
     const db = getDatabase(this.firebaseApp);
@@ -362,11 +366,13 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
         .getUserDataReference(email)
         .then((userRef: DatabaseReference | null) => {
           if (userRef) {
+            // Query de récupération du user
             get(userRef).then((snapshot) => {
               const user: User = snapshot.val();
-              const notificationCanaux = user.notificationCanaux || {};
-              notificationCanaux[canalId] = 1;
-              update(userRef.ref, { notificationCanaux })
+              const notifConversations = user.notifConversations || {};
+              notifConversations[convId] = 1;
+              // Mise à jour dans la BDD de la valeur de la clé de la conv du user
+              update(userRef.ref, { notifConversations })
                 .then(() => {
                   console.log("User's notification updated successfully");
                 })
@@ -377,7 +383,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
           }
         })
         .catch((error) => {
-          // Gestion de l'erreur
+          console.error("Error updating user's notification:",error);
         });
     });
     await this.updateUserNotification(this.email);
@@ -385,8 +391,11 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
 
   /** NOTIFICATIONS :
    * (géré par 0 ou 1 car pourra être amélioré en nombre pour le nombre de messages non lu)
+   * Met à 0 la clé de la conversation (transmise par convId) pour le User (transmis par user_email).
+   * L'appel de this.updateUserNotification(this.email) actualise le badge de la notification de
+   * toutes ses conversations, immédiatement et n'attend pas la boucle de 5 secondes.
    */
-  async markCanalAsRead(canalId: string, user_email: string): Promise<void> {
+  async markconvAsRead(convId: string, user_email: string): Promise<void> {
     const db = getDatabase(this.firebaseApp);
 
     this.firebaseService
@@ -395,20 +404,20 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
         if (userRef) {
           get(userRef).then((snapshot) => {
             const user: User = snapshot.val();
-            const notificationCanaux = user.notificationCanaux || {};
-            notificationCanaux[canalId] = 0;
-            update(userRef.ref, { notificationCanaux })
+            const notifConversations = user.notifConversations || {};
+            notifConversations[convId] = 0;
+            update(userRef.ref, { notifConversations })
               .then(() => {
-                //console.log("User's notification marked as read");
+                console.log("User's notification marked as read");
               })
               .catch((error) => {
-                //console.error("Error updating user's notification:", error);
+                console.error("Error updating user's notification:", error);
               });
           });
         }
       })
       .catch((error) => {
-        // Gestion de l'erreur
+        console.error("Error updating user's notification:",error);
       });
 
     await this.updateUserNotification(this.email);
@@ -426,15 +435,15 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
         if (userRef) {
           get(userRef).then((snapshot) => {
             const userSnapShot = snapshot.val();
-            const notificationCanaux = userSnapShot.notificationCanaux;
-            for (const canal of Object.keys(notificationCanaux)) {
+            const notifConversations = userSnapShot.notifConversations;
+            for (const conv of Object.keys(notifConversations)) {
               if (
-                notificationCanaux[canal as keyof typeof notificationCanaux] ==
+                notifConversations[conv as keyof typeof notifConversations] ==
                 0
               ) {
-                this.notification[canal] = false;
+                this.notification[conv] = false;
               } else {
-                this.notification[canal] = true;
+                this.notification[conv] = true;
               }
             }
           });
