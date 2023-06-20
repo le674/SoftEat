@@ -144,4 +144,11 @@ li a:hover:not(.active) {
   border-radius: 50%;
   display: inline-block;
   margin-left: 5px;
+  min-width: 10px;
+}
+
+.conversation-name { /* Permet de réduire les noms et voir le badge de notification */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
