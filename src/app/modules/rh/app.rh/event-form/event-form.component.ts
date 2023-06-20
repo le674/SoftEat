@@ -210,27 +210,25 @@ export class EventFormComponent implements OnInit, AfterViewInit {
           if (this.isSameDay(startDate, endDate)) {
             const weekStart = new Date(startDate);
             const weekEnd = new Date(startDate);
-            weekStart.setDate(weekStart.getDate() - weekStart.getDay()); // Début de la semaine = lundi
+            weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1); // Début de la semaine = lundi
             weekEnd.setDate(weekStart.getDate() + 6); // Fin de la semaine = samedi
             const currentDate = new Date(weekStart);
-            let i = 0;
-            while (currentDate <= weekEnd) {
-              this.newEvent.start =
+            while (currentDate < weekEnd) {
+              const newEvent = { ...this.newEvent }; // Crée une nouvelle instance de newEvent (évite la duplication)
+              newEvent.start =
                 this.formatDate(currentDate) +
                 'T' +
                 row.prisePoste.split('T')[1] +
                 ':00';
-              this.newEvent.end =
+              newEvent.end =
                 this.formatDate(currentDate) +
                 'T' +
                 row.finPoste.split('T')[1] +
                 ':00';
               const userPath: string | null = await this.calendar.getPath(row.personnel);
               if (userPath) {
-                console.log('passage de boucle : ', i, 'on est le jour : ', currentDate, 'et dans l event : ', this.newEvent.start)
-                this.addEvent(userPath, this.newEvent);
+                this.addEvent(userPath, newEvent);
               }
-              i += 1;
               currentDate.setDate(currentDate.getDate() + 1); // Se déplace au jour suivant
             }
           } else {
@@ -255,12 +253,13 @@ export class EventFormComponent implements OnInit, AfterViewInit {
             const currentDate = new Date(firstDayOfMonth);
             while (currentDate <= lastDayOfMonth) {
               if (currentDate.getDay() === startDate.getDay()) {
-                this.newEvent.start =
+                const newEvent = { ...this.newEvent }; // Crée une nouvelle instance de newEvent (évite la duplication)
+                newEvent.start =
                   this.formatDate(currentDate) +
                   'T' +
                   row.prisePoste.split('T')[1] +
                   ':00';
-                this.newEvent.end =
+                newEvent.end =
                   this.formatDate(currentDate) +
                   'T' +
                   row.finPoste.split('T')[1] +
@@ -270,7 +269,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
                   row.personnel
                 );
                 if (userPath) {
-                  await this.addEvent(userPath, this.newEvent);
+                  await this.addEvent(userPath, newEvent);
                 }
               }
               currentDate.setDate(currentDate.getDate() + 1); // Se déplace au jour suivant
@@ -298,12 +297,13 @@ export class EventFormComponent implements OnInit, AfterViewInit {
             while (currentDate <= lastDayOfMonth) {
               // Check si l'évènement a lieu sur un jour de travail (lundi à samedi)
               if (currentDate.getDay() >= 1 && currentDate.getDay() <= 6) {
-                this.newEvent.start =
+                const newEvent = { ...this.newEvent }; // Crée une nouvelle instance de newEvent (évite la duplication)
+                newEvent.start =
                   this.formatDate(currentDate) +
                   'T' +
                   row.prisePoste.split('T')[1] +
                   ':00';
-                this.newEvent.end =
+                newEvent.end =
                   this.formatDate(currentDate) +
                   'T' +
                   row.finPoste.split('T')[1] +
@@ -313,7 +313,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
                   row.personnel
                 );
                 if (userPath) {
-                  await this.addEvent(userPath, this.newEvent);
+                  await this.addEvent(userPath, newEvent);
                 }
               }
               currentDate.setDate(currentDate.getDate() + 1); // Se déplace au jour suivant
@@ -391,9 +391,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
 
   addEvent(userId: string, newEvent: DayPilot.EventData): void {
     // Ajouter l'évènement au calendrier
-    const prop = 'foodandboost_prop'; // Assuming the property name is fixed
+    const prop = 'foodandboost_prop'; // table des utilisateurs
     this.calendar.add_event(prop, userId, newEvent);
-    console.log('j ai créé un event : ', newEvent.start);
   }
 
   closeDialog(): void {
