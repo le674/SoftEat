@@ -12,14 +12,14 @@
   <ol>
     <li>
       <a href="#1-structure-de-la-messagerie">Structure de la messagerie</a>
-      <ol style="list-style-type: lower-alpha">
+      <ol type="a">
           <li><a href="#a-composants">Composants</a></li>
           <li><a href="#b-modèles">Modèles</a></li>
       </ol>
     </li>
     <li>
       <a href="#2-messages">Messages</a>
-      <ol style="list-style-type: lower-alpha">
+      <ol type="a">
         <li><a href="#a-message-template">Message Template</a></li>
         <li><a href="#b-date-template">Date Template</a></li>
         <li><a href="#c-barre-de-saisie">Barre de saisie</a></li>
@@ -27,7 +27,7 @@
     </li>
     <li>
       <a href="#3-canaux">Canaux</a>
-      <ol style="list-style-type: lower-alpha">
+      <ol type="a">
         <li><a href="#a-droits-et-rôles">Droits et rôles</a></li>
         <li><a href="#b-notifications">Notifications</a></li>
       </ol>
