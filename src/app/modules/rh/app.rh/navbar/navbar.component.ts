@@ -190,7 +190,7 @@ export class NavbarComponent implements OnInit {
 
   // Récupérer les données utilisateur depuis la base de données
   async fetchUser() {
-    const db = getDatabase(this.firebaseApp);
+    const db = getDatabase(this.firebaseApp); // Récupération de la base de données
 
     const userPath = '/users/foodandboost_prop/';
     const usersRef = ref(db, userPath);
@@ -201,8 +201,8 @@ export class NavbarComponent implements OnInit {
         const usersData = snapshot.val();
         const userIDs = Object.keys(usersData);
 
-        for (const userID of userIDs) {
-          const userRoleRef = ref(db, `${userPath}/${userID}/role`);
+        for (const userID of userIDs) { // Parcours tous les utilisateurs dans la base de données
+          const userRoleRef = ref(db, `${userPath}/${userID}/role`); 
           const userPrenomRef = ref(db, `${userPath}/${userID}/prenom`);
           const userNomRef = ref(db, `${userPath}/${userID}/nom`);
           const userMailRef = ref(db, `${userPath}/${userID}/email`);
@@ -220,7 +220,7 @@ export class NavbarComponent implements OnInit {
           if (nomComplet) {
             if (user_mail === this.userMail) {
               if (role == 'gerant') {
-                this.Gerants.push({
+                this.Gerants.push({ // Ajout de l'utilisateur dans la liste
                   nom: nomComplet,
                   selectionne: true,
                   mail: user_mail,
@@ -276,7 +276,7 @@ export class NavbarComponent implements OnInit {
       } else {
         console.log('Aucune donnée utilisateur trouvée.');
       }
-      localStorage.setItem('Gérants', JSON.stringify(this.Gerants));
+      localStorage.setItem('Gérants', JSON.stringify(this.Gerants)); // Mettre les listes dans le local storage pour les récupérer dans les autres fichiers
       localStorage.setItem('Autres', JSON.stringify(this.Autres));
       localStorage.setItem('Rh', JSON.stringify(this.Rh));
       localStorage.setItem('Serveurs', JSON.stringify(this.Serveurs));
