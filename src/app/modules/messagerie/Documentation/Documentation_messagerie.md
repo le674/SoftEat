@@ -107,7 +107,7 @@ Le template de la date est une simple div, qui prend en argument un timestamp :
 
 ---
 
-## 3. Canaux
+## 3. Conversations
 
 ### a. Droits et rôles
 
