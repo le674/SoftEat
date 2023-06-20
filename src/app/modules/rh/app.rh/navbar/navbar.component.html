@@ -22,7 +22,8 @@
                             <li *ngFor="let liste of Serveurs">
                                 <div class="center-container">
                                     <div>{{liste.nom}}</div>
-                                    <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)">
+                                    <input type="checkbox" [checked]="liste.selectionne"
+                                        (click)="selectEmployee(liste)">
                                 </div>
                             </li>
                         </ul>
@@ -33,15 +34,14 @@
                             <li>
                                 <div class="center-container">
                                     <div>Sélectionner tout</div>
-                                    <input type="checkbox" [checked]="selectAllGerants" (click)="addAllGerants()"
-                                        >
+                                    <input type="checkbox" [checked]="selectAllGerants" (click)="addAllGerants()">
                                 </div>
                             </li>
                             <li *ngFor="let liste of Gerants">
                                 <div class="center-container">
                                     <div>{{liste.nom}}</div>
-                                    <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)"
-                                        >
+                                    <input type="checkbox" [checked]="liste.selectionne"
+                                        (click)="selectEmployee(liste)">
                                 </div>
                             </li>
                         </ul>
@@ -58,7 +58,8 @@
                             <li *ngFor="let liste of Rh">
                                 <div class="center-container">
                                     <div>{{liste.nom}}</div>
-                                    <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)">
+                                    <input type="checkbox" [checked]="liste.selectionne"
+                                        (click)="selectEmployee(liste)">
                                 </div>
                             </li>
                         </ul>
@@ -75,7 +76,8 @@
                             <li *ngFor="let liste of Autres">
                                 <div class="center-container">
                                     <div>{{liste.nom}}</div>
-                                    <input type="checkbox" [checked]="liste.selectionne" (click)="selectEmployee(liste)">
+                                    <input type="checkbox" [checked]="liste.selectionne"
+                                        (click)="selectEmployee(liste)">
                                 </div>
                             </li>
                         </ul>
@@ -86,7 +88,7 @@
     </div>
 </div>
 
-    <!-- <br>
+<!-- <br>
 Employés Selectionnés :
 <span *ngFor="let element of select">
     {{element}}

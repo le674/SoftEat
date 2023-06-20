@@ -5,8 +5,7 @@ import {
   ElementRef,
   AfterViewInit,
 } from '@angular/core';
-import { FirebaseApp, initializeApp } from '@angular/fire/app';
-import { getDatabase, ref, onValue, get } from 'firebase/database';
+import { FirebaseApp } from '@angular/fire/app';
 import { DayPilot } from 'daypilot-pro-angular';
 import { CalendarService } from '../calendar-view/calendar-data.service';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -75,7 +74,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       this.addLieuInput.nativeElement,
     ];
 
-    setTimeout(() => { // Ajouter un délai avant de configurer les écouteurs d'événements pour les champs de texte
+    setTimeout(() => {
+      // Ajouter un délai avant de configurer les écouteurs d'événements pour les champs de texte
       const inputFields: HTMLInputElement[] = [
         this.addEventInput.nativeElement,
       ];
@@ -88,7 +88,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     });
   }
 
-  truncateInputValue(input: HTMLInputElement): void { // Mettre le premier caractère en majuscule
+  truncateInputValue(input: HTMLInputElement): void {
+    // Mettre le premier caractère en majuscule
     input.value = input.value.charAt(0).toUpperCase() + input.value.slice(1);
   }
 
@@ -107,7 +108,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
 
   rows: Row[] = [];
 
-  addRow( // Ajouter tous les éléments mis dans le form
+  addRow(
+    // Ajouter tous les éléments mis dans le form
     personnel: string,
     motif: string,
     event: string,
@@ -128,7 +130,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     this.rows.push(newRow);
   }
 
-  resetFormFields(): void { // Remise à zéro des champs du form
+  resetFormFields(): void {
+    // Remise à zéro des champs du form
     this.addPersonnelInput.nativeElement.value = '';
     this.addMotifInput.nativeElement.value = '';
     this.addEventInput.nativeElement.value = '';
@@ -138,11 +141,13 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     this.addRepeterSelect.nativeElement.value = '';
   }
 
-  deleteRow(index: number): void { // Supprimer un évènement enregistré dans le form
+  deleteRow(index: number): void {
+    // Supprimer un évènement enregistré dans le form
     this.rows.splice(index, 1);
   }
 
-  isFieldFilled( // Vérifier si l'élément est rempli
+  isFieldFilled(
+    // Vérifier si l'élément est rempli
     inputRef: ElementRef<HTMLInputElement | HTMLSelectElement>
   ): boolean {
     const value = inputRef.nativeElement.value;
@@ -152,7 +157,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     return value.trim() !== '';
   }
 
-  onClickAdd( // Lorsqu'on clique sur le + pour ajouter l'évènement
+  onClickAdd(
+    // Lorsqu'on clique sur le + pour ajouter l'évènement
     personnel: string,
     motif: string,
     event: string,
@@ -161,7 +167,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     finPoste: string,
     repeter: string
   ): void {
-    if ( // Vérifier si tous les champs obligatoires sont remplis
+    if (
+      // Vérifier si tous les champs obligatoires sont remplis
       !this.isFieldFilled(this.addPersonnelInput) ||
       !this.isFieldFilled(this.addMotifInput) ||
       !this.isFieldFilled(this.addLieuInput) ||
@@ -172,7 +179,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       // Show the popup or perform any required validation logic
       alert('Renseignez les champs obligatoires marqués par un astérisque (*)');
       return;
-    } else if (new Date(finPoste) < new Date(prisePoste)) { // Vérifier si la date de prise de poste est antérieure à la date de fin de poste
+    } else if (new Date(finPoste) < new Date(prisePoste)) {
+      // Vérifier si la date de prise de poste est antérieure à la date de fin de poste
       alert(
         'La date de fin de poste est antérieure à la date de prise de poste'
       );
@@ -182,7 +190,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     this.resetFormFields();
   }
 
-  async saveRows(): Promise<void> { // Sauvegarde de l'évènement
+  async saveRows(): Promise<void> {
+    // Sauvegarde de l'évènement
     for (const row of this.rows) {
       this.newEvent = {
         start: row.prisePoste + ':00',
@@ -339,7 +348,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     this.closeDialog();
   }
 
-  private isSameDay(date1: Date, date2: Date): boolean { // Vérif si les deux dates sont les mêmes
+  private isSameDay(date1: Date, date2: Date): boolean {
+    // Vérif si les deux dates sont les mêmes
     return (
       date1.getFullYear() === date2.getFullYear() &&
       date1.getMonth() === date2.getMonth() &&
@@ -347,14 +357,16 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     );
   }
 
-  private formatDate(date: Date): string { // Formater la date en string lisible
+  private formatDate(date: Date): string {
+    // Formater la date en string lisible
     const year = date.getFullYear();
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
   }
 
-  getMotifLabel(value: string): string { // Retourner le motif selon le choix de l'utilisateur
+  getMotifLabel(value: string): string {
+    // Retourner le motif selon le choix de l'utilisateur
     switch (value) {
       case 'motif-option1':
         return 'Travail';
@@ -369,7 +381,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getRepeterLabel(value: string): string { // Retourner le champ répéter selon le choix de l'utilisateur
+  getRepeterLabel(value: string): string {
+    // Retourner le champ répéter selon le choix de l'utilisateur
     switch (value) {
       case 'repeter-option1':
         return 'Non';
@@ -384,7 +397,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     }
   }
 
-  addEvent(userId: string, newEvent: DayPilot.EventData): void { // Ajouter l'évènement au calendrier
+  addEvent(userId: string, newEvent: DayPilot.EventData): void {
+    // Ajouter l'évènement au calendrier
     const prop = 'foodandboost_prop'; // Assuming the property name is fixed
     this.calendar.add_event(prop, userId, newEvent);
   }
@@ -393,7 +407,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     this.dialogRef.close(); // Fermer le dialog
   }
 
-  getCategoryUsers( // Récupérer la liste des utilisateurs dont on rentre le rôle
+  getCategoryUsers(
+    // Récupérer la liste des utilisateurs dont on rentre le rôle
     category: String
   ): { nom: String; selectionne: boolean; mail: String }[] {
     switch (category) {

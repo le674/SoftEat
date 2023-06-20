@@ -65,7 +65,7 @@ button {
 
 table {
   width: 300px;
-  
+
 }
 
 tr {
@@ -116,12 +116,14 @@ input[type="checkbox"]::before {
   transform: translate(-50%, -50%);
   color: rgb(125, 181, 46);
   font-size: 14px;
-  visibility: hidden; /* Hide the checkmark by default */
+  visibility: hidden;
+  /* Hide the checkmark by default */
 }
 
 /* Style lorsque la checkbox est cochée */
 input[type="checkbox"]:checked::before {
-  visibility: visible; /* Show the checkmark when checked */
+  visibility: visible;
+  /* Show the checkmark when checked */
 }
 
 /* Style au survol de la checkbox */
