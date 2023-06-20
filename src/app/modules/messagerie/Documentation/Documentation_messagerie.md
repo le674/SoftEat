@@ -12,14 +12,14 @@
   <ol>
     <li>
       <a href="#1-structure-de-la-messagerie">Structure de la messagerie</a>
-      <ol style="list-style-type: lower-alpha">
+      <ol type="a">
           <li><a href="#a-composants">Composants</a></li>
           <li><a href="#b-modèles">Modèles</a></li>
       </ol>
     </li>
     <li>
       <a href="#2-messages">Messages</a>
-      <ol style="list-style-type: lower-alpha">
+      <ol type="a">
         <li><a href="#a-message-template">Message Template</a></li>
         <li><a href="#b-date-template">Date Template</a></li>
         <li><a href="#c-barre-de-saisie">Barre de saisie</a></li>
@@ -27,7 +27,7 @@
     </li>
     <li>
       <a href="#3-conversations">Conversations</a>
-      <ol style="list-style-type: lower-alpha">
+      <ol type="a">
         <li><a href="#a-droits-et-rôles">Droits et rôles</a></li>
         <li><a href="#b-notifications">Notifications</a></li>
       </ol>
@@ -87,17 +87,30 @@ Le résultat final ressemble à ceci :
 
 ### a. Message Template
 
+![Schéma du template de message](./img/message-template-schema.png)
 
+Le template prend en argument un objet `MessageInfos` et deux booléens : `authorIsMe` et `isBot`.
 
 ### b. Date Template
 
-
+Le template de la date est une simple div, qui prend en argument un timestamp : 
+```html
+<div>
+	<p>{{ this.date | date: 'E dd MMMM yyyy' }}</p>
+</div>
+```
 
 ### c. Barre de saisie
 
-
+:x: La barre de saisie ne permet pas de retour à la ligne.  
+:heavy_check_mark: Il est possible d'appuyer sur le bouton envoi ou sur la touche "entrée".
 
 ---
 
-## 3. Conversations
+## 3. Canaux
 
+### a. Droits et rôles
+
+
+
+### b. Notifications

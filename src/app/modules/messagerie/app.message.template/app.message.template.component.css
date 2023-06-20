@@ -1,10 +1,7 @@
-.messagerie {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 .message {
   display: flex;
   flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .message_infos {
