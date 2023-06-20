@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { initializeApp } from '@angular/fire/app';
-import { getDatabase, ref, onValue, get } from 'firebase/database';
-import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
+import { getDatabase, ref, onValue } from 'firebase/database';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 @Component({
   selector: 'app-rh',
