@@ -106,7 +106,7 @@ Le template de la date est une simple div, qui prend en argument un timestamp :
 ### c. Autres fonctionnalités
 
 :heavy_check_mark: possibilité d'appuyer sur le bouton envoi ou sur la touche "entrée"  
-:heavy_check_mark: message de couleurs différentes selon qui envoie le message
+:heavy_check_mark: message de couleurs différentes selon qui envoie le message  
 :heavy_check_mark: heure d'envoi de chaque message  
 :heavy_check_mark: message automatique par le bot lorsqu'un congé est demandé  
 
