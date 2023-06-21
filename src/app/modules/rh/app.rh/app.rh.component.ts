@@ -69,6 +69,7 @@ export class AppRhComponent implements OnInit {
       });
       this.currentUserNomComplet =
         this.currentUserPrenom + ' ' + this.currentUserNom;
+      localStorage.setItem('currentUserNomComplet', this.currentUserNomComplet);
     });
   }
 

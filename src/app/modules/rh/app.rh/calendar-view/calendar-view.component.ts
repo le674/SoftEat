@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  Input,
-  OnDestroy,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnDestroy } from '@angular/core';
 import {
   DayPilot,
   DayPilotCalendarComponent,
@@ -98,9 +92,15 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
       let bubbleContent =
         '<div>' + '<strong>' + args.source.data.tags + '</strong><br>';
 
-      if (args.source.data.resource) {
+      if (localStorage.getItem('currentUserNomComplet')) {
         bubbleContent +=
-          '<div>Personnel : ' + args.source.data.resource + '</div>';
+          '<div>Personnel : ' +
+          localStorage.getItem('currentUserNomComplet') +
+          '</div>';
+      }
+
+      if (args.source.data.resource) {
+        bubbleContent += '<div>Email : ' + args.source.data.resource + '</div>';
       }
 
       if (lieu) {
