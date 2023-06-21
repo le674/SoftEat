@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  Input,
-  OnDestroy,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnDestroy } from '@angular/core';
 import {
   DayPilot,
   DayPilotCalendarComponent,
@@ -28,6 +22,10 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
   @Input() userRole!: string;
   status: string = '';
   statusSubscription!: Subscription;
+  listeGérantLocal!: { nom: String; selectionne: boolean; mail: String }[];
+  listeRhLocal!: { nom: String; selectionne: boolean; mail: String }[];
+  listeServeursLocal!: { nom: String; selectionne: boolean; mail: String }[];
+  listeAutresLocal!: { nom: String; selectionne: boolean; mail: String }[];
 
   constructor(
     private ds: CalendarService,
@@ -71,10 +69,23 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
   events: DayPilot.EventData[] = [];
   date = DayPilot.Date.today();
 
+  // Renvoie le bon nom en fonction de l'email
+  trouverNomParEmail(
+    personnes: { nom: String; selectionne: boolean; mail: String }[],
+    emailRecherche: String
+  ): String | undefined {
+    for (const personne of personnes) {
+      if (personne.mail === emailRecherche) {
+        return personne.nom;
+      }
+    }
+    return undefined; // Si aucun nom correspondant n'est trouvé
+  }
+
   //Mise en forme de la bulle d'information des événements
   bubble = new DayPilot.Bubble({
     zIndex: 500,
-    onLoad: function (args) {
+    onLoad: (args) => {
       // Trouver l'index de la première virgule
       const commaIndex = args.source.data.text.indexOf(',');
       // Extraire la première partie du texte
@@ -98,9 +109,68 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
       let bubbleContent =
         '<div>' + '<strong>' + args.source.data.tags + '</strong><br>';
 
-      if (args.source.data.resource) {
+      const GerantString = localStorage.getItem('Gérants');
+      if (GerantString) {
+        this.listeGérantLocal = JSON.parse(GerantString);
+      }
+      const RhString = localStorage.getItem('Rh');
+      if (RhString) {
+        this.listeRhLocal = JSON.parse(RhString);
+      }
+      const ServeursString = localStorage.getItem('Serveurs');
+      if (ServeursString) {
+        this.listeServeursLocal = JSON.parse(ServeursString);
+      }
+      const AutresString = localStorage.getItem('Autres');
+      if (AutresString) {
+        this.listeAutresLocal = JSON.parse(AutresString);
+      }
+
+      if (
+        this.trouverNomParEmail(this.listeGérantLocal, args.source.data.resource)
+      ) {
         bubbleContent +=
-          '<div>Personnel : ' + args.source.data.resource + '</div>';
+          '<div>Personnel : ' +
+          this.trouverNomParEmail(
+            this.listeGérantLocal,
+            args.source.data.resource
+          ) +
+          '</div>';
+      }
+
+      if (
+        this.trouverNomParEmail(this.listeServeursLocal, args.source.data.resource)
+      ) {
+        bubbleContent +=
+          '<div>Personnel : ' +
+          this.trouverNomParEmail(
+            this.listeServeursLocal,
+            args.source.data.resource
+          ) +
+          '</div>';
+      }
+
+      if (
+        this.trouverNomParEmail(this.listeAutresLocal, args.source.data.resource)
+      ) {
+        bubbleContent +=
+          '<div>Personnel : ' +
+          this.trouverNomParEmail(
+            this.listeAutresLocal,
+            args.source.data.resource
+          ) +
+          '</div>';
+      }
+
+      if (this.trouverNomParEmail(this.listeRhLocal, args.source.data.resource)) {
+        bubbleContent +=
+          '<div>Personnel : ' +
+          this.trouverNomParEmail(this.listeRhLocal, args.source.data.resource) +
+          '</div>';
+      }
+
+      if (args.source.data.resource) {
+        bubbleContent += '<div>Email : ' + args.source.data.resource + '</div>';
       }
 
       if (lieu) {
