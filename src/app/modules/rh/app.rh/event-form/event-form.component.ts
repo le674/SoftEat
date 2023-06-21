@@ -9,6 +9,7 @@ import { FirebaseApp } from '@angular/fire/app';
 import { DayPilot } from 'daypilot-pro-angular';
 import { CalendarService } from '../calendar-view/calendar-data.service';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-event-form',
@@ -35,7 +36,8 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   constructor(
     private calendar: CalendarService,
     public dialogRef: MatDialogRef<EventFormComponent>,
-    firebaseApp: FirebaseApp
+    firebaseApp: FirebaseApp,
+    private snackBar: MatSnackBar
   ) {
     this.dialogRef = dialogRef;
   }
@@ -177,13 +179,11 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       !this.isFieldFilled(this.addRepeterSelect)
     ) {
       // Show the popup or perform any required validation logic
-      alert('Renseignez les champs obligatoires marqués par un astérisque (*)');
+      this.snackBar.open('Renseignez les champs obligatoires marqués par un astérisque (*)', 'Fermer');
       return;
     } else if (new Date(finPoste) < new Date(prisePoste)) {
       // Vérifier si la date de prise de poste est antérieure à la date de fin de poste
-      alert(
-        'La date de fin de poste est antérieure à la date de prise de poste'
-      );
+      this.snackBar.open('La date de fin de poste est antérieure à la date de prise de poste', 'Fermer');
       return;
     }
     this.addRow(personnel, motif, event, lieu, prisePoste, finPoste, repeter);
