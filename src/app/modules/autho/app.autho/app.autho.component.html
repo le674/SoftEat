@@ -49,9 +49,9 @@
                         </div>
                         <figcaption>
                             <h3 class="entry-title">
-                                <a>{{restaurant.id}}</a>
+                                <a>{{restaurant.name}}</a>
                             </h3>
-                            <span class="description">{{restaurant.address}}</span>
+                            <span class="description">{{(restaurant.address == null) ? "" : restaurant.address.print()}}</span>
                         </figcaption>
                         <div class="tourbtn">
                             <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer"

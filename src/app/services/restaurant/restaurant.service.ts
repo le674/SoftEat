@@ -5,6 +5,7 @@ import { addDoc, collection, doc, DocumentSnapshot, Firestore, onSnapshot, query
 import { CommonService } from '../common/common.service';
 import { Subject } from 'rxjs/internal/Subject';
 import { User } from 'src/app/interfaces/user';
+import { Address } from 'src/app/interfaces/address';
 
 @Injectable({
   providedIn: 'root'
@@ -48,7 +49,16 @@ export class RestaurantService {
       fromFirestore: (snapshot:DocumentSnapshot<Restaurant>, options:SnapshotOptions) => {
         const data = snapshot.data(options);
         if(data !== undefined){
-          return data;
+          console.log("here we log data : ");
+          console.log(data);
+          
+          let restaurant = new Restaurant(null);
+          restaurant.setRestaurant(data);
+          console.log("restaurant log data : ");
+          
+          console.log(restaurant);
+          
+          return restaurant;
         }
         else{
           return null;
@@ -67,7 +77,9 @@ getAllRestaurantsBDD(user:User){
     const prop = user.related_restaurants[0].proprietaire_id;
     const restaurants = user.related_restaurants.filter((prop_rest) => prop_rest.proprietaire_id === prop)
                                                 .map((prop_rest) => prop_rest.restaurant_id);  
-    let docRef = query(collection(doc(collection(this.db, "proprietaire"), ), "restaurants"), where('id', 'in', restaurants))
+    console.log("proprietaires" + prop + "restaurants", restaurants);
+ 
+    let docRef = query(collection(doc(collection(this.db, "proprietaires"), prop), "restaurants"), where('id', 'in', restaurants))
                  .withConverter(this.restaurants_converter);
     this.sub_all_restaurants = onSnapshot(docRef, (restaurants) => {
       restaurants.forEach((restaurant) => {

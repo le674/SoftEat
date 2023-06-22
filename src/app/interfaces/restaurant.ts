@@ -38,4 +38,14 @@ export class Restaurant {
     setId(id:string){
       this.id = id;
     }
+    setRestaurant(data: Restaurant) {
+      this.name = data.name;
+      this.id = data.id;
+      if(data.address !== null){
+        this.address = new Address(data.address.postal_code, data.address.street_number, data.address.city, data.address.street); 
+      }
+      this.menus = data.menus;
+      this.ingredients = data.ingredients;
+      this.consommables = data.consommables;
+    }
 }

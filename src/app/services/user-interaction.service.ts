@@ -3,7 +3,7 @@ import { User } from '../interfaces/user';
 import { FirebaseApp } from "@angular/fire/app";
 import { Proprietaire } from '../interfaces/proprietaire';
 import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../environments/variables';
-import { Firestore, DocumentSnapshot, SnapshotOptions, Unsubscribe, addDoc, collection, connectFirestoreEmulator, onSnapshot, query, where } from '@angular/fire/firestore';
+import { Firestore, DocumentSnapshot, SnapshotOptions, Unsubscribe, addDoc, collection, connectFirestoreEmulator, onSnapshot, query, where, doc } from '@angular/fire/firestore';
 import { Subject } from 'rxjs';
 import { CommonService } from './common/common.service';
 import { Employee } from '../interfaces/employee';
@@ -82,6 +82,7 @@ getUserFromUidBDD(uid: string) {
   let client_ref =  query(collection(this.firestore, "clients"), where("uid", "==", uid)).withConverter(this.user_converter);
   this.sub_user = onSnapshot(client_ref, (users) => {
     users.forEach((user) => {
+      console.log(user.data());
       if(user.exists()){
         this.user.next(user.data() as User);
       }
@@ -104,12 +105,22 @@ getUserFromUidBDD(uid: string) {
      const uid = user.uid;
      const prop = user.related_restaurants[0].proprietaire_id;
      const restaurant = user.related_restaurants[0].restaurant_id;
-     let employee_ref = query(collection(this.firestore, "proprietaire", prop, "restaurants", restaurant, "employees"), where("uid", "==", uid))
-                     .withConverter(this.employee_converter);
+     let employee_ref = query(
+      collection(
+        doc(
+          collection(
+            doc(
+              collection(this.firestore, "proprietaires"), prop
+              ), "restaurants"
+            ), restaurant
+          ), "employees"
+        ), where("uid", "==", uid)).withConverter(this.employee_converter);
      this.sub_employee = onSnapshot(employee_ref, (employees) => {
       employees.forEach((employee) => {
         if(employee.exists()){
           this.employees.next(employee.data() as Employee);
+          console.log(employee.data());
+          
         }
       })
       this.common_service.incCounter();
