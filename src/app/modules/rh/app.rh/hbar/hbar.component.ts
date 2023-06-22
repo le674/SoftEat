@@ -11,6 +11,7 @@ import { AppRhComponent } from '../app.rh.component';
 import { getDatabase, ref, push, get, onValue } from 'firebase/database';
 import { FirebaseApp } from '@angular/fire/app';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-hbar',
   templateUrl: './hbar.component.html',
@@ -44,7 +45,8 @@ export class HbarComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private app: AppRhComponent,
     firebaseApp: FirebaseApp,
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+    private snackbar : MatSnackBar
   ) {
     this.firebaseApp = firebaseApp;
   }
@@ -137,6 +139,7 @@ export class HbarComponent implements OnInit {
         message += `\n Fichier joint: ${this.selectedFileName}`;
       }
       this.sendMessage(message);
+      this.snackbar.open("Demande envoyée", "Fermer")
       this.clearForm();
     }
   }
