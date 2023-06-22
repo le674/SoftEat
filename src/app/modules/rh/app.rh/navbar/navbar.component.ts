@@ -50,7 +50,6 @@ export class NavbarComponent implements OnInit {
     this.selectMail = [];
     this.new_users = '';
 
-    localStorage.clear();
     this.fetchUser();
     this.selectUser();
   }

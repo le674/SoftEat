@@ -36,7 +36,7 @@ export class CalendarService {
   private firebaseConfig = environment.firebase;
   private firebaseApp = initializeApp(this.firebaseConfig);
   private db = getDatabase(this.firebaseApp);
-  private currentUser = localStorage.getItem('user_email') as string;
+  private currentUser = localStorage.getItem("user_email") as string;
   private users = new BehaviorSubject<string>(this.currentUser);
   currentData = this.users.asObservable();
   private statusSubject = new BehaviorSubject<string>('');
@@ -62,11 +62,13 @@ export class CalendarService {
     console.log('Emitting loading status...');
     if (usersMails === '') {
       this.events = [];
+      this.statusSubject.next("");
       return this.events;
     } //Evite les erreurs dans le cas où aucun utilisateur n'est sélectionné
 
     // Sépare le string de mails d'utilisateurs en liste de mails
-    const emails = usersMails.split(',');
+    console.log(usersMails);
+    const emails = usersMails.split(",");
 
     let allEvents: DayPilot.EventData[] = []; // Crée un nouveau tableau pour enregistrer tous les événements
 

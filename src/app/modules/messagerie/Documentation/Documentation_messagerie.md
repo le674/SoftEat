@@ -1,6 +1,6 @@
 <div align="center">
 	<div style="display: flex; justify-content: center; align-items: center; background-color: white; padding: 15px; border-radius: 50%; width: 60px; height: 60px">
-		<img src="./img/paper-plane.png" width="50" height="50">
+		<img style="background-color: transparent" src="./img/paper-plane.png" width="50" height="50">
 	</div>
 	<h2 align="center">Messagerie</h3>
 	<br />
@@ -22,7 +22,7 @@
       <ol type="a">
         <li><a href="#a-message-template">Message Template</a></li>
         <li><a href="#b-date-template">Date Template</a></li>
-        <li><a href="#c-barre-de-saisie">Barre de saisie</a></li>
+        <li><a href="#c-autres-fonctionnalités">Autres fonctionnalités</a></li>
       </ol>
     </li>
     <li>
@@ -89,7 +89,10 @@ Le résultat final ressemble à ceci :
 
 ![Schéma du template de message](./img/message-template-schema.png)
 
-Le template prend en argument un objet `MessageInfos` et deux booléens : `authorIsMe` et `isBot`.
+Le template prend en argument un objet `MessageInfos` et deux booléens : `authorIsMe` et `isBot` : 
+```ts
+<message-template [listeMessages]="messageInfos.message" [author_is_me]="messageInfos.authorIsMe" [isBot]="messageInfos.isBot"></message-template>
+```
 
 ### b. Date Template
 
@@ -100,17 +103,47 @@ Le template de la date est une simple div, qui prend en argument un timestamp :
 </div>
 ```
 
-### c. Barre de saisie
+### c. Autres fonctionnalités
 
-:x: La barre de saisie ne permet pas de retour à la ligne.  
-:heavy_check_mark: Il est possible d'appuyer sur le bouton envoi ou sur la touche "entrée".
+:heavy_check_mark: possibilité d'appuyer sur le bouton envoi ou sur la touche "entrée"  
+:heavy_check_mark: message de couleurs différentes selon qui envoie le message  
+:heavy_check_mark: heure d'envoi de chaque message  
+:heavy_check_mark: message automatique par le bot lorsqu'un congé est demandé  
+
+
+:x: pas de retour à la ligne dans la barre de saisie  
+:x: pas d'état lu/non lu sur chaque message  
+:x: pas d'animations  
+:x: pas d'envoi de fichiers
+
 
 ---
 
 ## 3. Conversations
 
-### a. Droits et rôles
+La page des conversations permet de voir tous les messages envoyés dans les différents canaux. L'accès à chaque canal est défini en fonction des droits des employés. 
 
+>Les différents canaux sont récupérés dans la base de données. Chaque restaurant a des ID de conversation pour ses canaux : 
+>- facture
+>- recette
+>- inventaire
+>- comptabilité
+>- stock  
+>
+>Une fois les ID récupérés, l'écriture et la lecture du canal se font dans la partie `conversation` de la BDD sous chaque ID approprié.
 
+Pour la conversation **RH**, chaque employé a un ID de conversation RH privé qui est généré à la création de son compte. Cette conversation est uniquement accessible par lui/elle et aux employés ayant les droits `RH` (l'employeur peut y avoir accès ainsi qu'un employé affilié aux ressources humaines par exemple).
+
+### a. Droits d'accès
+
+Les onglets des différents canaux sont créés uniquement si les droits de l'employés le permettent en utilisant `ngIf`. De cette manière, il n'y a pas de création inutile.
+
+```html
+<li *ngIf="budgetConv">
+  <span class="conversation-name">
+    Comptabilité
+  </span>
+</li>
+```
 
 ### b. Notifications
