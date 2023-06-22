@@ -96,7 +96,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       this.statut.analyse === 'rw' ||
       this.statut.analyse === 'r'
     )
-      this.stockConv = true;
+      this.analyseConv = true;
     if (
       this.statut.budget === 'wr' ||
       this.statut.budget === 'rw' ||
