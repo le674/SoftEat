@@ -121,8 +121,29 @@ Le template de la date est une simple div, qui prend en argument un timestamp :
 
 ## 3. Conversations
 
-### a. Droits et rôles
+La page des conversations permet de voir tous les messages envoyés dans les différents canaux. L'accès à chaque canal est défini en fonction des droits des employés. 
 
+>Les différents canaux sont récupérés dans la base de données. Chaque restaurant a des ID de conversation pour ses canaux : 
+>- facture
+>- recette
+>- inventaire
+>- comptabilité
+>- stock  
+>
+>Une fois les ID récupérés, l'écriture et la lecture du canal se font dans la partie `conversation` de la BDD sous chaque ID approprié.
 
+Pour la conversation **RH**, chaque employé a un ID de conversation RH privé qui est généré à la création de son compte. Cette conversation est uniquement accessible par lui/elle et aux employés ayant les droits `RH` (l'employeur peut y avoir accès ainsi qu'un employé affilié aux ressources humaines par exemple).
+
+### a. Droits d'accès
+
+Les onglets des différents canaux sont créés uniquement si les droits de l'employés le permettent en utilisant `ngIf`. De cette manière, il n'y a pas de création inutile.
+
+```html
+<li *ngIf="budgetConv">
+  <span class="conversation-name">
+    Comptabilité
+  </span>
+</li>
+```
 
 ### b. Notifications
