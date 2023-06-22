@@ -1,23 +1,7 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { IngredientsInteractionService } from "../services/menus/ingredients-interaction.service";
 import { CalculService } from "../services/menus/menu.calcul/menu.calcul.ingredients/calcul.service";
 import { Cetape } from "./etape";
-
-export type TIngredientBase = {
-    name: string, 
-    quantity: number, 
-    quantity_unity:number ,
-    unity:string, 
-    unity_unitary: string,
-    cost:number,
-    material_cost:number,
-    vrac:string,
-    taux_tva:number, 
-    marge:number,
-    added_price:number,
-    supp:boolean
-
-}
 
 export type TConsoBase = {
     name:string,
@@ -123,9 +107,52 @@ export interface Consommable {
     setMarge(marge:number):void;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+/**
+ * @class ingrédient dan la base de donnée de manière légé pour plat par exemple
+ * @argument name nom de l'ingrédient
+ * @argument taux_tva taux de tva à appliquer à 'lingrédient
+ * @argument cost coût de l'ingrédient
+ * @argument quantity nombre de pack d'ingrédient 1 si vrac
+ * @argument quantity_unity quantitée pour un pack 
+ * @argument total_quantity quantitée total une fois réapprovisionnement afin de contrôler les marges
+ * @argument unity unitée de vente du produit ex. huile -> litre
+ * @argument unity_unitary cette unitée est utilisez pour les préparation par ex. huile -> c.s
+ * @argument material_cost cout matière de l'ingrédient
+ * @argument vrac est ce que l'aliment est en vrac ou non 
+ * @argument marge marge présent sur total_quantity une fois que la quantitée est inférieur à la marge ont prévient le restaurateur d'un problème de stock
+ * @argument added_price prix à ajouter dans le cas d'un supplément au plat
+ * @argument supp si l'ingrédient est un supplément ou pas
+ */
+export class TIngredientBase{
+    "name": string;
+    "quantity": number; 
+    "quantity_unity":number ;
+    "unity":string;
+    "unity_unitary": string;
+    "cost":number;
+    "material_cost":|number | null;
+    "vrac":string;
+    "taux_tva":number; 
+    "marge":number | null;
+    "added_price":number | null;
+    "supp":boolean | null
+    constructor(name:string, quantity:number, quantity_unity:number, unity:string, unity_unitary:string, cost:number, vrac:string, taux_tva:number){
+        this.name = name;
+        this.quantity = quantity;
+        this.quantity_unity = quantity_unity;
+        this.unity = unity;
+        this.unity_unitary = unity_unitary;
+        this.cost = cost;
+        this.vrac = vrac;
+        this.taux_tva = taux_tva;
+        this.material_cost = null;
+        this.marge = null;
+        this.added_price = null;
+        this.supp = null;
+    }
+
+}
+
 /**
  * @class ingrédient dan la base de donnée 
  * @argument nom nom de l'ingrédient
@@ -212,6 +239,8 @@ export class CIngredient implements Ingredient {
         return this
     }
 
+
+    
     /**
      * Permet de convertire un ingrédient en ingrédient_base qui contiennent moins d'information 
      * que les ingrédients et qui sont donc plus légées

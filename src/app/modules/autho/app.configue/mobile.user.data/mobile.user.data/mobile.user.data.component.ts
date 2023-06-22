@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, QueryList, ViewChildren } from '@angular/core';
+/* import { Component, Inject, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { MatOption } from '@angular/material/core';
 import { MatSelectChange } from '@angular/material/select';
@@ -53,13 +53,15 @@ export class MobileUserDataComponent implements OnInit {
   ngOnInit(): void {
   }
   get_restaurant() {
-    const restaurants = this.user.restaurants.map((restaurant) => restaurant.id);
-    let options = this.options.filter((option: MatOption) => {
-      return restaurants.includes(option.value)
-    });
-    options.forEach((option) => {
-      option.select()
-    })
+    if(this.user.restaurants !== null){
+      const restaurants = this.user.restaurants.map((restaurant) => restaurant);
+      let options = this.options.filter((option: MatOption) => {
+        return restaurants.includes(option.value)
+      });
+      options.forEach((option) => {
+        option.select()
+      })
+    }
   }
   set_restaurants(restaurants_selected: MatSelectChange) {
     this.user.restaurants = [];
@@ -136,3 +138,4 @@ export class MobileUserDataComponent implements OnInit {
     this._snackBar.open("vous avez bien modifier l'ultilisateur", "fermer")
   }
 }
+ */

@@ -44,6 +44,7 @@ export class ConsommableInteractionService {
         }
       })
     })
+    console.log(`Ont récupère ${this.consommable.toString().length/1000} ko de consommables`);
     return this.consommable
   }
 
@@ -69,6 +70,7 @@ export class ConsommableInteractionService {
         }
       })
     })
+    console.log(`Ont récupère ${this.consommable.toString().length/1000} ko de consommables`);
     return this.consommable
   }
 
@@ -92,6 +94,7 @@ export class ConsommableInteractionService {
         }
       })
     }
+    console.log(`Ont récupère ${this.consommable.toString().length/1000} ko de consommables`);
     return this.consommable;
   }
 
@@ -151,6 +154,7 @@ export class ConsommableInteractionService {
         }
       })
     })
+    console.log(`Ont récupère ${this.consommable.toString().length/1000} ko de consommables`);
     return this.consommable;
   }
 

@@ -28,14 +28,14 @@ export class ModifNumberComponent implements OnInit {
   }
 
   sendNewNumber(){
-    if(this.number_modification.valid && (this.number_modification.value.number != null)){
+/*     if(this.number_modification.valid && (this.number_modification.value.number != null)){
       const updated = this.service.updateNumber(this.data.prop, this.data.restaurant ,this.data.uid, this.number_modification.value.number).then(() => {
         this._snackBar.open("le numéro de téléphone a bien été modifié", "fermer")
       }).catch((error) => {
         console.log(error);
         this._snackBar.open("le numéro de téléphone n'a pas pu être modifié veuillez contacter SoftEat", "fermer") 
       })
-    } 
+    }  */
   }
 
 }

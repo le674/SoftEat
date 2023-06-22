@@ -58,6 +58,7 @@ export class MenuInteractionService {
         this.menus.push(add_menu);
       })
     })
+    console.log(`Ont récupère ${this.menus.toString().length/1000} ko de menu`);
     return this.menus
   }
 

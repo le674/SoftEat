@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
 import { Unsubscribe } from 'firebase/auth';
 import { child, connectDatabaseEmulator, Database, DatabaseReference, get, getDatabase, onValue, ref, remove, update } from 'firebase/database';
-import { collection, connectFirestoreEmulator, Firestore, getDocs, getFirestore } from "firebase/firestore";
+import { collection, connectFirestoreEmulator, Firestore, getDocs, getFirestore } from '@angular/fire/firestore';
 import { Subject } from 'rxjs';
 import { CIngredient, TIngredientBase } from '../../../app/interfaces/ingredient';
 import { Cpreparation } from '../../../app/interfaces/preparation';
@@ -72,6 +72,7 @@ export class IngredientsInteractionService {
           this.ingredients.push(add_ingredient);
         }
       })
+      console.log(`ont récupère ${this.ingredients.toString().length / 1000} ko d'ingrédients brut`);
       this.data_ingredient.next(this.ingredients)
     })
     return this.sub_ingredients_br;
@@ -107,6 +108,7 @@ export class IngredientsInteractionService {
         add_preparation.is_stock =  preparation.child("is_stock").val();
         this.preparation.push(add_preparation);
       })
+      console.log(`ont récupère ${this.preparation.toString().length / 1000} ko de préparation`);
       this.data_ingredient_prep.next(this.preparation);
     })
     return this.sub_ingredients_prep;
@@ -141,6 +143,7 @@ export class IngredientsInteractionService {
         }
       })
     })
+    console.log(`Ont écrit ${this.ingredients.toString().length/1000} ko de ingrédients`);
     return this.ingredients;
   }
 
@@ -176,6 +179,7 @@ export class IngredientsInteractionService {
             this.preparation.push(add_preparation);
       })
     })
+    console.log(`Ont lit ${this.preparation.toString().length/1000} ko de préparations`);
     return this.preparation;
   }
 
@@ -207,6 +211,7 @@ export class IngredientsInteractionService {
             added_price:0,
             supp: false
           };
+          console.log(`Ont lit ${this.ingredients_minimal.toString().length/1000} ko de ingrédients`);
           this.ingredients_minimal.push(ingredient);
         }
       })
@@ -242,6 +247,7 @@ export class IngredientsInteractionService {
       }
       ingredient.is_similar =  is_similar;
     })
+    console.log(`Ont écrit ${ingredient.toString().length/1000} ko de ingrédients`);
     return ingredient;
   }
 
@@ -282,6 +288,7 @@ export class IngredientsInteractionService {
              })
            })
          }
+         console.log(`Ont écrit ${preparation_princ.toString().length/1000} ko de préparations`);
          await update(ref_db, preparation_princ)
   }
 
@@ -366,6 +373,7 @@ export class IngredientsInteractionService {
         }
       })
     })
+    console.log(`Ont récupère ${this.ingredients_minimal.toString().length/1000} ko de ingrédients`);
     return this.ingredients_minimal;
   } 
 

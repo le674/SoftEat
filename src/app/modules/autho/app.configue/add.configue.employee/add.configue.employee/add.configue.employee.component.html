@@ -11,6 +11,14 @@
 <body>
     <form [formGroup]="add_employee" (ngSubmit)="addEmployee()">
         <h1>Ajout d'un nouveau employé</h1>
+        <p>prénom du nouveau employé</p>
+        <mat-form-field class="example-full-width">
+            <mat-label>prénom</mat-label>
+            <input formControlName="name" matInput placeholder="Ex. adam">
+            <mat-error *ngIf="add_employee.controls.name.hasError('name')">
+                veuillez entrer un prénom valide
+            </mat-error>
+        </mat-form-field>
         <p>email du nouveau employé</p>
         <mat-form-field class="example-full-width">
             <mat-label>email</mat-label>

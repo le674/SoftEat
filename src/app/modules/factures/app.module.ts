@@ -49,8 +49,6 @@ import { MatListModule } from '@angular/material/list';
     AppFacturesComponent,
     AppArchiComponent
   ],
-  providers: [
-    CIngredient
-  ],
+  providers: [],
 })
 export class AppFacturesModule {}

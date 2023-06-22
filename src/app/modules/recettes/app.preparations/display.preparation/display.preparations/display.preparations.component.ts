@@ -26,7 +26,7 @@ export class DisplayPreparationsComponent implements OnInit {
     quantity: number;
     unity: string,
     cost: number;
-    cost_matiere: number;
+    cost_matiere: number | null;
   }>;
   public dataSource_conso: MatTableDataSource<{
     name: string;
@@ -44,7 +44,7 @@ export class DisplayPreparationsComponent implements OnInit {
     quantity: number;
     unity: string,
     cost: number;
-    cost_matiere: number;
+    cost_matiere: number | null;
   }>;
   public displayed_conso: Array<{
     name: string;
@@ -110,7 +110,6 @@ export class DisplayPreparationsComponent implements OnInit {
     this.val_bouch = this.data.val_bouch;
     if(this.data.ingredients !== null){
       if(this.data.ingredients.length > 0){
-
         this.displayed_ing = this.data.ingredients.map((ing) => {
           return {name: ing.name, quantity: ing.quantity, unity: ing.unity, cost:ing.cost, cost_matiere: ing.material_cost}
         })

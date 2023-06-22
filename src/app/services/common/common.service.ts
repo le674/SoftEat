@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
+import { FirebaseApp } from '@angular/fire/app';
+import { Firestore, connectFirestoreEmulator} from '@angular/fire/firestore';
+import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommonService {
+  private read_count:number;
   constructor() { 
+    this.read_count = 0;
   }
 
   // l'argument type dépend du tbaleau que l'on souhaite transformer 
@@ -44,5 +49,24 @@ export class CommonService {
     }
     return window.innerWidth - 100;
   }
-
+  incCounter():any{
+    this.read_count = this.read_count + 1;
+  }
+  decCounter():any{
+    this.read_count = this.read_count - 1;
+  }
+  getCounter():number{
+    return this.read_count;
+  }
+  initializeBdd(app:FirebaseApp, firestore:Firestore):Firestore{
+    if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
+      try {
+          connectFirestoreEmulator(firestore, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
+      } catch (error) {
+          console.log(error);
+          
+      }  
+    } 
+    return firestore;
+  }
 }
