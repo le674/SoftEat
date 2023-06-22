@@ -20,7 +20,7 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
   @ViewChild('month') month!: DayPilotMonthComponent;
   users!: string;
   @Input() userRole!: string;
-  status: string = '';
+  status = '';
   statusSubscription!: Subscription;
 
   constructor(
@@ -214,7 +214,7 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
           text: 'Supprimer',
           image: '../../../../assets/images/trash.png',
           onClick: async (args) => {
-            var e = args.source;
+            const e = args.source;
             await this.ds.remove_event(
               'foodandboost_prop',
               e.resource(),
@@ -225,7 +225,6 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
         },
       ], //Permet de supprimer l'événement sur lequel on a fait un clic droit
       onShow: (args) => {
-        var e = args.source;
         if (this.userRole !== 'gerant') {
           if (args.menu && args.menu.items && args.menu.items[0]) {
             args.menu.items[0].disabled = true; //Désactivation de cette option si l'utilisateur n'est pas gerant
@@ -261,8 +260,7 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
       // Extraire la première partie du texte
       const lieu = args.data.text.slice(0, commaIndex).trim();
       // Extraire la deuxième partie du texte
-      const evenement = args.data.text.slice(commaIndex + 1).trim();
-      let resourceHtml = args.data.resource
+      const resourceHtml = args.data.resource
         ? "<div style='font-style: italic;'>" + lieu + '</div>'
         : '';
       args.data.html =
@@ -292,7 +290,7 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
           text: 'Supprimer',
           image: '../../../../assets/images/trash.png',
           onClick: async (args) => {
-            var e = args.source;
+            const e = args.source;
             await this.ds.remove_event(
               'foodandboost_prop',
               e.resource(),
@@ -303,7 +301,6 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
         },
       ],
       onShow: (args) => {
-        var e = args.source;
         if (this.userRole !== 'gerant') {
           if (args.menu && args.menu.items && args.menu.items[0]) {
             args.menu.items[0].hidden = true;
@@ -342,7 +339,7 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
       const lieu = args.data.text.slice(0, commaIndex).trim();
       // Extraire la deuxième partie du texte
       const evenement = args.data.text.slice(commaIndex + 1).trim();
-      let resourceHtml = args.data.resource
+      const resourceHtml = args.data.resource
         ? "<div style='font-style: italic;'>" + lieu + '</div>'
         : '';
       args.data.html =
@@ -368,7 +365,7 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
           text: 'Supprimer',
           image: '../../../../assets/images/trash.png',
           onClick: async (args) => {
-            var e = args.source;
+            const e = args.source;
             await this.ds.remove_event(
               'foodandboost_prop',
               e.resource(),
@@ -435,7 +432,7 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
       height: '85vh',
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(() => { // result
       this.onDialogClosed();
     });
   }

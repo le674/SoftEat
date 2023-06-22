@@ -67,7 +67,7 @@ export class FirebaseService {
         const usersRef = ref(this.db, 'users/foodandboost_prop');
         const usersSnapShot = await get(usersRef); // Ici : Erreur permission dinied
       
-        return new Promise<DatabaseReference>((resolve, reject) => { // | null
+        return new Promise<DatabaseReference>((resolve) => { // | null
             if (usersSnapShot.exists()) {
                 usersSnapShot.forEach((userSnapShot) => {
                     const user = userSnapShot.val();
@@ -85,7 +85,7 @@ export class FirebaseService {
         const usersSnapShot = await get(usersRef); // Ici : Erreur permission dinied
         const convListUsers = { 'ana': [''], 'com': [''], 'fac': [''], 'inv': [''], 'rec': [''], 'plan': [''], 'rh': ['']};
 
-        return new Promise<{ [conv: string]: string[] }>((resolve, reject) => {
+        return new Promise<{ [conv: string]: string[] }>((resolve) => {
             if (usersSnapShot.exists()) {
                 usersSnapShot.forEach((userSnapShot) => {
                     const user = userSnapShot.val() ;
@@ -95,10 +95,10 @@ export class FirebaseService {
                     if(userStatuts.stock === 'wr' || userStatuts.stock === 'rw' || userStatuts.stock === 'r') { //userStatuts.stock.includes('w') || userStatuts.stock.includes('r')
                         convListUsers['inv'].push(user_email);
                         convListUsers['rec'].push(user_email);
-                    };
+                    }
                     if(userStatuts.analyse === 'wr' || userStatuts.analyse === 'rw' || userStatuts.analyse === 'r' ) convListUsers['ana'].push(user_email);
                     if(userStatuts.budget === 'wr' || userStatuts.budget === 'rw' || userStatuts.budget === 'r' ) convListUsers['com'].push(user_email);
-                    if(userStatuts.facture === 'wr' || userStatuts.facture === 'rw' || userStatuts.facture === 'r' ) convListUsers['fac'].push(user_email);;
+                    if(userStatuts.facture === 'wr' || userStatuts.facture === 'rw' || userStatuts.facture === 'r' ) convListUsers['fac'].push(user_email);
                     if(userStatuts.planning === 'wr' || userStatuts.planning === 'rw' || userStatuts.planning === 'r' ) convListUsers['plan'].push(user_email);
                     
                 });

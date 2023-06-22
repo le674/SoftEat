@@ -50,7 +50,7 @@ export class CalendarService {
           FIREBASE_DATABASE_EMULATOR_HOST.host,
           FIREBASE_DATABASE_EMULATOR_HOST.port
         );
-      } catch (error) {}
+      } catch (error) {console.log("Error in constructor calendar-data.service.ts :", error)}
     }
   }
 

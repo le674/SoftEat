@@ -9,11 +9,11 @@ import { CalendarService } from '../calendar-view/calendar-data.service';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-  Categories!: { nom: string; open: boolean; buttonname: String }[]; // Définition d'un tableau de catégories avec leurs propriétés
-  Serveurs!: { nom: String; selectionne: boolean; mail: String }[]; // Définition d'un tableau de serveurs avec leurs propriétés
-  Gerants!: { nom: String; selectionne: boolean; mail: String }[]; // Définition d'un tableau de gérants avec leurs propriétés
-  Rh!: { nom: String; selectionne: boolean; mail: String }[]; // Définition d'un tableau de ressources humaines avec leurs propriétés
-  Autres!: { nom: String; selectionne: boolean; mail: string }[]; // Définition d'un tableau d'autres employés avec leurs propriétés
+  Categories!: { nom: string; open: boolean; buttonname: string }[]; // Définition d'un tableau de catégories avec leurs propriétés
+  Serveurs!: { nom: string; selectionne: boolean; mail: string }[]; // Définition d'un tableau de serveurs avec leurs propriétés
+  Gerants!: { nom: string; selectionne: boolean; mail: string }[]; // Définition d'un tableau de gérants avec leurs propriétés
+  Rh!: { nom: string; selectionne: boolean; mail: string }[]; // Définition d'un tableau de ressources humaines avec leurs propriétés
+  Autres!: { nom: string; selectionne: boolean; mail: string }[]; // Définition d'un tableau d'autres employés avec leurs propriétés
 
   select!: string[]; // Tableau des employés sélectionnés
   selectMail!: string[]; // Tableau des adresses e-mail des employés sélectionnés

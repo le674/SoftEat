@@ -25,17 +25,16 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   @ViewChild('addRepeter') addRepeterSelect!: ElementRef<HTMLSelectElement>;
   dateWidth = '150px'; // Default width
 
-  Categories!: String[];
-  Serveurs!: { nom: String; selectionne: boolean; mail: String }[];
-  Gerants!: { nom: String; selectionne: boolean; mail: String }[];
-  Rh!: { nom: String; selectionne: boolean; mail: String }[];
-  Autres!: { nom: String; selectionne: boolean; mail: String }[];
+  Categories!: string[];
+  Serveurs!: { nom: string; selectionne: boolean; mail: string }[];
+  Gerants!: { nom: string; selectionne: boolean; mail: string }[];
+  Rh!: { nom: string; selectionne: boolean; mail: string }[];
+  Autres!: { nom: string; selectionne: boolean; mail: string }[];
   firebaseApp: FirebaseApp | undefined;
   newEvent?: DayPilot.EventData;
   constructor(
     private calendar: CalendarService,
-    public dialogRef: MatDialogRef<EventFormComponent>,
-    firebaseApp: FirebaseApp
+    public dialogRef: MatDialogRef<EventFormComponent>
   ) {
     this.dialogRef = dialogRef;
   }
@@ -67,12 +66,6 @@ export class EventFormComponent implements OnInit, AfterViewInit {
       this.Autres = JSON.parse(AutresString);
     }
 
-    // Configuration des écouteurs d'événements pour les champs de texte
-    const inputFields: HTMLInputElement[] = [
-      this.addPersonnelInput.nativeElement,
-      this.addEventInput.nativeElement,
-      this.addLieuInput.nativeElement,
-    ];
 
     setTimeout(() => {
       // Ajouter un délai avant de configurer les écouteurs d'événements pour les champs de texte
@@ -402,7 +395,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   getCategoryUsers(
     // Récupérer la liste des utilisateurs dont on rentre le rôle
     category: String
-  ): { nom: String; selectionne: boolean; mail: String }[] {
+  ): { nom: string; selectionne: boolean; mail: string }[] {
     switch (category) {
       case 'Serveurs':
         return this.Serveurs;

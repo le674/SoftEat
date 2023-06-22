@@ -37,16 +37,13 @@ export class AppRhComponent implements OnInit {
 
     const userPath = '/users/foodandboost_prop/';
 
-    // Référence au chemin des utilisateurs
-    const usersRef = ref(db, userPath);
-
     // Current user
     const auth = getAuth(firebaseApp);
 
     // Récupérer les infos de l'utilisateur connecté
     onAuthStateChanged(auth, (currentUser) => {
-      let user = currentUser;
-      let userdat = user?.uid;
+      const user = currentUser;
+      const userdat = user?.uid;
       const role = ref(db, `${userPath}/${userdat}/role`);
       const mail = ref(db, `${userPath}/${userdat}/email`);
       const prenom = ref(db, `${userPath}/${userdat}/prenom`);
