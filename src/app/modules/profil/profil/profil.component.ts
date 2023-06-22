@@ -26,7 +26,7 @@ export class ProfilComponent implements OnInit {
   private router: Router;
   private url: UrlTree;
   private auth : Auth;
-  public user_db: User;
+  public user_db: any;
   public enseigne:string;
   public restaurants: string;
   public not_mobile: boolean;
@@ -39,7 +39,7 @@ export class ProfilComponent implements OnInit {
      private mail_service:MailServicesService,public dialog: MatDialog,
      private _snackBar: MatSnackBar, public mobile_service:CommonService) { 
     this.router = router;
-    this.user_db = new User()
+  /*   this.user_db = new User() */
     this.enseigne = "";
     this.restaurants = "";
     this.not_mobile = false;
@@ -64,12 +64,12 @@ export class ProfilComponent implements OnInit {
     onAuthStateChanged(this.auth, (user) => {
       if(user){
         
-        const private_data = this.service.getUserFromUid(user.uid, this.enseigne).then((user) => {
+/*         const private_data = this.service.getUserFromUid(user.uid, this.enseigne).then((user) => {
           this.user_db.restaurants = user.restaurants;
           this.user_db.statut = user.statut;
           return user
-        })
-        private_data.then((user_db) => {
+        }) */
+/*         private_data.then((user_db) => {
           this.service.getUserDataFromUid(user.uid, this.enseigne, this.restaurants).then((user) => {
             this.user_db.name = user.name;
             this.user_db.numero = user.numero;
@@ -79,7 +79,7 @@ export class ProfilComponent implements OnInit {
             if(this.user_db.surname == "") this.user_db.surname = "pas de prénom inscrit"
             if(this.user_db.numero == "") this.user_db.numero = "pas de numéro inscrit"
           })
-        })
+        }) */
       }
     })
     this.not_mobile = this.mobile_service.getMobileBreakpoint("mobile");
@@ -122,7 +122,7 @@ export class ProfilComponent implements OnInit {
       data: {
         restaurant: this.restaurants,
         prop: this.enseigne,
-        uid: this.user_db.id,
+        uid: this.user_db.uid,
         auth: this.auth
       }
     });
@@ -135,7 +135,7 @@ export class ProfilComponent implements OnInit {
       data: {
         restaurant: this.restaurants,
         prop: this.enseigne,
-        uid: this.user_db.id
+        uid: this.user_db.uid
       }
     });
   }

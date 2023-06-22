@@ -48,16 +48,20 @@ export class AppPlatsComponent implements OnInit {
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];
     this.plat_service.getPlatFromRestaurant(this.prop, this.restaurant).then((plats) => { 
+      console.log(`${plats.toString().length/1000} ko pour les plats`);
       this.plats = plats;
       this.categorie.map((categorie) => this.carte.push(plats.filter((plat) => plat.type === categorie)));
     })
     this.ingredient_service.getFullIngs(this.prop,this.restaurant).then((ingredients) => {
+      console.log(`${ingredients.toString().length/1000} ko pour les ingredients`);
       this.full_lst_ings = ingredients;
     })
     this.conso_service.getFullConso(this.prop, this.restaurant).then((consomables) => {
+      console.log(`${consomables.toString().length/1000} ko pour les consommables`);
       this.full_lst_conso = consomables;
     })
     this.prepa_service.getFullPreparations(this.prop, this.restaurant).then((preparations) => {
+      console.log(`${preparations.toString().length/1000} ko pour les préprations`);
       this.full_lst_prepa = preparations;
     })
     

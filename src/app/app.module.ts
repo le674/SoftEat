@@ -10,7 +10,8 @@ import { AppFacturesModule } from './modules/factures/app.module';
 import { AppStockModule } from './modules/stock/app.module';
 import { AppAcceuilModule } from './modules/acceuil/app.module';
 import { AppDashboardModule } from './modules/dashboard/app.module';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import {getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getFirestore, provideFirestore,  persistentLocalCache, persistentMultipleTabManager, initializeFirestore } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { AuthentificationService } from './services/authentification.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -37,20 +38,26 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     AppFacturesModule,
     AppStockModule,
     AppAcceuilModule,
-    AppAuthoModule,
     RecettesModule,
+    AppRoutingModule,
     // permet d'initialiser les services firebase à utiliser une fois dans
     //le app.module les objet de classe FirebaseApp contiendrons alors la configuration pour l'api firebase présent dans l'environnement
     provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirestore(() => {
+      initializeFirestore(getApp(), {
+        localCache: persistentLocalCache({
+            tabManager: persistentMultipleTabManager()
+        })
+      })
+      return getFirestore();
+    }),
     provideAuth(() => getAuth()),
-    AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     })
-
   ],
   providers: [AuthentificationService],
   bootstrap: [AppComponent]

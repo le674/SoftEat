@@ -36,7 +36,7 @@ export class ModifMailComponent implements OnInit {
 
   sendNewMail() {
     if (this.email_modification.valid && (this.email_modification.value.email != null) && (this.data.auth.currentUser != null)) {
-       //on modifie l'email dans firebase
+/*        //on modifie l'email dans firebase
       const updated =  updateEmail(this.data.auth.currentUser, this.email_modification.value.email) 
       updated.then(() => {
          //on écrit dans la base de donnée le nouveau email
@@ -65,7 +65,7 @@ export class ModifMailComponent implements OnInit {
             updateCurrentUser(this.data.auth, null);
             window.location.href = ""
           })  
-      })
+      }) */
     }
   }
 }

@@ -129,6 +129,7 @@ export class PlatsInteractionService {
         })
       })
     })
+    console.log(`Ont récupère ${this.plats.toString().length/1000} ko de plats`); 
     return this.plats
   }
 
@@ -159,6 +160,7 @@ export class PlatsInteractionService {
         }
       })
     })
+    console.log(`Ont récupère ${lst_plats.toString().length/1000} ko de plats`); 
     return lst_plats;
   }
 

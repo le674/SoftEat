@@ -114,7 +114,7 @@ export class CalculPrepaService {
         sum_cost_conso = full_cost_quant_conso.reduce((curr_cost, next_cost) => curr_cost + next_cost)
       }
       this.prime_cost =  this.ToCentime(sum_cost_conso + sum_cost_ing);
-      await this.restau_service.getSalaryCuisiniee(prop, restaurant).then((salary) => {
+      /* await this.restau_service.getSalaryCuisiniee(prop, restaurant).then((salary) => {
       // 35 nombr d'heur travaillé par semaine en fonction du nombre de semaine dans un mois
       const mensuel_work_hour = 4.34524*35;
       if((salary !== null) && (salary !== undefined)){
@@ -126,7 +126,7 @@ export class CalculPrepaService {
       }
       
       this.prime_cost = this.ToCentime(second_salary*full_time + this.prime_cost);
-    });
+    }); */
     return this.prime_cost;
   }
   getFullTheoTimeFromSec(etapes: Array<Cetape>):string{

@@ -31,6 +31,7 @@ export class AddConfigueSalaryComponent implements OnInit {
   }
 
   addSalary(){
+    /*
     const salary = this.add_salary.controls.salary.value;
     const restaurant = this.add_salary.controls.restaurant.value;
     if(salary !== null) this.salary = salary;
@@ -42,5 +43,6 @@ export class AddConfigueSalaryComponent implements OnInit {
         this._snackBar.open(`nous ne sommes pas parvenu à ajouter un salairer pour le restaurant ${restaurant}`, "fermer");
       });
     }
+    */
   }
 }

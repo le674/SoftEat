@@ -1,14 +1,14 @@
-import { AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+/*
+import {Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Auth, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { Router } from '@angular/router';
 import { ShortUser, User } from '../../../../app/interfaces/user';
-import { InteractionRestaurantService } from '../app.autho/interaction-restaurant.service';
 import { UserInteractionService } from '../../../../app/services/user-interaction.service';
 import { Restaurant } from '../../../../app/interfaces/restaurant';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSelect, MatSelectChange } from '@angular/material/select';
+import { MatSelectChange } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
 import { Visibles } from './app.configue.index';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -99,7 +99,7 @@ export class AppConfigueComponent implements OnInit{
   @ViewChildren("options_write")
   options_write!: QueryList<MatOption>
 
-  constructor(public dialog: MatDialog, private service: InteractionRestaurantService, private user_services: UserInteractionService,
+  constructor(public dialog: MatDialog, private user_services: UserInteractionService,
     private ofApp: FirebaseApp, private router: Router,  private _snackBar: MatSnackBar,
     private _bottomSheet: MatBottomSheet, public mobile_service:CommonService) {
     this.prop_user = [];
@@ -164,6 +164,7 @@ export class AppConfigueComponent implements OnInit{
             this.is_prop = is_prop;
           })
           const all_id = this.user_services.getAllIdFromProp(name).then((props) => {
+
             return (props)
           })
           return (all_id)
@@ -172,6 +173,7 @@ export class AppConfigueComponent implements OnInit{
        all_id.then((users) => {
           if (users.employee !== null) {
             const rest_prom = this.service.getAllRestaurants(this.proprietaire).then((restau_list) => {
+              console.log(`${restau_list.toString().length/1000} ko pour les restaurants`);              
               this.restau_list = restau_list;
               return (restau_list)
             })
@@ -209,7 +211,6 @@ export class AppConfigueComponent implements OnInit{
                 }
               }).catch((e) => {
                 console.log("erreur pour la fonction getAllRestaurant qui est", e);
-                
               })
             }
           }
@@ -387,12 +388,12 @@ export class AppConfigueComponent implements OnInit{
     index = 6 * this.page_number + index
     let user = this.curr_user["user" +  this.curr_categorie as keyof typeof this.curr_user].at(index);
     if(user?.restaurants !== undefined){
-/*       user.restaurants.forEach((restaurant:Restaurant, index:number) => {
+/       user.restaurants.forEach((restaurant:Restaurant, index:number) => {
         // on enlève dans les restaureants utilisateurs tout les restaurants qui ne sont pas séléctionné
         //les restaurants sont conv
         restaurants.filter((restaurant: {id: any;}) => (restaurant !== restaurant.id))
       })
-       */
+       /
       user.restaurants = [];
 
       for(let restaurant of restaurants){
@@ -547,5 +548,5 @@ export class AppConfigueComponent implements OnInit{
     }
   }
 }
-
+*/
 

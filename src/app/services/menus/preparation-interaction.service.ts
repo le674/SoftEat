@@ -56,7 +56,8 @@ export class PreparationInteractionService {
     Object.assign(updates, {[`inventaire_${prop}_${restaurant}/${prop}/${restaurant}/preparations/${name}/prime_cost`]:prime_cost});
     Object.assign(updates, {[`inventaire_${prop}_${restaurant}/${prop}/${restaurant}/preparations/${name}/val_bouch`]:val_bouch});
     Object.assign(updates, {[`inventaire_${prop}_${restaurant}/${prop}/${restaurant}/preparations/${name}/temps`]:tmps_prepa});
-
+    console.log(`ont écrits ${updates.toString().length} ko de préparation`);
+    
     await update(ref_db, updates);
   }
 
@@ -80,6 +81,7 @@ export class PreparationInteractionService {
         }
       })
     })
+    console.log(`${this.preparations.length/1000} ko de préparations récupérés`);
     return this.preparations;
   }
 }

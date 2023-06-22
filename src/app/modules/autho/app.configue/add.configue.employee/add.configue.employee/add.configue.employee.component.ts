@@ -13,6 +13,7 @@ import { User } from '../../../../../../app/interfaces/user';
 })
 export class AddConfigueEmployeeComponent implements OnInit {
   public add_employee = new FormGroup({
+    name: new FormControl('', Validators.required),
     mail: new FormControl('', [Validators.required, Validators.email]),
     mdp: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
@@ -36,18 +37,19 @@ export class AddConfigueEmployeeComponent implements OnInit {
           //ont crée le nouveau utilisateur puis on reconnecte le proprietaire 
           createUserWithEmailAndPassword(this.data.auth, this.add_employee.controls.mail.value, this.add_employee.controls.mdp.value).then((user_cred) => {
             updateCurrentUser(this.data.auth,user).then(() => {
-              let user:User = new User();
-              user.id = user_cred.user.uid;
-              user.email = this.add_employee.controls.mail.value as string;
-              this.user_service.setUser(this.data.prop,user).then(() => {
-                this.user_service.setUserInfo(this.data.prop,user).catch((e) => {
-                  console.log(e);
-                  this.dialogRef.close();
-                  this._snackBar.open("le nouvelle employé n'a pas été ajouté veuillez contacter softeat", "fermer")
-                }).finally(() => {
-                  this.dialogRef.close();
-                  this._snackBar.open("vous venez d'ajouter un nouveau employé", "fermer")
-                })
+              let name = "";
+              let email = "";
+              if(this.add_employee.controls.name.value !== null){
+                name = this.add_employee.controls.name.value;
+              }
+              if(this.add_employee.controls.mail.value !== null){
+                email = this.add_employee.controls.mail.value;
+              }
+              let _user:User = new User();
+              _user.uid = user_cred.user.uid;
+              _user.email = this.add_employee.controls.mail.value as string;
+              this.user_service.setUserBDD(_user).then(() => {
+                  this._snackBar.open(`l'utilisateur ${user.email} vient d'être ajouté dans la abse de donnée`)
               });
             });
           });
