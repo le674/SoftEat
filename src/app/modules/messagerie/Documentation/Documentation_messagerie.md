@@ -147,3 +147,8 @@ Les onglets des différents canaux sont créés uniquement si les droits de l'em
 ```
 
 ### b. Notifications
+
+Les notifications sont indiquées par des points de couleur à côté des noms de canaux. Les points restent visibles si la fenêtre est réduite.
+
+![Exemple de notification](./img/notification.png)
+
