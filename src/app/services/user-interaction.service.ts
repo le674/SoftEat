@@ -148,6 +148,7 @@ export class UserInteractionService {
       where("auth_rh", "array-contains", uid)
     ).withConverter(this.employee_converter);
     this.sub_employees = onSnapshot(employee_ref, (employees) => {
+      this._employees = [];
       employees.forEach((employee) => {
         if (employee.exists()) {
           this._employees.push(employee.data() as Employee);
@@ -176,6 +177,7 @@ export class UserInteractionService {
         .withConverter(this.user_converter);
     }
     this.sub_users = onSnapshot(user_ref, (users) => {
+      this._users = [];
       users.forEach((user) => {
         if (user.exists()) {
           this._users.push(user.data() as User);

@@ -77,6 +77,7 @@ getAllRestaurantsBDD(user:User){
     let docRef = query(collection(doc(collection(this.db, "proprietaires"), prop), "restaurants"), where('id', 'in', restaurants))
                  .withConverter(this.restaurants_converter);
     this.sub_all_restaurants = onSnapshot(docRef, (restaurants) => {
+      this._restaurants = [];
       restaurants.forEach((restaurant) => {
         if(restaurant.exists()){
           this._restaurants.push(restaurant.data() as Restaurant);
@@ -100,6 +101,7 @@ getAllRestaurantsFromPropBDD(user:User){
     const prop = user.related_restaurants[0].proprietaire_id; 
     let docRef = collection(doc(collection(this.db, "proprietaires"), prop), "restaurants").withConverter(this.restaurants_converter);
     this.sub_all_full_restaurants = onSnapshot(docRef, (restaurants) => {
+      this._full_restaurants = [];
       restaurants.forEach((restaurant) => {
         if(restaurant.exists()){
           this._full_restaurants.push(restaurant.data() as Restaurant);

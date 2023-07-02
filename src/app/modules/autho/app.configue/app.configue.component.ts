@@ -203,6 +203,8 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
                 }
                 this.restaurant_service.getAllRestaurantsFromPropBDD(this.user);
                 this.restaurant_service.getAllRestaurantsFromProp().subscribe((restaurants) => {
+                  this.users = [];
+                  this.prop_user = [];
                   for(let employee of employees){
                     let row_user = new ShortUser();
                     let _employee = new EmployeeFull(employee.email, employee.statut, employee.uid, this.common_service);
@@ -217,6 +219,7 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
                     first_event.length = this.prop_user.length
                     first_event.pageSize = 6
                     first_event.pageIndex = 0
+                    this.clearDataSource();
                     this.pageChanged(first_event, 0);
                     this.pageChanged(first_event, 1);
                     this.pageChanged(first_event, 2);
@@ -233,6 +236,15 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
       }
     })
   }
+   clearDataSource() {
+      this.dataSource.data0 = new MatTableDataSource([new ShortUser()]);
+      this.dataSource.data1 = new MatTableDataSource([new ShortUser()]);
+      this.dataSource.data2 = new MatTableDataSource([new ShortUser()]);
+      this.dataSource.data3 = new MatTableDataSource([new ShortUser()]);
+      this.dataSource.data4 = new MatTableDataSource([new ShortUser()]);
+      this.dataSource.data5 = new MatTableDataSource([new ShortUser()]);
+      this.dataSource.data6 = new MatTableDataSource([new ShortUser()]);
+   }
    pageChanged(event: PageEvent, i: number) {
     let role_names = this.common_service.getRoles();
     for(let i = 0; i < this.users.length; i++){

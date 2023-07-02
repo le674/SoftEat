@@ -139,6 +139,7 @@ export class EmployeeFull extends Employee{
   proprietaire:string = "";
   restaurants: Array<Restaurant> = [];
   getAllRestaurant(user:User, restaurants:Array<Restaurant>){
+    this.restaurants = [];
     if(user.related_restaurants !== null){
      const restaurants_ids =  user.related_restaurants.map((restaurant) => restaurant.restaurant_id);
      this.restaurants = restaurants.filter((restaurant) => restaurants_ids.includes(restaurant.id))
