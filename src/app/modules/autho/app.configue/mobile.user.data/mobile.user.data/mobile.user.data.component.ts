@@ -1,4 +1,4 @@
-/* import { Component, Inject, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, Inject, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { MatOption } from '@angular/material/core';
 import { MatSelectChange } from '@angular/material/select';
@@ -31,8 +31,12 @@ export class MobileUserDataComponent implements OnInit {
   options_write!: QueryList<MatOption>;
 
 
-  constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: { user: User, prop_user: ShortUser[], is_prop:boolean, proprietaire: string},
-  private user_services: UserInteractionService, private _snackBar: MatSnackBar) {
+  constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: {
+    user: User,
+    prop_user: ShortUser[],
+    is_prop:boolean,
+    proprietaire: string
+  }, private user_services: UserInteractionService, private _snackBar: MatSnackBar) {
     this.proprietaire = this.data.proprietaire;
     this.user = this.data.user;
     this.is_prop = this.data.is_prop;
@@ -52,7 +56,8 @@ export class MobileUserDataComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  get_restaurant() {
+ /*  get_restaurant() {
+
     if(this.user.restaurants !== null){
       const restaurants = this.user.restaurants.map((restaurant) => restaurant);
       let options = this.options.filter((option: MatOption) => {
@@ -136,6 +141,5 @@ export class MobileUserDataComponent implements OnInit {
       this.user_services.setUser(this.proprietaire, user)
     }
     this._snackBar.open("vous avez bien modifier l'ultilisateur", "fermer")
-  }
+  } */
 }
- */

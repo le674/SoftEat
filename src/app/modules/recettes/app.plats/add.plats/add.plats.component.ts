@@ -270,7 +270,6 @@ export class AddPlatsComponent implements OnInit {
     }
     const prime_cost_prom = this.plat_service.getPrimCost(this.data.prop, this.data.restaurant, plat as Cplat).then((prime_cost) => plat.prime_cost = prime_cost);
     prime_cost_prom.then((prime_cost) => {
-      console.log(prime_cost);
       this.plat_interaction.setPlat(this.data.prop, this.data.restaurant, plat).finally(() => {
         this._snackBar.open(`le plat ${plat.nom} vient d'être ajouté`, "fermer")
       }).catch((e) => {

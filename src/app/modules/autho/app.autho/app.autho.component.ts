@@ -11,7 +11,8 @@ import { RestaurantService } from 'src/app/services/restaurant/restaurant.servic
 import { Unsubscribe } from 'firebase/firestore';
 import { User } from 'src/app/interfaces/user';
 import { Employee } from 'src/app/interfaces/employee';
-import { Address } from 'src/app/interfaces/address';
+import { CommonCacheServices } from 'src/app/services/common/common.cache.services.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-app.autho',
@@ -25,28 +26,30 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
   private uid: string;
   public user:User | null;
   public is_confique: boolean;
-  public restaurants_only: Array<Restaurant>;
   public url:string;
   private employee_unsubscribe!:Unsubscribe;
+  private _employee_subscription!:Subscription;
   private restaurant_unsubscribe!: Unsubscribe;
+  private _restaurant_subscription!:Subscription;
   private user_unsubscribe!: Unsubscribe;
+  private _user_subscription!:Subscription;
 
   constructor(private user_services : UserInteractionService, private ofApp: FirebaseApp,
      private router: Router, public dialog: MatDialog, private tst_dialog:MatDialog, private serealizer: UrlSerializer,
-     private restaurant_service:RestaurantService){   
+     private restaurant_service:RestaurantService, public cache_service:CommonCacheServices){   
       this.uid = "";
       this.screen_width = window.innerWidth;
-      this.restaurants_only = [
-        new Restaurant(null)
-      ];
       this.url = "";
       this.is_confique = false;
       this.user = null;
   }
-  ngOnDestroy(): void {
+  ngOnDestroy(): void {    
     this.restaurant_unsubscribe();
+    this._restaurant_subscription.unsubscribe();
     this.user_unsubscribe();
+    this._user_subscription.unsubscribe();
     this.employee_unsubscribe();
+    this._employee_subscription.unsubscribe();
   }
   ngOnInit(): void {
     const auth = getAuth(this.ofApp);
@@ -54,18 +57,21 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
         if(user){
           this.uid = user.uid;
           this.user_unsubscribe = this.user_services.getUserFromUidBDD(this.uid);
-          this.user_services.getUserFromUid().subscribe((user:User) => {
+          this._user_subscription = this.user_services.getUserFromUid().subscribe((user:User) => {
+            console.log("1");
             this.user = user;
             if(this.user !== null){
+              this.cache_service.setUser(user);
               this.employee_unsubscribe = this.user_services.getEmployeeBDD(this.user)
-              this.user_services.getEmployee().subscribe((employee:Employee) => {
+              this._employee_subscription = this.user_services.getEmployee().subscribe((employee:Employee) => {
                 if(employee.roles?.includes("propriétaire")){
                   this.is_confique = true;
                 }
               })
               this.restaurant_unsubscribe = this.restaurant_service.getAllRestaurantsBDD(this.user);
-              this.restaurant_service.getAllRestaurants().subscribe((restaurants:Array<Restaurant>) => {
-                this.restaurants_only = restaurants;
+              this._restaurant_subscription = this.restaurant_service.getAllRestaurants().subscribe((restaurants:Array<Restaurant>) => {
+                console.log("3");
+                this.cache_service.setRestaurants(restaurants);
               })
             }
           })
@@ -113,7 +119,10 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
   restaurantNavigate(restaurant:string, user:User | null){
     if((user !== null) && (user.related_restaurants !== null)){
       const proprietaire = user.related_restaurants[0].proprietaire_id  
-      this.router.navigate(["/dashboard"],{ queryParams: { restaurant: restaurant, prop: proprietaire}})
+      this.router.navigate(["/dashboard"],{ queryParams: {
+        restaurant: restaurant,
+        prop: proprietaire
+      }})
     }
   }
   redirectConfigue() {

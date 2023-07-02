@@ -41,7 +41,7 @@
     <main>
         <div class="container-fluid" id="card_number">
             <div #widgetsContent class="row card-deck-scrollable flex-nowrap scroll-right">
-                <div class="tourcard" *ngFor="let restaurant of restaurants_only">
+                <div class="tourcard" *ngFor="let restaurant of this.cache_service.getRestaurants()">
                     <figure>
                         <div class="tourpic">
                             <img width="300" height="200" src='/assets/images/autho.jpg'>

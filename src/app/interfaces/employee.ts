@@ -1,12 +1,15 @@
+import { CommonService } from "../services/common/common.service";
 import { Address } from "./address";
 import { Restaurant } from "./restaurant";
 import { Statut } from "./statut";
+import { User } from "./user";
+
 
 export class Employee {
     address:Address | null;
     current_restaurant:string | null;
     email:string;
-    id:string | null;
+    id:string;
     name:string | null;
     number:string | null;
     roles:Array<string> | null;
@@ -16,8 +19,10 @@ export class Employee {
     statut:Statut;
     surname:string | null;
     uid:string;
+    user_id:string;
 
-    constructor(email:string, statut:Statut, uid:string){
+    constructor(email:string, statut:Statut, uid:string, private common_service: CommonService){
+        this.user_id = "";
         this.email = email;
         this.statut = statut;
         this.uid = uid;
@@ -28,31 +33,46 @@ export class Employee {
         this.number = null;
         this.roles = null;
         this.name = null;
-        this.id = null;
+        this.id = "";
         this.address = null;
         this.current_restaurant = null;
     }
     getStatus(right:string):string[]{
         let status = []
-        let roles = ["proprietaire", "stock", "alertes", "analyse", "budget", "facture", "planning"];
+        let roles = ["stock", "analyse", "budget", "facture", "planning"];
         for(let key in this.statut){
-          if(key === "is_prop"){
-            status.push('proprietaire')
+          const role = this.statut[key as keyof typeof this.statut] as string
+          if(typeof role === "string"){
+            if(role.includes(right)) status.push(key) 
           } 
-          else{
-             const role = this.statut[key as keyof typeof this.statut] as string
-              if(typeof role === "string"){
-                if(role.includes(right)) status.push(key) 
-              }  
-            }
           }
           return status
-        }
+      }
     
       setStatus(status:string[], right:string){
-        let roles = ["proprietaire", "stock", "alertes", "analyse", "budget", "facture", "planning"];
-    
-        roles.forEach((role) => {
+        let roles = this.common_service.getStatut();
+        let _roles =  new Array();
+        console.log("analyse");
+        console.log(this.statut.analyse);
+        _roles.push(this.statut.analyse);
+        console.log("budget");
+        console.log(this.statut.budget);
+        _roles.push(this.statut.budget);
+        console.log("facture");
+        console.log(this.statut.facture);
+        _roles.push(this.statut.facture);
+        console.log("planning");
+        console.log(this.statut.planning);
+        _roles.push(this.statut.planning);
+        console.log("======================");
+        console.log("stock");
+        console.log(this.statut.stock);
+        _roles.push(this.statut.stock);
+        console.log('test 1');
+        console.log("======================");
+        console.log(_roles);
+        
+        roles.forEach((role, index) => {
           if(role === 'proprietaire'){
             if(status.includes('proprietaire')){
               this.roles?.push("propriétaire");
@@ -63,7 +83,7 @@ export class Employee {
           }
           else{
             if(this.statut !== null){
-              let u_role = (this.statut[role as keyof typeof this.statut] == undefined) ? "" : this.statut[role as keyof typeof this.statut]
+              let u_role = _roles[index];
               if(status.includes(role)){
                 if(typeof u_role === 'string'){
                   if(!u_role.includes('r')){
@@ -84,11 +104,11 @@ export class Employee {
                   }
                 }
               }
-              if(role === "stock" && typeof u_role != "boolean") this.statut.stock = u_role;
-              if(role === "analyse" && typeof u_role != "boolean") this.statut.analyse = u_role;
-              if(role === "budget" && typeof u_role != "boolean") this.statut.budget = u_role;
-              if(role === "facture" && typeof u_role != "boolean") this.statut.facture = u_role;
-              if(role === "planning" && typeof u_role != "boolean") this.statut.planning = u_role;
+              if(role === "analyse") this.statut.analyse = u_role;
+              if(role === "budget") this.statut.budget = u_role;
+              if(role === "facture") this.statut.facture = u_role;
+              if(role === "planning") this.statut.planning = u_role;
+              if(role === "stock") this.statut.stock = u_role;
             }
           }
         })   
@@ -100,71 +120,51 @@ export class Employee {
     
     
       remove_null(){
-        this.statut = {
-          analyse: "",
-          budget: "",
-          facture: "",
-          stock: "",
-          planning: "",
-          is_prop:false
-        }
+        this.statut.analyse = "";
+        this.statut.budget = "";
+        this.statut.facture = "";
+        this.statut.stock = "";
+        this.statut.planning = "";
       }
     
     
       to_roles() {
-        this.roles = []
-        if(this.statut !== null){
-          if(this.statut.is_prop) {
-            this.roles.push("proprietaire");
-            return null;
-          }
-        
-          if (this.statut.stock?.includes("r")) {
-            if (this.statut.stock?.includes("w")) {
-              this.roles.push("cuisinié");
-            }
-            else {
-              this.roles.push("serveur");
-            }
-          }
-      
-          if (this.statut.analyse?.includes("r")) {
-            if (this.statut.analyse?.includes("w")) {
-              this.roles.push("prévisionniste");
-            }
-            else {
-              this.roles.push("analyste");
-            }
-          }
-      
-          if (this.statut.budget?.includes("r")) {
-            if (this.statut.budget?.includes("w")) {
-              this.roles.push("economiste")
-            }
-            else {
-              this.roles.push("economiste")
-            }
-          }
-      
-          if (this.statut.facture?.includes("r")) {
-            if (this.statut.facture?.includes("w")) {
-              this.roles.push("comptable +");
-            }
-            else {
-              this.roles.push("comptable");
-            }
-          }
-      
-          if (this.statut.planning?.includes("w")) {
-            this.roles.push("RH");
-          }
-      
-          if(this.statut.stock?.includes("w") && this.statut.planning?.includes("w") &&
-          this.statut.facture?.includes("w") && this.statut.analyse?.includes("w") &&
-          this.statut.budget?.includes("w")) {
-            this.roles = ["gérant"];
-          }
-        }
-        return null;
+        let statut = new Statut(this.common_service);
+        statut.setStatut(this.statut);
+        this.roles = statut.getRoles();
       }
+}
+
+export class EmployeeFull extends Employee{
+  proprietaire:string = "";
+  restaurants: Array<Restaurant> = [];
+  getAllRestaurant(user:User, restaurants:Array<Restaurant>){
+    if(user.related_restaurants !== null){
+     const restaurants_ids =  user.related_restaurants.map((restaurant) => restaurant.restaurant_id);
+     this.restaurants = restaurants.filter((restaurant) => restaurants_ids.includes(restaurant.id))
+    }
+  }
+  setEmployee(employee:Employee){
+    super.address = employee.address;
+    super.current_restaurant = employee.current_restaurant;
+    super.id = employee.id;
+    super.name = employee.name;
+    super.number = employee.number;
+    super.roles = employee.roles;
+    super.statut = employee.statut;
+    super.service = employee.service;
+    super.surname = employee.surname;
+    super.user_id = employee.user_id;
+  }
+  getRestaurantsIds(){
+    return this.restaurants.map((restaurant) => restaurant.id);
+  }
+  getRestaurantsProp(){
+    return this.restaurants.map((restaurant) => {
+      return {
+        proprietaire_id: this.proprietaire,
+        restaurant_id: restaurant.id
+      }
+    })
+  }
 }

@@ -1,15 +1,17 @@
+import { Employee } from "./employee";
 import { Restaurant } from "./restaurant";
 
 export class User {
   public "email":string;
   public "id":string | null;
+  public "proprietary_id":string | null
   public "related_restaurants": Array<{
       proprietaire_id:string,
       restaurant_id:string
     
   }> | null;
   public "uid":string;
-  public "is_employee":boolean;
+  public "id_employee":string | null;
 
   constructor(){
   }
@@ -35,16 +37,24 @@ export class ShortUser {
   public "numero": string
 
   restToString(restaurants: Array<Restaurant>){
-    let restau = restaurants.map((restaurant) => restaurant.id)
+    let restau = restaurants.map((restaurant) => restaurant.name)
     this.restaurants = restau.toString()
   }
 
-  restToList(restaurants:string){
-    return restaurants.split(',')
+  restToList(){
+    return this.restaurants.split(',')
   }
 
   rolesToString(roles:string[]){
     this.row_roles= roles.toString()
   }
-
+  rolesToList(){
+    return this.roles.split(',');
+  }
+  setRowUser(employee:Employee, roles:(string | string[])[], restaurants:Array<Restaurant>){
+    if(employee.id !== null) this.id = employee.id;
+    this.email = employee.email;
+    this.row_roles = roles.toString();
+    this.restToString(restaurants);
+  }
 }

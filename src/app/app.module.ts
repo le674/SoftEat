@@ -11,7 +11,7 @@ import { AppStockModule } from './modules/stock/app.module';
 import { AppAcceuilModule } from './modules/acceuil/app.module';
 import { AppDashboardModule } from './modules/dashboard/app.module';
 import {getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getFirestore, provideFirestore,  persistentLocalCache, persistentMultipleTabManager, initializeFirestore } from '@angular/fire/firestore';
+import { getFirestore, provideFirestore,  persistentLocalCache, persistentMultipleTabManager, initializeFirestore, memoryLocalCache } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { AuthentificationService } from './services/authentification.service';
 import { HttpClientModule } from '@angular/common/http';

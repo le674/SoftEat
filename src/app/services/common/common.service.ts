@@ -49,6 +49,20 @@ export class CommonService {
     }
     return window.innerWidth - 100;
   }
+  getRoles():(string | string[])[]{
+    const role_name = [
+      "","cuisinié", "serveur",
+      ["analyste", "economiste", "prévisionniste", "comptable", "comptable +"],
+      "RH", "gérant", "propriétaire"
+    ]; 
+    return role_name; 
+  }
+  getStatut():Array<string>{
+    return ["analyse", "budget", "facture", "planning", "stock"];
+  }
+  getColumnAdminTab():Array<string>{
+    return ["id", "email", "restaurants", "read_right", "write_right", "validation"];
+  }
   incCounter():any{
     this.read_count = this.read_count + 1;
   }

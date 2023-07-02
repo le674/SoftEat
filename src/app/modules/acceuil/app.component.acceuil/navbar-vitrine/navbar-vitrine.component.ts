@@ -132,7 +132,6 @@ export class NavbarVitrineComponent implements OnInit {
     }
   }
   hideImage(image: HTMLImageElement) { 
-    console.log("test");
     if(window.matchMedia("(max-width: 990px)").matches){
       image.remove() 
     }
