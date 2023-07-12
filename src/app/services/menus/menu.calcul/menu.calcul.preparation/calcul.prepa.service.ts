@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Cetape } from '../../../../../app/interfaces/etape';
-import { Cconsommable, TConsoBase, TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import {TIngredientBase } from '../../../../../app/interfaces/ingredient';
 import { RestaurantService } from '../../../../../app/services/restaurant/restaurant.service';
 import { CalculService } from '../menu.calcul.ingredients/calcul.service';
+import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
+import { MiniConsommable } from 'src/app/interfaces/recette';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +16,8 @@ export class CalculPrepaService {
     this.prime_cost = 0;
   }
 
-  getCostMaterial(ings:Array<TIngredientBase>):Array<{nom:string, quantity:number, unity:string, cost:number,taux_tva:number, cost_matiere:number, vrac:string}>{
-    let ingredients:Array<{nom:string, quantity:number, unity:string, cost:number, taux_tva:number, cost_matiere:number, vrac:string}> = [];
+  getCostMaterial(ings:Array<TIngredientBase>):Array<TIngredientBase>{
+    let ingredients:Array<TIngredientBase> = [];
     ings.forEach((ing) => {
       let cost_matiere = 0;
       // on peut considérer les ingrédients sur plusieurs aspects
@@ -27,15 +29,8 @@ export class CalculPrepaService {
       // dans la partie stock si le restaurateur choisit de faire du vrac en pièce exemple : quantitée unitaire 6 tomates -> unitée p -> 9€
       // alors il vaut mieux remplir : quantitée unitaire de 1 -> unitée p -> cost 1.50 -> quantitée 6 
       cost_matiere = this.getOnlyCostMaterial(ing);
-      ingredients.push({
-        nom: ing.name,
-        quantity: ing.quantity,
-        unity: ing.unity,
-        cost: ing.cost,
-        taux_tva: ing.taux_tva,
-        cost_matiere: cost_matiere,
-        vrac: ing.vrac
-      })
+      ing.material_cost = cost_matiere;
+      ingredients.push(ing)
     })
     return ingredients
   }
@@ -44,14 +39,18 @@ export class CalculPrepaService {
     let cost_matiere = 0;
     // dans un premier temps ont calcule la quantitée pas par pièce dans un seconbd temps ont pren en compte l'unitée par pièce
     if(ing.vrac === "oui"){
-      cost_matiere = ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary);
+      if((ing.quantity_unity !== null) && (ing.unity !== null)){
+        cost_matiere = ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity);
+      }
     } 
     else{
-      if(ing.unity !== "p" || ((ing.unity === "p") && (ing.unity_unitary === "p"))){
-        cost_matiere = this.calcul_service.convertQuantity(ing.quantity, ing.unity)*(ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity_unitary));
+      if(ing.unity !== "p" || ((ing.unity === "p") && (ing.unity === "p"))){
+        if((ing.quantity !== null) && (ing.unity !== null) && (ing.quantity_unity !== null)){
+          cost_matiere = this.calcul_service.convertQuantity(ing.quantity, ing.unity)*(ing.cost/this.calcul_service.convertQuantity(ing.quantity_unity, ing.unity));
+        }
       }
       else{
-        cost_matiere = ing.quantity * ing.cost;
+        if(ing.quantity !== null) cost_matiere = ing.quantity * ing.cost;
       }
     }
    
@@ -59,7 +58,7 @@ export class CalculPrepaService {
   }
 
   async getPrimCost(prop:string,restaurant:string, etapes: Array<Cetape>, ingredients: Array<TIngredientBase>,
-     consommables: Array<Cconsommable> | Array<TConsoBase>){
+     consommables: Array<TConsoBase> | Array<MiniConsommable>){
       let sum_cost_ing = 0;
       let sum_cost_conso = 0;
       let second_salary = 0;
@@ -83,14 +82,18 @@ export class CalculPrepaService {
       }
       if(consommables !== null){
         if(consommables.length > 0){
-          console.log(consommables);
-          
+          let cost = 0;
           full_cost_quant_conso = consommables
                                   .filter((conso) => (conso !== null) && (conso !== undefined))
                                   .filter((conso) => (conso.cost !== null) && (conso.cost !== undefined))
                                   .filter((conso) => (conso.quantity !== null) && (conso.quantity !== undefined))
                                   .map((conso) => {
-            let cost =  conso.cost*conso.quantity;
+          if(conso.cost !== null){
+            cost = conso.cost;
+          }
+          if(conso.quantity !== null){
+            cost =  cost*conso.quantity;
+          }
             return cost
           })
         }
@@ -216,8 +219,10 @@ export class CalculPrepaService {
     const quantity_unity_act = this.calcul_service.convertQuantity(Number(quantity_aft_prep), unity_aft_prep);
     
     base.forEach((ingredient: TIngredientBase) => {
-      ingredient.quantity = Number(ingredient.quantity);
-      ingredient_quantity.push(this.calcul_service.convertQuantity(ingredient.quantity, ingredient.unity));
+      if(ingredient.unity !== null){
+        ingredient.quantity = Number(ingredient.quantity);
+        ingredient_quantity.push(this.calcul_service.convertQuantity(ingredient.quantity, ingredient.unity));
+      }
     });
     
     // on fait la somme des coûts et des quantitées des ingrédients de base utilisées pour la préparation

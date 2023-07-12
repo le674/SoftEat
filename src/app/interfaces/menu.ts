@@ -1,5 +1,6 @@
+import { Consommable, TConsoBase } from "./consommable";
 import { Etape } from "./etape";
-import { Consommable, TIngredientBase } from "./ingredient";
+import {TIngredientBase } from "./ingredient";
 import { Plat } from "./plat";
 
 export interface Menu{
@@ -9,7 +10,7 @@ export interface Menu{
     "taux_tva":number;
     "prix":number;
     "prix_ttc":number;
-    "consommables":Array<Consommable>;
+    "consommables":Array<TConsoBase>;
     "ingredients":Array<TIngredientBase>;
     "etapes":Array<Etape>;
     "plats":Array<Plat>;
@@ -25,8 +26,8 @@ export interface Menu{
     getTauxTva():number;
     setIngredients(ingredients:Array<TIngredientBase>):void;
     getIngredients():Array<TIngredientBase>;
-    setConsommbale(consommables:Array<Consommable>):void;
-    getConsommbale():Array<Consommable>;
+    setConsommbale(consommables:Array<TConsoBase>):void;
+    getConsommbale():Array<TConsoBase>;
     getEtapes():Array<Etape>;
     setEtapes(etapes:Array<Etape>):void;
     setPlats(ingredients:Array<Plat>):void;
@@ -38,7 +39,7 @@ export class Cmenu implements Menu{
     "taux_tva": number;
     "prix": number;
     "prix_ttc":number;
-    "consommables": Consommable[];
+    "consommables": TConsoBase[];
     "ingredients": TIngredientBase[];
     "etapes": Etape[];
     "plats": Plat[];
@@ -85,10 +86,10 @@ export class Cmenu implements Menu{
     getPlats():Plat[] {
         return this.plats
     }
-    setConsommbale(consommables: Consommable[]): void {
+    setConsommbale(consommables: TConsoBase[]): void {
         this.consommables = consommables;
     }
-    getConsommbale(): Consommable[] {
+    getConsommbale(): TConsoBase[] {
        return this.consommables
     }
 }

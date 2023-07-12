@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Cetape } from '../../../../../app/interfaces/etape';
-import { Cconsommable, TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import { TIngredientBase } from '../../../../../app/interfaces/ingredient';
 import { Cplat } from '../../../../../app/interfaces/plat';
 import { CalculPrepaService } from '../menu.calcul.preparation/calcul.prepa.service';
+import {TConsoBase } from 'src/app/interfaces/consommable';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +14,10 @@ export class MenuCalculPlatsServiceService {
 
   getPrimCost(prop:string, restaurant:string,plat:Cplat):Promise<number>{
     let arr_ings:Array<TIngredientBase> = [];
-    let consommables:Array<Cconsommable> = [];
+    let consommables:Array<TConsoBase> = [];
     let etapes:Array<Cetape> = [];
-    let prepa_etapes:Array<Cetape> = [];
-    let prepa_consommables:Array<Cconsommable> = [];
+    let prepa_etapes:Array<Cetape | null> = [];
+    let prepa_consommables:Array<TConsoBase> = [];
     let prepa_ingredients:Array<TIngredientBase> = [];
     if(plat.ingredients !== null) arr_ings = plat.ingredients;
     if(plat.consommables !== null) consommables = plat.consommables;
@@ -31,35 +32,27 @@ export class MenuCalculPlatsServiceService {
         }
       }).flat();
       prepa_consommables = plat.preparations.map((preparation) => {
-        if(preparation.consommables !== undefined){
-          return  preparation.consommables
-        }
-        else{
-          return [];
-        }
-      }).flat();
-      prepa_ingredients = plat.preparations
-                          .filter((preparation) => preparation.base_ing !== undefined)
-                          .map((preparation) => preparation.base_ing.map((ing) => {
-        let ingredient:TIngredientBase = {
-          name:ing.name,
-          quantity:ing.quantity,
-          quantity_unity:ing.quantity_unity,
-          unity:ing.unity,
-          unity_unitary: ing.unity_unitary,
-          cost:ing.cost,
-          vrac:ing.vrac,
-          material_cost:0,
-          taux_tva:0,
-          marge:0,
-          added_price:0,
-          supp:false
-        }
+          if(preparation.consommables !== undefined){
+            return  preparation.consommables
+          }
+          else{
+            return [];
+          }
+        }).flat();
+        let id = "";
+        prepa_ingredients = plat.preparations
+                          .filter((preparation) => preparation.ingredients !== undefined)
+                          .map((preparation) => preparation.ingredients.map((ing) => {
+        if(ing.id !== null){
+          id = ing.id
+        } 
+        let ingredient:TIngredientBase = new TIngredientBase(ing.name, ing.quantity, ing.quantity_unity, ing.unity, ing.cost, ing.vrac, ing.taux_tva);
         return ingredient
       })).flat();
     }
     if((etapes) && (prepa_etapes !== null)){
-      etapes = etapes.concat(prepa_etapes);
+      prepa_etapes = prepa_etapes.filter((etape) => etape !== null);
+      etapes = etapes.concat(prepa_etapes as Cetape[]);
     }
     if((arr_ings !== null) && (prepa_ingredients !== null)){
       arr_ings = arr_ings.concat(prepa_ingredients);
@@ -159,31 +152,31 @@ export class MenuCalculPlatsServiceService {
       }
       if(plat.preparations !== null){
         prepa_ingredients = plat.preparations
-                            .filter((prep) => (prep.base_ing !== null) && (prep.base_ing !== undefined))
-                            .map((preparation) => preparation.base_ing.map((ing) => {
-          let ingredient:TIngredientBase = {
-            name:ing.name,
-            quantity:ing.quantity,
-            quantity_unity:ing.quantity_unity,
-            unity:ing.unity,
-            unity_unitary: ing.unity_unitary,
-            cost:ing.cost,
-            vrac:ing.vrac,
-            material_cost:0,
-            taux_tva:0,
-            marge:0,
-            added_price:0,
-            supp:false
-          }
-          return ingredient
+                            .filter((prep) => (prep.ingredients !== null) && (prep.ingredients !== undefined))
+                            .map((preparation) => preparation.ingredients.map((ing) => {
+        let id = ""
+        if(ing.id !== null){
+          id = ing.id;
+        }
+          return ing;
         })).flat();
       }
 
       arr_ingredients = arr_ingredients.concat(prepa_ingredients);
       if(arr_ingredients.length > 0){
-        const full_material_cost = this.prepa_service.getCostMaterial(arr_ingredients).map((ingredient) => ingredient.cost_matiere);
-        const portion_cost = full_material_cost.reduce((prev, next) => prev + next)/plat.portions;
-        return this.ToCentime(portion_cost);
+        const full_material_cost = this.prepa_service.getCostMaterial(arr_ingredients).map((ingredient) => ingredient.material_cost);
+        let portion_cost = full_material_cost.reduce((prev, next) => {
+          if((prev !== null) && (next !== null)){
+            return prev + next;
+          }
+          else{
+            return 0;
+          }
+        })
+        if(portion_cost !== null){
+          portion_cost = portion_cost/plat.portions;
+          return this.ToCentime(portion_cost);
+        }
       }
       return 0;
     }

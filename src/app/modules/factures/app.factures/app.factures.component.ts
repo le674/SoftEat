@@ -110,7 +110,7 @@ export class AppFacturesComponent implements OnInit {
   }
 
   getPdf(file_blob: any) {
-
+/* 
     if(file_blob.target !== undefined){
       if((file_blob.target.files[0] !== null) && (file_blob.target.files[0] !== undefined)){
         const pdf_file:File = file_blob.target.files[0];
@@ -120,17 +120,29 @@ export class AppFacturesComponent implements OnInit {
           p_ingredients.then((ingredients) => {
             this.ingredients_br = ingredients;
             for (let ingredient of ingredients) {
+              let row_dlc = ""
+              let row_category_tva = ""
+              let row_marge = 0;
+              if(ingredient.dlc !== null){
+                row_dlc = ingredient.dlc.toLocaleString();
+              }
+              if(ingredient.categorie_tva !== null){
+                row_category_tva = ingredient.categorie_tva
+              }
+              if(ingredient.marge !== null){
+                row_marge = ingredient.marge;
+              }
               const add_to_tab = {
                 nom: ingredient.nom.split('_').join(" "),
-                categorie_tva: ingredient.categorie_tva,
+                categorie_tva: row_category_tva,
                 cost: ingredient.cost,
                 cost_ttc: ingredient.cost_ttc, // si le cout a changé dans la nouvelle facture ont calcule un cout moyen 
                 quantity: ingredient.quantity,
                 quantity_unity: ingredient.quantity_unity,
-                unity: ingredient.unity_unitary,
+                unity: ingredient.unity,
                 date_reception: ingredient.date_reception.toLocaleString(),
-                dlc: ingredient.dlc.toLocaleString(),
-                marge: ingredient.marge,
+                dlc: row_dlc,
+                marge: row_marge,
                 vrac: ingredient.vrac
               }
               this.ingredients_displayed_br.push(add_to_tab);
@@ -141,7 +153,7 @@ export class AppFacturesComponent implements OnInit {
         });
       }
      // const url = URL.createObjectURL();
-    }
+    } */
   }
   getImg(file_blob: any) {
     if(file_blob.target !== undefined){
@@ -187,7 +199,7 @@ export class AppFacturesComponent implements OnInit {
 
     if ((ele.date_reception !== undefined) && (ele.date_reception !== "")) {
       const date_reception = this.calc_service.stringToDate(ele.date_reception);
-      if(dlc !== null){
+      if(dlc !== null && date_reception !== null){
         res_dlc = (dlc.getTime() - date_reception.getTime()) / (1000 * 60 * 60 * 24)
       }
     }
@@ -222,8 +234,8 @@ export class AppFacturesComponent implements OnInit {
     if(ele.vrac === undefined){
       ele.vrac = "non";
     }
-    let ingredient = new CIngredient(this.calc_service, this.service)
-    ingredient.nom = ele.nom;
+    let ingredient = new CIngredient(this.calc_service)
+    ingredient.name = ele.nom;
     ingredient.categorie_tva = ele.categorie_tva;
     ingredient.cost = ele.cost;
     ingredient.quantity = ele.quantity;
@@ -252,20 +264,34 @@ export class AppFacturesComponent implements OnInit {
       }
     });
     dialogRef.componentInstance.myEvent.subscribe((ingredient:CIngredient) => {
-       this.ingredients_br = this.ingredients_br.filter((_ingredient) => _ingredient.nom !== ingredient.nom);
-       let _ingredients = this.ingredients_displayed_br.filter((_ingredient) => ingredient.nom.split("_").join(" ") !== _ingredient.nom);
+       this.ingredients_br = this.ingredients_br.filter((_ingredient) => _ingredient.name !== ingredient.name);
+       let _ingredients = this.ingredients_displayed_br.filter((_ingredient) => ingredient.name.split("_").join(" ") !== _ingredient.nom);
+      let categorie_tva = ""
+      let dlc = "";
+      let marge = 0;
+       if(ingredient.categorie_tva !== null){
+        categorie_tva = ingredient.categorie_tva;
+       }
+       if(ingredient.dlc !== null){
+        dlc = ingredient.dlc.toLocaleString();
+       }
+       if(ingredient.marge !== null){
+        marge = ingredient.marge;
+       }
        this.ingredients_br.push(ingredient);
+       let cost_ttc = 0;
+       if(ingredient.cost_ttc !== null) cost_ttc = ingredient.cost_ttc;
        _ingredients.push({
-        nom: ingredient.nom.split("_").join(" "),
-        categorie_tva: ingredient.categorie_tva,
+        nom: ingredient.name,
+        categorie_tva: categorie_tva,
         cost: ingredient.cost,
-        cost_ttc: ingredient.cost_ttc,
+        cost_ttc: cost_ttc,
         quantity: ingredient.quantity,
         quantity_unity: ingredient.quantity_unity,
         unity: ingredient.unity,
         date_reception: ingredient.date_reception.toLocaleString(),
-        dlc: ingredient.dlc.toLocaleString(),
-        marge: ingredient.marge,
+        dlc: dlc,
+        marge: marge,
         vrac: ingredient.vrac
        });
        this.ingredients_displayed_br = _ingredients;
@@ -290,19 +316,19 @@ export class AppFacturesComponent implements OnInit {
     //on regénère la datasource 
     if(ele.nom === undefined){
       this.ingredients_displayed_br = this.ingredients_displayed_br.filter((ingredient) => ingredient.nom !== undefined);
-      this.ingredients_br = this.ingredients_br.filter((ingredient) => ingredient.nom !== undefined);
+      this.ingredients_br = this.ingredients_br.filter((ingredient) => ingredient.name !== undefined);
     }
     else{
       const name = ele.nom;
       this.ingredients_displayed_br = this.ingredients_displayed_br.filter((ingredient) => ingredient.nom !== name);
-      this.ingredients_br = this.ingredients_br.filter((ingredient) => ingredient.nom !== name.split(" ").join("_"));
+      this.ingredients_br = this.ingredients_br.filter((ingredient) => ingredient.name !== name.split(" ").join("_"));
     }
     const supp_event = new PageEvent();
     supp_event.length = this.ingredients_displayed_br.length;
     supp_event.pageSize = 6
     this.pageChangedFirst(supp_event);
   }
-
+/* 
   addIngredients($event: MouseEvent) {
    if(this.ingredient){
     let is_added = true;
@@ -323,7 +349,7 @@ export class AppFacturesComponent implements OnInit {
       this._snackBar.open("les ingrédients viennent d'être ajoutés à la base de donnée", "fermer");
      }
    }
-  }
+  } */
 
   pageChanged(event: PageEvent) {
     let datasource = [... this.ingredients_displayed_br];

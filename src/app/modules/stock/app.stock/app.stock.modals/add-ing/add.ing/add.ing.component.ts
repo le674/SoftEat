@@ -1,5 +1,5 @@
 import { AfterContentInit, AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import {FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CalculService } from '../../../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { CIngredient } from '../../../../../../../app/interfaces/ingredient';
@@ -40,6 +40,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       prop: string,
       is_modif: boolean,
       ingredient: {
+        id:string,
         nom: string,
         categorie: string
         quantity: number,
@@ -54,7 +55,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     }, private service: IngredientsInteractionService, private changeDetector: ChangeDetectorRef,
     private _snackBar: MatSnackBar, private service_alertes: AlertesService) {
     this._mat_dialog_ref = dialogRef;
-   /*  this.is_prep = false; */
+    /*  this.is_prep = false; */
     this.current_inputs = 1;
     this.index_inputs = [this.current_inputs];
     this.is_modif = this.data.is_modif;
@@ -63,11 +64,11 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
 
 
   ngOnInit(): void {
-    if(this.data.ingredient.vrac !== undefined){
-      if(this.data.ingredient.vrac === "oui"){
+    if (this.data.ingredient.vrac !== undefined) {
+      if (this.data.ingredient.vrac === "oui") {
         this.is_vrac = true;
       }
-      else{
+      else {
         this.is_vrac = false;
       }
       // on adapte la quantitée affiché en fonction
@@ -114,17 +115,25 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
 
 
   changeIngredient() {
-
     let new_ing_aft_prepa = null;
     let new_ing: CIngredient;
-    new_ing = new CIngredient(this.calcul_service, this.service);
+    new_ing = new CIngredient(this.calcul_service);
     let act_quant = 0;
+    if((this.data.ingredient.id !== null) && (this.data.ingredient.id !== undefined)){
+      new_ing.id = this.data.ingredient.id;
+    }
+    else{
+      this._snackBar.open("id manquant pas de modification de l'ingrédient contacter softeat", "fermer");
+      throw "Id missing error";
+    }
     // on construit la date limite de consomation à partir de la date de récéption.
     if (this.is_modif) {
-
-      const date_reception_date = this.calcul_service.stringToDate(this.data.ingredient.date_reception);
-      const dlc = this.calcul_service.stringToDate(this.data.ingredient.date_reception);
-      new_ing.date_reception = date_reception_date
+      let dlc = this.calcul_service.stringToDate(this.data.ingredient.date_reception);
+      let date_reception_date = this.calcul_service.stringToDate(this.data.ingredient.date_reception);
+      if(dlc !== null && date_reception_date !== null){
+        dlc.setDate(dlc.getDate() + this.data.ingredient.dlc);
+        new_ing.date_reception = date_reception_date
+      }
       new_ing.dlc = dlc;
     }
     else {
@@ -133,7 +142,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     }
 
     //on modifie le nom est l'unitée avant envoie dans le base de donnée 
-    const name = this.add_ing_section.value["name"]?.split(' ').join('_');
+    const name = this.add_ing_section.value["name"];
     const unity = this.add_ing_section.value["unity"]?.split(' ')[0];
 
     /* On crée un ingrédient à partir des données récupéré depuis le formulaire puis on l'ajoute à la bdd */
@@ -151,9 +160,9 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
 
     if ((this.add_ing_section.value["quantity"] !== undefined) && (this.add_ing_section.value["quantity"] !== null)) {
       new_ing.quantity = this.add_ing_section.value["quantity"];
-      if(this.data.ingredient.quantity !== undefined){
+      if (this.data.ingredient.quantity !== undefined) {
         new_ing.total_quantity = this.data.ingredient.quantity;
-        if((this.data.ingredient.quantity < this.add_ing_section.value["quantity"]) || (!this.data.is_modif)){
+        if ((this.data.ingredient.quantity < this.add_ing_section.value["quantity"]) || (!this.data.is_modif)) {
           new_ing.total_quantity = this.add_ing_section.value["quantity"];
         }
       }
@@ -172,65 +181,69 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     }
 
     if ((this.add_ing_section.value["vrac"] !== undefined) && (this.add_ing_section.value["vrac"] !== null)) {
-        new_ing.vrac = this.add_ing_section.value["vrac"]
-        // dans la partie stock si le restaurateur choisit de faire du vrac en pièce exemple : quantitée unitaire 6 tomates -> unitée p -> 9€
-        // alors il vaut mieux remplir : quantitée unitaire de 1 -> unitée p -> cost 1.50 -> quantitée 6  
-        if((unity === "p") && (new_ing.vrac === "oui")){
-          new_ing.vrac = "non";
-          new_ing.quantity = new_ing.quantity_unity;
-          new_ing.quantity_unity = 1;
-          new_ing.cost = new_ing.cost/new_ing.quantity;
-        }
+      new_ing.vrac = this.add_ing_section.value["vrac"]
+      // dans la partie stock si le restaurateur choisit de faire du vrac en pièce exemple : quantitée unitaire 6 tomates -> unitée p -> 9€
+      // alors il vaut mieux remplir : quantitée unitaire de 1 -> unitée p -> cost 1.50 -> quantitée 6  
+      if ((unity === "p") && (new_ing.vrac === "oui")) {
+        new_ing.vrac = "non";
+        new_ing.quantity = new_ing.quantity_unity;
+        new_ing.quantity_unity = 1;
+        new_ing.cost = new_ing.cost / new_ing.quantity;
+      }
     }
 
     if (unity !== undefined) {
-      new_ing.unity_unitary = unity;
+      new_ing.unity = unity;
     }
 
     if ((this.add_ing_section.value["dlc"] !== undefined) && (this.add_ing_section.value["dlc"] !== null)) {
-      new_ing.dlc.setHours(new_ing.dlc.getHours() + 24 * this.add_ing_section.value["dlc"])
+      if(new_ing.dlc !== null){
+        new_ing.dlc.setDate(new_ing.dlc.getDate() + this.add_ing_section.value["dlc"])
+      }
       new_ing.dlc = new_ing.dlc;
     }
     else {
       new_ing.dlc = this.calcul_service.stringToDate(this.data.ingredient.date_reception);
     }
     if (new_ing.vrac === 'oui') {
-      if (new_ing.quantity_unity < new_ing.marge) {
-        // alors on affiche une alerte
-        const nom = (new_ing.nom === null) ? "" : new_ing.nom;
-        const msg = "l'ingredient : ".concat(nom).concat(" arrive en rupture de stock.");
-        this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "SoftEat", "", "stock");
+      if (new_ing.marge !== null) {
+        if (new_ing.quantity_unity < new_ing.marge) {
+          // alors on affiche une alerte
+          const nom = (new_ing.name === null) ? "" : new_ing.name;
+          const msg = "l'ingredient : ".concat(nom).concat(" arrive en rupture de stock.");
+          this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "SoftEat", "", "stock");
+        }
       }
     }
     else {
-      if (new_ing.quantity < new_ing.marge) {
-        //alors on affiche une alerte 
-        const nom = (new_ing.nom === null) ? "" : new_ing.nom;
-        const msg = "l'ingredient ".concat(nom).concat(" arrive en rupture de stock.");
-        this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "stock");
+      if (new_ing.marge !== null) {
+        if (new_ing.quantity < new_ing.marge) {
+          //alors on affiche une alerte 
+          const nom = (new_ing.name === null) ? "" : new_ing.name;
+          const msg = "l'ingredient ".concat(nom).concat(" arrive en rupture de stock.");
+          this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "stock");
+        }
       }
     }
-
     if (this.add_ing_section.valid) {
-
-        this.service.setIngInBdd(new_ing as CIngredient, this.data.prop, this.data.restaurant).then(() => {
-          if (this.is_modif) {
-            this._snackBar.open("l'ingrédient vient d'être modifié dans la base de donnée du restaurant", "fermer");
-          }
-          else {
-            this._snackBar.open("l'ingrédient vient d'être ajouté à la base de donnée du restaurant", "fermer");
-          }
+      if (this.is_modif) {
+        this.service.updateIngInBdd(new_ing as CIngredient, this.data.prop, this.data.restaurant).then(() => {
+          this._snackBar.open("l'ingrédient vient d'être modifié dans la base de donnée du restaurant", "fermer");
         }).catch((e) => {
-          if (this.is_modif) {
             this._snackBar.open("nous n'avons pas réussit à modifier l'ingrédient dans la base de donnée", "fermer");
-          }
-          else {
-            this._snackBar.open("nous n'avons pas réussit à envoyer l'ingrédient dans la base de donnée", "fermer");
-          }
         })
         this.dialogRef.close()
       }
-    else {
+      else {
+        this.service.setIngInBdd(new_ing as CIngredient, this.data.prop, this.data.restaurant).then(() => {
+          this._snackBar.open("l'ingrédient vient d'être ajouté dans la base de donnée du restaurant", "fermer");
+        }).catch((e) => {
+          
+          this._snackBar.open("nous n'avons pas réussit à ajouter l'ingrédient dans la base de donnée", "fermer");
+      })
+      }
+    }
+    else{
       this._snackBar.open("veuillez valider l'ensemble des champs", "fermer");
     }
   }
@@ -252,7 +265,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     this.taux.nativeElement.value = taux;
 
   }
-  closePopup(click:MouseEvent) {
+  closePopup(click: MouseEvent) {
     this._mat_dialog_ref.close();
   }
 }

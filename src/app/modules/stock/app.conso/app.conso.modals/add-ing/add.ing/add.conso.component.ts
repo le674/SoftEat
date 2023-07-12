@@ -2,10 +2,10 @@ import { AfterContentInit, AfterViewChecked, AfterViewInit, ChangeDetectorRef, C
 import {FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CalculService } from '../../../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
-import { Cconsommable} from '../../../../../../../app/interfaces/ingredient';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConsommableInteractionService } from '../../../../../../../app/services/menus/consommable-interaction.service';
 import { AlertesService } from '../../../../../../../app/services/alertes/alertes.service';
+import { Cconsommable } from 'src/app/interfaces/consommable';
 
 @Component({
   selector: 'app-add.conso',
@@ -25,7 +25,7 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
 
   private readonly _mat_dialog_ref: MatDialogRef<AddConsoComponent>;
   public is_modif: boolean;
-  public cost_ttc_val:number;
+  public cost_ttc_val:number | null;
 
   constructor(public dialogRef: MatDialogRef<AddConsoComponent>,
     public calcul_service: CalculService, @Inject(MAT_DIALOG_DATA) public data: {
@@ -80,8 +80,13 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
     // on construit la date limite de consomation à partir de la date de récéption.
     if(this.is_modif){
       const date_reception_date = this.calcul_service.stringToDate(this.data.consommable.date_reception); 
-      const dlc = this.calcul_service.stringToDate(this.data.consommable.date_reception); 
-      new_conso.date_reception =  date_reception_date 
+      const dlc = this.calcul_service.stringToDate(this.data.consommable.date_reception);
+      if(date_reception_date !== null){
+        new_conso.date_reception =  date_reception_date 
+      } 
+      else{
+        new_conso.date_reception = new Date();
+      }
     }
     else{
       new_conso.date_reception = new Date();

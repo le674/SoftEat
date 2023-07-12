@@ -303,7 +303,7 @@ export class FactureSharedService {
   convertTextItemToTextSharedLst(items: TextItem[]):TextShared[]{
     return items.map((item) => this.convertTextItemToTextShared(item));
   }
-
+/* 
   async convertParsedLstToIngs(parsed_pdf: {
     name: string;
     description?: string | undefined;
@@ -348,8 +348,7 @@ export class FactureSharedService {
         new_ingredient.quantity = _ingredient.quantity;
         new_ingredient.total_quantity = _ingredient.quantity;
         new_ingredient.quantity_unity = 1;
-        new_ingredient.unity_unitary = "p";
-        new_ingredient.unity = "";
+        new_ingredient.unity = "p";
         new_ingredient.cost = _ingredient.price;
         new_ingredient.date_reception = new Date();
         new_ingredient.dlc = new Date();
@@ -363,5 +362,5 @@ export class FactureSharedService {
       }
     }
     return _ingredients;
-  }
+  } */
 }

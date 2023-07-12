@@ -1,5 +1,6 @@
 import { Address } from "./address";
-import { CIngredient, Cconsommable } from "./ingredient";
+import { Cconsommable } from "./consommable";
+import { CIngredient } from "./ingredient";
 import { Menu } from "./menu";
 
 export class UserRestaurant {

@@ -1,20 +1,23 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import { child, connectDatabaseEmulator, Database, get, getDatabase, ref, remove, update } from 'firebase/database';
-import { Cconsommable, TIngredientBase } from '../../../app/interfaces/ingredient';
+import {TIngredientBase } from '../../../app/interfaces/ingredient';
 import { Cmenu } from '../../../app/interfaces/menu';
 import { Cplat } from '../../../app/interfaces/plat';
 import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../../environments/variables';
 import { ConsommableInteractionService } from './consommable-interaction.service';
 import { IngredientsInteractionService } from './ingredients-interaction.service';
 import { PlatsInteractionService } from './plats-interaction.service';
+import { Cconsommable } from 'src/app/interfaces/consommable';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MenuInteractionService {
   private db: Database;
-  private menus: Array<Cmenu>
+  private _menus: Array<Cmenu>
+  private menus = new Subject<Array<Cmenu>>();
 
   constructor(private ofApp: FirebaseApp, private ingredient_service: IngredientsInteractionService,
     private conso_service: ConsommableInteractionService, private plat_service: PlatsInteractionService) {
@@ -28,12 +31,12 @@ export class MenuInteractionService {
         
       }
     } 
-    this.menus = [];
+    this._menus = [];
   }
 
   async getMenusFromRestaurants(prop: string, restaurant: string, all_ingredients: Array<TIngredientBase>,
     all_consommables: Array<Cconsommable>, all_plats: Array<Cplat>) {
-    this.menus = [];
+    this._menus = [];
     const ref_db = ref(this.db);
     const path = `menu_${prop}_${restaurant}/${prop}/${restaurant}/`;
     await get(child(ref_db, path)).then((menus) => {
@@ -55,11 +58,11 @@ export class MenuInteractionService {
           add_menu.setPrixTtc(prix_ttc);
 
         }
-        this.menus.push(add_menu);
+        this._menus.push(add_menu);
       })
     })
-    console.log(`Ont récupère ${this.menus.toString().length/1000} ko de menu`);
-    return this.menus
+    console.log(`Ont récupère ${this._menus.toString().length/1000} ko de menu`);
+    return this._menus
   }
 
   async setMenu(prop:string,restaurant:string,menu:Cmenu){
@@ -96,5 +99,11 @@ export class MenuInteractionService {
       }
   }
 
+  getMenuFromRestaurantBDD(prop: string, restaurant: string) {
+  
+  }
 
+  getMenuFromRestaurant(){
+    return this.menus.asObservable();
+  }
 }

@@ -5,13 +5,15 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Cetape } from '../../../../../app/interfaces/etape';
-import {Cconsommable, Consommable, TConsoBase, TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import {TIngredientBase } from '../../../../../app/interfaces/ingredient';
 import { AfterPreparation } from '../../../../../app/interfaces/preparation';
 import { ConsommableInteractionService } from '../../../../../app/services/menus/consommable-interaction.service';
 import { IngredientsInteractionService } from '../../../../../app/services/menus/ingredients-interaction.service';
 import { CalculService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { CalculPrepaService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 import { PreparationInteractionService } from '../../../../../app/services/menus/preparation-interaction.service';
+import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
+import { MiniConsommable } from 'src/app/interfaces/recette';
 
 @Component({
   selector: 'app-add.preparations',
@@ -23,7 +25,7 @@ export class AddPreparationsComponent implements OnInit{
   public unity_conso:Array<string>;
   public curr_ingredients_vrac:Array<number>;
   public ingredients: Array<TIngredientBase>;
-  public consommables: Array<Cconsommable>;
+  public consommables: Array<TConsoBase>;
   public add_prepa_section = new FormGroup({
     name: new FormControl('', Validators.required),
     base_ing: new FormArray<FormGroup<{
@@ -47,7 +49,7 @@ export class AddPreparationsComponent implements OnInit{
     unity: new FormControl("")
   });
   private base_ings: Array<TIngredientBase>;
-  private base_conso: Array<TConsoBase>;
+  private base_conso: Array<MiniConsommable>;
   private etapes: Array<Cetape>;
   private after_prep:AfterPreparation = {quantity: 0, unity:""}; 
   private is_stock:boolean;
@@ -63,15 +65,15 @@ export class AddPreparationsComponent implements OnInit{
     names: Array<string | null>,
     name:string,
     full_ingredients: Array<TIngredientBase>,
-    full_consommables: Array<Cconsommable>,
+    full_consommables: Array<TConsoBase>,
     ingredients: Array<TIngredientBase>,
-    consommables: Array<Consommable>,
+    consommables: Array<TConsoBase>,
     etapes: Array<Cetape>,
     unity:string,
     quantity_after_prep:number,
     modification:boolean
-    }, private preparation_service: PreparationInteractionService, private ingredient_service: IngredientsInteractionService,
-    private prepa_service:CalculPrepaService, private conso_service:ConsommableInteractionService, private _snackBar: MatSnackBar) { 
+    }, private preparation_service: PreparationInteractionService,
+    private prepa_service:CalculPrepaService, private _snackBar: MatSnackBar) { 
     
     if(this.data.full_ingredients !== null){
       this.ingredients = this.data.full_ingredients;
@@ -112,7 +114,7 @@ export class AddPreparationsComponent implements OnInit{
         // ont prend en compte le cas où on modifie une préparation contenant un ingrédient pour lequel
         // nous n'avons pas décider une unitée pour la préparation. Mais nous l'avons ajouté à l'inventaire
         // exemple : huile 1 litre dans l'inventaire, 1 c.s dans la préparation.
-        let unity = ing.unity_unitary;
+        let unity = ing.unity;
         if(ing.unity !== undefined) unity = ing.unity;
         return {name: ing.name, quantity: ing.quantity, unity: unity};
       })
@@ -160,7 +162,7 @@ export class AddPreparationsComponent implements OnInit{
   }
 
   changePreparation(){
-    let consos:Cconsommable[] = [];
+    let consos:TConsoBase[] = [];
     let ings:TIngredientBase[] = [];
     let to_add_preparation_name:string = "";
     let tmps_prepa = 0;
@@ -177,20 +179,7 @@ export class AddPreparationsComponent implements OnInit{
           const etapes_prepa = this.getEtapes();
           
           base_ings.value.forEach((ing:Partial<{name:string | null, quantity:number | null, unity:string | null}>) => {
-            let full_ing:TIngredientBase = {
-                        name:"",
-                        quantity:0,
-                        quantity_unity:0,
-                        unity:"",
-                        unity_unitary: "",
-                        cost:0,
-                        material_cost: 0,
-                        vrac:'non',
-                        taux_tva: 0,
-                        marge:0, 
-                        added_price: 0,
-                        supp: false
-                      };
+            let full_ing:TIngredientBase = new TIngredientBase("", 0,0,"", 0, "non", null);
             if((ing.name !== undefined) || (ing.name !== null)){
               full_ing.name = ing.name as string;
               if((ing.quantity !== undefined) || (ing.quantity !== null)){
@@ -211,7 +200,7 @@ export class AddPreparationsComponent implements OnInit{
             if(conso.name !== undefined || (conso.name !== null)){
               if((conso.quantity === undefined) || (conso.quantity === null)) conso.quantity = 0;
               if((conso.unity === undefined) || (conso.unity === null)) conso.unity = "";
-              const act_conso:TConsoBase = {
+              const act_conso:MiniConsommable = {
                 name: conso.name as string,
                 quantity: conso.quantity,
                 unity: conso.unity,
@@ -270,36 +259,22 @@ export class AddPreparationsComponent implements OnInit{
               }
             }
           })
-          let result = this.prepa_service.getCostMaterial(ings).filter((ing) => !(ing.nom === ""));
+          let result = this.prepa_service.getCostMaterial(ings).filter((ing) => !(ing.name === ""));
           let displayed_conso = consos.map((conso) => { return {name: conso.name, cost: conso.cost, quantity: conso.quantity, unity: conso.unity}})
                                       .filter((conso) => !(conso.name === ""));
           // ont vide les listes avant l'ajout dans la bdd
           this.base_ings = [];
           this.base_conso = [];
-          for(let index = 0; index < result.length; index++){
-              const ing: TIngredientBase = {
-                name: result[index].nom,
-                quantity: result[index].quantity,
-                quantity_unity: ings[index].quantity_unity,
-                unity: result[index].unity,
-                unity_unitary: ings[index].unity_unitary,
-                cost: result[index].cost,
-                material_cost: result[index].cost_matiere,
-                vrac:result[index].vrac,
-                taux_tva: result[index].taux_tva,
-                added_price:0,
-                supp: false,
-                marge: 0
-              }
+          for(let ingredient of result){
+            const ing:TIngredientBase = new TIngredientBase(ingredient.name, ingredient.quantity, ingredient.quantity_unity, ingredient.unity, ingredient.cost, ingredient.vrac, ingredient.taux_tva);
+            ing.material_cost = ingredient.material_cost;
             this.base_ings.push(ing);
           }
           for (let index = 0; index < displayed_conso.length; index++) {
-            const conso: TConsoBase = {
-              name: displayed_conso[index].name,
-              quantity: displayed_conso[index].quantity,
-              unity: displayed_conso[index].unity,
-              cost: displayed_conso[index].cost
-            }
+            const conso: MiniConsommable = new MiniConsommable(displayed_conso[index].name);
+            conso.quantity = displayed_conso[index].quantity;
+            conso.unity = displayed_conso[index].unity;
+            conso.cost = displayed_conso[index].cost;
            this.base_conso.push(conso)            
           }
           const unity_aft_prep = this.add_prepa_section.controls.unity.value;
@@ -316,7 +291,7 @@ export class AddPreparationsComponent implements OnInit{
           }
           this.prepa_service.getPrimCost(this.data.prop, this.data.restaurant,this.etapes, this.base_ings,
             this.base_conso).then((prime_cost) => {
-              this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop, name_prepa.split(" ").join('_'),
+              /* this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop, name_prepa.split(" ").join('_'),
               this.etapes, this.base_ings, this.base_conso, this.after_prep,
               this.is_stock, this.data.modification,  prime_cost, val_bouch, tmps_prepa).catch((e) => {
                  console.log(e);
@@ -329,7 +304,7 @@ export class AddPreparationsComponent implements OnInit{
                  this.base_conso = [];
                  this.base_ings = [];
                  this._snackBar.open("la préparation vient d'être ajouté", "fermer");
-               });
+               }); */
             })
         }
       }
@@ -371,8 +346,8 @@ export class AddPreparationsComponent implements OnInit{
       if(ings_length > 0){
         if(ingredients[ings_length] !== undefined){
           name = ingredients[ings_length].name;
-          quantity = ingredients[ings_length].quantity;
-          unity = ingredients[ings_length].unity; 
+          if(ingredients[ings_length].quantity !== null) quantity = ingredients[ings_length].quantity as number;
+          if(ingredients[ings_length].unity !== null) unity = ingredients[ings_length].unity as string; 
         }
       }
     }
@@ -396,8 +371,12 @@ export class AddPreparationsComponent implements OnInit{
       }); 
       if((consommables[consommable_length] !== undefined) && (consommable_length > 0)){
         name = consommables[consommable_length].name;
-        quantity = consommables[consommable_length].quantity;
-        unity = consommables[consommable_length].unity;
+        if(consommables[consommable_length].quantity !== null){
+          quantity = consommables[consommable_length].quantity as number; 
+        }
+        if(consommables[consommable_length].unity !== null){
+          unity = consommables[consommable_length].unity as string; 
+        }
       }
     }
     const new_conso = this.formBuilder.group({
@@ -455,7 +434,7 @@ export class AddPreparationsComponent implements OnInit{
     if(category === 'ing'){
       const ingredient = this.ingredients.find((ingredient) => ingredient.name === (new_selection.value as string));
       if((this.getBaseIng().at(index) !== undefined) && (ingredient !== undefined)){
-        this.getBaseIng().at(index).controls.unity.setValue(ingredient.unity_unitary);
+        this.getBaseIng().at(index).controls.unity.setValue(ingredient.unity);
       }
     }
 

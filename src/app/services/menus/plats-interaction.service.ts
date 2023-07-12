@@ -2,25 +2,28 @@ import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import { child, connectDatabaseEmulator, Database, get, getDatabase, ref, remove, update } from 'firebase/database';
 import { Cetape } from '../../../app/interfaces/etape';
-import { Cconsommable,TIngredientBase } from '../../../app/interfaces/ingredient';
+import {TIngredientBase } from '../../../app/interfaces/ingredient';
 import { Cplat, Plat } from '../../../app/interfaces/plat';
 import { Cpreparation} from '../../../app/interfaces/preparation';
 import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../../environments/variables';
 import { IngredientsInteractionService } from './ingredients-interaction.service';
+import { Cconsommable } from 'src/app/interfaces/consommable';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlatsInteractionService {
   private db: Database;
-  private plats: Array<Cplat>;
+  private _plats: Array<Cplat>;
   private consommables: Array<Cconsommable>;
   private ingredients: Array<TIngredientBase>;
   private ingredients_minimal: {name:string, quantity:number, unity:string}[];
   private preparation: Array<Cpreparation>;
-  private etapes: Array<Cetape>
+  private etapes: Array<Cetape>;
+  private plats = new Subject<Array<Cplat>>();
   constructor(private ofApp: FirebaseApp, private ingredient_service: IngredientsInteractionService) {
-    this.plats = [];
+    this._plats = [];
     this.db = getDatabase(ofApp);
     if((location.hostname === "localhost") && (!FIREBASE_PROD)) {
       try {
@@ -59,7 +62,7 @@ export class PlatsInteractionService {
       })
     }
   }
-
+/* 
   async getPlatsFromRestaurantsFiltreIds(prop: string, restaurant: string,
     lst_ings: Array<TIngredientBase>, lst_conso: Array<Cconsommable>) {
     const ref_db = ref(this.db);
@@ -131,8 +134,8 @@ export class PlatsInteractionService {
     })
     console.log(`Ont récupère ${this.plats.toString().length/1000} ko de plats`); 
     return this.plats
-  }
-
+  } */
+/* 
   async getPlatFromRestaurant(prop:string, restaurant:string){
     let lst_plats:Array<Cplat> = [];
     const path = `plat_${prop}_${restaurant}/${prop}/${restaurant}/`;
@@ -162,12 +165,19 @@ export class PlatsInteractionService {
     })
     console.log(`Ont récupère ${lst_plats.toString().length/1000} ko de plats`); 
     return lst_plats;
-  }
+  } */
 
   async removePlatInBdd(plat: string, prop: string, restaurant: string) {
     const path = `plat_${prop}_${restaurant}/${prop}/${restaurant}/${plat}`
     const ref_db = ref(this.db, path);
     await remove(ref_db).then(() => console.log("ingrédient ", plat, "bien supprimée"))
+  }
+
+  getPlatFromRestaurantBDD(prop: string, restaurant: string) {
+    throw new Error('Method not implemented.');
+  }
+  getPlatFromRestaurant() {
+    return this.plats.asObservable();;
   }
 
 }

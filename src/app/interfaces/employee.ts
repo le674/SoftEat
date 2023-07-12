@@ -52,25 +52,11 @@ export class Employee {
       setStatus(status:string[], right:string){
         let roles = this.common_service.getStatut();
         let _roles =  new Array();
-        console.log("analyse");
-        console.log(this.statut.analyse);
         _roles.push(this.statut.analyse);
-        console.log("budget");
-        console.log(this.statut.budget);
         _roles.push(this.statut.budget);
-        console.log("facture");
-        console.log(this.statut.facture);
         _roles.push(this.statut.facture);
-        console.log("planning");
-        console.log(this.statut.planning);
         _roles.push(this.statut.planning);
-        console.log("======================");
-        console.log("stock");
-        console.log(this.statut.stock);
         _roles.push(this.statut.stock);
-        console.log('test 1');
-        console.log("======================");
-        console.log(_roles);
         
         roles.forEach((role, index) => {
           if(role === 'proprietaire'){

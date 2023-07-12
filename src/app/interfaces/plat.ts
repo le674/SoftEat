@@ -1,6 +1,7 @@
-import { Etape } from "./etape";
-import {Consommable, TIngredientBase} from "./ingredient";
-import { Cpreparation } from "./preparation";
+import {TConsoBase} from "./consommable";
+import {Etape} from "./etape";
+import {TIngredientBase} from "./ingredient";
+import {CpreparationBase} from "./preparation";
 
 export interface Plat{
     "unity":string;
@@ -15,9 +16,9 @@ export interface Plat{
     "nom":string;
     "portions":number;
     "ingredients":Array<TIngredientBase>;
-    "consommables":Array<Consommable>;
+    "consommables":Array<TConsoBase>;
     "etapes":Array<Etape>;
-    "preparations":Array<Cpreparation>;
+    "preparations":Array<CpreparationBase>;
     "prix":number;
     /* dépend de la catégorie appliquée*/
     "taux_tva":number;
@@ -35,12 +36,12 @@ export interface Plat{
     setPortions(portion:number):void;
     setIngredients(ingredients:Array<TIngredientBase>):void;
     getIngredients():Array<TIngredientBase>;
-    setConsommbale(consommables:Array<Consommable>):void;
-    getConsommbale():Array<Consommable>;
+    setConsommbale(consommables:Array<TConsoBase>):void;
+    getConsommbale():Array<TConsoBase>;
     getEtapes():Array<Etape>;
     setEtapes(etapes:Array<Etape>):void;
-    getPreparations():Array<Cpreparation>;
-    setPreparations(preparations:Array<Cpreparation>):void;
+    getPreparations():Array<CpreparationBase>;
+    setPreparations(preparations:Array<CpreparationBase>):void;
     setPrix(prix:number):void;
     getPrix():number;
     setTauxTva(tva:number):void;
@@ -56,9 +57,9 @@ export class Cplat implements Plat{
     "nom": string;
     "portions": number;
     "ingredients": TIngredientBase[];
-    "consommables": Consommable[];
+    "consommables": TConsoBase[];
     "etapes": Etape[];
-    "preparations": Cpreparation[];
+    "preparations": CpreparationBase[];
     "prix": number;
     "taux_tva": number;
     "prime_cost": number;
@@ -111,10 +112,10 @@ export class Cplat implements Plat{
     getIngredients(): TIngredientBase[] {
         return this.ingredients
     }
-    setConsommbale(consommables: Consommable[]): void {
+    setConsommbale(consommables: TConsoBase[]): void {
         this.consommables = consommables;
     }
-    getConsommbale(): Consommable[] {
+    getConsommbale(): TConsoBase[] {
        return this.consommables
     }
     getType(): string {
@@ -130,10 +131,10 @@ export class Cplat implements Plat{
     setEtapes(etapes: Etape[]): void {
         this.etapes = etapes;
     }
-    getPreparations(): Cpreparation[] {
+    getPreparations(): CpreparationBase[] {
         return this.preparations;
     }
-    setPreparations(preparations: Cpreparation[]): void {
+    setPreparations(preparations: CpreparationBase[]): void {
         this.preparations = preparations;
     }
     setPrix(prix: number): void {

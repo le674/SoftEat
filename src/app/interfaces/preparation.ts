@@ -1,7 +1,8 @@
 import { IngredientsInteractionService } from "../services/menus/ingredients-interaction.service";
 import { CalculService } from "../services/menus/menu.calcul/menu.calcul.ingredients/calcul.service";
-import { Cetape, Etape } from "./etape";
-import { Consommable, Ingredient } from "./ingredient";
+import { Consommable, TConsoBase } from "./consommable";
+import {Etape } from "./etape";
+import {Ingredient, TIngredientBase } from "./ingredient";
 
 
 export interface AfterPreparation {
@@ -12,37 +13,16 @@ export interface AfterPreparation {
 export interface Preparation {    
     "nom":string | null;
     "categorie_restaurant": string;
-    "categorie_tva": string;
-    "taux_tva": number;
-    "portions":number;
-    "ingredients":Array<Ingredient>;
-    "consommables":Array<Consommable>;
-    "etapes":Array<Etape>;
-    "temps":number;
+    "ingredients":Array<TIngredientBase>;
+    "consommables":Array<TConsoBase>;
     "cost": number;
     "quantity": number;
     "quantity_unity": number;
     "total_quantity":number;
     "unity": string;
-    "unity_unitary":string;
-    "cost_ttc": number;
-    "val_bouch": number;
-    "prime_cost":number;
-    "material_cost":number;
-    "base_ing":Array<{
-        name:string,
-        quantity:number,
-        quantity_unity: number,
-        unity: string,
-        cost:number,
-        vrac:string
-    }>;
-    "quantity_bef_prep": number;
-    "quantity_after_prep": number;
     "is_similar":number;
     "marge": number;
     "vrac":string;
-    "is_stock":boolean;
     "dlc":Date;
     "date_reception":Date;
 
@@ -50,84 +30,57 @@ export interface Preparation {
     setNom(nom:string):void;
     getPortion():number;
     setPortions(portion:number):void;
-    setIngredients(ingredients:Array<Ingredient>):void;
-    getIngredients():Array<Ingredient>;
-    setConsommbale(consommables:Array<Consommable>):void;
-    getConsommbale():Array<Consommable>;
-    getTime():number;
-    setTime(time:number):void;
+    setIngredients(ingredients:Array<TIngredientBase>):void;
+    getIngredients():Array<TIngredientBase>;
+    setConsommbale(consommables:Array<TConsoBase>):void;
+    getConsommbale():Array<TConsoBase>;
 }
 
 export class Cpreparation implements Preparation {
-    "nom": string | null;
+    "nom": string;
     "categorie_restaurant": string;
-    "categorie_tva": string;
-    "taux_tva": number;
+    "etapes":Array<Etape> | null;
+    "temps":number | null;
     "cost": number;
     "quantity": number;
     "quantity_unity": number;
     "total_quantity": number;
     "unity": string;
-    "unity_unitary":string;
-    "cost_ttc": number;
-    "val_bouch": number;
-    "prime_cost":number;
-    "material_cost":number;
-    "base_ing": { name: string; quantity: number; quantity_unity: number; unity: string; unity_unitary:string; cost: number; vrac: string; marge:number; }[];
     "marge": number;
     "vrac": string;
     "portions": number;
     "dlc": Date;
     "date_reception":Date;
-    "ingredients": Ingredient[];
-    "consommables": Consommable[];
-    "etapes": Etape[];
-    "temps":number;
-    "quantity_bef_prep": number;
-    "quantity_after_prep": number;
+    "ingredients": TIngredientBase[];
+    "consommables": TConsoBase[];
+    "val_bouch": number | null;
+    "prime_cost":number | null;
+    "material_cost":number | null;
+    "quantity_bef_prep": number | null;
+    "quantity_after_prep": number | null;
     "is_similar": number;
     "is_stock": boolean;
+    "id":string;
 
     constructor(private service: CalculService){
         this.consommables = [];
-        this.etapes = []
-        this.base_ing = [];
         this.nom = "";
         this.categorie_restaurant = "";
-        this.categorie_tva = "";
-        this.taux_tva = 0;
         this.cost = 0;
         this.quantity = 0;
         this.quantity_unity = 0;
         this.unity = "";
-        this.categorie_tva = "";
-        this.cost_ttc = 0;
-        this.val_bouch = 0;
-        this.prime_cost = 0;
-        this.material_cost = 0;
-        this.quantity_bef_prep = 0;
-        this.temps = 0;
-        this.quantity_after_prep = 0;
     }
 
     // permet d'initialiser certain attributs pour l'objet préparation lorsque celui-ci a des attributs null
     setDefautPrep() {
         this.categorie_restaurant = (this.categorie_restaurant === null) ? "" : this.categorie_restaurant;
         this.cost = (this.cost === null) ? 0 : this.cost;
-        this.categorie_tva = (this.categorie_tva === null) ? "" : this.categorie_tva;
-        this.consommables = (this.consommables === null) ? [] : this.consommables;
-        this.cost_ttc = (this.cost_ttc === null) ? 0 : this.cost_ttc;
         this.date_reception = (this.date_reception === null) ? new Date() : this.date_reception;
-        this.etapes = (this.etapes === null) ? [] : this.etapes;
         this.quantity = (this.quantity === null) ? 0 : this.quantity;
-        this.quantity_after_prep = (this.quantity_after_prep === null) ? 0 : this.quantity_after_prep;
-        this.quantity_bef_prep = (this.quantity_bef_prep === null) ? 0 : this.quantity_bef_prep;
-        this.cost_ttc = (this.cost_ttc === null) ? 0 : this.cost_ttc;
-        this.taux_tva = (this.taux_tva === null) ? 0 : this.taux_tva;
         this.unity = (this.unity === null) ? "" : this.unity;
         this.vrac = (this.vrac === null) ? 'non' : this.vrac;
     }
-
     getNom(): string | null {
         return this.nom
     }
@@ -140,30 +93,81 @@ export class Cpreparation implements Preparation {
     setPortions(portion: number): void {
         this.portions = portion
     }
-    setIngredients(ingredients: Ingredient[]): void {
+    setIngredients(ingredients: TIngredientBase[]): void {
         this.ingredients = ingredients
     }
-    getIngredients(): Ingredient[] {
+    getIngredients(): TIngredientBase[] {
         return this.ingredients
     }
-    setConsommbale(consommables: Consommable[]): void {
+    setConsommbale(consommables: TConsoBase[]): void {
         this.consommables = consommables;
     }
-    getConsommbale(): Consommable[] {
+    getConsommbale(): TConsoBase[] {
        return this.consommables
     }
-    getTime(): number {
-        return this.temps;
-    }
-    setTime(time: number): void {
-        this.temps = time;
-    }
-    getCostTtcFromCat(): void {
-        this.cost_ttc = this.service.getCostTtcFromCat(this.categorie_tva, this.cost);
-    } 
-
-    getCostTtcFromTaux():void{
-        this.cost_ttc = this.service.getCostTtcFromTaux(this.taux_tva, this.cost)
-    }   
-
+    setData(data: Cpreparation) {
+        this.nom = data.nom;
+        this.categorie_restaurant = data.categorie_restaurant;
+        this.categorie_restaurant = data.categorie_restaurant;
+        this.id = data.id;
+        this.date_reception = data.date_reception;
+        this.dlc = data.dlc;
+        this.etapes = data.etapes;
+        this.ingredients = data.ingredients;
+        this.consommables = data.consommables;
+        this.marge = data.marge;
+        this.material_cost = data.material_cost;
+        this.portions = data.portions;
+        this.prime_cost = data.prime_cost;
+        this.quantity = data.quantity;
+        this.quantity_after_prep = data.quantity_after_prep;
+        this.quantity_bef_prep = data.quantity_bef_prep;
+        this.total_quantity = data.total_quantity;
+        this.cost = data.cost;
+        this.id = data.id;
+        this.val_bouch = data.val_bouch;
+        this.quantity_unity = data.quantity_unity;
+        this.temps = data.temps;
+        this.is_stock = data.is_stock;
+        this.is_similar = data.is_similar;
+      }
+    convertToBase():CpreparationBase{
+        let preparation = new CpreparationBase();
+        preparation.consommables = this.consommables;
+        preparation.ingredients = this.ingredients;
+        preparation.portions = this.portions;
+        preparation.nom = this.nom;
+        preparation.id_preparation = this.id;
+        preparation.id = null;
+        preparation.val_bouch = null;
+        preparation.unity = null;
+        preparation.material_cost = null;
+        preparation.prime_cost = null;
+        preparation.quantity = null;
+        preparation.quantity_unity = null;
+        preparation.quantity_bef_prep = null;
+        preparation.quantity_after_prep = null;
+        preparation.etapes = null;
+        preparation.temps = null
+        return preparation;
+    }  
 }
+
+export class CpreparationBase{
+    "nom":string | null;
+    "portions":number;
+    "ingredients":Array<TIngredientBase>;
+    "consommables":Array<TConsoBase>;
+    "etapes":Array<Etape> | null;
+    "temps":number | null;
+    "quantity": number | null;
+    "quantity_unity": number | null;
+    "unity": string | null;
+    "val_bouch": number | null;
+    "prime_cost":number | null;
+    "material_cost":number | null;
+    "quantity_bef_prep": number | null;
+    "quantity_after_prep": number | null;
+    "id_preparation":string;
+    "id": string | null;
+} 

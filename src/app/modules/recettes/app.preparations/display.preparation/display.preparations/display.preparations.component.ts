@@ -3,10 +3,12 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Cetape } from '../../../../../../app/interfaces/etape';
-import { Consommable, TIngredientBase } from '../../../../../../app/interfaces/ingredient';
+import { TIngredientBase } from '../../../../../../app/interfaces/ingredient';
 import { CalculPrepaService } from '../../../../../../app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 import { RecetteHelpPreparationsComponent } from './display.preparations.modals/recette.help.preparations/recette.help.preparations.component';
 import { CommonService } from '../../../../../../app/services/common/common.service';
+import { RowConsommableRecette, RowIngredientRecette } from 'src/app/interfaces/recette';
+import { TConsoBase } from 'src/app/interfaces/consommable';
 
 @Component({
   selector: 'app-display.preparations',
@@ -21,37 +23,15 @@ export class DisplayPreparationsComponent implements OnInit {
   public displayedColumnsIng: string[] = ['nom', 'quantity', 'unity', 'cost', 'cost_matiere'];
   public displayedColumnsConso: string[] = ['nom', 'quantity', 'unity', 'cost'];
   public displayedColumnsEtape: string[] = ['nom', 'temps', 'commentaire'];
-  public dataSource_ing: MatTableDataSource<{
-    name: string;
-    quantity: number;
-    unity: string,
-    cost: number;
-    cost_matiere: number | null;
-  }>;
-  public dataSource_conso: MatTableDataSource<{
-    name: string;
-    cost: number;
-    quantity: number;
-    unity: string,
-  }>;
+  public dataSource_ing: MatTableDataSource<RowIngredientRecette>;
+  public dataSource_conso: MatTableDataSource<RowConsommableRecette>;
   public dataSource_etape: MatTableDataSource<{
     nom: string;
     temps: number;
     commentaire: string | null;
   }>;
-  public displayed_ing: Array<{
-    name: string;
-    quantity: number;
-    unity: string,
-    cost: number;
-    cost_matiere: number | null;
-  }>;
-  public displayed_conso: Array<{
-    name: string;
-    cost: number;
-    quantity: number;
-    unity: string;
-  }>;
+  public displayed_ing: Array<RowIngredientRecette>;
+  public displayed_conso: Array<RowConsommableRecette>;
   public displayed_etape: Array<{
     nom: string;
     temps: number;
@@ -74,7 +54,7 @@ export class DisplayPreparationsComponent implements OnInit {
     restaurant: string,
     name: string,
     ingredients: Array<TIngredientBase>,
-    consommables: Array<Consommable>,
+    consommables: Array<TConsoBase>,
     etapes: Array<Cetape>,
     unity:string,
     quantity_after_prep: number,
@@ -111,7 +91,9 @@ export class DisplayPreparationsComponent implements OnInit {
     if(this.data.ingredients !== null){
       if(this.data.ingredients.length > 0){
         this.displayed_ing = this.data.ingredients.map((ing) => {
-          return {name: ing.name, quantity: ing.quantity, unity: ing.unity, cost:ing.cost, cost_matiere: ing.material_cost}
+          
+          let ingredient:RowIngredientRecette = new RowIngredientRecette(ing.name, ing.cost, ing.quantity, ing.quantity_unity, ing.unity);
+          return ingredient;
         })
         this.dataSource_ing.data = this.displayed_ing;
         this.visibles.index_1 = new Array(this.displayed_ing.length).fill(false);
@@ -119,7 +101,7 @@ export class DisplayPreparationsComponent implements OnInit {
     }
     if(this.data.consommables !== null){
       if(this.data.consommables.length > 0){
-        this.displayed_conso = this.data.consommables;
+        this.displayed_conso = this.data.consommables.map((consommable) => consommable.toRowConsoRecette());
         this.dataSource_conso.data = this.displayed_conso;
         this.visibles.index_2 = new Array(this.displayed_conso.length).fill(false); 
       }

@@ -118,10 +118,10 @@ export class ModifIngComponent implements OnInit {
 
   }
   changeIngredient() {
-    let ingredient = new CIngredient(this.calcul_service, this.service);
+    let ingredient = new CIngredient(this.calcul_service);
     if(this.add_ing_section.controls.name.value !== null){
       const name =  this.add_ing_section.controls.name.value.trim()
-      ingredient.nom = name.split(" ").join("_");
+      ingredient.name = name;
     }
     if(this.add_ing_section.controls.name_tva.value !== null){
       ingredient.categorie_tva = this.add_ing_section.controls.name_tva.value;
@@ -139,7 +139,7 @@ export class ModifIngComponent implements OnInit {
       ingredient.quantity_unity = this.add_ing_section.controls.quantity_unitary.value;
     }
     if(this.add_ing_section.controls.unity.value !== null){
-      ingredient.unity_unitary = this.add_ing_section.controls.unity.value;
+      ingredient.unity = this.add_ing_section.controls.unity.value;
     }
     if(this.add_ing_section.controls.unitary_cost.value !== null){
       ingredient.cost = this.add_ing_section.controls.unitary_cost.value

@@ -35,9 +35,9 @@ export class AppAlertesComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-    this.alerte_subscription.unsubscribe();
-    this.stock_unsubscribe();
-    this.conso_unsubscribe();
+    if(this.alerte_subscription !== undefined) this.alerte_subscription.unsubscribe();
+    if(this.stock_unsubscribe !== undefined) this.stock_unsubscribe();
+    if(this.conso_unsubscribe !== undefined) this.conso_unsubscribe();
   }
 
   ngOnInit(): void {

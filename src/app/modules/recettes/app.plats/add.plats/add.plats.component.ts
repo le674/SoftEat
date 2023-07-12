@@ -5,13 +5,14 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Cetape } from '../../../../../app/interfaces/etape';
-import { Cconsommable, Consommable, TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import { TIngredientBase } from '../../../../../app/interfaces/ingredient';
 import { Cplat, Plat } from '../../../../../app/interfaces/plat';
-import { Cpreparation } from '../../../../../app/interfaces/preparation';
+import { Cpreparation, CpreparationBase } from '../../../../../app/interfaces/preparation';
 import { CalculService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { MenuCalculPlatsServiceService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.plats/menu.calcul.plats.service.service';
 import { CalculPrepaService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 import { PlatsInteractionService } from '../../../../../app/services/menus/plats-interaction.service';
+import { Cconsommable, Consommable, TConsoBase } from 'src/app/interfaces/consommable';
 
 @Component({
   selector: 'app-add.plats',
@@ -23,8 +24,8 @@ export class AddPlatsComponent implements OnInit {
   public unity_conso:Array<string>;
   public unity_ing:Array<string>;
   public full_lst_ings:Array<TIngredientBase>;
-  public full_lst_conso:Array<Cconsommable>;
-  public full_lst_prepa:Array<Cpreparation>;
+  public full_lst_conso:Array<TConsoBase>;
+  public full_lst_prepa:Array<CpreparationBase>;
   public selected_ing:string;
   public selected_conso:string;
   public selected_prepa:string;
@@ -68,8 +69,8 @@ export class AddPlatsComponent implements OnInit {
     prop:string,
     restaurant:string,
     full_ingredients: Array<TIngredientBase>,
-    full_consommables: Array<Consommable>,
-    full_preparations: Array<Cpreparation>,
+    full_consommables: Array<TConsoBase>,
+    full_preparations: Array<CpreparationBase>,
     plat: Cplat,
     type:string
     }, private _snackBar: MatSnackBar, private plat_service:MenuCalculPlatsServiceService,
@@ -118,7 +119,7 @@ export class AddPlatsComponent implements OnInit {
            // ont prend en compte le cas où on modifie une préparation contenant un ingrédient pour lequel
            // nous n'avons pas décider une unitée pour la préparation. Mais nous l'avons ajouté à l'inventaire
            // exemple : huile 1 litre dans l'inventaire, 1 c.s dans la préparation.
-          let unity = ingredient.unity_unitary;
+          let unity = ingredient.unity;
           if(ingredient.unity !== undefined) unity = ingredient.unity
           const to_add_grp = new FormGroup({
             name:new FormControl(ingredient.name),
@@ -285,17 +286,21 @@ export class AddPlatsComponent implements OnInit {
     if(category === 'ing'){
       const ingredient = this.full_lst_ings.find((ingredient) => ingredient.name === (new_selection.value as string));
       if((this.getBaseIng().at(index) !== undefined) && (ingredient !== undefined)){
-        this.getBaseIng().at(index).controls.unity.setValue(ingredient.unity_unitary);
+        this.getBaseIng().at(index).controls.unity.setValue(ingredient.unity);
       }
     }
 
     if(category === 'conso'){
-      const consommables = this.full_lst_conso.filter((consommable) => consommable.name === (new_selection.value) as string);
+      const consommable = this.full_lst_conso.find((consommable) => consommable.name === (new_selection.value) as string);
       if(index > this.unity_conso.length){
-        if(consommables.length > 0) this.unity_conso.push(consommables[0].unity);
+        if((consommable !== undefined) && (consommable.unity !== null)){
+          this.unity_conso.push(consommable.unity);
+        } 
       }
       else{
-        if(consommables.length > 0) this.unity_conso[index] = consommables[0].unity;
+        if((consommable !== undefined) && (consommable.unity !== null)){
+          this.unity_conso[index] = consommable.unity;
+        } 
       }
     }
   }
@@ -321,8 +326,12 @@ export class AddPlatsComponent implements OnInit {
       if(ingredients !== null){
         if((ingredients[ingredient_length] !== undefined) && (ingredients.length > 0)){
           name = ingredients[ingredient_length].name;
-          quantity = ingredients[ingredient_length].quantity;
-          unity = ingredients[ingredient_length].unity;   
+          if(ingredients[ingredient_length].quantity !== null){
+            if(ingredients[ingredient_length].unity !== null){
+              quantity = ingredients[ingredient_length].quantity as number;
+              unity = ingredients[ingredient_length].unity as string;   
+            }
+          }
         }
       }
     }
@@ -346,8 +355,14 @@ export class AddPlatsComponent implements OnInit {
       if(consommables !== null){
         if((consommables[consommable_length] !== undefined) && (consommables.length > 0)){
           name = consommables[consommable_length].name;
-          quantity = consommables[consommable_length].quantity;
-          unity =  consommables[consommable_length].unity;
+          let _quantity = consommables[consommable_length].quantity;
+          let _unity = consommables[consommable_length].unity;
+          if(_quantity !== null){
+            quantity = _quantity;
+          }
+          if(_unity !== null){
+            unity =  _unity;
+          }
         }
       }
     }
@@ -369,7 +384,9 @@ export class AddPlatsComponent implements OnInit {
       if(preparations !== null){
         if((preparations[prepa_length] !== undefined) && (preparations.length > 0)){
          if(preparations[prepa_length].nom !== null)  name = preparations[prepa_length].nom as string;
-          if(preparations[prepa_length].quantity !== null) quantity = preparations[prepa_length].quantity;
+          if(preparations[prepa_length].quantity !== null){
+            quantity = preparations[prepa_length].quantity as number;
+          } 
         }
       } 
     }

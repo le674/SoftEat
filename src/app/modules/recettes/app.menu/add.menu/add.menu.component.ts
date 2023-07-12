@@ -4,11 +4,12 @@ import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Cconsommable, Consommable, TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import { TIngredientBase } from '../../../../../app/interfaces/ingredient';
 import { Cmenu } from '../../../../../app/interfaces/menu';
 import { Cplat } from '../../../../../app/interfaces/plat';
 import { MenuInteractionService } from '../../../../../app/services/menus/menu-interaction.service';
 import { MenuCalculMenuService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.menu.service';
+import { TConsoBase } from 'src/app/interfaces/consommable';
 
 @Component({
   selector: 'app-add.menu',
@@ -18,7 +19,7 @@ import { MenuCalculMenuService } from '../../../../../app/services/menus/menu.ca
 export class AddMenuComponent implements OnInit {
   public plats: Array<Cplat>;
   public ingredients: Array<TIngredientBase>;
-  public consommables: Array<Cconsommable>;
+  public consommables: Array<TConsoBase>;
   public unity_conso: Array<string>;
   public unity_ing: Array<string>;
   public curr_ingredients_vrac: Array<number>;
@@ -45,7 +46,7 @@ export class AddMenuComponent implements OnInit {
     prop: string,
     restaurant: string,
     ingredients: Array<TIngredientBase>,
-    consommables: Array<Consommable>,
+    consommables: Array<TConsoBase>,
     plats: Array<Cplat>,
     menu: Cmenu
   }, private menu_service: MenuInteractionService, private _snackBar: MatSnackBar, private menu_calcul: MenuCalculMenuService) {
@@ -72,10 +73,11 @@ export class AddMenuComponent implements OnInit {
             if (!(ingredient.vrac === 'oui')) {
               if (_ing === undefined) {
                 console.log("l'ingrédient n'est pas définit");
-
               }
               else {
-                quantity = ingredient.quantity * ingredient.quantity_unity;
+                if((ingredient.quantity !== null) && (ingredient.quantity_unity !== null)){
+                  quantity = ingredient.quantity * ingredient.quantity_unity;
+                }
               }
             }
             const form_ingredient = new FormGroup({
@@ -136,7 +138,9 @@ export class AddMenuComponent implements OnInit {
           if (_ingredient.quantity !== null) {
             full_ingredient.quantity = _ingredient.quantity
             if ((full_ingredient.vrac !== 'oui') && (full_ingredient.quantity_unity !== 0)) {
-              full_ingredient.quantity = full_ingredient.quantity / full_ingredient.quantity_unity;
+              if(full_ingredient.quantity_unity !== null){
+                full_ingredient.quantity = full_ingredient.quantity / full_ingredient.quantity_unity;
+              }
             }
           }
         }
@@ -167,16 +171,24 @@ export class AddMenuComponent implements OnInit {
       const ingredients = this.ingredients.filter((ingredient) => ingredient.name === (new_selection.value as string));
       const ingredient = this.ingredients.find((ingredient) => ingredient.name === (new_selection.value as string));
       if ((this.getBaseIng().at(index) !== undefined) && (ingredient !== undefined)) {
-        this.getBaseIng().at(index).controls.unity.setValue(ingredient.unity_unitary);
+        this.getBaseIng().at(index).controls.unity.setValue(ingredient.unity);
       }
     }
     if (category === 'conso') {
-      const consommables = this.consommables.filter((consommable) => consommable.name === (new_selection.value) as string);
+      const consommable = this.consommables.find((consommable) => consommable.name === (new_selection.value) as string);
       if (index > this.unity_conso.length) {
-        if (consommables.length > 0) this.unity_conso.push(consommables[0].unity);
+        if (consommable !== undefined) {
+          if(consommable.unity !== null){
+            this.unity_conso.push(consommable.unity);
+          }
+        }
       }
       else {
-        if (consommables.length > 0) this.unity_conso[index] = consommables[0].unity;
+        if (consommable !== undefined){
+          if(consommable.unity !== null){
+            this.unity_conso[index] = consommable.unity;
+          }
+        } 
       }
     }
   }
@@ -199,8 +211,10 @@ export class AddMenuComponent implements OnInit {
         if (this.data.menu.ingredients[_curr_ings_length] !== undefined) {
           let _curr_ing = this.data.menu.ingredients[_curr_ings_length];
           name = _curr_ing.name;
-          quantity = _curr_ing.quantity;
-          unity = _curr_ing.unity;
+          if((_curr_ing.quantity !== null) && (_curr_ing.unity !== null)){
+            quantity = _curr_ing.quantity;
+            unity = _curr_ing.unity;
+          }
         }
       }
     }
@@ -222,8 +236,8 @@ export class AddMenuComponent implements OnInit {
         if (this.data.menu.consommables[_curr_conso_length] !== undefined) {
           let _curr_conso = this.data.menu.consommables[_curr_conso_length];
           name = _curr_conso.name;
-          quantity = _curr_conso.quantity;
-          unity = _curr_conso.unity;
+          if(_curr_conso.quantity !== null) quantity = _curr_conso.quantity;
+          if(_curr_conso.unity !== null)  unity = _curr_conso.unity;
         }
       }
     }

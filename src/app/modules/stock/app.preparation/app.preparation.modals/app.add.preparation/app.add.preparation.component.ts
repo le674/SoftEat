@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CIngredient, TIngredientBase } from '../../../../../../app/interfaces/ingredient';
-import { Cpreparation } from '../../../../../../app/interfaces/preparation';
+import { Cpreparation, CpreparationBase } from '../../../../../../app/interfaces/preparation';
 import { AddPreparationsComponent } from '../../../../../../app/modules/recettes/app.preparations/add.preparations/add.preparations.component';
 import { AlertesService } from '../../../../../../app/services/alertes/alertes.service';
 import { IngredientsInteractionService } from '../../../../../../app/services/menus/ingredients-interaction.service';
@@ -42,20 +42,7 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit, OnI
       restaurant: string,
       prop: string,
       is_modif: boolean,
-      preparation: {
-        nom: string,
-        quantity: number,
-        quantity_unity: number,
-        unity: string,
-        unitary_cost: number,
-        dlc: number,
-        date_reception: string,
-        base_ing: Array<TIngredientBase>,
-        not_prep: Array<CIngredient>,
-        quantity_after_prep: number,
-        marge: number,
-        vrac: string
-      }
+      preparation: Cpreparation
     }, public calcul_service: CalculService, public service: IngredientsInteractionService, public service_alertes: AlertesService) {
     this.current_inputs = 0;
     this.is_vrac = false;
@@ -74,10 +61,10 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit, OnI
     this.add_preparation.get("quantity_unitary")?.setValue(this.data.preparation.quantity_unity);
     this.add_preparation.get("unity")?.setValue(unity);
     this.add_preparation.get("quantity")?.setValue(this.data.preparation.quantity);
-
+    let dlc = (this.data.preparation.dlc.getUTCSeconds() - this.data.preparation.date_reception.getUTCSeconds() )/ (60 * 60 * 24);
     // Si on récupère une date de limite de consommation négative on dépose zéro sinon on dépose la dlc
-    if (this.data.preparation.dlc > 0) {
-      this.add_preparation.get("dlc")?.setValue(this.data.preparation.dlc);
+    if (dlc > 0) {
+      this.add_preparation.get("dlc")?.setValue(dlc);
     }
 
     if ((this.data.preparation.marge > 0) && (this.data.preparation.marge !== undefined)) {
@@ -106,15 +93,16 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit, OnI
 
   changePreparation() {
     let new_ing_aft_prepa = null;
-    let new_prepa: Cpreparation;
+    let new_prepa_base: CpreparationBase;
+    let new_prepa:Cpreparation;
+    new_prepa_base = new CpreparationBase();
     new_prepa = new Cpreparation(this.calcul_service);
-    new_prepa.is_stock = true;
     let act_quant = 0;
     // on construit la date limite de consomation à partir de la date de récéption.
     if (this.is_modif) {
 
-      const date_reception_date = this.calcul_service.stringToDate(this.data.preparation.date_reception);
-      const dlc = this.calcul_service.stringToDate(this.data.preparation.date_reception);
+      const date_reception_date = this.data.preparation.date_reception;
+      const dlc = this.data.preparation.date_reception;
       new_prepa.date_reception = date_reception_date
       new_prepa.dlc = dlc;
     }
@@ -128,12 +116,12 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit, OnI
 
     /* On crée un ingrédient à partir des données récupéré depuis le formulaire puis on l'ajoute à la bdd */
     if (name !== undefined) {
-      new_prepa.setNom(name);
+      new_prepa.nom = name;
     }
 
     if(this.data.preparation.vrac === "oui"){
       if ((this.add_preparation.value["quantity_after_prep"] !== undefined) && (this.add_preparation.value["quantity_after_prep"] !== null)) {
-        new_prepa.quantity_after_prep = this.add_preparation.value["quantity_after_prep"];
+        new_prepa_base.quantity_after_prep = this.add_preparation.value["quantity_after_prep"];
       } 
     }
 
@@ -168,18 +156,19 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit, OnI
       new_prepa.dlc = new_prepa.dlc;
     }
     else {
-      new_prepa.dlc = this.calcul_service.stringToDate(this.data.preparation.date_reception);
+      new_prepa.dlc = this.data.preparation.date_reception;
     }
 
 
     if ((this.add_preparation.value["quantity"] !== undefined) && (this.add_preparation.value["quantity"] !== null)) {
-          new_ing_aft_prepa = this.calcul_service.removeQuantityAftPrepa(this.data.preparation.not_prep,
-          this.data.preparation.base_ing, this.data.preparation.quantity, this.add_preparation.value["quantity"], this.is_vrac);
+      let minimal_ingredients =  this.data.preparation.ingredients.map((ingredient) => ingredient.toMinimalIng());
+      new_ing_aft_prepa = this.calcul_service.removeQuantityAftPrepa(this.data.preparation.ingredients,
+        minimal_ingredients, this.data.preparation.quantity, this.add_preparation.value["quantity"], this.is_vrac);
       } 
 
 
     if (this.add_preparation.valid) {
-      this.service.setPreparationInBdd(new_prepa as Cpreparation, this.data.prop, this.data.restaurant, this.base_ings_prepa).then(() => {
+      /* this.service.setPreparationInBdd(new_prepa as Cpreparation, this.data.prop, this.data.restaurant, this.base_ings_prepa).then(() => {
         if (this.is_modif) {
           this._snackBar.open("l'ingrédient vient d'être modifié dans la base de donnée du restaurant", "fermer");
         }
@@ -194,7 +183,7 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit, OnI
           this._snackBar.open("nous n'avons pas réussit à envoyer l'ingrédient dans la base de donnée", "fermer");
         }
       })
-      this.dialogRef.close()
+      this.dialogRef.close() */
     }
     else {
       this._snackBar.open("veuillez valider l'ensemble des champs", "fermer");

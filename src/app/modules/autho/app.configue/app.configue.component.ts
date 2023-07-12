@@ -176,8 +176,12 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
     this.user_subscription.unsubscribe();
     this.all_user_unsubscribe();
     this.all_user_subscription.unsubscribe();
-    this.all_restaurants_unsubscribe();
-    this.all_restaurants_subscription.unsubscribe();
+    if(this.all_restaurants_unsubscribe !== undefined){
+      this.all_restaurants_unsubscribe();
+    }
+    if(this.all_restaurants_subscription !== undefined){
+      this.all_restaurants_subscription.unsubscribe();
+    }
   }
   ngOnInit(): void {
     const auth = getAuth(this.ofApp);

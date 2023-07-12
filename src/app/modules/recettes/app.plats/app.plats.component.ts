@@ -2,15 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
-import { Cconsommable, TIngredientBase } from '../../../../app/interfaces/ingredient';
+import {CIngredient, TIngredientBase } from '../../../../app/interfaces/ingredient';
 import { Cplat } from '../../../../app/interfaces/plat';
-import { Cpreparation } from '../../../../app/interfaces/preparation';
+import { Cpreparation, CpreparationBase } from '../../../../app/interfaces/preparation';
 import { ConsommableInteractionService } from '../../../../app/services/menus/consommable-interaction.service';
 import { IngredientsInteractionService } from '../../../../app/services/menus/ingredients-interaction.service';
 import { PlatsInteractionService } from '../../../../app/services/menus/plats-interaction.service';
 import { PreparationInteractionService } from '../../../../app/services/menus/preparation-interaction.service';
 import { AddPlatsComponent } from './add.plats/add.plats.component';
 import { DisplayPlatsComponent } from './display.plats/display.plats.component';
+import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
 
 @Component({
   selector: 'app-plats',
@@ -18,9 +19,9 @@ import { DisplayPlatsComponent } from './display.plats/display.plats.component';
   styleUrls: ['./app.plats.component.css']
 })
 export class AppPlatsComponent implements OnInit {
-  public full_lst_prepa:Array<Cpreparation>;
+  public full_lst_prepa:Array<CpreparationBase>;
   public full_lst_ings:Array<TIngredientBase>;
-  public full_lst_conso: Array<Cconsommable>;
+  public full_lst_conso: Array<TConsoBase>;
 
   private url: UrlTree;
   private router: Router;
@@ -47,24 +48,28 @@ export class AppPlatsComponent implements OnInit {
     let user_info = this.url.queryParams;
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];
-    this.plat_service.getPlatFromRestaurant(this.prop, this.restaurant).then((plats) => { 
-      console.log(`${plats.toString().length/1000} ko pour les plats`);
+    this.plat_service.getPlatFromRestaurantBDD(this.prop, this.restaurant);
+    this.plat_service.getPlatFromRestaurant().subscribe((plats:Cplat[]) => {
       this.plats = plats;
       this.categorie.map((categorie) => this.carte.push(plats.filter((plat) => plat.type === categorie)));
+      this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant)
+      this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:CIngredient[]) => {
+        let ingredients_base = ingredients.map((ingredient) => ingredient.convertToBase());
+        this.full_lst_ings = ingredients_base;
+        this.conso_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
+        this.conso_service.getConsommablesFromRestaurants().subscribe((consommables:Cconsommable[]) => {
+          let consommables_base = consommables.map((consommable) => consommable.convertToBase());
+          this.full_lst_conso = consommables_base;
+          this.ingredient_service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
+          this.ingredient_service.getPrepraparationsFromRestaurants().subscribe((preparations:Cpreparation[]) => {
+            let preparations_base = preparations.map((preparation) =>{
+              return preparation.convertToBase()
+            })
+            this.full_lst_prepa = preparations_base;
+          })
+        })
+      })
     })
-    this.ingredient_service.getFullIngs(this.prop,this.restaurant).then((ingredients) => {
-      console.log(`${ingredients.toString().length/1000} ko pour les ingredients`);
-      this.full_lst_ings = ingredients;
-    })
-    this.conso_service.getFullConso(this.prop, this.restaurant).then((consomables) => {
-      console.log(`${consomables.toString().length/1000} ko pour les consommables`);
-      this.full_lst_conso = consomables;
-    })
-    this.prepa_service.getFullPreparations(this.prop, this.restaurant).then((preparations) => {
-      console.log(`${preparations.toString().length/1000} ko pour les préprations`);
-      this.full_lst_prepa = preparations;
-    })
-    
   }
   
   addPlat(categorie:number){

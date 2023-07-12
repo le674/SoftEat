@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import { child, connectDatabaseEmulator, Database, DatabaseReference, get, getDatabase, ref, update } from 'firebase/database';
 import { Cetape } from '../../../app/interfaces/etape';
-import { TConsoBase, TIngredientBase } from '../../../app/interfaces/ingredient';
+import {TIngredientBase } from '../../../app/interfaces/ingredient';
 import { AfterPreparation, Cpreparation } from '../../../app/interfaces/preparation';
 import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../../environments/variables';
 import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.service';
+import { TConsoBase } from 'src/app/interfaces/consommable';
 
 @Injectable({
   providedIn: 'root'
@@ -71,12 +72,9 @@ export class PreparationInteractionService {
         if(prepa.key !== null){
           let preparation:Cpreparation = new Cpreparation(this.calcul_service);
           preparation.nom = prepa.key;
-          preparation.base_ing = prepa.child('base_ing').val();
+          preparation.ingredients = prepa.child('base_ing').val();
           preparation.consommables = prepa.child('consommables').val();
-          preparation.etapes =  prepa.child('etapes').val();
-          preparation.quantity_after_prep =  prepa.child('quantity_after_prep').val();
           preparation.unity = prepa.child('unity').val();
-          preparation.unity_unitary = prepa.child('unity_unitary').val();
           this.preparations.push(preparation);
         }
       })

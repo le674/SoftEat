@@ -1,50 +1,34 @@
-import { Inject, Injectable } from "@angular/core";
 import { IngredientsInteractionService } from "../services/menus/ingredients-interaction.service";
 import { CalculService } from "../services/menus/menu.calcul/menu.calcul.ingredients/calcul.service";
-import { Cetape } from "./etape";
-
-export type TConsoBase = {
-    name:string,
-    quantity:number,
-    unity:string,
-    cost:number
-}
-
 
 export interface Ingredient {
-    "nom": string;
-    "categorie_restaurant": string;
-    "categorie_tva": string;
-    "taux_tva": number;
-    "categorie_dico": string;
+    "name": string;
+    "categorie_restaurant": string | null;
+    "categorie_tva": string | null;
+    "taux_tva": number | null;
     "cost": number;
     "quantity": number;
     "quantity_unity": number;
     "total_quantity": number;
     "unity": string;
-    "unity_unitary":string;
-    "date_reception":Date;
-    "dlc": Date;
-    "cost_ttc": number;
-    "conditionnement": boolean;
-    "refrigiree": boolean;
-    "gelee": boolean;
-    "marge": number;
+    "date_reception":Date | string;
+    "dlc": Date | null | string;
+    "cost_ttc": number | null;
+    "marge": number | null;
     "vrac":string;
+    "base_ingredient_id":Array<string> | null;
+    "id":string;
 
-    getInfoDico(): void;
 /*     getValBouchFromNewQauntity(quantity_unity: number): CIngredient; */
     getCostTtcFromCat(): void;
     getNom(): string;
     setNom(nom: string | null): void;
-    getCategorieRestaurant(): string;
+    getCategorieRestaurant(): string | null;
     setCategorieRestaurant(categorie: string | null): void;
-    getCategorieTva(): string;
+    getCategorieTva(): string | null;
     setCategorieTva(categorie: string | null): void;
-    getTauxTva(): number;
+    getTauxTva(): number | null;
     setTauxTva(taux: number | null): void;
-    getCategorieDico(): string;
-    setCategorieDico(categorie: string | null): void;
     getCost(): number;
     setCost(cost: number | null): void;
     getQuantity(): number;
@@ -53,150 +37,125 @@ export interface Ingredient {
     setQuantityUniy(quantity: number | null): void;
     getUnity(): string;
     setUnity(unity: string | null): void;
-    getUnityUnitary():string;
-    setUnityUnitary(unity: string | null):void;
-    getDlc(): Date;
-    setDlc(val: Date | null): void;
-    getDateReception(): Date;
-    setDateReception(val: Date | null): void;
-    getCostTtc(): number;
+    getDlc(): Date | null | string;
+    setDlc(val: Date | null | string): void;
+    getDateReception(): Date | string;
+    setDateReception(val: Date | null | string): void;
+    getCostTtc(): number | null;
     setCostTtc(val: number | null): void;
-    getRefrigiree(): boolean;
-    setRefrigiree(val: boolean | null): void;
-    getCondition(): boolean;
-    setCondition(val: boolean | null): void;
-    getGel(): boolean;
-    setGel(val: boolean | null): void;
-    getMarge():number;
+    getMarge():number | null;
     setMarge(marge:number):void;
     getVrac():string;
     setVrac(is_vrac:string):void;
 
 }
 
-export interface Consommable {
-    [x: string]: any;
-    "name": string;
-    "cost": number;
-    "quantity": number;
-    "unity": string;
-    "taux_tva": number;
-    "cost_ttc": number;
-    "marge": number;
-    "date_reception":Date;
-    "total_quantity":number;
-
-    getNom(): string;
-    setNom(nom: string | null): void;
-    getCost(): number;
-    setCost(cost: number | null): void;
-    getCostTTC(): number;
-    setCostTTC(cost: number | null): void;
-    getTotalQuantity():number;
-    setTotalQuantity(quantity:number):void;
-    getTotalQuantity():number;
-    getTauxTva(): number;
-    setTauxTva(taux: number | null): void;
-    getQuantity(): number;
-    setQuantity(quantity: number | null): void;
-    getUnity(): string;
-    setUnity(unity: string | null): void;
-    getDateReception():Date;
-    setDateReception(val: Date | null):void;
-    getMarge():number;
-    setMarge(marge:number):void;
-}
-
 /**
- * @class ingrédient dan la base de donnée de manière légé pour plat par exemple
+ * @class ingrédient utilisé pour la recette d'un plat 
  * @argument name nom de l'ingrédient
  * @argument taux_tva taux de tva à appliquer à 'lingrédient
  * @argument cost coût de l'ingrédient
  * @argument quantity nombre de pack d'ingrédient 1 si vrac
  * @argument quantity_unity quantitée pour un pack 
- * @argument total_quantity quantitée total une fois réapprovisionnement afin de contrôler les marges
  * @argument unity unitée de vente du produit ex. huile -> litre
- * @argument unity_unitary cette unitée est utilisez pour les préparation par ex. huile -> c.s
  * @argument material_cost cout matière de l'ingrédient
  * @argument vrac est ce que l'aliment est en vrac ou non 
  * @argument marge marge présent sur total_quantity une fois que la quantitée est inférieur à la marge ont prévient le restaurateur d'un problème de stock
  * @argument added_price prix à ajouter dans le cas d'un supplément au plat
  * @argument supp si l'ingrédient est un supplément ou pas
+ * @argument ingredient_id identifiant de l'ingrédient dans l'inventaire
+ * @argument id identifiant de l'ingrédient de base utilisé dans la recette
  */
 export class TIngredientBase{
     "name": string;
-    "quantity": number; 
-    "quantity_unity":number ;
-    "unity":string;
-    "unity_unitary": string;
+    "quantity": number | null; 
+    "quantity_unity":number | null;
+    "unity":string | null;
     "cost":number;
-    "material_cost":|number | null;
+    "material_cost":number | null;
     "vrac":string;
-    "taux_tva":number; 
+    "taux_tva":number | null; 
     "marge":number | null;
     "added_price":number | null;
-    "supp":boolean | null
-    constructor(name:string, quantity:number, quantity_unity:number, unity:string, unity_unitary:string, cost:number, vrac:string, taux_tva:number){
+    "supp":boolean | null;
+    "ingredient_id":string;
+    "id":string | null;
+    constructor(name:string, quantity:number | null, quantity_unity:number | null, unity:string | null, cost:number, vrac:string, taux_tva:number | null){
         this.name = name;
         this.quantity = quantity;
         this.quantity_unity = quantity_unity;
         this.unity = unity;
-        this.unity_unitary = unity_unitary;
         this.cost = cost;
         this.vrac = vrac;
         this.taux_tva = taux_tva;
         this.material_cost = null;
         this.marge = null;
         this.added_price = null;
-        this.supp = null;
+        this.supp = null
     }
+    toMinimalIng(): {name:string, quantity:number} {
+        let quantity = 0;
 
+        if(this.quantity !== null) quantity = this.quantity;
+        return {name: this.name, quantity: quantity};
+    }
+    setIngredient(ingredient:CIngredient){
+        this.ingredient_id =  ingredient.id;
+        this.name = ingredient.name;
+        this.cost = ingredient.cost;
+        this.taux_tva = ingredient.taux_tva;
+        this.vrac = ingredient.vrac;
+        this.marge = ingredient.marge;
+        this.supp = null;
+        this.added_price = null;
+        this.quantity = null;
+        this.unity = null;
+        this.id = null;
+        this.material_cost = null;
+    }
 }
-
 /**
  * @class ingrédient dan la base de donnée 
- * @argument nom nom de l'ingrédient
+ * @argument name nom de l'ingrédient
  * @argument categorie_restaurant catégorie dans lequel le restaurant souhaite ranger l'ingrédient pour le suivie des coûts
+ * @argument categorie_tva catégorie de tva pour l'application du taux de tva
  * @argument taux_tva taux de tva à appliquer à 'lingrédient
- * @argument categorie_dico catégorie de dictionnaire dans lequel ont souhaite ranger l'ingrédient
  * @argument cost coût de l'ingrédient
  * @argument quantity nombre de pack d'ingrédient 1 si vrac
  * @argument quantity_unity quantitée pour un pack 
  * @argument total_quantity quantitée total une fois réapprovisionnement afin de contrôler les marges
  * @argument unity unitée de vente du produit ex. huile -> litre
- * @argument unity_unitary cette unitée est utilisez pour les préparation par ex. huile -> c.s
  * @argument date_reception date de récéption de l'aliment 
  * @argument dlc date limite de consommation de l'aliment
  * @argument cost_ttc coût toutes taxes comprisent
- * @argument conditionnement actuellement non utilisé
- * @argument refrigiree actuellement non utilisé
- * @argument gelee actuellement non utilisé
+ * @argument is_similar
  * @argument marge marge présent sur total_quantity une fois que la quantitée est inférieur à la marge ont prévient le restaurateur d'un problème de stock
- * @argument vrac est ce que l'aliment est en vrac ou non 
+ * @argument vrac est ce que l'aliment est en vrac ou non
+ * @argument base_ingredient_id liste des identifiants des ingrédients utilisée dans les plats
+ * @argument id identifiant unique de l'ingrédient dans le stock
+ * @argument proprietary_id identifiant du propriétaire des restaurants
  */
 export class CIngredient implements Ingredient {
-    "nom": string;
-    "categorie_restaurant": string;
-    "categorie_tva": string;
-    "taux_tva": number;
-    "categorie_dico": string;
+    "name": string;
+    "categorie_restaurant": string | null;
+    "categorie_tva": string | null;
+    "taux_tva": number | null;
     "cost": number;
     "quantity": number;
     "quantity_unity": number;
     "total_quantity": number;
     "unity": string;
-    "unity_unitary":string;
-    "date_reception":Date;
-    "dlc": Date;
-    "cost_ttc": number;
-    "conditionnement": boolean;
-    "refrigiree": boolean;
-    "gelee": boolean;
+    "date_reception":Date | string;
+    "dlc": Date | null | string;
+    "cost_ttc": number | null;
     "is_similar":number;
-    "marge": number;
+    "marge": number | null;
     "vrac": string;
-    constructor(private service: CalculService, private db_service: IngredientsInteractionService) {
-        this.nom = "";
+    "base_ingredient_id":Array<string> | null;
+    "id":string;
+    "proprietary_id":string;
+    constructor(private service: CalculService) {
+        this.name = "";
         this.categorie_restaurant = "";
         this.categorie_tva = "";
         this.taux_tva = 0;
@@ -205,96 +164,58 @@ export class CIngredient implements Ingredient {
         this.quantity_unity = 0;
         this.unity = "";
         this.categorie_tva = "";
-        this.categorie_dico = "";
         this.dlc = new Date();
         this.date_reception = new Date()
         this.cost_ttc = 0;
+        this.base_ingredient_id = null;
+        
     }
-
-  /*   getValBouchFromNewQauntity(quantity_unity: number): CIngredient {
-        throw new Error("Method not implemented.");
-    } */
-
-
-    async getInfoDico(): Promise<CIngredient> {
-        const Pingredient = await this.db_service.getInfoIngFromDico(this.nom);
-        this.categorie_dico = Pingredient.categorie_dico;
-        this.conditionnement = Pingredient.conditionnement;
-        // on réecrit la catégori en onction du conditionnement important pour le calcul de tva
-        if((this.categorie_tva=== "") || (this.categorie_tva === undefined)){
-            this.categorie_tva = this.service.getTvaCategorieFromConditionnement(Pingredient.categorie_tva, Pingredient.conditionnement);
-        }    
-        if(typeof this.dlc !== "string"){
-            this.dlc.setHours(this.date_reception.getHours() + 24*Pingredient.dlc);
-        }
-        else{
-            this.dlc = new Date(this.dlc);
-        }
-
-        if(typeof this.date_reception === 'string'){
-            this.date_reception = new Date(this.date_reception);
-        }
-        this.gelee = Pingredient.gelee;
-        this.refrigiree = Pingredient.refrigiree;
-        return this
-    }
-
-
-    
     /**
      * Permet de convertire un ingrédient en ingrédient_base qui contiennent moins d'information 
      * que les ingrédients et qui sont donc plus légées
      * @returns {TIngredientBase} une instance d'un ingrédient de base
      */
-    convertToBase(): any {
-        let ingredient:TIngredientBase = {
-            name:this.nom,
-            quantity: this.quantity,
-            quantity_unity: this.quantity_unity,
-            unity_unitary: this.unity_unitary,
-            unity: this.unity,
-            cost: this.cost, 
-            material_cost: 0,
-            vrac: this.vrac,
-            taux_tva: this.taux_tva,
-            marge: this.marge,
-            supp: false,
-            added_price:0
-        };
+    convertToBase(): TIngredientBase {
+        let ingredient:TIngredientBase = new TIngredientBase(this.name, this.quantity, this.quantity_unity,this.unity, this.cost, this.vrac, this.taux_tva);
         return ingredient
       }
-
     /**
      * permet de récupérer le cout ttc d'un ingrédient à partir de la catégorie de tva et du cout
      */
     getCostTtcFromCat(): void {
-        this.cost_ttc = this.service.getCostTtcFromCat(this.categorie_tva, this.cost);
+        const cost_ttc = this.service.getCostTtcFromCat(this.categorie_tva, this.cost);
+        if(cost_ttc){
+            this.cost_ttc = cost_ttc
+        }
     } 
 
     /**
      * permet de récupérer le cout ttc d'un ingrédient à partir du taux de tva et du cout
     */
     getCostTtcFromTaux():void{
-        this.cost_ttc = this.service.getCostTtcFromTaux(this.taux_tva, this.cost)
+       const cost_ttc = this.service.getCostTtcFromTaux(this.taux_tva, this.cost);
+       if(cost_ttc !== null){
+        this.cost_ttc = cost_ttc;
+       }
     }
 
     /**
      * permet de récupérer la date de récéption de l'ingrédient
     */
-    getDateReception(): Date {
+    getDateReception(): Date | string {
         return this.date_reception;
     }
     setDateReception(val: Date | null): void {
         if (val !== null) this.date_reception = val;
     }
 
-    getDlc(): Date {
+    getDlc(): Date | null | string{
         return this.dlc
     }
     setDlc(val: Date | null): void {
         if (val !== null) this.dlc = val;
     }
-    getCostTtc(): number {
+    getCostTtc(): number | null {
         return this.cost_ttc
     }
     setCostTtc(val: number | null): void {
@@ -302,34 +223,28 @@ export class CIngredient implements Ingredient {
     }
 
     getNom(): string {
-        return this.nom
+        return this.name
     }
-    setNom(nom: string | null): void {
-        if (nom !== null) this.nom = nom
+    setNom(name: string | null): void {
+        if (name !== null) this.name = name
     }
-    getCategorieRestaurant(): string {
+    getCategorieRestaurant(): string | null {
         return this.categorie_restaurant
     }
     setCategorieRestaurant(categorie: string | null): void {
         if (categorie !== null) this.categorie_restaurant = categorie;
     }
-    getCategorieTva(): string {
+    getCategorieTva(): string | null {
         return this.categorie_tva
     }
     setCategorieTva(categorie: string | null): void {
         if (categorie !== null) this.categorie_tva = categorie;
     }
-    getTauxTva(): number {
+    getTauxTva(): number | null {
         return this.taux_tva;
     }
     setTauxTva(taux: number | null): void {
         if (taux !== null) this.taux_tva = taux;
-    }
-    getCategorieDico(): string {
-        return this.categorie_dico
-    }
-    setCategorieDico(categorie: string | null): void {
-        if (categorie !== null) this.categorie_dico = categorie;
     }
     getCost(): number {
         return this.cost
@@ -362,41 +277,8 @@ export class CIngredient implements Ingredient {
     }
     setUnity(unity: string | null): void {
         if (unity !== null) this.unity = unity
-    }
-
-    getUnityUnitary(): string {
-       return this.unity_unitary;
-    }
-    setUnityUnitary(unity: string | null): void {
-        if(unity !== null) {
-            this.unity_unitary = unity;
-        }
-        else{
-            this.unity_unitary = "";
-        }
-    }
-
-    getRefrigiree(): boolean {
-        return this.refrigiree
-    }
-    setRefrigiree(val: boolean | null): void {
-        if (val !== null) this.refrigiree = val;
-    }
-    getCondition(): boolean {
-        return this.conditionnement
-    }
-    setCondition(val: boolean | null): void {
-        if (val !== null) this.conditionnement = val;
-    }
-    getGel(): boolean {
-        return this.gelee
-    }
-    setGel(val: boolean | null): void {
-        if (val !== null) this.gelee = val;
-    }
-
-    
-    getMarge(): number {
+    }  
+    getMarge(): number | null{
        return this.marge
     }
     setMarge(marge: number): void {
@@ -408,80 +290,85 @@ export class CIngredient implements Ingredient {
     setVrac(is_vrac: string): void {
        this.vrac = is_vrac
     }
+    /**
+     * Cette fonction peremet de construire un objet ingrédient à partir du JSON de la
+     * base de donnée
+     * @param data données à intégrer comme ingrédient
+     */
+    setData(data: CIngredient | undefined) {
+        if(data !== undefined){
+            this.name = data.name;
+            this.cost = data.cost;
+            this.cost_ttc = data.cost_ttc;
+            this.id = data.id;
+            this.base_ingredient_id = data.base_ingredient_id;
+            this.categorie_restaurant = data.categorie_restaurant;
+            this.categorie_tva = data.categorie_tva;
+            this.taux_tva= data.taux_tva;
+            if(typeof data.date_reception === "string"){
+                const date_reception = this.service.stringToDate(data.date_reception);
+                if(date_reception !== null){
+                    this.date_reception = date_reception;
+                }
+                else{
+                    this.date_reception = new Date();
+                }
+            }
+            else{
+                this.date_reception = data.date_reception;
+            }
+            if(typeof data.dlc === "string"){
+                this.dlc  = this.service.stringToDate(data.dlc);
+            }
+            else{
+                this.dlc = data.dlc;
+            }
+            this.is_similar = data.is_similar;
+            this.marge = data.marge;
+            this.quantity = data.quantity;
+            this.unity = data.unity;
+            this.total_quantity = data.total_quantity;
+            this.quantity_unity = data.quantity_unity;
+            this.proprietary_id = data.proprietary_id;
+            this.vrac = data.vrac;
+        }
+    }
+    /**
+     * permet de récupérer un objet constituant l'ingrédient à écrire en base de donnée
+     * @param id identifiant du document que l'on souahite renvoyer pour l'ajout en base de donnée
+     */
+    getData(id:string | null, proprietary_id:string): any {
+        if((this.proprietary_id === null) || this.proprietary_id === undefined){
+            this.proprietary_id = proprietary_id;
+        }
+        if(this.is_similar === undefined){
+            this.is_similar = 0;
+        }
+        if(this.base_ingredient_id === undefined){
+            this.base_ingredient_id = null;
+        }
+        if(id !== null){
+            this.id = id;
+        }
+        return {
+           name: this.name,
+           cost: this.cost,
+           cost_ttc: this.cost_ttc,
+           id: this.id,
+           base_ingredient_id: this.base_ingredient_id,
+           categorie_restaurant: this.categorie_restaurant,
+           categorie_tva: this.categorie_tva,
+           taux_tva: this.taux_tva,
+           date_reception: this.date_reception.toLocaleString(),
+           dlc: this.dlc?.toLocaleString(),
+           is_similar: this.is_similar,
+           marge: this.marge,
+           quantity: this.quantity,
+           unity: this.unity,
+           total_quantity: this.total_quantity,
+           quantity_unity: this.quantity_unity,
+           proprietary_id: this.proprietary_id,
+           vrac: this.vrac
+        }
+    }
 }
-
-
-export class Cconsommable implements Consommable {
-    "quantity": number;
-    "total_quantity":number;
-    "name": string;
-    "cost": number;
-    "unity": string;
-    "taux_tva": number;
-    "cost_ttc": number;
-    "date_reception": Date;
-    "marge": number;
-    
-    constructor() { 
-    }
-
-    getNom(): string {
-        return this.name
-    }
-    setNom(nom: string | null): void {
-        if (nom !== null) this.name = nom;
-    }
-    getCost(): number {
-        return this.cost
-    }
-    setCost(cost: number | null): void {
-        if (cost !== null) this.cost = cost
-    }
-    
-    getCostTTC(): number {
-        return this.cost_ttc
-    }
-
-    setCostTTC(cost: number | null): void {
-        if (cost !== null) this.cost_ttc = cost
-    }
-
-    getTauxTva(): number {
-        return this.taux_tva;
-    }
-    setTauxTva(taux: number | null): void {
-        if (taux !== null) this.taux_tva = taux;
-    }
-
-    getQuantity(): number {
-        return this.quantity
-    }
-    setQuantity(quantity: number | null): void {
-        if (quantity !== null) this.quantity = quantity;
-    }
-    setTotalQuantity(quantity:number):void{
-        this.total_quantity = quantity;
-    }
-    getTotalQuantity():number{
-        return this.total_quantity;
-    }
-    getUnity(): string {
-        return this.unity
-    }
-    setUnity(unity: string | null): void {
-        if (unity !== null) this.unity = unity
-    }
-    getDateReception(): Date {
-        return this.date_reception;
-    }
-    setDateReception(val: Date | null): void {
-        if (val !== null) this.date_reception = val;
-    }
-    getMarge(): number {
-       return this.marge;
-    }
-    setMarge(marge: number): void {
-       this.marge = marge;
-    }
-}
-

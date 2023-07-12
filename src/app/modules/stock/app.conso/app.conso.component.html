@@ -84,18 +84,18 @@
     </main>
     <div *ngIf="windows_screen_mobile" #accordeon class="accordion" [ngStyle]="{'max-width.px': this.mobile_service.accordeonMaxWidth()}">
         <div class="accordion-item" *ngFor="let consommable of consommable_displayed; let i = index;">
-          <h2 class="accordion-header" [id]="'heading_' + consommable.nom.split('\<br>').join('_').split('\'').join('_')">
+          <h2 class="accordion-header" [id]="'heading_' + consommable.name">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-              [attr.data-bs-target]="'#collapse_' +  consommable.nom.split('\<br>').join('_').split('\'').join('_')" [attr.aria-controls]="'collapse_' +  consommable.nom.split('\<br>').join('_').split('\'').join('_')"
+              [attr.data-bs-target]="'#collapse_' +  consommable.name" [attr.aria-controls]="'collapse_' +  consommable.name"
               (click)="changeArrow(i)">
               <div class="collapse-section">
-                <p>{{consommable.nom.split("\<br>").join(" ").split('\'').join('_')}}</p>
+                <p>{{consommable.name}}</p>
                 <i [ngClass]="getVisible(i) ? 'fa-regular fa-angle-down' : 'fa-regular fa-angle-up'"></i>
               </div>
             </button>
           </h2>
-          <div [id]="'collapse_' + consommable.nom.split('\<br>').join('_').split('\'').join('_')" class="accordion-collapse collapse"
-            [attr.aria-labelledby]="'heading_' + consommable.nom.split('\<br>').join('_').split('\'').join('_')" data-bs-parent="#accordionExample">
+          <div [id]="'collapse_' + consommable.name" class="accordion-collapse collapse"
+            [attr.aria-labelledby]="'heading_' + consommable.name" data-bs-parent="#accordionExample">
             <div class="accordion-body">
               <div>
                 <mat-list role="list">
