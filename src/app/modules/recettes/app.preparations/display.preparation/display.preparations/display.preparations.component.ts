@@ -2,13 +2,13 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Cetape } from '../../../../../../app/interfaces/etape';
-import { TIngredientBase } from '../../../../../../app/interfaces/ingredient';
+import { CIngredient } from '../../../../../../app/interfaces/ingredient';
 import { CalculPrepaService } from '../../../../../../app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 import { RecetteHelpPreparationsComponent } from './display.preparations.modals/recette.help.preparations/recette.help.preparations.component';
 import { CommonService } from '../../../../../../app/services/common/common.service';
 import { RowConsommableRecette, RowIngredientRecette } from 'src/app/interfaces/recette';
-import { TConsoBase } from 'src/app/interfaces/consommable';
+import { Cconsommable } from 'src/app/interfaces/consommable';
+import { Cpreparation } from 'src/app/interfaces/preparation';
 
 @Component({
   selector: 'app-display.preparations',
@@ -19,7 +19,7 @@ export class DisplayPreparationsComponent implements OnInit {
   public name_prepa: string;
   public tmps_prepa: string;
   public prime_cost: number;
-  public val_bouch:number; 
+  public val_bouch: number;
   public displayedColumnsIng: string[] = ['nom', 'quantity', 'unity', 'cost', 'cost_matiere'];
   public displayedColumnsConso: string[] = ['nom', 'quantity', 'unity', 'cost'];
   public displayedColumnsEtape: string[] = ['nom', 'temps', 'commentaire'];
@@ -37,12 +37,12 @@ export class DisplayPreparationsComponent implements OnInit {
     temps: number;
     commentaire: string | null;
   }>;
-  public visibles:{
-    index_1:Array<boolean>,
+  public visibles: {
+    index_1: Array<boolean>,
     index_2: Array<boolean>,
     index_3: Array<boolean>
   };
-  public windows_screen_mobile:boolean;
+  public windows_screen_mobile: boolean;
   @ViewChild('paginatoring') paginatoring!: MatPaginator;
   @ViewChild('paginatorconso') paginatorconso!: MatPaginator;
   @ViewChild('paginatoretape') paginatoretape!: MatPaginator;
@@ -53,16 +53,11 @@ export class DisplayPreparationsComponent implements OnInit {
     prop: string,
     restaurant: string,
     name: string,
-    ingredients: Array<TIngredientBase>,
-    consommables: Array<TConsoBase>,
-    etapes: Array<Cetape>,
-    unity:string,
-    quantity_after_prep: number,
-    val_bouch:number,
-    temps:number,
-    prime_cost:number
-  }, private prepa_service:CalculPrepaService,
-   public dialog: MatDialog, public mobile_service:CommonService) { 
+    _ingredients: Array<CIngredient>,
+    _consommables: Array<Cconsommable>,
+    preparation: Cpreparation
+  }, private prepa_service: CalculPrepaService,
+    public dialog: MatDialog, public mobile_service: CommonService) {
     this.page_number_conso = 0;
     this.page_number_etapes = 0;
     this.page_number_ings = 0;
@@ -82,36 +77,54 @@ export class DisplayPreparationsComponent implements OnInit {
       index_2: [],
       index_3: []
     }
+
   }
   ngOnInit(): void {
     this.name_prepa = this.data.name;
-    this.tmps_prepa = this.prepa_service.SecToString(this.data.temps);
-    this.prime_cost = this.data.prime_cost;
-    this.val_bouch = this.data.val_bouch;
-    if(this.data.ingredients !== null){
-      if(this.data.ingredients.length > 0){
-        this.displayed_ing = this.data.ingredients.map((ing) => {
-          
-          let ingredient:RowIngredientRecette = new RowIngredientRecette(ing.name, ing.cost, ing.quantity, ing.quantity_unity, ing.unity);
+    if (this.data.preparation.temps !== null) {
+      this.tmps_prepa = this.prepa_service.SecToString(this.data.preparation.temps);
+    }
+    if (this.data.preparation.prime_cost !== null) {
+      this.prime_cost = this.data.preparation.prime_cost;
+    }
+    if (this.data.preparation.val_bouch !== null) {
+      this.val_bouch = this.data.preparation.val_bouch;
+    }
+    if (this.data.preparation.ingredients !== null) {
+      if (this.data.preparation.ingredients.length > 0) {
+        this.displayed_ing = this.data.preparation.ingredients.map((ing) => {
+          let ingredient:RowIngredientRecette = new RowIngredientRecette("", 0, 0, "");
+          let _ingredient = this.data._ingredients.find((_ingredient) => _ingredient.id === ing.id);
+          if(_ingredient !== undefined){
+             ingredient = new RowIngredientRecette(ing.name, _ingredient.cost, ing.quantity, ing.unity);
+          }
           return ingredient;
         })
         this.dataSource_ing.data = this.displayed_ing;
         this.visibles.index_1 = new Array(this.displayed_ing.length).fill(false);
       }
     }
-    if(this.data.consommables !== null){
-      if(this.data.consommables.length > 0){
-        this.displayed_conso = this.data.consommables.map((consommable) => consommable.toRowConsoRecette());
+    if (this.data.preparation.consommables !== null) {
+      if (this.data.preparation.consommables.length > 0){
+
+        this.displayed_conso = this.data.preparation.consommables.map((consommable) => {
+          let row_cons = new RowConsommableRecette("",0,0,"");
+          const _consommable = this.data._consommables.find((_consommable) => _consommable.id == consommable.id);
+          if(_consommable !== undefined){
+            row_cons = consommable.toRowConsoRecette(_consommable.cost);
+          }
+          return row_cons;
+        });
         this.dataSource_conso.data = this.displayed_conso;
-        this.visibles.index_2 = new Array(this.displayed_conso.length).fill(false); 
+        this.visibles.index_2 = new Array(this.displayed_conso.length).fill(false);
       }
     }
-    if(this.data.etapes !== null){
-      this.displayed_etape = this.data.etapes.map((etape) => {return {nom: etape.nom, temps: etape.temps, commentaire: etape.commentaire}})
-      this.visibles.index_3 = new Array(this.displayed_etape.length).fill(false); 
+    if (this.data.preparation.etapes !== null) {
+      this.displayed_etape = this.data.preparation.etapes.map((etape) => { return { nom: etape.nom, temps: etape.temps, commentaire: etape.commentaire } })
+      this.visibles.index_3 = new Array(this.displayed_etape.length).fill(false);
       this.dataSource_etape.data = this.displayed_etape;
     }
-    
+
     // ont initialise la pagination pour le tableau, ingrédient, consommables, étapes
     const ing_data = new PageEvent();
     ing_data.length = this.displayed_ing.length
@@ -132,26 +145,26 @@ export class DisplayPreparationsComponent implements OnInit {
     etapes_data.pageIndex = this.page_number_etapes
     this.pageChangedEtape(etapes_data);
   }
-  pageChangedEtape(event:PageEvent){
+  pageChangedEtape(event: PageEvent) {
     event.length;
     let datasource = [... this.displayed_etape];
-    this.page_number_etapes = event.pageIndex;    
+    this.page_number_etapes = event.pageIndex;
     this.dataSource_etape.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
-    
+
   }
-  pageChangedConso(event:PageEvent){
+  pageChangedConso(event: PageEvent) {
     event.length;
     let datasource = [... this.displayed_conso];
-    this.page_number_conso = event.pageIndex;    
+    this.page_number_conso = event.pageIndex;
     this.dataSource_conso.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
-    
+
   }
-  pageChangedInv(event:PageEvent){
+  pageChangedInv(event: PageEvent) {
     event.length;
     let datasource = [... this.displayed_ing];
-    this.page_number_ings = event.pageIndex;    
+    this.page_number_ings = event.pageIndex;
     this.dataSource_ing.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
-    
+
   }
   OpenHelp() {
     const dialogRef = this.dialog.open(RecetteHelpPreparationsComponent, {
@@ -159,14 +172,14 @@ export class DisplayPreparationsComponent implements OnInit {
       width: `400px`,
     });
   }
-  closePopup(click:MouseEvent){
+  closePopup(click: MouseEvent) {
     this.dialogRef.close();
   }
   // Gestion de l'accordéon version mobile
-  getVisible(i: number, categorie:number):boolean{
+  getVisible(i: number, categorie: number): boolean {
     return this.visibles["index_" + categorie.toString() as keyof typeof this.visibles][i];
-  } 
-  changeArrow(arrow_index: number, categorie:number) {
+  }
+  changeArrow(arrow_index: number, categorie: number) {
     this.visibles["index_" + categorie.toString() as keyof typeof this.visibles][arrow_index] = !this.visibles["index_" + categorie.toString() as keyof typeof this.visibles][arrow_index];
   }
 }

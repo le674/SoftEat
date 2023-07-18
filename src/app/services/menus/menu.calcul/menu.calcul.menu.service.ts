@@ -3,6 +3,7 @@ import { Cmenu } from '../../../../app/interfaces/menu';
 import { Plat } from '../../../../app/interfaces/plat';
 import { CalculService } from './menu.calcul.ingredients/calcul.service';
 import { MenuCalculPlatsServiceService } from './menu.calcul.plats/menu.calcul.plats.service.service';
+import { CIngredient } from 'src/app/interfaces/ingredient';
 
 @Injectable({
   providedIn: 'root'
@@ -11,29 +12,33 @@ export class MenuCalculMenuService {
 
   constructor(private plat_service:MenuCalculPlatsServiceService, private calcul_service:CalculService) { }
 
-  getTauxTvaVentilee(menu:Cmenu){
+  getTauxTvaVentilee(menu:Cmenu, ingredients:Array<CIngredient>){
     let price_sum_plat = 0;
     let price_sum_ing = 0;
+
     const taux_plats = menu.plats.filter((plat) => (plat.prix !== undefined) && (plat.prix !== null))
                                  .map((plat) => plat.prix*(plat.taux_tva/100));
     const price_sum_plat_lst = menu.plats.filter((plat) => (plat.prix !== undefined) && (plat.prix !== null))
-                                     .map((plat) => plat.prix)
+                                         .map((plat) => plat.prix)
     if(price_sum_plat_lst.length > 0){
       price_sum_plat = price_sum_plat_lst.reduce((prev_price,next_price) => prev_price + next_price);
     }
     const taux_ings = menu.ingredients.map((ingredient) => {
-      if(ingredient.vrac === 'oui' && (ingredient.taux_tva !== null)){
-        return  ingredient.cost*(ingredient.taux_tva/100);
-      }
-      else{
-        if((ingredient.quantity !== null) && (ingredient.taux_tva !== null)){
-          return ingredient.quantity* ingredient.cost*(ingredient.taux_tva/100);
+      const _ingredient = ingredients.find((t_ingredient) => t_ingredient.id === ingredient.id);
+      if(_ingredient !== undefined){
+        if(_ingredient.vrac === 'oui' && (_ingredient.taux_tva !== null)){
+          return  _ingredient.cost*(_ingredient.taux_tva/100);
+        }
+        else{
+          if((ingredient.quantity !== null) && (_ingredient.taux_tva !== null)){
+            return ingredient.quantity*_ingredient.cost*(_ingredient.taux_tva/100);
+          }
         }
       }
       return 0
     });
-    const price_sum_ing_lst =  menu.ingredients
-    .filter((ingredient) => (ingredient.cost !== null) && (ingredient.cost !== undefined))
+    const price_sum_ing_lst = ingredients
+    .filter((ingredient) => menu.ingredients.map((ingredient) => ingredient.id).includes(ingredient.id))
     .map((ingredient) => {
       if(ingredient.vrac === 'oui'){ 
         return  ingredient.cost
@@ -42,7 +47,7 @@ export class MenuCalculMenuService {
         if(ingredient.quantity !== null) return ingredient.cost*ingredient.quantity;
       }
       return 0;
-    })
+    });
     if(price_sum_ing_lst.length > 0){
      price_sum_ing = price_sum_ing_lst.reduce((prev_price,next_price) => prev_price + next_price);
     }

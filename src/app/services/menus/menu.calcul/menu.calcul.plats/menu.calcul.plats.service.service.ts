@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Cetape } from '../../../../../app/interfaces/etape';
-import { TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import { CIngredient, TIngredientBase } from '../../../../../app/interfaces/ingredient';
 import { Cplat } from '../../../../../app/interfaces/plat';
 import { CalculPrepaService } from '../menu.calcul.preparation/calcul.prepa.service';
-import {TConsoBase } from 'src/app/interfaces/consommable';
+import {Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
+import { Cpreparation } from 'src/app/interfaces/preparation';
 
 @Injectable({
   providedIn: 'root'
@@ -12,18 +13,21 @@ export class MenuCalculPlatsServiceService {
 
   constructor(private prepa_service:CalculPrepaService) { }
 
-  getPrimCost(prop:string, restaurant:string,plat:Cplat):Promise<number>{
+  getPrimCost(prop:string, restaurant:string,plat:Cplat, _preparations:Array<Cpreparation>, _consommables:Array<Cconsommable>,
+   _ingredients:Array<CIngredient>):Promise<number>{
     let arr_ings:Array<TIngredientBase> = [];
     let consommables:Array<TConsoBase> = [];
     let etapes:Array<Cetape> = [];
     let prepa_etapes:Array<Cetape | null> = [];
-    let prepa_consommables:Array<TConsoBase> = [];
+    let prepa_consommables:Array<TConsoBase | null> = [];
     let prepa_ingredients:Array<TIngredientBase> = [];
+    let full_ingredients = plat
     if(plat.ingredients !== null) arr_ings = plat.ingredients;
     if(plat.consommables !== null) consommables = plat.consommables;
     if(etapes !== null) etapes = plat.etapes;
     if(plat.preparations !== null){
-      prepa_etapes = plat.preparations.map((preparation) => {
+      let preparations = _preparations.filter((preparation) => plat.preparations.map((preparation) => preparation.id).includes(preparation.id));
+      prepa_etapes = preparations.map((preparation) => {
         if(preparation.etapes !== undefined){
           return preparation.etapes
         }
@@ -31,7 +35,7 @@ export class MenuCalculPlatsServiceService {
           return [];
         }
       }).flat();
-      prepa_consommables = plat.preparations.map((preparation) => {
+      prepa_consommables = preparations.map((preparation) => {
           if(preparation.consommables !== undefined){
             return  preparation.consommables
           }
@@ -40,15 +44,22 @@ export class MenuCalculPlatsServiceService {
           }
         }).flat();
         let id = "";
-        prepa_ingredients = plat.preparations
+        prepa_ingredients = preparations
                           .filter((preparation) => preparation.ingredients !== undefined)
-                          .map((preparation) => preparation.ingredients.map((ing) => {
-        if(ing.id !== null){
-          id = ing.id
-        } 
-        let ingredient:TIngredientBase = new TIngredientBase(ing.name, ing.quantity, ing.quantity_unity, ing.unity, ing.cost, ing.vrac, ing.taux_tva);
-        return ingredient
-      })).flat();
+                          .filter((preparation) => preparation !== null)
+                          .map((preparation) => {
+                            let ingredient:TIngredientBase = new TIngredientBase("", 0, "");
+                            if(preparation.ingredients !== null){
+                              preparation.ingredients.map((ing) => {
+                                if(ing.id !== null){
+                                  id = ing.id
+                                } 
+                                ingredient = new TIngredientBase(ing.name, ing.quantity, ing.unity);
+                              }) 
+                              
+                            }
+                            return ingredient
+                          }).flat();
     }
     if((etapes) && (prepa_etapes !== null)){
       prepa_etapes = prepa_etapes.filter((etape) => etape !== null);
@@ -57,16 +68,19 @@ export class MenuCalculPlatsServiceService {
     if((arr_ings !== null) && (prepa_ingredients !== null)){
       arr_ings = arr_ings.concat(prepa_ingredients);
     }
+    let ings = _ingredients.filter((ingredient) => arr_ings.map((_ingredient) => _ingredient.id).includes(ingredient.id));
     if((consommables !== null) && (prepa_consommables !== null)){
-      consommables = consommables.concat(prepa_consommables);
+      consommables = consommables.concat(prepa_consommables.filter((conso) => conso !== null) as TConsoBase[]);
     }
-    return this.prepa_service.getPrimCost(prop, restaurant, etapes, arr_ings, consommables)
+    let consos =_consommables.filter((consommable) => consommables.map((consommable) => consommable.id).includes(consommable.id));
+    return this.prepa_service.getPrimCost(etapes, ings, arr_ings, consos);
   }
-  getFullTheoTimeFromSec(plat:Cplat):string{
-    let sum_time_prepa  = 0
+  getFullTheoTimeFromSec(plat:Cplat, preparations:Array<Cpreparation>):string{
+   let sum_time_prepa  = 0;
+   let _preparations =  preparations.filter((preparation) => plat.preparations.map((preparation) => preparation.id).includes(preparation.id));
    const sum_time_plat = this.prepa_service.getFullTheoTimeSec(plat.etapes)
    if(plat.preparations !== null){
-    sum_time_prepa = plat.preparations.map((preparation) => {
+    sum_time_prepa = _preparations.map((preparation) => {
       if((preparation.etapes !== null) && (preparation.etapes !== undefined)){
         let etapes = preparation.etapes.filter((etape) => (etape !== null) && (etape !== undefined));
         if(etapes.length > 0){
@@ -88,16 +102,17 @@ export class MenuCalculPlatsServiceService {
    const sec = full_time%60;
    return `${heure}h ${min}min ${sec}sec`;
   }
-  getFullTheoTimeToSec(plat:Cplat):number{
+  getFullTheoTimeToSec(plat:Cplat, preparations:Array<Cpreparation>):number{
     let sum_time_prepa  = 0
     let sum_time_plat = 0;
+    let _preparations = preparations.filter((preparation) => plat.preparations.map((prepa) => prepa.id).includes(preparation.id));
     if((plat.etapes !== undefined) &&(plat.etapes !== null)){
       sum_time_plat = this.prepa_service.getFullTheoTimeSec(plat.etapes);
     }
     if(plat.preparations !== null){
      const preparations = plat.preparations.filter((prepa) => (prepa !== undefined) && (prepa !== null))
      if(preparations.length > 0){
-      sum_time_prepa = preparations
+      sum_time_prepa = _preparations
       .map((preparation) => {
           if(preparation.etapes !== null){
             const etapes = preparation.etapes.filter((prepa) => (prepa !== undefined) && (prepa !== null));
@@ -143,28 +158,31 @@ export class MenuCalculPlatsServiceService {
     }
     return hour + minute + sec;
   }
-  getPortionCost(plat:Cplat):number{
+  getPortionCost(plat:Cplat, preparations:Array<Cpreparation>, ingredients:Array<CIngredient>):number{
     let arr_ingredients: TIngredientBase[] = [];
     let prepa_ingredients:TIngredientBase[] = [];
+    let _preparations = preparations.filter((preparation) => plat.preparations.map((prepa) => prepa.id).includes(preparation.id));
     if(plat !== null){
       if(plat.ingredients !== null){
         plat.ingredients.forEach((ingredient) => arr_ingredients.push(ingredient))
       }
       if(plat.preparations !== null){
-        prepa_ingredients = plat.preparations
+        prepa_ingredients = _preparations
                             .filter((prep) => (prep.ingredients !== null) && (prep.ingredients !== undefined))
-                            .map((preparation) => preparation.ingredients.map((ing) => {
-        let id = ""
-        if(ing.id !== null){
-          id = ing.id;
-        }
-          return ing;
-        })).flat();
+                            .map((preparation) => {
+                                return (preparation.ingredients as TIngredientBase[]).map((ing) => {
+                                  let id = ""
+                                  if(ing.id !== null){
+                                    id = ing.id;
+                                  }
+                                    return ing;
+                                  })  
+                            }).flat();
       }
-
       arr_ingredients = arr_ingredients.concat(prepa_ingredients);
+      let _ingredient = ingredients.filter((ingredient) => arr_ingredients.map((ingredient) => ingredient.id).includes(ingredient.id));
       if(arr_ingredients.length > 0){
-        const full_material_cost = this.prepa_service.getCostMaterial(arr_ingredients).map((ingredient) => ingredient.material_cost);
+        const full_material_cost = this.prepa_service.getCostMaterial(_ingredient, arr_ingredients).map((ingredient) => ingredient.material_cost);
         let portion_cost = full_material_cost.reduce((prev, next) => {
           if((prev !== null) && (next !== null)){
             return prev + next;

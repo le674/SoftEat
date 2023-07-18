@@ -40,7 +40,6 @@ export class IngredientsInteractionService {
         let ingredient = new CIngredient(this.service);
         ingredient.setData(data);
         if(data !== undefined){
-
           return ingredient;
         }
         else{
@@ -55,13 +54,9 @@ export class IngredientsInteractionService {
       fromFirestore: (snapshot:DocumentSnapshot<TIngredientBase>, options:SnapshotOptions) => {
         const data = snapshot.data(options);
         if(data !== undefined){
-          let ingredient = new TIngredientBase(data.name, data.quantity,data.quantity_unity, data.unity, data.cost, data.vrac,data.taux_tva);
-          ingredient.ingredient_id = data.ingredient_id;
+          let ingredient = new TIngredientBase(data.name, data.quantity, data.unity);
           ingredient.id = data.id;
           ingredient.added_price = data.added_price;
-          ingredient.marge = data.marge;
-          ingredient.supp = data.supp;
-          ingredient.material_cost = data.material_cost;
           return ingredient;
         }
         else{

@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import {TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import {CIngredient, TIngredientBase } from '../../../../../app/interfaces/ingredient';
 import { Cplat } from '../../../../../app/interfaces/plat';
 import { Cpreparation, CpreparationBase } from '../../../../../app/interfaces/preparation';
 import { CalculService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
@@ -76,9 +76,9 @@ export class DisplayPlatsComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<DisplayPlatsComponent>, @Inject(MAT_DIALOG_DATA) public data:{
     prop:string,
     restaurant:string,
-    ingredients: Array<TIngredientBase>,
-    consommables: Array<TConsoBase>,
-    preparations: Array<CpreparationBase>,
+    ingredients: Array<CIngredient>,
+    consommables: Array<Cconsommable>,
+    preparations: Array<Cpreparation>,
     plat: Cplat
     }, private prepa_service:CalculPrepaService, private plat_service:MenuCalculPlatsServiceService, private _snackBar: MatSnackBar,
      private calcul_service:CalculService, public mobile_service:CommonService  ,public dialog: MatDialog) {
@@ -115,9 +115,8 @@ export class DisplayPlatsComponent implements OnInit {
   ngOnInit(): void {
     //ont récupère les préprations uniquement qui sont 
 
-    this.tmps_prepa_theo = this.plat_service.getFullTheoTimeFromSec(this.data.plat);
+    this.tmps_prepa_theo = this.plat_service.getFullTheoTimeFromSec(this.data.plat, this.data.preparations);
     let price_ttc = this.calcul_service.getCostTtcFromTaux(this.data.plat.taux_tva, this.data.plat.prix);
-
     if(this.data.plat.portion_cost !== undefined){
       let taux_tva = this.calcul_service.getCostTtcFromTaux(this.data.plat.taux_tva, this.recommendation_price);
       this.portion_cost = this.data.plat.portion_cost;
@@ -148,12 +147,19 @@ export class DisplayPlatsComponent implements OnInit {
 
     if(this.data.plat.preparations !== null){
       if(this.data.plat.preparations.length > 0){
-          const res = this.data.plat.preparations.filter((prepa) => prepa.nom !== null)
-          this.displayed_prepa = res.map((preparation) => {
-            return {name: preparation.nom as string,
-                    val_bouch: this.prepa_service.getValBouchFromBasIng(preparation.ingredients, 1, "p"),
-                    cost: this.prepa_service.getTotCost(preparation.ingredients)
+          const res = this.data.plat.preparations.filter((prepa) => prepa.name !== null)
+          this.displayed_prepa = res.map((_preparation) => {
+           const preparation = this.data.preparations.find((preparation) => preparation.id === _preparation.id);
+           let cost = 0;
+           let val_bouch = 0; 
+           if((preparation !== undefined) && (preparation.ingredients !== null) ){
+              val_bouch = this.prepa_service.getValBouchFromBasIng(preparation.ingredients, this.data.ingredients,1, "p");
+              cost = this.prepa_service.getTotCost(this.data.ingredients, preparation.ingredients);
             }
+            return {name: _preparation.name as string,
+              val_bouch: val_bouch,
+              cost: cost
+           }
           })
           this.dataSource_prepa.data = this.displayed_prepa;
           this.visibles.index_2 = new Array(this.displayed_prepa.length).fill(false);
@@ -162,9 +168,9 @@ export class DisplayPlatsComponent implements OnInit {
 
     if(this.data.ingredients !== null){
       if(this.data.plat.ingredients.length > 0){
-        const material_cost = this.prepa_service.getCostMaterial(this.data.plat.ingredients);
+        const material_cost = this.prepa_service.getCostMaterial(this.data.ingredients, this.data.plat.ingredients);
         this.displayed_ing = material_cost.map((ing) => {
-          let ingredient = new RowIngredientRecette(ing.name, ing.cost,ing.quantity, ing.quantity_unity ,ing.unity);
+          let ingredient = new RowIngredientRecette(ing.name, ing.cost, ing.quantity, ing.unity);
           if(ing.material_cost !== null){
             ingredient.cost_material = ing.material_cost;
           }
@@ -180,7 +186,10 @@ export class DisplayPlatsComponent implements OnInit {
           let cost = 0;
           let quantity = 0; 
           let unity = "";
-          if(consommable.cost !== null) cost = consommable.cost;
+          let full_conso = this.data.consommables.find((_consommable) => _consommable.id === consommable.id);
+          if(full_conso !== undefined){
+            cost = full_conso.cost;
+          }
           if(consommable.quantity !== null) quantity = consommable.quantity;
           if(consommable.unity !== null) unity = consommable.unity;
           return {name: consommable.name, cost: cost, quantity:quantity, unity:unity};

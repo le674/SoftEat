@@ -14,6 +14,7 @@ import { AppAddPreparationComponent } from './app.preparation.modals/app.add.pre
 import { AppHelpPreparationComponent } from './app.preparation.modals/app.help.preparation/app.help.preparation/app.help.preparation.component';
 import { CommonService } from '../../../../app/services/common/common.service';
 import { RowPreparation } from 'src/app/interfaces/inventaire';
+import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
 
 @Component({
   selector: 'app-prepa',
@@ -37,13 +38,12 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
   private prop: string;
   private restaurant: string;
   private req_ingredients_prep!: Unsubscribe;
-  private req_ingredients_br!: Unsubscribe;
   private req_merge_obs!: Subscription
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
-  constructor(private service: IngredientsInteractionService, private calc_service: CalculService,
-    router: Router, public dialog: MatDialog, private _snackBar: MatSnackBar, public mobile_service:CommonService) {
+  constructor(private service: IngredientsInteractionService, private prepa_service:PreparationInteractionService,
+    private calc_service: CalculService, router: Router, public dialog: MatDialog, private _snackBar: MatSnackBar, public mobile_service:CommonService) {
     this.page_number = 1;
     this.prop = "";
     this.restaurant = "";
@@ -63,7 +63,6 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
 
   ngOnDestroy(): void {
     this.req_ingredients_prep();
-    this.req_ingredients_br();
     this.req_merge_obs.unsubscribe();
   }
 
@@ -73,19 +72,20 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     this.restaurant = user_info["restaurant"];
     this.req_ingredients_prep = this.service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
 
-    const merge_obs = this.service.getPrepraparationsFromRestaurants().subscribe((preparations) => {
+    this.req_merge_obs = this.service.getPrepraparationsFromRestaurants().subscribe((preparations) => {
       this.preparation_table = preparations;
       this.displayed_prep = [];
       this.dataSource = new MatTableDataSource(this.displayed_prep);
       for(let preparation of preparations){
         let ingredients = preparation.ingredients
-        const name = preparation.nom;
+        const name = preparation.name;
         const cost = preparation.cost;
         const unity = preparation.unity;
         const quantity = preparation.quantity;
         const quantity_unity = preparation.quantity_unity;
         const id = preparation.id;
         let row_preparation = new RowPreparation(name, cost, quantity, quantity_unity, unity, id);
+        
         row_preparation.setRowPreparation(preparation);
         this.displayed_prep.push(row_preparation);
       }
@@ -118,13 +118,16 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
       }
     }
     ele.name = ele.name.split('<br>').join('_');
-    const preparations = this.preparation_table.filter((preparation) => preparation.nom === ele.name)
+    const preparations = this.preparation_table.filter((preparation) => preparation.name === ele.name)
     // TO DO remplacer les window.alert
     // On récupère les ingrédients de bases que l'on envoie 
     if (preparations.length > 1) window.alert('attention plusieurs ingrésient en base de donnée pour l ingrédient modifié (on prend le premier), contctez SoftEat');
     if (preparations.length === 1) {
-      var_base_ing = preparations[0].ingredients;
+      if(preparations[0].ingredients !== null){
+        var_base_ing = preparations[0].ingredients;
+      }
     }
+    let preparation = this.preparation_table.find((preparation) => preparation.id === ele.id);
 
     const dialogRef = this.dialog.open(AppAddPreparationComponent, {
       height: `700px`,
@@ -133,49 +136,22 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
         restaurant: this.restaurant,
         prop: this.prop,
         is_modif: true,
-        preparation: {
-          nom: ele.name,
-          quantity: ele.quantity,
-          quantity_unity: ele.quantity_unity,
-          unity: ele.unity,
-          unitary_cost: ele.cost,
-          dlc: res_dlc,
-          date_reception: ele.date_reception,
-          base_ing: var_base_ing,
-          not_prep: this.ingredients_table,
-          marge: ele.marge,
-          vrac: ele.vrac
-        }
+        preparation: preparation
       }
     });
-
   }
-
-/*   suppPrepa(ele: {
-    nom: string;
-    categorie_tva: string;
-    cost: number;
-    cost_ttc: number;
-    after_prep: number;
-    quantity: number;
-    quantity_unity: number;
-    unity: string;
-    date_reception: string;
-    dlc: string;
-  }) {
-    this.service.removeIngInBdd(ele.nom.split('<br>').join('_'), this.prop, this.restaurant, true).then(() => {
+   suppPrepa(preparation:RowPreparation) {
+    this.prepa_service.removePrepaInBdd(preparation, this.prop, this.restaurant).then(() => {
       this._snackBar.open("l'ingrédient vient d'être supprimé de la base de donnée du restaurant", "fermer")
     }).catch(() => {
       this._snackBar.open("l'ingrédient n'a pas pu être supprimé de la base de donnée du restaurant", "fermer")
     });
-  } */
-
+  }
   pageChanged(event: PageEvent) {
     let datasource = [... this.displayed_prep];
     this.page_number = event.pageIndex;
     this.dataSource.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
   }
-
   pageChangedFirst(event: PageEvent) {
     let datasource = [... this.displayed_prep];
     this.page_number = 0;
@@ -192,4 +168,3 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     this.visibles[arrow_index] = !this.visibles[arrow_index];
   }
 }
-

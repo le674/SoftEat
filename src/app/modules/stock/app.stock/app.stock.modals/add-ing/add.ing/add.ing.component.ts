@@ -42,15 +42,25 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       ingredient: {
         id:string,
         nom: string,
+        categorie_restaurant:string | null,
+        categorie_tva: string,
+        taux_tva: number,
+        cost: number,
         categorie: string
         quantity: number,
         quantity_unity: number,
+        total_quantity: number, 
         unity: string,
         unitary_cost: number,
-        dlc: number,
         date_reception: string,
-        marge: number,
-        vrac: string
+        dlc: number,
+        cost_ttc: number | null,
+        is_similar:number,
+        marge: number, 
+        vrac: string,
+        base_ingredient_id:Array<string> | null,
+        base_ing: Array<string> | null,
+        not_prep: Array<CIngredient>
       }
     }, private service: IngredientsInteractionService, private changeDetector: ChangeDetectorRef,
     private _snackBar: MatSnackBar, private service_alertes: AlertesService) {
@@ -119,6 +129,18 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     let new_ing: CIngredient;
     new_ing = new CIngredient(this.calcul_service);
     let act_quant = 0;
+    if(this.data.ingredient.base_ingredient_id !== undefined){
+      new_ing.base_ingredient_id = this.data.ingredient.base_ingredient_id;
+    }
+    if(this.data.ingredient.categorie_restaurant !== undefined){
+      new_ing.categorie_restaurant = this.data.ingredient.categorie_restaurant;
+    }
+    if(this.data.ingredient.categorie_tva !== undefined){
+      new_ing.categorie_tva = this.data.ingredient.categorie_tva;
+    }
+    if(this.data.ingredient.total_quantity !== undefined){
+      new_ing.total_quantity = this.data.ingredient.total_quantity;
+    }
     if((this.data.ingredient.id !== null) && (this.data.ingredient.id !== undefined)){
       new_ing.id = this.data.ingredient.id;
     }

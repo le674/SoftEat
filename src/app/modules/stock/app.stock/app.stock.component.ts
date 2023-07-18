@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -108,17 +108,23 @@ export class AppStockComponent implements OnInit, OnDestroy{
         prop: this.prop,
         is_modif: false,
         ingredient: {
-          id:"",
-          nom: "",
-          categorie: "",
+          name: "",
+          categorie_restaurant: null,
+          categorie_tva: null,
+          taux_tva: null,
+          cost: 0,
           quantity: 0,
           quantity_unity: 0,
+          total_quantity: 0,
           unity: "",
-          unitary_cost: 0,
-          dlc: 0,
           date_reception: new Date(),
+          dlc: 0,
+          cost_ttc: null,
+          is_similar:0,
           marge: 0,
-          vrac: 'non'
+          vrac: 'non',
+          base_ingredient_id:null,
+          id:""
         }
       }
     });
@@ -127,6 +133,7 @@ export class AppStockComponent implements OnInit, OnDestroy{
   modifIng(ele: RowIngredient) {
     let dlc = ""
     let categorie_tva = "";
+    let _ingredient = this.ingredient_table.find((ingredient) => ingredient.id === ele.id);
     if(ele.dlc !== null){
       dlc = ele.dlc;
     }
@@ -156,33 +163,43 @@ export class AppStockComponent implements OnInit, OnDestroy{
     ingredient.cost = ele.cost;
     ingredient.quantity = ele.quantity;
     ingredient.quantity_unity = ele.quantity_unity;
-    const dialogRef = this.dialog.open(AddIngComponent, {
-      height: `${window.innerHeight}px`,
-      width: `${window.innerWidth - window.innerWidth / 15}px`,
-      data: {
-        restaurant: this.restaurant,
-        prop: this.prop,
-        is_modif: true,
-        ingredient: {
-          id:ele.id,
-          /* cuisinee: ele.cuisinee, */
-          nom: ele.name,
-          categorie: ele.categorie_tva,
-          quantity: ele.quantity,
-          quantity_unity: ele.quantity_unity,
-          unity: ele.unity,
-          unitary_cost: ele.cost,
-          dlc: res_dlc,
-          date_reception: ele.date_reception,
-          base_ing: var_base_ing,
-          not_prep: this.ingredient_table,
-         /*  quantity_after_prep: ele.after_prep, */
-          marge: ele.marge,
-          vrac: ele.vrac
+    if(_ingredient !== undefined){
+      const dialogRef = this.dialog.open(AddIngComponent, {
+        height: `${window.innerHeight}px`,
+        width: `${window.innerWidth - window.innerWidth / 15}px`,
+        data: {
+          restaurant: this.restaurant,
+          prop: this.prop,
+          is_modif: true,
+          ingredient: {
+            id:ele.id,
+            /* cuisinee: ele.cuisinee, */
+            name: ele.name,
+            categorie_restaurant: _ingredient.categorie_restaurant,
+            categorie_tva: _ingredient.categorie_tva,
+            taux_tva: _ingredient.taux_tva,
+            cost: _ingredient.cost,
+            quantity: ele.quantity,
+            quantity_unity: ele.quantity_unity,
+            total_quantity: _ingredient.total_quantity,
+            unity: ele.unity,
+            unitary_cost: ele.cost,
+            date_reception: ele.date_reception,
+            dlc: res_dlc,
+            cost_ttc: _ingredient.cost_ttc,
+            marge: ele.marge,
+            vrac: ele.vrac,
+            base_ingredient_id: null,
+            base_ing: var_base_ing,
+            not_prep: this.ingredient_table,
+           /*  quantity_after_prep: ele.after_prep, */
+          }
         }
-      }
-    });
-   
+      });
+    }
+    else{
+      throw `No Ingredient founded for array element of id ${ele.id} and name ${ele.name}`;
+    }
   }
 
   suppIng(ele: RowIngredient) {

@@ -103,10 +103,9 @@ export class CalculService {
     }
     return null;
   }
-
-  removeQuantityAftPrepa(not_prep_ing: TIngredientBase[], base_ing: { name: string; quantity: number; }[],
+/* 
+  removeQuantityAftPrepa(not_prep_ing: CIngredient[], base_ing: { name: string; quantity: number; }[],
     quantity_bef_add: number, quantity_aft_add: number, is_vrac: boolean) {
-
     if (not_prep_ing.length === base_ing.length) {
       not_prep_ing.forEach((ingredient, index: number) => {
         // on applique la réduction uniquement dans le cas le nombre d'ingrédients préparés est plus important
@@ -129,7 +128,7 @@ export class CalculService {
       console.log("les ingrédient récupérés sur le formulaire ne coincide pas avec les ingrédient de base récupéré dans la bdd");
     }
     return null;
-  }
+  } */
 
 
   convertQuantity(quantity: number, unity: string): number {

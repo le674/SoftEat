@@ -19,9 +19,12 @@ import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
   styleUrls: ['./app.plats.component.css']
 })
 export class AppPlatsComponent implements OnInit {
-  public full_lst_prepa:Array<CpreparationBase>;
-  public full_lst_ings:Array<TIngredientBase>;
-  public full_lst_conso: Array<TConsoBase>;
+  public _preparations:Array<CpreparationBase>;
+  public _ingredients:Array<TIngredientBase>;
+  public _consommables: Array<TConsoBase>;
+  public preparations:Array<Cpreparation>;
+  public ingredients:Array<CIngredient>;
+  public consommables: Array<Cconsommable>;
 
   private url: UrlTree;
   private router: Router;
@@ -39,9 +42,12 @@ export class AppPlatsComponent implements OnInit {
     this.prop = "";
     this.restaurant = "";
     this.url = this.router.parseUrl(this.router.url);
-    this.full_lst_prepa = [];
-    this.full_lst_conso = [];
-    this.full_lst_ings = [];
+    this._preparations = [];
+    this._consommables = [];
+    this._ingredients = [];
+    this.preparations = [];
+    this.consommables = [];
+    this.ingredients = [];
     this.carte = [];
   }
   ngOnInit(): void {
@@ -54,18 +60,13 @@ export class AppPlatsComponent implements OnInit {
       this.categorie.map((categorie) => this.carte.push(plats.filter((plat) => plat.type === categorie)));
       this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant)
       this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:CIngredient[]) => {
-        let ingredients_base = ingredients.map((ingredient) => ingredient.convertToBase());
-        this.full_lst_ings = ingredients_base;
+        this.ingredients = ingredients;
         this.conso_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
         this.conso_service.getConsommablesFromRestaurants().subscribe((consommables:Cconsommable[]) => {
-          let consommables_base = consommables.map((consommable) => consommable.convertToBase());
-          this.full_lst_conso = consommables_base;
+          this.consommables = consommables;
           this.ingredient_service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
           this.ingredient_service.getPrepraparationsFromRestaurants().subscribe((preparations:Cpreparation[]) => {
-            let preparations_base = preparations.map((preparation) =>{
-              return preparation.convertToBase()
-            })
-            this.full_lst_prepa = preparations_base;
+           this.preparations = preparations;
           })
         })
       })
@@ -79,9 +80,9 @@ export class AppPlatsComponent implements OnInit {
       data: {
         prop: this.prop,
         restaurant: this.restaurant,
-        full_ingredients: this.full_lst_ings,
-        full_consommables: this.full_lst_conso,
-        full_preparations: this.full_lst_prepa,
+        ingredients: this.ingredients,
+        consommables: this.consommables,
+        preparations: this.preparations,
         plat:null,
         type: this.categorie[categorie]
       }
@@ -104,9 +105,9 @@ export class AppPlatsComponent implements OnInit {
       data: {
         prop: this.prop,
         restaurant: this.restaurant,
-        full_ingredients: this.full_lst_ings,
-        full_consommables: this.full_lst_conso,
-        full_preparations: this.full_lst_prepa,
+        ingredients: this.ingredients,
+        consommables: this.consommables,
+        preparations: this.preparations,
         plat:plat,
         type: ""
       }
@@ -119,9 +120,9 @@ export class AppPlatsComponent implements OnInit {
       data: {
         prop: this.prop,
         restaurant: this.restaurant,
-        ingredients: this.full_lst_ings,
-        consommables: this.full_lst_conso,
-        preparations: this.full_lst_prepa,
+        ingredients: this.ingredients,
+        consommables: this.consommables,
+        preparations: this.preparations,
         plat:plat
       }
     })

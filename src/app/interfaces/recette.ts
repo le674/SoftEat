@@ -15,29 +15,19 @@ export class RowIngredientRecette{
     public name: string;
     public cost: number;
     public quantity:number;
-    public quantity_unity:number;
     public unity:string;
     public cost_material:number;
-    constructor(name:string, cost:number | null, quantity:number | null, quantity_unity:number | null, unity:string | null){
+    constructor(name:string, cost:number | null, quantity:number | null, unity:string | null){
         this.cost = 0;
         this.quantity = 0;
         this.unity = "";
-        this.quantity_unity = 0;
         this.name = name;
         if(cost !== null) this.cost = cost;
         if(quantity !== null) this.quantity = quantity;
-        if(quantity_unity !== null) this.quantity_unity = quantity_unity;
         if(unity !== null) this.unity = unity;
         this.cost_material = 0;
     }
-    setRowIngredient(ingredient:TIngredientBase){
-        if(ingredient.material_cost !== null){
-            this.cost_material = ingredient.material_cost;
-        }
-    }
 }
-
-
 /**
  * @class Cette classe est utilisé pour afficher les prépartions dans le tableau stock
  * @argument name nom de la préparation
@@ -101,7 +91,6 @@ export class MiniIngredient{
         this.cost =null;
     }
 }
-
 /**
  * @class Cette classe est utilisé pour afficher les consommables dans le formulaire d'ajout d'une recette
  * @argument name nom du consommable

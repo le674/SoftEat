@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Cetape } from '../../../../../app/interfaces/etape';
-import {TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import {CIngredient, TIngredientBase } from '../../../../../app/interfaces/ingredient';
 import { RestaurantService } from '../../../../../app/services/restaurant/restaurant.service';
 import { CalculService } from '../menu.calcul.ingredients/calcul.service';
 import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
@@ -16,9 +16,10 @@ export class CalculPrepaService {
     this.prime_cost = 0;
   }
 
-  getCostMaterial(ings:Array<TIngredientBase>):Array<TIngredientBase>{
-    let ingredients:Array<TIngredientBase> = [];
-    ings.forEach((ing) => {
+  getCostMaterial(ingredients:Array<CIngredient>, _ingredients:Array<TIngredientBase>):Array<CIngredient>{
+    let c_ingredients = ingredients.filter((ingredient) => _ingredients.map((_ingredient) => _ingredient.id) 
+                                                   .includes(ingredient.id))
+    c_ingredients.forEach((ingredient) => {
       let cost_matiere = 0;
       // on peut considérer les ingrédients sur plusieurs aspects
       // 1. un ingrédient est définie par un prix unitaire et une quantitée pour le plat dans ce cas il suffit de faire prix * quantitée plat
@@ -28,14 +29,14 @@ export class CalculPrepaService {
       // dans le cas d'ingrédient en vrac il ne faut pas que le restaurateur puisse choisir p dans les unitée pour son plat/préparation pour ses ingrédients 
       // dans la partie stock si le restaurateur choisit de faire du vrac en pièce exemple : quantitée unitaire 6 tomates -> unitée p -> 9€
       // alors il vaut mieux remplir : quantitée unitaire de 1 -> unitée p -> cost 1.50 -> quantitée 6 
-      cost_matiere = this.getOnlyCostMaterial(ing);
-      ing.material_cost = cost_matiere;
-      ingredients.push(ing)
+      cost_matiere = this.getOnlyCostMaterial(ingredient);
+      ingredient.material_cost = cost_matiere;
+      ingredients.push(ingredient)
     })
     return ingredients
   }
 
-  getOnlyCostMaterial(ing:TIngredientBase):number{
+  getOnlyCostMaterial(ing:CIngredient):number{
     let cost_matiere = 0;
     // dans un premier temps ont calcule la quantitée pas par pièce dans un seconbd temps ont pren en compte l'unitée par pièce
     if(ing.vrac === "oui"){
@@ -57,14 +58,29 @@ export class CalculPrepaService {
     return this.ToCentime(cost_matiere);
   }
 
-  async getPrimCost(prop:string,restaurant:string, etapes: Array<Cetape>, ingredients: Array<TIngredientBase>,
-     consommables: Array<TConsoBase> | Array<MiniConsommable>){
+  async getPrimCost(etapes: Array<Cetape>, ingredients: Array<CIngredient>,
+     _ingredients:Array<TIngredientBase>,consommables: Array<Cconsommable> | Array<MiniConsommable>){
       let sum_cost_ing = 0;
       let sum_cost_conso = 0;
       let second_salary = 0;
       let full_time = 0;
       let full_cost_quant_ing:Array<number> = [0];
       let full_cost_quant_conso:Array<number> = [0];
+      ingredients = ingredients.map((ingredient) => {
+        let base_ingredient = _ingredients.find((_ingredient) => _ingredient.id === ingredient.id);
+        if(base_ingredient !== undefined){
+          if(base_ingredient.quantity !== null){
+            ingredient.quantity = base_ingredient.quantity;
+          }
+          else{
+            ingredient.quantity = 0;
+          }
+          if(base_ingredient.unity !== null){
+            ingredient.unity = base_ingredient.unity;
+          }
+        }
+        return ingredient;
+      })
       if(ingredients !== null){
         if(ingredients.length > 0){
           full_cost_quant_ing = ingredients
@@ -208,7 +224,17 @@ export class CalculPrepaService {
   // on néglige les préparations qui ont une quantitée inférieure à 100g car alors ont divise le quotient
   // par une puissance de 10 de sorte à avoir une valeur bouchère de l'ordre de grandeur du total des coûts 
   // des ingrédients de base.
-  getValBouchFromBasIng(base: TIngredientBase[], quantity_aft_prep: number, unity_aft_prep:string): number {
+  /**
+   * 
+   * @param base ingrédients pour lesquelles nous voulons récupérer la valeurs bouchère
+   * @param ingredients ensemble des ingrédients de la base de donnée
+   * @param quantity_aft_prep quantitée après préaparation 
+   * @param unity_aft_prep unitée utilisé pour la préparation
+   * @returns {number} valeur bouchère de la préaparation 
+   */
+  getValBouchFromBasIng(base: TIngredientBase[], ingredients:CIngredient[] ,quantity_aft_prep: number, unity_aft_prep:string): number {
+    let t_ingredients = ingredients.filter((ingredient) => base.map((_ingredient) => _ingredient.id)
+                                                               .includes(ingredient.id));
     let ingredient_quantity:Array<number> = [];
     let square_final_cost = 0;
     if (base.length === 0) {
@@ -218,7 +244,7 @@ export class CalculPrepaService {
     quantity_aft_prep = Number(quantity_aft_prep);
     const quantity_unity_act = this.calcul_service.convertQuantity(Number(quantity_aft_prep), unity_aft_prep);
     
-    base.forEach((ingredient: TIngredientBase) => {
+    t_ingredients.forEach((ingredient: CIngredient) => {
       if(ingredient.unity !== null){
         ingredient.quantity = Number(ingredient.quantity);
         ingredient_quantity.push(this.calcul_service.convertQuantity(ingredient.quantity, ingredient.unity));
@@ -226,7 +252,7 @@ export class CalculPrepaService {
     });
     
     // on fait la somme des coûts et des quantitées des ingrédients de base utilisées pour la préparation
-    const total_cost = base.map(ing => {
+    const total_cost = t_ingredients.map(ing => {
       let cost =  ing.cost
       ing.quantity_unity = Number(ing.quantity_unity);
       ing.quantity = Number(ing.quantity);
@@ -256,10 +282,11 @@ export class CalculPrepaService {
   }
   
 
-  getTotCost(ingredients:Array<TIngredientBase>):number{
+  getTotCost(ingredients:Array<CIngredient>, _ingredients:Array<TIngredientBase>):number{
+    let t_ingredients = ingredients.filter((ingredient) => _ingredients.map((ingredient) => ingredient.id).includes(ingredient.id));
     let cost = 0
     if(ingredients !== null){
-      cost = ingredients.map((ing) => {
+      cost = t_ingredients.map((ing) => {
         if(ing !== null){
           return ing.cost
         }

@@ -4,12 +4,12 @@ import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import { CIngredient, TIngredientBase } from '../../../../../app/interfaces/ingredient';
 import { Cmenu } from '../../../../../app/interfaces/menu';
 import { Cplat } from '../../../../../app/interfaces/plat';
 import { MenuInteractionService } from '../../../../../app/services/menus/menu-interaction.service';
 import { MenuCalculMenuService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.menu.service';
-import { TConsoBase } from 'src/app/interfaces/consommable';
+import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
 
 @Component({
   selector: 'app-add.menu',
@@ -18,8 +18,8 @@ import { TConsoBase } from 'src/app/interfaces/consommable';
 })
 export class AddMenuComponent implements OnInit {
   public plats: Array<Cplat>;
-  public ingredients: Array<TIngredientBase>;
-  public consommables: Array<TConsoBase>;
+  public ingredients: Array<CIngredient>;
+  public consommables: Array<Cconsommable>;
   public unity_conso: Array<string>;
   public unity_ing: Array<string>;
   public curr_ingredients_vrac: Array<number>;
@@ -45,8 +45,8 @@ export class AddMenuComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<AddMenuComponent>, private formBuilder: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: {
     prop: string,
     restaurant: string,
-    ingredients: Array<TIngredientBase>,
-    consommables: Array<TConsoBase>,
+    ingredients: Array<CIngredient>,
+    consommables: Array<Cconsommable>,
     plats: Array<Cplat>,
     menu: Cmenu
   }, private menu_service: MenuInteractionService, private _snackBar: MatSnackBar, private menu_calcul: MenuCalculMenuService) {
@@ -70,16 +70,7 @@ export class AddMenuComponent implements OnInit {
           this.data.menu.ingredients.forEach((ingredient) => {
             let quantity = ingredient.quantity;
             let _ing = this.data.ingredients.find((ing) => ing.name === ingredient.name);
-            if (!(ingredient.vrac === 'oui')) {
-              if (_ing === undefined) {
-                console.log("l'ingrédient n'est pas définit");
-              }
-              else {
-                if((ingredient.quantity !== null) && (ingredient.quantity_unity !== null)){
-                  quantity = ingredient.quantity * ingredient.quantity_unity;
-                }
-              }
-            }
+            quantity = ingredient.quantity
             const form_ingredient = new FormGroup({
               name: new FormControl(ingredient.name),
               quantity: new FormControl(quantity),
@@ -127,21 +118,16 @@ export class AddMenuComponent implements OnInit {
       if ((price !== null) && (price !== undefined)) {
         menu.prix = price;
       }
-      let _ing = this.data.ingredients.filter((ingredient) => ingredients.map((ing) => ing.name)
+      let _ing = this.data.menu.ingredients.filter((ingredient) => ingredients.map((ing) => ing.name)
         .includes(ingredient.name))
-      let _conso = this.data.consommables.filter((consommable) => consommables.map((conso) => conso.name)
+      let _conso = this.data.menu.consommables.filter((consommable) => consommables.map((conso) => conso.name)
         .includes(consommable.name))
-      let _plats = this.data.plats.filter((plat) => plats.includes(plat.nom))
+      let _plats = this.data.menu.plats.filter((plat) => plats.includes(plat.nom))
       _ing.forEach((full_ingredient) => {
         const _ingredient = ingredients.find((ingredient) => full_ingredient.name === ingredient.name);
         if (_ingredient !== undefined) {
           if (_ingredient.quantity !== null) {
             full_ingredient.quantity = _ingredient.quantity
-            if ((full_ingredient.vrac !== 'oui') && (full_ingredient.quantity_unity !== 0)) {
-              if(full_ingredient.quantity_unity !== null){
-                full_ingredient.quantity = full_ingredient.quantity / full_ingredient.quantity_unity;
-              }
-            }
           }
         }
       })
@@ -155,7 +141,7 @@ export class AddMenuComponent implements OnInit {
       menu.ingredients = _ing;
       menu.consommables = _conso;
       menu.plats = _plats;
-      menu.taux_tva = this.menu_calcul.getTauxTvaVentilee(menu);
+      menu.taux_tva = this.menu_calcul.getTauxTvaVentilee(menu, this.data.ingredients);
       menu.prix_ttc = this.menu_calcul.getPriceTTC(menu.prix, menu.taux_tva);
       this.menu_service.setMenu(this.data.prop, this.data.restaurant, menu).catch(() => {
         this._snackBar.open("le menu n'a pas été ajouté", "fermer");
@@ -193,14 +179,14 @@ export class AddMenuComponent implements OnInit {
     }
   }
   // lorsque l'ingédient est un ingrédient en vrac ont enlève la possibilité de choisir pièce dans l'outils de séléction 
-  changeIng(ingredient: MatOptionSelectionChange<string>, i: number) {
-    let ing = this.ingredients.find((_ingredient) => _ingredient.name === ingredient.source.value);
+ changeIng(ingredient: MatOptionSelectionChange<string>, i: number) {
+   /*  let ing = this.ingredients.find((_ingredient) => _ingredient.name === ingredient.source.value);
     if (ing !== undefined) {
       if (ing.vrac === "oui") {
         this.curr_ingredients_vrac.push(i);
       }
-    }
-  }
+    } */
+  } 
   addInputIng() {
     let _curr_ings_length = this.getBaseIng().length;
     let name = "";

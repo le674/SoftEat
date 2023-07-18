@@ -33,13 +33,17 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
       prop: string,
       is_modif: boolean,
       consommable: {
-        nom: string,
+        categorie_restaurant:string | null,
         quantity: number,
-        cost: number
-        cost_ttc: number,
-        taux_tva: number,
+        total_quantity:number;
+        name: string,
+        cost: number,
         unity: string,
+        taux_tva: number,
+        cost_ttc: number,
         date_reception: string,
+        marge:number,
+        id:string,
       }
     }, private service: ConsommableInteractionService,
     private _snackBar: MatSnackBar, private service_alertes:AlertesService ) {
@@ -57,7 +61,7 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
     //Pour le moment ont ne met pas unity mais p, car on ne gère pas les quantitée unitaire
     // et quantitée dans l'application 
     const unity = this.data.consommable.unity
-    this.add_cons_section.get("name")?.setValue(this.data.consommable.nom);
+    this.add_cons_section.get("name")?.setValue(this.data.consommable.name);
     this.add_cons_section.get("quantity")?.setValue(this.data.consommable.quantity);
 
     //
@@ -65,7 +69,7 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
     this.add_cons_section.get("cost")?.setValue(this.data.consommable.cost); 
     this.add_cons_section.get("cost_ttc")?.setValue(this.data.consommable.cost_ttc); 
     this.add_cons_section.get("taux_tva")?.setValue(this.data.consommable.taux_tva);
-
+    this.add_cons_section.get("marge")?.setValue(this.data.consommable.marge);
     //
     this.add_cons_section.controls.unity.disable();
     // Si on récupère une date de limite de consommatin négative on dépose 0 sinon on dépose la dlc
@@ -76,7 +80,20 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
 
 
   changeConsommable() {
-    let new_conso = new Cconsommable();
+    let new_conso = new Cconsommable(this.calcul_service);
+    if(this.data.consommable.id !== undefined){
+      new_conso.id = this.data.consommable.id; 
+    }
+    if(this.data.consommable.total_quantity !== undefined){
+      new_conso.total_quantity = this.data.consommable.total_quantity; 
+    }
+    if(this.data.consommable.categorie_restaurant !== undefined){
+      new_conso.categorie_restaurant = this.data.consommable.categorie_restaurant;
+    }
+    else{
+      this._snackBar.open("le consommable n'a pas d'identifiant", "fermer");
+      throw "le consommable n'a pas d'identifiant";
+    }
     // on construit la date limite de consomation à partir de la date de récéption.
     if(this.is_modif){
       const date_reception_date = this.calcul_service.stringToDate(this.data.consommable.date_reception); 
@@ -95,18 +112,13 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
     //on modifie le nom est l'unitée avant envoie dans le base de donnée 
     const name = this.add_cons_section.value["name"]?.split(' ').join('_');
     const unity = this.add_cons_section.controls.unity.value;
-    console.log(unity);
-    
     /* On crée un ingrédient à partir des données récupéré depuis le formulaire puis on l'ajoute à la bdd */
     if (name !== undefined) {
       new_conso.setNom(name);
     }
-
-
     if (this.add_cons_section.value["taux_tva"] !== undefined) {
       new_conso.setTauxTva(this.add_cons_section.value["taux_tva"]);
     }
-
     if (this.add_cons_section.value["quantity"] !== undefined) {
       new_conso.setQuantity(this.add_cons_section.value["quantity"]);
       if(this.add_cons_section.value["quantity"] !== null) {
@@ -143,24 +155,21 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
     }
 
     if(this.add_cons_section.valid){
-      
-      this.service.setConsoInBdd(new_conso, this.data.prop, this.data.restaurant).then(() => {
-        if(this.is_modif){
-          this._snackBar.open("l'ingrédient vient d'être modifié dans la base de donnée du restaurant", "fermer")
-        }
-        else{
-          this._snackBar.open("l'ingrédient vient d'être ajouté à la base de donnée du restaurant", "fermer")
-        }
-      }).catch((e) => {
-        console.log(e);
-        if(this.is_modif){
-          this._snackBar.open("nous n'avons pas réussit à modifier l'ingrédient dans la base de donnée", "fermer")
-        }
-        else{
-          this._snackBar.open("nous n'avons pas réussit à envoyer l'ingrédient dans la base de donnée", "fermer")
-        }
-      })
-      this.dialogRef.close()
+      if(this.is_modif){
+        this.service.updateConsoInBdd(new_conso, this.data.prop, this.data.restaurant).then(() => {
+          this._snackBar.open("le consommable vient d'être modifié à la base de donnée du restaurant", "fermer")
+        }).catch((e) => {
+          this._snackBar.open("nous n'avons pas réussit à modifier le consommable dans la base de donnée", "fermer")
+        })
+      }
+      else{
+        this.service.setConsoInBdd(new_conso, this.data.prop, this.data.restaurant).then(() => {
+          this._snackBar.open("le consommable vient d'être ajouté à la base de donnée du restaurant", "fermer")
+        }).catch((e) => {
+          this._snackBar.open("nous n'avons pas réussit à envoyer le consommable dans la base de donnée", "fermer")
+        })
+        this.dialogRef.close()
+      }
     }
     else{
       this._snackBar.open("veuillez valider l'ensemble des champs", "fermer")

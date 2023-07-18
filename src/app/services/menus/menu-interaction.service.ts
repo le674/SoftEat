@@ -77,12 +77,8 @@ export class MenuInteractionService {
           price_ttc:menu.prix_ttc,
           taux_tva:menu.taux_tva,
           ingredients:menu.ingredients.map((ingredient) => { return {name: ingredient.name,
-             cost:ingredient.cost,
-             taux_tva:ingredient.taux_tva,
              quantity:ingredient.quantity,
-             quantity_unity:ingredient.quantity_unity,
              unity:ingredient.unity,
-             vrac:ingredient.vrac
           }}),
           consommables:menu.consommables,
           plats:menu.plats,

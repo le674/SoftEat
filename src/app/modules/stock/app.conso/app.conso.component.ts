@@ -53,7 +53,7 @@ ngOnInit(): void{
     let user_info = this.url.queryParams;
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];
-    this.service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
+    this.service.getConsommablesFromRestaurantsBDD(this.restaurant, this.prop);
     this.service.getConsommablesFromRestaurants().subscribe((consommables:Cconsommable[]) => {
       for (let consommable of consommables) {
         if((consommable.date_reception === undefined) || (consommable.date_reception === null)){
@@ -97,11 +97,14 @@ ngOnInit(): void{
         prop: this.prop,
         is_modif: false,
         consommable: {
-          nom: "",
+          categorie_restaurant:null,
           quantity: 0,
+          id:null,
+          nom: "",
           cost: 0,
           cost_ttc: 0,
           taux_tva: 0,
+          total_quantity: 0,
           unity: "",
           date_reception: new Date(),
         }
@@ -110,36 +113,42 @@ ngOnInit(): void{
   }
 
   modifConso(ele:RowConsommable){
-    
     const date_reception = this.calc_service.stringToDate(ele.date_reception);
     ele.name = ele.name;
     // afin de récupérer le taux de tva comme celui-ci ne passe pas par le tableau affiché on eut le récupérer directment depuis la bdd 
-    const conso = this.consommable_table.filter((conso) => conso.name === ele.name)[0];
-    const dialogRef = this.dialog.open(AddConsoComponent, {
-      height: `${window.innerHeight - window.innerHeight/3}px`,
-      width:`${window.innerWidth - window.innerWidth/15}px`,
-      data: {
-        restaurant: this.restaurant,
-        prop: this.prop,
-        is_modif: true,
-        consommable: {
-          nom: ele.name,
-          quantity: ele.quantity,
-          unity: ele.unity,
-          cost: ele.cost,
-          cost_ttc: ele.cost_ttc,
-          taux_tva: conso.taux_tva,
-          date_reception: ele.date_reception,
-          marge: ele.marge
+    const conso = this.consommable_table.find((conso) => conso.id === ele.id);
+    if(conso !== undefined){
+      const dialogRef = this.dialog.open(AddConsoComponent, {
+        height: `${window.innerHeight - window.innerHeight/3}px`,
+        width:`${window.innerWidth - window.innerWidth/15}px`,
+        data: {
+          restaurant: this.restaurant,
+          prop: this.prop,
+          is_modif: true,
+          consommable: {
+            quantity: ele.quantity,
+            name: ele.name,
+            cost: ele.cost,
+            unity: ele.unity,
+            cost_ttc: ele.cost_ttc,
+            date_reception: ele.date_reception,
+            marge: ele.marge,
+            id:ele.id,
+            total_quantity: conso.total_quantity,
+            taux_tva: conso.taux_tva,
+            categorie_restaurant: conso.categorie_restaurant,
+          }
         }
-      }
-    });
-   
+      });
+    }
+    else{
+      throw `No consommable founded for array element of id ${ele.id} and name ${ele.name}`;
+    }
   }
 
   suppConso(ele:RowConsommable){
     let is_prep = false
-    this.service.removeConsoInBdd(ele.name.split('<br>').join('_'), this.prop, this.restaurant).then(() => {
+    this.service.removeConsoInBdd(ele, this.prop, this.restaurant).then(() => {
       this._snackBar.open("l'ingrédient vient d'être supprimé de la base de donnée du restaurant", "fermer")
     }).catch(() => {
       this._snackBar.open("l'ingrédient n'a pas pu être supprimé de la base de donnée du restaurant", "fermer")

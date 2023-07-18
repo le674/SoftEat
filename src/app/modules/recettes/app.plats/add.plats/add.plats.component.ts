@@ -5,7 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Cetape } from '../../../../../app/interfaces/etape';
-import { TIngredientBase } from '../../../../../app/interfaces/ingredient';
+import { CIngredient, TIngredientBase } from '../../../../../app/interfaces/ingredient';
 import { Cplat, Plat } from '../../../../../app/interfaces/plat';
 import { Cpreparation, CpreparationBase } from '../../../../../app/interfaces/preparation';
 import { CalculService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
@@ -23,9 +23,9 @@ export class AddPlatsComponent implements OnInit {
 
   public unity_conso:Array<string>;
   public unity_ing:Array<string>;
-  public full_lst_ings:Array<TIngredientBase>;
-  public full_lst_conso:Array<TConsoBase>;
-  public full_lst_prepa:Array<CpreparationBase>;
+  public full_lst_ings:Array<CIngredient>;
+  public full_lst_conso:Array<Cconsommable>;
+  public full_lst_prepa:Array<Cpreparation>;
   public selected_ing:string;
   public selected_conso:string;
   public selected_prepa:string;
@@ -51,7 +51,7 @@ export class AddPlatsComponent implements OnInit {
     }>>([]),
     base_prepa: new FormArray<FormGroup<{
       name:FormControl<string | null>,
-      quantity:FormControl<number | null>
+      portions:FormControl<number | null>
     }>>([]),
     etapes: new FormArray<FormGroup<{
       name:FormControl<string | null>,
@@ -68,9 +68,9 @@ export class AddPlatsComponent implements OnInit {
     public prepa_interaction:CalculPrepaService, private formBuilder: FormBuilder, @Inject(MAT_DIALOG_DATA) public data:{
     prop:string,
     restaurant:string,
-    full_ingredients: Array<TIngredientBase>,
-    full_consommables: Array<TConsoBase>,
-    full_preparations: Array<CpreparationBase>,
+    ingredients: Array<CIngredient>,
+    consommables: Array<Cconsommable>,
+    preparations: Array<Cpreparation>,
     plat: Cplat,
     type:string
     }, private _snackBar: MatSnackBar, private plat_service:MenuCalculPlatsServiceService,
@@ -89,9 +89,9 @@ export class AddPlatsComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.full_lst_conso = this.data.full_consommables;
-    this.full_lst_ings = this.data.full_ingredients;
-    this.full_lst_prepa = this.data.full_preparations;
+    this.full_lst_conso = this.data.consommables;
+    this.full_lst_ings = this.data.ingredients;
+    this.full_lst_prepa = this.data.preparations;
     if(this.categorie !== ""){
       this.add_plats_section.controls.type.setValue(this.categorie);
     }
@@ -121,12 +121,18 @@ export class AddPlatsComponent implements OnInit {
            // exemple : huile 1 litre dans l'inventaire, 1 c.s dans la préparation.
           let unity = ingredient.unity;
           if(ingredient.unity !== undefined) unity = ingredient.unity
+          let supp = false;
+          let added_price = 0;
+          if(ingredient.added_price !== null){
+            supp = true;
+            added_price = ingredient.added_price;
+          }
           const to_add_grp = new FormGroup({
             name:new FormControl(ingredient.name),
             quantity: new FormControl(ingredient.quantity),
             unity: new FormControl(unity),
-            supp: new FormControl(ingredient.supp),
-            added_price:new FormControl(ingredient.added_price),
+            supp: new FormControl(supp),
+            added_price:new FormControl(added_price),
           })
           this.getBaseIng().push(to_add_grp);
         })
@@ -158,8 +164,8 @@ export class AddPlatsComponent implements OnInit {
       if((this.data.plat.preparations !== null) && (this.data.plat.preparations !== undefined)){
         this.data.plat.preparations.forEach((preparation) => {
           const to_add_grp = new FormGroup({
-            name: new FormControl(preparation.nom),
-            quantity: new FormControl(preparation.quantity)
+            name: new FormControl(preparation.name),
+            portions: new FormControl(preparation.portions)
           })
           this.getBasePrepa().push(to_add_grp);
         })
@@ -169,7 +175,7 @@ export class AddPlatsComponent implements OnInit {
   }
   
   changePlats():void{
-    let plat:Plat = new Cplat();
+    let plat:Cplat = new Cplat();
 
     if(this.add_plats_section.controls.name.value !== null){
       plat.nom = this.add_plats_section.controls.name.value;
@@ -191,7 +197,7 @@ export class AddPlatsComponent implements OnInit {
     }
     if(this.add_plats_section.controls.base_ing.value !==null){
       let base_ings = this.add_plats_section.controls.base_ing.value;
-      plat.ingredients = this.data.full_ingredients.filter((base_ing) => base_ings.map((ing) => ing.name).includes(base_ing.name));
+      plat.ingredients = this.data.plat.ingredients.filter((base_ing) => base_ings.map((ing) => ing.name).includes(base_ing.name));
       // on ajoute la quantitée présente pour le plat entré dans le formulaire comme étant la quantitée 
       plat.ingredients.map((ingredient) => {
         const _ingredient = base_ings.find((base) => base.name === ingredient.name);
@@ -205,12 +211,6 @@ export class AddPlatsComponent implements OnInit {
           if((_ingredient.unity !== null) && (_ingredient.unity !== undefined)){
             ingredient.unity = _ingredient.unity;
           }
-          if((_ingredient.quantity !== undefined) && (_ingredient.quantity !== null)){
-            ingredient.material_cost = this.prepa_interaction.getOnlyCostMaterial(ingredient);
-          }
-          if((_ingredient.supp !== null) && (_ingredient.supp !== undefined)){
-            ingredient.supp = _ingredient.supp;
-          }
           if((_ingredient.added_price !== null) && (_ingredient.added_price !== undefined)){
             ingredient.added_price = _ingredient.added_price;
           }
@@ -220,7 +220,7 @@ export class AddPlatsComponent implements OnInit {
     }
     if(this.add_plats_section.controls.base_conso.value !== null){
       let base_conso = this.add_plats_section.controls.base_conso.value;
-      plat.consommables = this.data.full_consommables.filter((consommable) => base_conso.map((conso) => conso.name).includes(consommable.name));
+      plat.consommables = this.data.plat.consommables.filter((consommable) => base_conso.map((conso) => conso.name).includes(consommable.name));
     }
     if(this.add_plats_section.controls.etapes.value !== null){
       let base_etapes = this.add_plats_section.controls.etapes.value;
@@ -251,25 +251,36 @@ export class AddPlatsComponent implements OnInit {
     // TO DO : Faire comme pour les ingrédients intégrer une unitée propre à la préparation
     if(this.add_plats_section.controls.base_prepa.value !== null){
       let base_prepa = this.add_plats_section.controls.base_prepa.value;
-      plat.preparations = this.data.full_preparations.filter((preparation) => base_prepa.map((prepa) => prepa.name).includes(preparation.nom))
+      plat.preparations = this.data.preparations.filter((preparation) => base_prepa.map((prepa) => prepa.name).includes(preparation.name))
                           .map((preparation) =>
                           { 
-                              const first_prepa = base_prepa.find((prepa) => preparation.nom === prepa.name);
-                              if((first_prepa?.quantity !== null) && (first_prepa?.quantity !== undefined)){
-                                  preparation.quantity = first_prepa.quantity; 
-                                }
+                              let _preparation = new CpreparationBase();
+                              const first_prepa = base_prepa.find((prepa) => preparation.name === prepa.name);
+                              if((first_prepa?.portions !== null) && (first_prepa?.portions !== undefined)){
+                                  preparation.portions = first_prepa.portions; 
+                              }
                               else{
-                                  preparation.quantity = 0;
+                                  preparation.portions = 0;
+                              }
+                              _preparation.id =  preparation.id;
+                              _preparation.name = preparation.name;
+                              _preparation.portions = preparation.portions;
+                              if(first_prepa !== undefined){
+                                if(first_prepa.name !== undefined && first_prepa.portions !== undefined){
+                                  if(first_prepa.name !== null && first_prepa.portions !== null){
+                                    _preparation.portions = first_prepa.portions; 
+                                  }
                                 }
-                            return preparation
-                          })
+                              }
+                            return _preparation;
+                          });
     }
-    plat.temps = this.plat_service.getFullTheoTimeToSec(plat as Cplat);
-    plat.portion_cost = this.plat_service.getPortionCost(plat as Cplat);
+    plat.temps = this.plat_service.getFullTheoTimeToSec(plat, this.data.preparations);
+    plat.portion_cost = this.plat_service.getPortionCost(plat, this.data.preparations, this.data.ingredients);
     if(plat.portions !== undefined){
       plat.material_ratio = this.plat_service.getRatioMaterial(plat.portion_cost,plat as Cplat);
     }
-    const prime_cost_prom = this.plat_service.getPrimCost(this.data.prop, this.data.restaurant, plat as Cplat).then((prime_cost) => plat.prime_cost = prime_cost);
+    const prime_cost_prom = this.plat_service.getPrimCost(this.data.prop, this.data.restaurant, plat, this.data.preparations, this.data.consommables, this.data.ingredients).then((prime_cost) => plat.prime_cost = prime_cost);
     prime_cost_prom.then((prime_cost) => {
       this.plat_interaction.setPlat(this.data.prop, this.data.restaurant, plat).finally(() => {
         this._snackBar.open(`le plat ${plat.nom} vient d'être ajouté`, "fermer")
@@ -383,16 +394,16 @@ export class AddPlatsComponent implements OnInit {
       const preparations = this.data.plat.preparations;
       if(preparations !== null){
         if((preparations[prepa_length] !== undefined) && (preparations.length > 0)){
-         if(preparations[prepa_length].nom !== null)  name = preparations[prepa_length].nom as string;
-          if(preparations[prepa_length].quantity !== null){
-            quantity = preparations[prepa_length].quantity as number;
+         if(preparations[prepa_length].name !== null)  name = preparations[prepa_length].name as string;
+          if(preparations[prepa_length].portions !== null){
+            quantity = preparations[prepa_length].portions as number;
           } 
         }
       } 
     }
     const new_prepa = this.formBuilder.group({
       name: new FormControl(name, Validators.required),
-      quantity: new FormControl(quantity)
+      portions: new FormControl(quantity)
     });
     this.getBasePrepa().push(new_prepa);
   }
@@ -429,13 +440,13 @@ export class AddPlatsComponent implements OnInit {
 
   // lorsque l'ingédient est un ingrédient en vrac ont enlève la possibilité de choisir pièce dans l'outils de séléction 
   changeIng(ingredient: MatOptionSelectionChange<string>, i:number) {
-    let ing = this.full_lst_ings.find((_ingredient) => _ingredient.name === ingredient.source.value);
+   /*  let ing = this.full_lst_ings.find((_ingredient) => _ingredient.name === ingredient.source.value);
     if(ing !== undefined){
       if(ing.vrac === "oui"){
         this.curr_ingredients_vrac.push(i);
       }
-    }
-  }
+    } */
+  } 
 
   suppInputIng(index:number){
     this.getBaseIng().removeAt(index);
@@ -474,7 +485,7 @@ export class AddPlatsComponent implements OnInit {
   getBasePrepa(){
     return this.add_plats_section.get("base_prepa") as FormArray<FormGroup<{
       name:FormControl<string | null>,
-      quantity:FormControl<number | null>
+      portions:FormControl<number | null>
     }>>
   }
   getEtapes(){

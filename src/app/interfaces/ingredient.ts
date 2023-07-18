@@ -7,6 +7,7 @@ export interface Ingredient {
     "categorie_tva": string | null;
     "taux_tva": number | null;
     "cost": number;
+    "material_cost":number;
     "quantity": number;
     "quantity_unity": number;
     "total_quantity": number;
@@ -69,49 +70,49 @@ export interface Ingredient {
 export class TIngredientBase{
     "name": string;
     "quantity": number | null; 
-    "quantity_unity":number | null;
     "unity":string | null;
-    "cost":number;
-    "material_cost":number | null;
-    "vrac":string;
-    "taux_tva":number | null; 
-    "marge":number | null;
     "added_price":number | null;
-    "supp":boolean | null;
-    "ingredient_id":string;
     "id":string | null;
-    constructor(name:string, quantity:number | null, quantity_unity:number | null, unity:string | null, cost:number, vrac:string, taux_tva:number | null){
+    constructor(name:string, quantity:number | null, unity:string | null){
         this.name = name;
         this.quantity = quantity;
-        this.quantity_unity = quantity_unity;
         this.unity = unity;
-        this.cost = cost;
-        this.vrac = vrac;
-        this.taux_tva = taux_tva;
-        this.material_cost = null;
-        this.marge = null;
         this.added_price = null;
-        this.supp = null
     }
-    toMinimalIng(): {name:string, quantity:number} {
+    /**
+     * Permet de récupérer de l'ingrédient de base un ingrédient affichable
+     * @returns {Object<{name:string, quntity:number}>}
+     */
+    public toMinimalIng(): {name:string, quantity:number, unity:string} {
+        let unity = "";
         let quantity = 0;
-
+        if(this.unity !== null) unity = this.unity;
         if(this.quantity !== null) quantity = this.quantity;
-        return {name: this.name, quantity: quantity};
+        return {name: this.name, quantity: quantity, unity:unity};
     }
-    setIngredient(ingredient:CIngredient){
-        this.ingredient_id =  ingredient.id;
+    /**
+     * permet de transformer un ingrédient en ingrédient de base
+     * @param ingredient ingrédient que l'on ajoute à un ingrédient de base
+     */
+    public setIngredient(ingredient:CIngredient){
         this.name = ingredient.name;
-        this.cost = ingredient.cost;
-        this.taux_tva = ingredient.taux_tva;
-        this.vrac = ingredient.vrac;
-        this.marge = ingredient.marge;
-        this.supp = null;
         this.added_price = null;
         this.quantity = null;
         this.unity = null;
         this.id = null;
-        this.material_cost = null;
+    }
+    /**
+     * On retourne l'ingréfdient de base mais uniquement les attributs de celui-ci
+     * @returns {TIngredientBase} ingrédient de base avec uniquement les attributs
+     */
+    public getData():{name:string, quantity:number | null, unity:string | null, added_price:number | null, id:string | null}{
+        return {
+            name: this.name,
+            quantity:this.quantity,
+            unity: this.unity,
+            added_price:this.added_price,
+            id:this.id
+        }
     }
 }
 /**
@@ -141,6 +142,7 @@ export class CIngredient implements Ingredient {
     "categorie_tva": string | null;
     "taux_tva": number | null;
     "cost": number;
+    "material_cost":number;
     "quantity": number;
     "quantity_unity": number;
     "total_quantity": number;
@@ -148,7 +150,6 @@ export class CIngredient implements Ingredient {
     "date_reception":Date | string;
     "dlc": Date | null | string;
     "cost_ttc": number | null;
-    "is_similar":number;
     "marge": number | null;
     "vrac": string;
     "base_ingredient_id":Array<string> | null;
@@ -176,7 +177,7 @@ export class CIngredient implements Ingredient {
      * @returns {TIngredientBase} une instance d'un ingrédient de base
      */
     convertToBase(): TIngredientBase {
-        let ingredient:TIngredientBase = new TIngredientBase(this.name, this.quantity, this.quantity_unity,this.unity, this.cost, this.vrac, this.taux_tva);
+        let ingredient:TIngredientBase = new TIngredientBase(this.name, this.quantity, this.unity);
         return ingredient
       }
     /**
@@ -259,13 +260,6 @@ export class CIngredient implements Ingredient {
         if (quantity !== null) this.quantity = quantity
     }
 
-    getIsSimilar(): number {
-        return this.is_similar
-    }
-    setIsSimilar(coeff: number | null): void {
-        if (coeff !== null) this.is_similar = coeff
-    }
-
     getQuantityUnity(): number {
         return this.quantity_unity
     }
@@ -323,7 +317,6 @@ export class CIngredient implements Ingredient {
             else{
                 this.dlc = data.dlc;
             }
-            this.is_similar = data.is_similar;
             this.marge = data.marge;
             this.quantity = data.quantity;
             this.unity = data.unity;
@@ -333,16 +326,15 @@ export class CIngredient implements Ingredient {
             this.vrac = data.vrac;
         }
     }
+
     /**
      * permet de récupérer un objet constituant l'ingrédient à écrire en base de donnée
      * @param id identifiant du document que l'on souahite renvoyer pour l'ajout en base de donnée
-     */
+     * @param proprietary_id identifiant du propriétaire 
+    */
     getData(id:string | null, proprietary_id:string): any {
         if((this.proprietary_id === null) || this.proprietary_id === undefined){
             this.proprietary_id = proprietary_id;
-        }
-        if(this.is_similar === undefined){
-            this.is_similar = 0;
         }
         if(this.base_ingredient_id === undefined){
             this.base_ingredient_id = null;
@@ -361,7 +353,6 @@ export class CIngredient implements Ingredient {
            taux_tva: this.taux_tva,
            date_reception: this.date_reception.toLocaleString(),
            dlc: this.dlc?.toLocaleString(),
-           is_similar: this.is_similar,
            marge: this.marge,
            quantity: this.quantity,
            unity: this.unity,

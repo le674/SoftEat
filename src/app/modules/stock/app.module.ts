@@ -52,7 +52,6 @@ import { Cconsommable } from 'src/app/interfaces/consommable';
     AppConsoComponent
   ],
   providers: [
-    Cconsommable
   ],
 })
 export class AppStockModule {}

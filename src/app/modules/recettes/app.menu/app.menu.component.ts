@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
-import { TIngredientBase } from '../../../../app/interfaces/ingredient';
+import { CIngredient, TIngredientBase } from '../../../../app/interfaces/ingredient';
 import { Cmenu } from '../../../../app/interfaces/menu';
 import { Cplat } from '../../../../app/interfaces/plat';
 import { ConsommableInteractionService } from '../../../../app/services/menus/consommable-interaction.service';
@@ -25,7 +25,7 @@ export class AppMenuComponent implements OnInit, AfterViewInit {
   private prop: string;
   private restaurant: string;
   private router: Router;
-  private ingredients: Array<TIngredientBase>
+  private ingredients: Array<CIngredient>
   private consommables: Array<Cconsommable>
   private plats: Array<Cplat>;
 
@@ -48,9 +48,7 @@ export class AppMenuComponent implements OnInit, AfterViewInit {
     this.restaurant = user_info["restaurant"];
     this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant)
     this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients) => {
-      this.ingredients = ingredients.map((ingredient) => {
-        return ingredient.convertToBase()
-      });
+      this.ingredients = ingredients;
       this.conso_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
       this.conso_service.getConsommablesFromRestaurants().subscribe((consommables) => {
         this.consommables = consommables;
