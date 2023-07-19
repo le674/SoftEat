@@ -47,7 +47,9 @@ export class AddPreparationsComponent implements OnInit{
     unity: new FormControl("")
   });
   private base_ings: Array<TIngredientBase>;
+  private _base_ings: Array<TIngredientBase>;
   private base_conso: Array<MiniConsommable>;
+  
   private etapes: Array<Cetape>;
   private after_prep:AfterPreparation = {quantity: 0, unity:""}; 
   private is_stock:boolean;
@@ -87,6 +89,7 @@ export class AddPreparationsComponent implements OnInit{
     this.consommables = [];
     this.ingredients = [];
     this.is_stock = false;  
+    this._base_ings = [];
     this.base_ings = [];
     this.base_conso = [];
     this.etapes = [];
@@ -178,24 +181,25 @@ export class AddPreparationsComponent implements OnInit{
   }
 
   changePreparation(){
+    this.base_ings = [];
+    this.base_conso = [];
+    this.etapes = [];
     let consos:TConsoBase[] = [];
     let ings:TIngredientBase[] = [];
     let to_add_preparation_name:string = "";
     let tmps_prepa = 0;
     let val_bouch = 0;
     const name_prepa = this.add_prepa_section.value.name;
-    
     if(name_prepa !== undefined){
       if(!this.data.names.includes(name_prepa)){
         if(name_prepa !== null){
           to_add_preparation_name = name_prepa;
-          
           const base_ings = this.getBaseIng();
           const base_conso = this.getBaseConso();
           const etapes_prepa = this.getEtapes();
-          
           base_ings.value.forEach((ing:Partial<{name:string | null, quantity:number | null, unity:string | null}>) => {
             let full_ing:TIngredientBase = new TIngredientBase("", 0,"");
+            let _ingredient = this.data._ingredients.find((ingredient) => ingredient.name == ing.name);
             if((ing.name !== undefined) || (ing.name !== null)){
               full_ing.name = ing.name as string;
               if((ing.quantity !== undefined) || (ing.quantity !== null)){
@@ -207,6 +211,9 @@ export class AddPreparationsComponent implements OnInit{
                 //. unity (unitée pour la préparation)
                 //. unity_unitary (unitée pour l'inventaire)
                 full_ing.unity =  ing.unity as string;
+              } 
+              if(_ingredient !== undefined){
+                full_ing.id = _ingredient.id;
               } 
               this.base_ings.push(full_ing);
             }
@@ -284,7 +291,8 @@ export class AddPreparationsComponent implements OnInit{
               }
             }
           })
-          let result = this.prepa_service.getCostMaterial(this.data._ingredients,ings).filter((ing) => !(ing.name === ""));
+          let result = this.prepa_service.getCostMaterial(this.data._ingredients,ings)
+                                         .filter((ing) => this._base_ings.map((ing) => ing.id).includes(ing.id));
           let displayed_conso = this.consommables.map((conso) => { return {name: conso.name, cost: conso.cost, quantity: conso.quantity, unity: conso.unity}})
                                       .filter((conso) => !(conso.name === ""));
           displayed_conso.map((conso) => {
@@ -299,6 +307,9 @@ export class AddPreparationsComponent implements OnInit{
           this.base_conso = [];
           for(let ingredient of result){
             const ing:TIngredientBase = new TIngredientBase(ingredient.name, ingredient.quantity, ingredient.unity);
+            ing.setIngredient(ingredient)
+            ing.quantity = ingredient.quantity;
+            ing.unity = ingredient.unity;
             this.base_ings.push(ing);
           }
           for (let index = 0; index < displayed_conso.length; index++) {
@@ -317,12 +328,47 @@ export class AddPreparationsComponent implements OnInit{
           if((this.etapes !== null) && (this.etapes !== undefined)){
             tmps_prepa =  this.prepa_service.getFullTheoTimeSec(this.etapes);
           }
-          if((this.base_ings !== null) && (this.base_ings !== undefined)){
+          if((this._base_ings !== null) && (this._base_ings !== undefined)){
             val_bouch = this.prepa_service.getValBouchFromBasIng(this.base_ings, this.ingredients ,this.after_prep.quantity, this.after_prep.unity);
           }
           this.prepa_service.getPrimCost(this.etapes, this.ingredients, this.base_ings ,this.base_conso).then((prime_cost) => {
               console.log("preparation prime_cost :");
               console.log(prime_cost);
+              let preparation = this.data.preparation;
+              if(preparation !== null){
+                preparation.ingredients = this.base_ings;
+                if(preparation.consommables !== null){
+                  preparation.consommables = preparation.consommables.map((consommable) => {
+                    const base_conso = this.base_conso.find((_consommable) => _consommable.name === consommable.name);
+                    if(base_conso !== undefined){
+                     consommable.quantity = base_conso.quantity;
+                     consommable.unity = base_conso.unity;
+                    }
+                    return consommable;
+                   })
+                }
+                preparation.etapes = this.etapes;
+                preparation.quantity_after_prep = this.after_prep.quantity;
+                preparation.unity = this.after_prep.unity;
+              }
+              if(preparation !== null){
+                if(this.data.modification){
+                  this.preparation_service.updatePreparationInBdd(preparation, this.data.restaurant, this.data.prop).catch((e) => {
+                    console.log(e);
+                    this._snackBar.open("nous ne somme pas parvenu à modifier la préparation veuillez contacter SoftEat");
+                  }).finally(() => {
+                    this._snackBar.open("nous ne somme parvenu à modifier la préparation");
+                  })
+                }
+                else{
+                  this.preparation_service.setPreparation(preparation, this.data.restaurant, this.data.prop).catch((e) => {
+                    console.log(e);
+                    this._snackBar.open("nous ne somme pas parvenu à ajouter la préparation veuillez contacter SoftEat");
+                  }).finally(() => {
+                    this._snackBar.open("nous somme  parvenu à ajouter la préparation");
+                  })
+                }
+              }
             /* this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop, name_prepa.split(" ").join('_'),
               this.etapes, this.base_ings, this.base_conso, this.after_prep,
               this.is_stock, this.data.modification,  prime_cost, val_bouch, tmps_prepa).catch((e) => {

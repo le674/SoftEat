@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { child, connectDatabaseEmulator, Database, DatabaseReference, get, getDatabase, ref, update } from 'firebase/database';
+import { child, connectDatabaseEmulator, Database, get, getDatabase, ref, update } from 'firebase/database';
 import { Cetape } from '../../../app/interfaces/etape';
 import {CIngredient, TIngredientBase } from '../../../app/interfaces/ingredient';
 import { AfterPreparation, Cpreparation } from '../../../app/interfaces/preparation';
@@ -160,6 +160,31 @@ export class PreparationInteractionService {
       preparation.id).withConverter(this.preparation_converter);
       await updateDoc(ingredients_ref, preparation.getData(null, prop))
   }
+
+  /**
+   * 
+   * @param restaurant identifiant du restaurant qui détient la préparation
+   * @param prop identifiant de l'enseigne qui détient la préparation
+   * @param preparation préparation à ajouter à l'inventaire
+   */
+  async setPreparation(preparation: Cpreparation, restaurant: string, prop: string) {
+    if(preparation !== null){
+      const preparation_ref = doc(collection(doc(
+        collection(
+          doc(
+            collection(
+              this.firestore, "proprietaires"
+              ), prop
+            ), "restaurants"
+          ), restaurant
+        ), "ingredients")).withConverter(this.preparation_converter);
+      await setDoc(preparation_ref, preparation.getData(preparation_ref.id, prop));
+    }
+  }
+  updatePreparation(restaurant: string, prop: string, preparation: Cpreparation | null) {
+    throw new Error('Method not implemented.');
+  }
+
 }
 
 

@@ -99,7 +99,7 @@ export class TIngredientBase{
         this.added_price = null;
         this.quantity = null;
         this.unity = null;
-        this.id = null;
+        this.id = ingredient.id;
     }
     /**
      * On retourne l'ingréfdient de base mais uniquement les attributs de celui-ci

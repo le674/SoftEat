@@ -10,16 +10,23 @@ import { MiniConsommable } from 'src/app/interfaces/recette';
   providedIn: 'root'
 })
 export class CalculPrepaService {
-
   private prime_cost:number;
   constructor(private calcul_service: CalculService, private restau_service:RestaurantService) { 
     this.prime_cost = 0;
   }
 
   getCostMaterial(ingredients:Array<CIngredient>, _ingredients:Array<TIngredientBase>):Array<CIngredient>{
+    let ingredient_return:Array<CIngredient> = []; 
     let c_ingredients = ingredients.filter((ingredient) => _ingredients.map((_ingredient) => _ingredient.id) 
                                                    .includes(ingredient.id))
     c_ingredients.forEach((ingredient) => {
+     let _ingredient = _ingredients.find((_ingredient) => _ingredient.id === ingredient.id);
+     if(_ingredient !== undefined && _ingredient.quantity !== null){
+      ingredient.quantity = _ingredient.quantity;
+     }
+     if(_ingredient !== undefined && _ingredient.unity !== null){
+      ingredient.unity = _ingredient.unity;
+     }
       let cost_matiere = 0;
       // on peut considérer les ingrédients sur plusieurs aspects
       // 1. un ingrédient est définie par un prix unitaire et une quantitée pour le plat dans ce cas il suffit de faire prix * quantitée plat
@@ -31,9 +38,9 @@ export class CalculPrepaService {
       // alors il vaut mieux remplir : quantitée unitaire de 1 -> unitée p -> cost 1.50 -> quantitée 6 
       cost_matiere = this.getOnlyCostMaterial(ingredient);
       ingredient.material_cost = cost_matiere;
-      ingredients.push(ingredient)
+      ingredient_return.push(ingredient)
     })
-    return ingredients
+    return ingredient_return
   }
 
   getOnlyCostMaterial(ing:CIngredient):number{

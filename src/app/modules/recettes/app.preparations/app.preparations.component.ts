@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
@@ -9,21 +9,29 @@ import { IngredientsInteractionService } from '../../../../app/services/menus/in
 import { AddPreparationsComponent } from './add.preparations/add.preparations.component';
 import { DisplayPreparationsComponent } from './display.preparation/display.preparations/display.preparations.component';
 import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
+import { Unsubscribe } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-preparations',
   templateUrl: './app.preparations.component.html',
   styleUrls: ['./app.preparations.component.css']
 })
-export class AppPreparationsComponent implements OnInit {
+export class AppPreparationsComponent implements OnInit, OnDestroy{
   private url: UrlTree;
   private router: Router;
-  public preparations: Array<Cpreparation>;
-  private prepa_names: Array<string | null>;
   private prop:string;
   private restaurant:string;
+  private req_ingredients!:Unsubscribe;
+  private req_preparations!:Unsubscribe;
+  private req_consommables!:Unsubscribe;
+  private ingredients_sub!:Subscription;
+  private preparations_sub!:Subscription;
+  private consommables_sub!:Subscription;
   private ingredients:Array<CIngredient>;
   private consommables:Array<Cconsommable>;
+  public preparations: Array<Cpreparation>;
+  private prepa_names: Array<string | null>;
 
   constructor(public dialog: MatDialog, private ingredient_service: IngredientsInteractionService,
   private consommable_service: ConsommableInteractionService,
@@ -37,25 +45,32 @@ export class AppPreparationsComponent implements OnInit {
     this.consommables = [];
     this.url = this.router.parseUrl(this.router.url);
   }
-
+  ngOnDestroy(): void {
+    this.req_ingredients();
+    this.req_consommables();
+    this.req_preparations();
+    this.ingredients_sub.unsubscribe();
+    this.consommables_sub.unsubscribe();
+    this.preparations_sub.unsubscribe();
+  }
   ngOnInit(): void {
     let user_info = this.url.queryParams;
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];
-    this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
-    this.ingredient_service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
-    this.consommable_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
-    this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:Array<CIngredient>) => {
-     this.ingredients = ingredients;
-      this.ingredient_service.getPrepraparationsFromRestaurants().subscribe((preparations:Array<Cpreparation>) => {
+    this.req_ingredients = this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
+    this.req_preparations = this.ingredient_service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
+    this.req_consommables = this.consommable_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
+    this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:Array<CIngredient>) => {
+     
+      this.ingredients = ingredients;
+      this.preparations_sub = this.ingredient_service.getPrepraparationsFromRestaurants().subscribe((preparations:Array<Cpreparation>) => {
         this.preparations = preparations;
-        this.consommable_service.getConsommablesFromRestaurants().subscribe((consommables:Array<Cconsommable>) => {
+        this.consommables_sub = this.consommable_service.getConsommablesFromRestaurants().subscribe((consommables:Array<Cconsommable>) => {
           this.consommables = consommables;
         })
       })
     })
   }
-
   addPreparation():void {
    this.prepa_names =  this.preparations.map(prepa => prepa.name); 
    this.dialog.open(AddPreparationsComponent, {

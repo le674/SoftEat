@@ -52,7 +52,6 @@ export class DisplayPreparationsComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<DisplayPreparationsComponent>, @Inject(MAT_DIALOG_DATA) public data: {
     prop: string,
     restaurant: string,
-    name: string,
     _ingredients: Array<CIngredient>,
     _consommables: Array<Cconsommable>,
     preparation: Cpreparation
@@ -80,7 +79,7 @@ export class DisplayPreparationsComponent implements OnInit {
 
   }
   ngOnInit(): void {
-    this.name_prepa = this.data.name;
+    this.name_prepa = this.data.preparation.name;
     if (this.data.preparation.temps !== null) {
       this.tmps_prepa = this.prepa_service.SecToString(this.data.preparation.temps);
     }
