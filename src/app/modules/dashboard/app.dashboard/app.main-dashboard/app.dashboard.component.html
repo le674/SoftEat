@@ -54,13 +54,31 @@
             </li>
 
             <!-- -------- Dropdown List Item ------- -->
+            <!--================Section Caisse enregistreuse==============-->
+            <li class="dropdown">
+                <div class="title">
+                    <a class="link">
+                        <i class="fas fa-cash-register"></i>
+                        <span class="name">Caisse</span>
+                    </a>
+                </div>
+                <div class="submenu media">
+                    <a class="link submenu-title">Caisse enregistreuse</a>
+                    <a class="link" (click)="clickSalle()">Commandes salle</a>
+                    <a class="link" (click)="clickTerrasse()">Commandes terrasse</a>
+                    <a class="link" (click)="clickCenLigne()">Commandes en ligne</a>
+                    <a class="link" (click)="clickHistCommandes()">historique des commandes</a>
+                </div>
+            </li>
+
+            <!-- -------- Dropdown List Item ------- -->
             <!--================Section Inventaires==============-->
             <li class="dropdown">
                 <div class="title">
                     <a class="multi-section">
                         <i class="fa-solid fa-boxes-stacked"></i>
                         <span class="name">Inventaire</span>
-                    </a>
+                    </a> 
                 </div>
                 <div class="submenu media">
                     <a class="link submenu-title">Inventaire</a>
@@ -86,7 +104,7 @@
                     <a class="link" (click)="clickPreparation()">Préparations</a>
                 </div>
             </li>
-
+          
             <!-- -------- Dropdown List Item ------- -->
             <!--================Section Clients==============-->
             <li class="dropdown" (click)="clickClients()">

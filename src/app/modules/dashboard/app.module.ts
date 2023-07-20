@@ -16,6 +16,7 @@ import { RecettesModule } from '../recettes/recettes.module';
 import { AppAnalyseModule } from '../analyse/app.module';
 import { AlertesService } from '../../../app/services/alertes/alertes.service';
 import { ClientsModule } from '../clients/clients.module';
+import { CaisseModule } from '../caisse/caisse.module';
 
 
 
@@ -23,6 +24,7 @@ import { ClientsModule } from '../clients/clients.module';
   declarations: [
     AppDashboardComponent,
     AppMainDashboardComponent,
+
     
   ],
   imports: [ 
@@ -39,7 +41,8 @@ import { ClientsModule } from '../clients/clients.module';
     ProfilModule,
     RecettesModule,
     MatMenuModule,
-    MatBadgeModule
+    MatBadgeModule,
+    CaisseModule
   ],
   exports: [
     AppDashboardComponent

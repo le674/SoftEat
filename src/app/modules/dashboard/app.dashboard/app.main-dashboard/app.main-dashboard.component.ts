@@ -210,6 +210,19 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
   clickRH(){
     this.numP.emit(19)
   }
+
+  clickSalle(){
+    this.numP.emit(20)
+  }
+  clickTerrasse(){
+    this.numP.emit(21)
+  }
+  clickCenLigne(){
+    this.numP.emit(22)
+  }
+  clickHistCommandes(){
+    this.numP.emit(23)
+  }
   clickToggle(){
 
    /* const sidebar = document.querySelector(".sidebar");

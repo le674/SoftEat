@@ -1,0 +1,122 @@
+.table {
+  position: relative;
+  width: 100%;
+  width: 240px;
+  height: 180px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  z-index: 1;
+  border: 2px solid rgb(125, 181, 46);
+  overflow: hidden;
+}
+
+.table-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.take-order-button {
+  padding: 10px 20px;
+  background-color: rgb(125, 181, 46);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.close-button {
+  padding: 10px 20px;
+  background-color: rgb(125, 181, 46);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 10px;
+}
+.payment-button{
+  background-color: rgb(125, 181, 46);
+  color: white;
+  border: none;
+  border-radius: 10%;
+}
+.button-container {
+  
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.table:hover {
+  transform: scale(1.05);
+  z-index: 2;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.table.active {
+  height: auto;
+}
+
+.table-details {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.table-number {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: rgb(125, 181, 46);
+}
+
+.table-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.seats {
+  font-size: 16px;
+  color: #272727;
+}
+
+.status {
+  font-weight: bold;
+  text-transform: uppercase;
+  color: rgb(148, 30, 148);
+}
+
+.occupied {
+  
+  background-color: #ffffff;
+  color: white;
+  border-color: rgb(148, 30, 148);
+  border-width: 4px;
+}
+
+@media screen and (max-width: 600px) {
+  .table {
+    max-width: 100%;
+    height: auto;
+  }
+}
