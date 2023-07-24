@@ -69,14 +69,12 @@ export class AddPreparationsComponent implements OnInit{
     modification:boolean
     }, private preparation_service: PreparationInteractionService,
     private prepa_service:CalculPrepaService, private _snackBar: MatSnackBar) { 
-    
     if(this.data._ingredients !== null){
       this.ingredients = this.data._ingredients;
     }
     else{
       this.ingredients = [];
     }
-    
     if(this.data._consommables !== null){
       this.consommables = this.data._consommables;
     }
@@ -86,8 +84,6 @@ export class AddPreparationsComponent implements OnInit{
     if(this.data.modification){
       this.setTrue()
     }
-    this.consommables = [];
-    this.ingredients = [];
     this.is_stock = false;  
     this._base_ings = [];
     this.base_ings = [];
@@ -96,20 +92,6 @@ export class AddPreparationsComponent implements OnInit{
     this.unity_conso = [];
     this.unity_ing = [];
     this.curr_ingredients_vrac = [];
-    if(this.data.preparation !== null){
-      if(this.data.preparation.consommables !== null){
-        this.consommables = this.data._consommables.filter((consommable) => this.data.preparation?.consommables?.
-        map((conso) => conso.id).
-        includes(consommable.id)
-        );
-      }
-      if(this.data.preparation !== null){
-        if(this.data.preparation.ingredients !== null){
-          const ingredient_prepa = this.data.preparation.ingredients;
-          this.ingredients = this.data._ingredients.filter((ingredient) => ingredient_prepa.map((ingredient) => ingredient.id)                                                                                                       .includes(ingredient.id));          
-        }
-      }
-    }
   }
 
 
@@ -166,10 +148,10 @@ export class AddPreparationsComponent implements OnInit{
       if((this.data.preparation.etapes !== null) && (this.data.preparation.etapes !== undefined)){
         const current_inputs_etapes = this.data.preparation.etapes.length;
         for (let index = 0; index < current_inputs_etapes; index++) {
-          const times = this.prepa_service.SecToArray(this.data.preparation.etapes[index].temps);
+          const times = this.prepa_service.SecToArray(this.data.preparation.etapes[index].time);
           const new_etape = this.formBuilder.group({
-            name: new FormControl(this.data.preparation.etapes[index].nom),
-            comm: new FormControl(this.data.preparation.etapes[index].commentaire),
+            name: new FormControl(this.data.preparation.etapes[index].name),
+            comm: new FormControl(this.data.preparation.etapes[index].commentary),
             heure: new FormControl(times[0]),
             minute: new FormControl(times[1]),
             seconde: new FormControl(times[2])
@@ -213,7 +195,9 @@ export class AddPreparationsComponent implements OnInit{
                 full_ing.unity =  ing.unity as string;
               } 
               if(_ingredient !== undefined){
-                full_ing.id = _ingredient.id;
+                if(full_ing.id !== null){
+                  full_ing.id.push(_ingredient.id);
+                }
               } 
               this.base_ings.push(full_ing);
             }
@@ -222,12 +206,8 @@ export class AddPreparationsComponent implements OnInit{
             if(conso.name !== undefined || (conso.name !== null)){
               if((conso.quantity === undefined) || (conso.quantity === null)) conso.quantity = 0;
               if((conso.unity === undefined) || (conso.unity === null)) conso.unity = "";
-              const act_conso:MiniConsommable = {
-                name: conso.name as string,
-                quantity: conso.quantity,
-                unity: conso.unity,
-                cost: 0
-              };
+              let act_conso = new MiniConsommable(conso.name as string);
+              act_conso.setConso(conso.quantity, conso.unity, 0);
               this.base_conso.push(act_conso);
             } 
           })
@@ -252,9 +232,9 @@ export class AddPreparationsComponent implements OnInit{
                  const tmps = _hours + _minute + _seconde;
                  if((etape.comm === undefined) || (etape.comm === null)) etape.comm = "";
                  let add_etape = new Cetape();
-                 add_etape.nom = (etape.name as string);
-                 add_etape.temps = tmps;
-                 add_etape.commentaire = (etape.comm as string); 
+                 add_etape.name = (etape.name as string);
+                 add_etape.time = tmps;
+                 add_etape.commentary = (etape.comm as string); 
                  this.etapes.push(add_etape);
              } 
           });
@@ -274,50 +254,41 @@ export class AddPreparationsComponent implements OnInit{
                 }
               }
             }
+            else{
+              ings.push(ingredient);
+            }
           });
 
           this.base_conso.forEach((_consommable) => {
-            if(this.data.preparation !== null){
-              if(this.data.preparation.consommables !== null){
+            let conso_id = null;
+            const tmp_conso = this.consommables.find((_conso) => _conso.name == _consommable.name);
+            if(tmp_conso !== undefined){
+              conso_id = tmp_conso.id;
+            }
+            if(this.data.preparation !== null && this.data.preparation.consommables !== null){
                 const consommable = this.data.preparation?.consommables.find((conso) => _consommable.name === conso.name);
-                if(_consommable.quantity !== undefined){
-                  if(consommable?.quantity !== undefined){
-                    if(_consommable.quantity !== null){
-                      consommable.quantity = _consommable.quantity;
-                      consos.push(consommable);
-                    }
-                  }
+                if(_consommable.quantity !== undefined && _consommable.quantity !== null && consommable?.quantity !== undefined){
+                  consommable.quantity = _consommable.quantity;
+                  consos.push(consommable);
                 }
-              }
+                else{
+                  consos.push(_consommable.toConsoBase(conso_id));
+                }
+            }
+            else{
+              consos.push(_consommable.toConsoBase(conso_id));
             }
           })
           let result = this.prepa_service.getCostMaterial(this.data._ingredients,ings)
-                                         .filter((ing) => this._base_ings.map((ing) => ing.id).includes(ing.id));
-          let displayed_conso = this.consommables.map((conso) => { return {name: conso.name, cost: conso.cost, quantity: conso.quantity, unity: conso.unity}})
-                                      .filter((conso) => !(conso.name === ""));
-          displayed_conso.map((conso) => {
-            const _conso = this.data.preparation?.consommables?.find((consommable) => consommable.name === conso.name);
-            if((_conso?.unity !== null) && (_conso?.unity !== undefined)){
-              conso.unity = _conso?.unity;
-            }
-            conso.quantity = conso.quantity;
-          })
+                                         .filter((ing) => this._base_ings.flatMap((ingredient) => ingredient.id).includes(ing.id));
           // ont vide les listes avant l'ajout dans la bdd
           this.base_ings = [];
-          this.base_conso = [];
           for(let ingredient of result){
             const ing:TIngredientBase = new TIngredientBase(ingredient.name, ingredient.quantity, ingredient.unity);
             ing.setIngredient(ingredient)
             ing.quantity = ingredient.quantity;
             ing.unity = ingredient.unity;
             this.base_ings.push(ing);
-          }
-          for (let index = 0; index < displayed_conso.length; index++) {
-            const conso: MiniConsommable = new MiniConsommable(displayed_conso[index].name);
-            conso.quantity = displayed_conso[index].quantity;
-            conso.unity = displayed_conso[index].unity;
-            conso.cost = displayed_conso[index].cost;
-           this.base_conso.push(conso)            
           }
           const unity_aft_prep = this.add_prepa_section.controls.unity.value;
           const quantity_aft_prep = this.add_prepa_section.controls.quantity_aft_prep.value;
@@ -335,54 +306,37 @@ export class AddPreparationsComponent implements OnInit{
               console.log("preparation prime_cost :");
               console.log(prime_cost);
               let preparation = this.data.preparation;
-              if(preparation !== null){
-                preparation.ingredients = this.base_ings;
-                if(preparation.consommables !== null){
-                  preparation.consommables = preparation.consommables.map((consommable) => {
-                    const base_conso = this.base_conso.find((_consommable) => _consommable.name === consommable.name);
-                    if(base_conso !== undefined){
-                     consommable.quantity = base_conso.quantity;
-                     consommable.unity = base_conso.unity;
-                    }
-                    return consommable;
-                   })
-                }
-                preparation.etapes = this.etapes;
-                preparation.quantity_after_prep = this.after_prep.quantity;
-                preparation.unity = this.after_prep.unity;
+              if(preparation === null){
+                preparation = new Cpreparation(this.calcul_service);
               }
+              preparation.name = to_add_preparation_name;
+              preparation.ingredients = this.base_ings;
+              preparation.consommables = consos;
+              preparation.etapes = this.etapes;
+              preparation.quantity_after_prep = this.after_prep.quantity;
+              preparation.unity = this.after_prep.unity;
               if(preparation !== null){
                 if(this.data.modification){
-                  this.preparation_service.updatePreparationInBdd(preparation, this.data.restaurant, this.data.prop).catch((e) => {
+                  this.preparation_service.updatePreparationInBdd(preparation, this.data.prop, this.data.restaurant).catch((e) => {
                     console.log(e);
-                    this._snackBar.open("nous ne somme pas parvenu à modifier la préparation veuillez contacter SoftEat");
+                    this._snackBar.open("nous ne somme pas parvenu à modifier la préparation veuillez contacter SoftEat", "fermer");
                   }).finally(() => {
-                    this._snackBar.open("nous ne somme parvenu à modifier la préparation");
+                    this._snackBar.open("nous somme parvenu à modifier la préparation", "fermer");
                   })
                 }
                 else{
-                  this.preparation_service.setPreparation(preparation, this.data.restaurant, this.data.prop).catch((e) => {
+                  console.log("=========== preparation ==========");
+                  console.log(preparation);
+                  console.log("===================================");
+                                    
+                  this.preparation_service.setPreparation(preparation, this.data.prop, this.data.restaurant).catch((e) => {
                     console.log(e);
-                    this._snackBar.open("nous ne somme pas parvenu à ajouter la préparation veuillez contacter SoftEat");
+                    this._snackBar.open("nous ne somme pas parvenu à ajouter la préparation veuillez contacter SoftEat", "fermer");
                   }).finally(() => {
-                    this._snackBar.open("nous somme  parvenu à ajouter la préparation");
+                    this._snackBar.open("nous somme  parvenu à ajouter la préparation", "fermer");
                   })
                 }
               }
-            /* this.preparation_service.setNewPreparation(this.data.restaurant, this.data.prop, name_prepa.split(" ").join('_'),
-              this.etapes, this.base_ings, this.base_conso, this.after_prep,
-              this.is_stock, this.data.modification,  prime_cost, val_bouch, tmps_prepa).catch((e) => {
-                 console.log(e);
-                 this.etapes = [];
-                 this.base_conso = [];
-                 this.base_ings = [];
-                 this._snackBar.open("nous ne somme pas parvenu à modifier la préparation veuillez contacter SoftEat");
-               }).finally(() => {
-                 this.etapes = [];
-                 this.base_conso = [];
-                 this.base_ings = [];
-                 this._snackBar.open("la préparation vient d'être ajouté", "fermer");
-               }); */
             })
         }
       }
@@ -481,10 +435,10 @@ export class AddPreparationsComponent implements OnInit{
       const etapes = this.data.preparation.etapes;
       if(etapes !== null){
         if((etapes[etape_length] !== undefined) && (etape_length > 0)){
-          name = etapes[etape_length].nom;
-          if(etapes[etape_length].commentaire !== null) comm = etapes[etape_length].commentaire as string;
-          if(etapes[etape_length].temps !== null){
-            const times = this.prepa_service.SecToArray(etapes[etape_length].temps)
+          name = etapes[etape_length].name;
+          if(etapes[etape_length].commentary !== null) comm = etapes[etape_length].commentary as string;
+          if(etapes[etape_length].time !== null){
+            const times = this.prepa_service.SecToArray(etapes[etape_length].time)
             heure = times[0];
             minute = times[1];
             seconde = times[2];

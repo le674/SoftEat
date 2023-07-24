@@ -129,7 +129,7 @@
                             <mat-form-field appearance="fill">
                                 <mat-label>Choisir le plat</mat-label>
                                 <mat-select formControlName="name">
-                                     <mat-option *ngFor="let plat of plats" [value]="plat.nom">{{plat.nom.split('_').join(' ')}}</mat-option>
+                                     <mat-option *ngFor="let plat of plats" [value]="plat.name">{{plat.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>

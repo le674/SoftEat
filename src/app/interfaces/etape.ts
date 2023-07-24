@@ -1,7 +1,8 @@
 export interface Etape {
-    "nom":string;
-    "commentaire":string | null;
-    "temps":number;
+    getData(): any;
+    "name":string;
+    "commentary":string | null;
+    "time":number;
 
     getNom():string;
     setNom(nom:string):void;
@@ -12,33 +13,53 @@ export interface Etape {
 }
 
 export class Cetape implements Etape{
-    "nom": string;
-    "commentaire": string | null;
-    "temps": number;
+    "name": string;
+    "commentary": string | null;
+    "time": number;
 
     constructor(){
-        this.nom = "";
-        this.commentaire = "";
-        this.temps = 0;
+        this.name = "";
+        this.commentary = "";
+        this.time = 0;
     }
-
+    /**
+     * permet de retourner un json de l'objet Cetape
+     * @returns {Object} json qui représente l'objet Cetape
+     */
+    getData() {
+        return {
+            nom: this.name,
+            commentaire: this.commentary,
+            temps: this.time
+        }
+    }
+    /**
+     * Permet de copier un objet Cetape dans cette instance de la classe
+     * @param objet etape que l'on copie dans cette instance
+     * @returns {void}
+     */
+    setData(etape:Cetape){
+        this.name = etape.name;
+        this.commentary = etape.commentary;
+        this.time = etape.time;
+    }
     getNom(): string {
-        return this.nom
+        return this.name
     }
     setNom(nom: string): void {
-        this.nom = nom
+        this.name = nom
     }
     getComentaire(): string | null{
-        return this.commentaire;
+        return this.commentary;
     }
     setComentaire(commentaire: string): void {
-       this.commentaire = commentaire
+       this.commentary = commentaire
     }
     getTemps(): number {
-      return this.temps
+      return this.time
     }
     setTemps(temps: number): void {
-        this.temps = temps
+        this.time = temps
     }
 
 }

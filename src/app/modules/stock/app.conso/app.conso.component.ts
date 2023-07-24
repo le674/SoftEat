@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,17 +11,17 @@ import { CommonService } from '../../../../app/services/common/common.service';
 import { Cconsommable, Consommable } from 'src/app/interfaces/consommable';
 import { RowConsommableRecette } from 'src/app/interfaces/recette';
 import { RowConsommable } from 'src/app/interfaces/inventaire';
+import { Unsubscribe } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-conso',
   templateUrl: './app.conso.component.html',
   styleUrls: ['./app.conso.component.css']
 })
-export class AppConsoComponent implements OnInit {
-
+export class AppConsoComponent implements OnInit, OnDestroy {
   public displayedColumns: string[] = ['nom', 'quantity', 'unity','cost', 'cost_ttc', 'date_reception', 'actions'];
   public dataSource: MatTableDataSource<RowConsommable>;
-
   public consommable_displayed: Array<RowConsommable>;
   public windows_screen_mobile:boolean;
   public size:string;
@@ -33,7 +33,8 @@ export class AppConsoComponent implements OnInit {
   private url: UrlTree;
   private prop:string;
   private restaurant:string;
-
+  private req_consommables!:Unsubscribe;
+  private consommables_sub!:Subscription;
   constructor(private service:ConsommableInteractionService, private calc_service:CalculConsoServiceTsService,
     router: Router, public dialog: MatDialog,  private _snackBar: MatSnackBar, public mobile_service:CommonService) { 
     this.page_number = 1;
@@ -48,13 +49,16 @@ export class AppConsoComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.consommable_displayed);
     this.url = this.router.parseUrl(this.router.url);
   }
-
-ngOnInit(): void{
+  ngOnDestroy(): void {
+    this.req_consommables();
+    this.consommables_sub.unsubscribe();
+  }
+  ngOnInit(): void{
     let user_info = this.url.queryParams;
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];
-    this.service.getConsommablesFromRestaurantsBDD(this.restaurant, this.prop);
-    this.service.getConsommablesFromRestaurants().subscribe((consommables:Cconsommable[]) => {
+    this.req_consommables = this.service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
+    this.consommables_sub = this.service.getConsommablesFromRestaurants().subscribe((consommables:Cconsommable[]) => {
       for (let consommable of consommables) {
         if((consommable.date_reception === undefined) || (consommable.date_reception === null)){
           consommable.date_reception = new Date();
@@ -85,9 +89,6 @@ ngOnInit(): void{
       this.pageChanged(first_event);
       this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("conso");
   }
-
-    
-
   OpenAddConsoForm(){
     const dialogRef = this.dialog.open(AddConsoComponent, {
       height: `${window.innerHeight - window.innerHeight/3}px`,
@@ -111,7 +112,6 @@ ngOnInit(): void{
       }
     });
   }
-
   modifConso(ele:RowConsommable){
     const date_reception = this.calc_service.stringToDate(ele.date_reception);
     ele.name = ele.name;
@@ -145,7 +145,6 @@ ngOnInit(): void{
       throw `No consommable founded for array element of id ${ele.id} and name ${ele.name}`;
     }
   }
-
   suppConso(ele:RowConsommable){
     let is_prep = false
     this.service.removeConsoInBdd(ele, this.prop, this.restaurant).then(() => {
@@ -153,7 +152,6 @@ ngOnInit(): void{
     }).catch(() => {
       this._snackBar.open("l'ingrédient n'a pas pu être supprimé de la base de donnée du restaurant", "fermer")
     });
-
     //on regénère la datasource
     const is_same =  this.consommable_displayed.map((consommable) => consommable.name !== ele.name.split('<br>').join('_')); 
     this.consommable_displayed = this.consommable_displayed.filter((consommable) => consommable.name !== ele.name.split('<br>').join('_')); 
@@ -164,7 +162,6 @@ ngOnInit(): void{
                   supp_event.pageIndex = this.page_number
     this.pageChanged(supp_event);
   }
-
   pageChanged(event: PageEvent) {
     event.length;
     let datasource = [... this.consommable_displayed];
@@ -175,10 +172,7 @@ ngOnInit(): void{
    getVisible(i: number):boolean{
     return this.visibles[i];
   }
-
   changeArrow(arrow_index: number) {
     this.visibles[arrow_index] = !this.visibles[arrow_index];
   }
 }
-
-

@@ -9,30 +9,42 @@ import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../../environ
 import { IngredientsInteractionService } from './ingredients-interaction.service';
 import { Cconsommable } from 'src/app/interfaces/consommable';
 import { Subject } from 'rxjs';
+import { collection, doc, DocumentSnapshot, Firestore, getFirestore, onSnapshot, setDoc, SnapshotOptions, Unsubscribe } from 'firebase/firestore';
+import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlatsInteractionService {
-  private db: Database;
+  private firestore: Firestore;
   private _plats: Array<Cplat>;
+  private plats = new Subject<Array<Cplat>>();
   private consommables: Array<Cconsommable>;
   private ingredients: Array<TIngredientBase>;
   private ingredients_minimal: {name:string, quantity:number, unity:string}[];
   private preparation: Array<Cpreparation>;
   private etapes: Array<Cetape>;
-  private plats = new Subject<Array<Cplat>>();
-  constructor(private ofApp: FirebaseApp, private ingredient_service: IngredientsInteractionService) {
+  private plat_converter:any;
+  private sub_plats!:Unsubscribe;
+  constructor(private ofApp: FirebaseApp, private calcul_service:CalculService) {
+    this.firestore = getFirestore(ofApp);
     this._plats = [];
-    this.db = getDatabase(ofApp);
-    if((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-      try {
-        // Point to the RTDB emulator running on localhost.
-         connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port); 
-      } catch (error) {
-        console.log(error);
-      }
-    } 
+    this.plat_converter = {
+      toFirestore: (plat:Cplat) => {
+        return plat;
+      },
+      fromFirestore: (snapshot:DocumentSnapshot<Cplat>, options:SnapshotOptions) => {
+        const data = snapshot.data(options);
+        if(data !== undefined){
+          let plat = new Cplat();
+          plat.setData(data)
+          return plat;
+        }
+        else{
+          return null;
+        }
+      } 
+    }  
     this.consommables = [];
     this.ingredients = [];
     this.etapes = [];
@@ -40,144 +52,71 @@ export class PlatsInteractionService {
     this.ingredients_minimal = [];
   }
 
-  async setPlat(prop:string, restaurant:string, plat:Plat){
-    const ref_db = ref(this.db, `plat_${prop}_${restaurant}/${prop}/${restaurant}/`);
-    if((plat.nom !== null) && (plat.nom !== undefined) && (plat.nom !== "")){
-      await update(ref_db, {
-        [plat.nom.split(' ').join('_')]: {
-          type: plat.type,
-          portion: plat.portions,
-          price: plat.prix,
-          taux_tva:plat.taux_tva,
-          categorie:plat.categorie,
-          temps: plat.temps,
-          portion_cost: plat.portion_cost,
-          prime_cost: plat.prime_cost,
-          material_ratio: plat.material_ratio,
-          ingredients:plat.ingredients,
-          consommables:plat.consommables,
-          preparations:plat.preparations,
-          etapes:plat.etapes
-        }
-      })
-    }
-  }
-/* 
-  async getPlatsFromRestaurantsFiltreIds(prop: string, restaurant: string,
-    lst_ings: Array<TIngredientBase>, lst_conso: Array<Cconsommable>) {
-    const ref_db = ref(this.db);
-    this.plats = [];
-    const path = `plat_${prop}_${restaurant}/${prop}/${restaurant}/`;
-    await get(child(ref_db, path)).then((plats) => {
-      this.ingredient_service.getIngredientsPrepFromRestaurantsPROMForMenu(prop, restaurant).then((lst_prepa: Array<Cpreparation>) => {
-        plats.forEach((plat) => {
-          let curr_plat = {id:"", quantity:0, unity:'g'}; 
-          if((plat.key !== null)) {
-            const add_plat = new Cplat();
-            let preparations = plat.child("preparations").val();
-            let consommables = plat.child("consommables").val();
-            let ingredients = plat.child("ingredients").val();
-            let etapes_bdd = plat.child("etapes").val();
-            let price = plat.child("price").val();
-            let tva_taux = plat.child("taux_tva").val();
-            let type = plat.child("type").val();
-            let categorie = plat.child("categorie").val();
-            let portion = plat.child("portion").val();
-            const iter_preparation: [string, { quantity: number, unity: string }][] = Object.entries(preparations);
-            const iter_ingredients: [string, { quantity: number, unity: string }][] = Object.entries(ingredients);
-            const iter_consommbales: [string, { quantity: number, unity: string }][] = Object.entries(consommables);
-            let etapes: [string, { commentaire: string, temps: number }][] = Object.entries(etapes_bdd);
-            for (let conso of iter_consommbales) {
-              const consommables = lst_conso.filter((consomable) => conso[0] === consomable.name);
-              if (consommables.length > 0) {
-                const consomable = consommables[0];
-                this.consommables.push(consomable);
-              }
-            }
-            for (let ing of iter_ingredients) {
-              const ingredients = lst_ings.filter((ingredient) => ing[0] === ingredient.name);
-              if (ingredients.length > 0) {
-                const ingredient = ingredients[0];
-                this.ingredients.push(ingredient);
-              }
-            }
-            for (let prepa of iter_preparation) {
-              const preparations = lst_prepa.filter((preparation) => prepa[0] === preparation.nom);
-              if (preparations.length > 0) {
-                const preparation = preparations[0];
-                this.preparation.push(preparation);
-              }
-            }
-            for (let [id_etape, etape_data] of etapes) {
-              let curr_etape = new Cetape();
-              curr_etape.setNom(id_etape);
-              curr_etape.setComentaire(etape_data.commentaire);
-              curr_etape.setTemps(etape_data.temps);
-              this.etapes.push(curr_etape);
-            }
-
-            add_plat.setNom(plat.key);
-            add_plat.setIngredients(this.ingredients);
-            add_plat.setConsommbale(this.consommables);
-            add_plat.setPreparations(this.preparation);
-            add_plat.setEtapes(this.etapes);
-            add_plat.setPortions(portion);
-            add_plat.setType(type);
-            add_plat.setPrix(price);
-            add_plat.setTauxTva(tva_taux);
-            add_plat.setCategorie(categorie);
-            add_plat.setUnity(curr_plat.unity);
-            this.plats.push(add_plat);
+  /**
+   * Récupération de l'ensemble des plats depuis la base de donnée
+   * @param prop identifiant de l'enseigne qui détient le plat
+   * @returns {Unsubscribe} fonction de désinscription de l'obsservable onSnapshot
+   */
+  getPlatFromRestaurantBDD(prop: string) {
+    const plats_ref = 
+      collection(
+        doc(
+          collection(
+            this.firestore, "proprietaires"
+            ), prop
+          ), "plats"
+        ).withConverter(this.plat_converter);
+    this.sub_plats = onSnapshot(plats_ref, (plats) => {
+      this._plats = [];
+      plats.forEach((plat) => {
+          if(plat.exists()){
+            this._plats.push(plat.data() as Cplat)
           }
-        })
       })
+      this.plats.next(this._plats);
     })
-    console.log(`Ont récupère ${this.plats.toString().length/1000} ko de plats`); 
-    return this.plats
-  } */
-/* 
-  async getPlatFromRestaurant(prop:string, restaurant:string){
-    let lst_plats:Array<Cplat> = [];
-    const path = `plat_${prop}_${restaurant}/${prop}/${restaurant}/`;
-    const ref_db = ref(this.db);
-    await get(child(ref_db, path)).then((plats) => {
-      plats.forEach((bdd_plat) => {
-        if(bdd_plat.key !== null){
-          const plat = new Cplat();
-          plat.nom = bdd_plat.key
-          plat.type = bdd_plat.child('type').val();
-          plat.categorie =  bdd_plat.child('categorie').val();
-          plat.unity = bdd_plat.child('unity').val();
-          plat.taux_tva = bdd_plat.child('taux_tva').val();
-          plat.ingredients = bdd_plat.child('ingredients').val();
-          plat.preparations = bdd_plat.child('preparations').val();
-          plat.consommables = bdd_plat.child('consommables').val();
-          plat.etapes =  bdd_plat.child('etapes').val();
-          plat.portions =  bdd_plat.child('portion').val();
-          plat.prix =  bdd_plat.child('price').val();
-          plat.portion_cost =  bdd_plat.child('portion_cost').val();
-          plat.prime_cost =  bdd_plat.child('prime_cost').val();
-          plat.temps = bdd_plat.child('temps').val();
-          plat.material_ratio = bdd_plat.child('material_ratio').val();
-          lst_plats.push(plat);
-        }
-      })
-    })
-    console.log(`Ont récupère ${lst_plats.toString().length/1000} ko de plats`); 
-    return lst_plats;
-  } */
-
-  async removePlatInBdd(plat: string, prop: string, restaurant: string) {
-    const path = `plat_${prop}_${restaurant}/${prop}/${restaurant}/${plat}`
-    const ref_db = ref(this.db, path);
-    await remove(ref_db).then(() => console.log("ingrédient ", plat, "bien supprimée"))
+    return this.sub_plats;
   }
 
-  getPlatFromRestaurantBDD(prop: string, restaurant: string) {
-    throw new Error('Method not implemented.');
-  }
   getPlatFromRestaurant() {
     return this.plats.asObservable();;
   }
-
+  async removePlatInBdd(prop: string, restaurant: string, plat_id: string) {
+    
+  }
+  /**
+   * permet d'ajouter un plat à la bdd
+   * @param prop identifiant de l'enseigne qui possède le plat
+   * @param plat plat que l'ont veut ajouter à la bdd
+   */
+  async setPlat(prop: string, plat: Cplat) {
+    console.log("setPLat");
+    console.log(plat);
+    const plats_ref = 
+      doc(collection(
+        doc(
+          collection(
+            this.firestore, "proprietaires"
+            ), prop
+          ), "plats"
+        )).withConverter(this.plat_converter);
+    await setDoc(plats_ref, plat.getData(plats_ref.id, prop))
+  }
+    /**
+   * permet de modifier un plat dans la bdd
+   * @param prop identifiant de l'enseigne qui possède le plat
+   * @param plat plat que l'ont veut modifier dans la bdd
+   */
+  async updatePlat(prop: string, plat: Cplat) {
+    console.log(plat);
+    const plats_ref = 
+      doc(collection(
+        doc(
+          collection(
+            this.firestore, "proprietaires"
+            ), prop
+          ), "plats"
+        ), plat.id).withConverter(this.plat_converter);
+    await setDoc(plats_ref, plat.getData(null, prop))
+  }
 }

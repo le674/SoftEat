@@ -32,7 +32,6 @@ export class IngredientsInteractionService {
     this.firestore = getFirestore(ofApp);
     this.ingredient_converter = {
       toFirestore: (ingredient:CIngredient) => {
-
         return ingredient;
       },
       fromFirestore: (snapshot:DocumentSnapshot<CIngredient>, options:SnapshotOptions) => {
@@ -85,7 +84,7 @@ export class IngredientsInteractionService {
     this.ingredients_minimal = [];
   }
   /**
-   * 
+   * Ajout d'un ingrédient à la base de donnée
    * @param ingredient ingrédient à ajouter dans la base de donnée
    * @param prop id du propriétaire pour lequel ont ajoute l'ingrédient
    * @param restaurant id du resdtaurant pour lequel ont ajoute l'ingreient
@@ -140,7 +139,12 @@ export class IngredientsInteractionService {
       ingredient.id).withConverter(this.ingredient_converter);
     await deleteDoc(ingredients_ref); 
   }
-
+  /**
+    * récupération de l'ensemble des ingrédients depuis le restaurant
+    * @param proprietaire_id identifiant de l'enseigne qui détient les ingrédients
+    * @param restaurant_id identifiant du restaurant qui détient les ingrédients
+    * @returns 
+  */
   getIngredientsFromRestaurantsBDD(proprietaire_id:string, restaurant_id:string){
     const ingredients_ref = collection(doc(
       collection(
@@ -163,7 +167,12 @@ export class IngredientsInteractionService {
     })
     return this.sub_ingredients;
   }
-
+  /**
+  * TODO
+  * @param proprietaire_id TODO
+  * @param restaurant_id TODO
+  * @returns TODO
+ */
   getPreparationsFromRestaurantsBDD(proprietaire_id:string, restaurant_id:string){
     const preparations_ref = collection(doc(
       collection(

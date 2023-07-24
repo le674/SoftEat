@@ -93,7 +93,12 @@ export class DisplayPreparationsComponent implements OnInit {
       if (this.data.preparation.ingredients.length > 0) {
         this.displayed_ing = this.data.preparation.ingredients.map((ing) => {
           let ingredient:RowIngredientRecette = new RowIngredientRecette("", 0, 0, "");
-          let _ingredient = this.data._ingredients.find((_ingredient) => _ingredient.id === ing.id);
+          let _ingredient = this.data._ingredients.find((_ingredient) => {
+            if(ing.id !== null){
+              ing.id.includes(_ingredient.id);
+            }
+            return false;
+          });
           if(_ingredient !== undefined){
              ingredient = new RowIngredientRecette(ing.name, _ingredient.cost, ing.quantity, ing.unity);
           }
@@ -108,7 +113,11 @@ export class DisplayPreparationsComponent implements OnInit {
 
         this.displayed_conso = this.data.preparation.consommables.map((consommable) => {
           let row_cons = new RowConsommableRecette("",0,0,"");
-          const _consommable = this.data._consommables.find((_consommable) => _consommable.id == consommable.id);
+          const _consommable = this.data._consommables.find((_consommable) => {
+            if(consommable.id !== null){
+              consommable.id.includes(_consommable.id);
+            }
+          });
           if(_consommable !== undefined){
             row_cons = consommable.toRowConsoRecette(_consommable.cost);
           }
@@ -119,7 +128,7 @@ export class DisplayPreparationsComponent implements OnInit {
       }
     }
     if (this.data.preparation.etapes !== null) {
-      this.displayed_etape = this.data.preparation.etapes.map((etape) => { return { nom: etape.nom, temps: etape.temps, commentaire: etape.commentaire } })
+      this.displayed_etape = this.data.preparation.etapes.map((etape) => { return { nom: etape.name, temps: etape.time, commentaire: etape.commentary } })
       this.visibles.index_3 = new Array(this.displayed_etape.length).fill(false);
       this.dataSource_etape.data = this.displayed_etape;
     }

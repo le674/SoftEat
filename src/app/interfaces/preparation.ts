@@ -34,6 +34,8 @@ export interface Preparation {
     getIngredients(): Array<TIngredientBase> | null;
     setConsommbale(consommables: Array<TConsoBase> | null): void;
     getConsommbale(): Array<TConsoBase> | null;
+    setData(data:Cpreparation):void;
+    getData(id:string | null, prop:string):any;
 }
 
 export class Cpreparation implements Preparation {
@@ -128,7 +130,7 @@ export class Cpreparation implements Preparation {
      * Cette fonction permet dedupliquer une prépartion
      * @param data préparation à ajouter dans la base de donnée
      */
-    setData(data: Cpreparation) {
+    setData(data: Cpreparation):void {
         let ingredients = new Array<TIngredientBase>();
         let consommables = new Array<TConsoBase>();
         if (data.ingredients !== null && data.ingredients !== undefined) {
@@ -199,7 +201,7 @@ export class Cpreparation implements Preparation {
                     ingredient.added_price = null;
                 }
                 if(ingredient.id === undefined){
-                    ingredient.id = "";
+                    ingredient.id = [];
                 }
                 if(ingredient.name === undefined){
                     ingredient.name = "";
@@ -281,15 +283,20 @@ export class Cpreparation implements Preparation {
      * permet de récupérer un objet constituant l'ingrédient à écrire en base de donnée
      * @param id identifiant du document que l'on souahite renvoyer pour l'ajout en base de donnée
      * @param prop identifiant du propriétaire 
+     * @returns {any} json de l'objet Cpreparation
     */
-    getData(id: string | null, prop: string): any {
+    getData(id: string | null, prop: string):any {
         let ingredients:null | Array<Object> = null;
         let consommables:null | Array<Object> = null;
+        let etapes:null | Array<Object> = null;
         if((this.ingredients !== null) && (this.ingredients !== undefined)){
             ingredients = this.ingredients.map((ingredient) => ingredient.getData());
         }
         if((this.consommables !== null) && (this.ingredients !== undefined)){
             consommables = this.consommables?.map((consommable) => consommable.getData());
+        }
+        if((this.etapes !== null) && (this.etapes !== undefined)){
+            etapes = this.etapes.map((etape) => etape.getData());
         }
         if ((this.proprietary_id === null) || this.proprietary_id === undefined) {
             this.proprietary_id = prop;
@@ -300,7 +307,7 @@ export class Cpreparation implements Preparation {
         return {
             name: this.name,
             categorie_restaurant: this.categorie_restaurant,
-            etapes: this.etapes,
+            etapes: etapes,
             temps: this.temps,
             cost: this.cost,
             quantity: this.quantity,
@@ -340,7 +347,42 @@ export class Cpreparation implements Preparation {
 
 export class CpreparationBase {
     "name": string | null;
-    "portions": number;
-    "id": string | null;
+    "portions": number | null;
+    "id": Array<string> | null;
+    /**
+     * permet de convertir l'instance de la classe en objet pour ajout dans la bdd
+     * @returns {Object} objet CpreparationBase
+     */
+    public getData():Object {
+        return {
+            name: this.name,
+            portions: this.portions,
+            id:this.id
+        }
+    }
+    /**
+     * permet de copier une instance de la classe CpreparationBase à cette instance
+     * @param preparation préparationque l'on copie
+     */
+    public setData(preparation:CpreparationBase){
+        if(preparation.id !== undefined){
+            this.id = preparation.id;
+        }
+        else{
+            this.id = null;
+        }
+        if(preparation.name !== undefined){
+            this.name = preparation.name;
+        }
+        else{
+            this.name = null;
+        }
+        if(preparation.portions !== undefined){
+            this.portions = preparation.portions;
+        }
+        else{
+            this.portions = null;
+        }
+    }
     constructor() {}
 } 

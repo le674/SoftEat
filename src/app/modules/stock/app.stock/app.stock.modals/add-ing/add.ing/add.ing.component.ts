@@ -41,7 +41,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       is_modif: boolean,
       ingredient: {
         id:string,
-        nom: string,
+        name: string,
         categorie_restaurant:string | null,
         categorie_tva: string,
         taux_tva: number,
@@ -55,7 +55,6 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         date_reception: string,
         dlc: number,
         cost_ttc: number | null,
-        is_similar:number,
         marge: number, 
         vrac: string,
         base_ingredient_id:Array<string> | null,
@@ -91,8 +90,8 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
 
     //après initialisatin du contenu ont ajoute les éléments dans le formulaire
     const unity = this.calcul_service.convertUnity(this.data.ingredient.unity, true);
-    this.add_ing_section.get("name")?.setValue(this.data.ingredient.nom);
-    this.add_ing_section.get("name_tva")?.setValue(this.data.ingredient.categorie);
+    this.add_ing_section.get("name")?.setValue(this.data.ingredient.name);
+    this.add_ing_section.get("name_tva")?.setValue(this.data.ingredient.categorie_tva);
     this.add_ing_section.get("quantity_unitary")?.setValue(this.data.ingredient.quantity_unity);
     this.add_ing_section.get("unity")?.setValue(unity);
     this.add_ing_section.get("quantity")?.setValue(this.data.ingredient.quantity);
@@ -112,7 +111,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
 
   ngAfterViewInit(): void {
     // après initialisation de la vue on ajoute la tva selon la catégorie
-    this.taux.nativeElement.value = this.calcul_service.getTauxFromCat(this.data.ingredient.categorie)
+    this.taux.nativeElement.value = this.calcul_service.getTauxFromCat(this.data.ingredient.categorie_tva)
     if (this.data.ingredient.vrac === 'oui') {
       this.clickRadioVrac(true)
     }

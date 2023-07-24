@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import { child, connectDatabaseEmulator, Database, get, getDatabase, ref, remove, update } from 'firebase/database';
-import {TIngredientBase } from '../../../app/interfaces/ingredient';
+import { TIngredientBase } from '../../../app/interfaces/ingredient';
 import { Cmenu } from '../../../app/interfaces/menu';
 import { Cplat } from '../../../app/interfaces/plat';
 import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../../environments/variables';
@@ -10,96 +10,90 @@ import { IngredientsInteractionService } from './ingredients-interaction.service
 import { PlatsInteractionService } from './plats-interaction.service';
 import { Cconsommable } from 'src/app/interfaces/consommable';
 import { Subject } from 'rxjs';
+import { collection, deleteDoc, doc, DocumentSnapshot, Firestore, getFirestore, onSnapshot, SnapshotOptions, Unsubscribe } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MenuInteractionService {
-  private db: Database;
+  private firestore: Firestore;
   private _menus: Array<Cmenu>
   private menus = new Subject<Array<Cmenu>>();
+  private menu_converter: any;
+  private sub_menus!: Unsubscribe;
 
   constructor(private ofApp: FirebaseApp, private ingredient_service: IngredientsInteractionService,
     private conso_service: ConsommableInteractionService, private plat_service: PlatsInteractionService) {
-    this.db = getDatabase(ofApp);
-    if((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-      try {
-       // Point to the RTDB emulator running on localhost.
-       connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port); 
-      } catch (error) {
-        console.log(error);
-        
+    this.firestore = getFirestore(ofApp);
+    this._menus = [];
+    this.menu_converter = {
+      toFirestore: (menu: Cmenu) => {
+        return menu;
+      },
+      fromFirestore: (snapshot: DocumentSnapshot<Cmenu>, options: SnapshotOptions) => {
+        const data = snapshot.data(options);
+        if (data !== undefined) {
+          let menu = new Cmenu();
+          menu.setData(data)
+          return menu;
+        }
+        else {
+          return null;
+        }
       }
-    } 
-    this._menus = [];
+    };
   }
-
-  async getMenusFromRestaurants(prop: string, restaurant: string, all_ingredients: Array<TIngredientBase>,
-    all_consommables: Array<Cconsommable>, all_plats: Array<Cplat>) {
-    this._menus = [];
-    const ref_db = ref(this.db);
-    const path = `menu_${prop}_${restaurant}/${prop}/${restaurant}/`;
-    await get(child(ref_db, path)).then((menus) => {
+  /**
+   * permet de récupérer un menu depuis la base de donnée 
+   * @param prop identifiant du propriétaire qui possède le menu
+   */
+  getMenuFromRestaurantBDD(prop: string) {
+    const menus_ref =
+      collection(
+        doc(
+          collection(
+            this.firestore, "proprietaires"
+          ), prop
+        ), "menus"
+      ).withConverter(this.menu_converter);
+    this.sub_menus = onSnapshot(menus_ref, (menus) => {
+      this._menus = [];
       menus.forEach((menu) => {
-        const add_menu = new Cmenu();
-        let consommables = menu.child("consommables").val();
-        let ingredients = menu.child("ingredients").val();
-        let plats = menu.child("plats").val();
-        let prix = menu.child("price").val();
-        let taux_tva = menu.child("taux_tva").val();
-        let prix_ttc = menu.child("price_ttc").val();
-        if (menu.key !== null) {
-          add_menu.setPrix(prix)
-          add_menu.setNom(menu.key.split('_').join(' '));
-          add_menu.setIngredients(ingredients);
-          add_menu.setConsommbale(consommables);
-          add_menu.setPlats(plats);
-          add_menu.setTauxTva(taux_tva);
-          add_menu.setPrixTtc(prix_ttc);
-
+        if (menu.exists()) {
+          this._menus.push(menu.data() as Cmenu)
         }
-        this._menus.push(add_menu);
       })
+      this.menus.next(this._menus);
     })
-    console.log(`Ont récupère ${this._menus.toString().length/1000} ko de menu`);
-    return this._menus
+    return this.sub_menus;
+  }
+  /**
+   * cette fonction permet de supprimer un menu dans la base de donnée
+   * @param prop enseigne qui détient le menu
+   * @param menu menu à supprimer de la base de donnée
+   */
+  async removeMenuFromBDD(prop:string,menu:Cmenu){
+    const menus_ref =
+    doc(collection(
+      doc(
+        collection(
+          this.firestore, "proprietaires"
+        ), prop
+      ), "menus"
+    ),menu.id).withConverter(this.menu_converter)
+    await deleteDoc(menus_ref);
   }
 
-  async setMenu(prop:string,restaurant:string,menu:Cmenu){
-    const ref_db = ref(this.db, `menu_${prop}_${restaurant}/${prop}/${restaurant}/`);
-    const name = menu.nom;
-    console.log(name);
-    console.log(menu);
-    if((name !== null) && (name!== undefined) && (name !== "")){
-      await update(ref_db, {
-        [menu.nom.split(' ').join('_')]: {
-          price: menu.prix,
-          price_ttc:menu.prix_ttc,
-          taux_tva:menu.taux_tva,
-          ingredients:menu.ingredients.map((ingredient) => { return {name: ingredient.name,
-             quantity:ingredient.quantity,
-             unity:ingredient.unity,
-          }}),
-          consommables:menu.consommables,
-          plats:menu.plats,
-        }
-      })
-    }
+  /**
+   * cette fonction permet d'ajouter un menu à la base de donnée
+   * @param prop enseigne qui possède le menu
+   * @param restaurant restaurant qui possède le menu
+   * @param menu menu à ajouter dans la base de donnée
+   */
+  async setMenu(prop: string, restaurant: string, menu: Cmenu) {
+    throw new Error('Method not implemented.');
   }
-
-
-  async deleteMenu(prop: string, restaurant: string, menu: Cmenu) {
-      if((menu.nom !== null) && (menu.nom !== undefined) && (menu.nom !== "")){
-        const ref_db = ref(this.db,  `menu_${prop}_${restaurant}/${prop}/${restaurant}/${menu.nom.split(" ").join('_')}`)
-        await remove(ref_db).catch((e) => console.log(e));
-      }
-  }
-
-  getMenuFromRestaurantBDD(prop: string, restaurant: string) {
-  
-  }
-
-  getMenuFromRestaurant(){
+  getMenuFromRestaurant() {
     return this.menus.asObservable();
   }
 }

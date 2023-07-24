@@ -6,7 +6,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Cetape } from '../../../../../app/interfaces/etape';
 import { CIngredient, TIngredientBase } from '../../../../../app/interfaces/ingredient';
-import { Cplat, Plat } from '../../../../../app/interfaces/plat';
+import { Cplat } from '../../../../../app/interfaces/plat';
 import { Cpreparation, CpreparationBase } from '../../../../../app/interfaces/preparation';
 import { CalculService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { MenuCalculPlatsServiceService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.plats/menu.calcul.plats.service.service';
@@ -20,7 +20,6 @@ import { Cconsommable, Consommable, TConsoBase } from 'src/app/interfaces/consom
   styleUrls: ['./add.plats.component.css']
 })
 export class AddPlatsComponent implements OnInit {
-
   public unity_conso:Array<string>;
   public unity_ing:Array<string>;
   public full_lst_ings:Array<CIngredient>;
@@ -71,8 +70,8 @@ export class AddPlatsComponent implements OnInit {
     ingredients: Array<CIngredient>,
     consommables: Array<Cconsommable>,
     preparations: Array<Cpreparation>,
-    plat: Cplat,
-    type:string
+    plat: Cplat | null,
+    modification:boolean
     }, private _snackBar: MatSnackBar, private plat_service:MenuCalculPlatsServiceService,
     private calcul_service:CalculService, private calcul_service_prepa:CalculPrepaService) {
     this.unity_conso = [];
@@ -85,7 +84,6 @@ export class AddPlatsComponent implements OnInit {
     this.full_lst_prepa = [];
     this.boisson = false;
     this.curr_ingredients_vrac = [];
-    this.categorie = this.data.type    
    }
 
   ngOnInit(): void {
@@ -96,11 +94,11 @@ export class AddPlatsComponent implements OnInit {
       this.add_plats_section.controls.type.setValue(this.categorie);
     }
     if((this.data.plat !== null) && (this.data.plat !== undefined)){
-      if((this.data.plat.nom !== null) && (this.data.plat.nom !== undefined)){
-        this.add_plats_section.controls.name.setValue(this.data.plat.nom.split('_').join(' '));
+      if((this.data.plat.name !== null) && (this.data.plat.name !== undefined)){
+        this.add_plats_section.controls.name.setValue(this.data.plat.name);
       }
-      if((this.data.plat.categorie !== null) && (this.data.plat.categorie !== undefined)){
-        this.add_plats_section.controls.name_tva.setValue(this.data.plat.categorie);
+      if((this.data.plat.category !== null) && (this.data.plat.category !== undefined)){
+        this.add_plats_section.controls.name_tva.setValue(this.data.plat.category);
       }
       if((this.data.plat.portions !== null) && (this.data.plat.portions !== undefined)){
         this.add_plats_section.controls.portion.setValue(this.data.plat.portions);
@@ -111,8 +109,8 @@ export class AddPlatsComponent implements OnInit {
       if((this.data.plat.taux_tva !== null) && (this.data.plat.taux_tva !== undefined)){
         this.add_plats_section.controls.taux_tva.setValue(this.data.plat.taux_tva);
       }
-      if((this.data.plat.prix !== null) && (this.data.plat.prix !== undefined)){
-        this.add_plats_section.controls.price.setValue(this.data.plat.prix);
+      if((this.data.plat.cost !== null) && (this.data.plat.cost !== undefined)){
+        this.add_plats_section.controls.price.setValue(this.data.plat.cost);
       }
       if((this.data.plat.ingredients !== null) && (this.data.plat.ingredients !== undefined)){
         this.data.plat.ingredients.forEach((ingredient) => {
@@ -144,16 +142,15 @@ export class AddPlatsComponent implements OnInit {
             quantity: new FormControl(consommable.quantity),
             unity: new FormControl(consommable.unity)
           })
-          to_add_grp.controls.unity.disable();
           this.getBaseConso().push(to_add_grp);
         })
       }
       if((this.data.plat.etapes !== null) && (this.data.plat.etapes !== undefined)){
         this.data.plat.etapes.forEach((etape) => {
-          const time_array = this.calcul_service_prepa.SecToArray(etape.temps);
+          const time_array = this.calcul_service_prepa.SecToArray(etape.time);
           const to_add_grp = new FormGroup({
-            name:new FormControl(etape.nom),
-            comm: new FormControl(etape.commentaire),
+            name:new FormControl(etape.name),
+            comm: new FormControl(etape.commentary),
             heure: new FormControl(time_array[0]),
             minute: new FormControl(time_array[1]),
             seconde: new FormControl(time_array[2]),
@@ -176,9 +173,18 @@ export class AddPlatsComponent implements OnInit {
   
   changePlats():void{
     let plat:Cplat = new Cplat();
+    if(this.data.plat !== null){
+      plat.id = this.data.plat.id;
+      plat.material_cost = this.data.plat.material_cost;
+      plat.material_ratio = this.data.plat.material_ratio;
+      plat.portion_cost = this.data.plat.portion_cost;
+      plat.prime_cost = this.data.plat.prime_cost;
+      plat.time = this.data.plat.time;
+      plat.type = this.data.plat.type; 
 
+    }
     if(this.add_plats_section.controls.name.value !== null){
-      plat.nom = this.add_plats_section.controls.name.value;
+      plat.name = this.add_plats_section.controls.name.value;
     }
     if(this.add_plats_section.controls.type.value !== null){
       plat.type = this.add_plats_section.controls.type.value;
@@ -187,40 +193,63 @@ export class AddPlatsComponent implements OnInit {
       plat.portions = this.add_plats_section.controls.portion.value;
     }
     if(this.add_plats_section.controls.price.value !== null){
-      plat.prix = this.add_plats_section.controls.price.value;
+      plat.cost = this.add_plats_section.controls.price.value;
     }
     if(this.add_plats_section.controls.name_tva.value !== null){
-      plat.categorie = this.add_plats_section.controls.name_tva.value;
+      plat.category = this.add_plats_section.controls.name_tva.value;
     }
     if(this.add_plats_section.controls.taux_tva.value !== null){
       plat.taux_tva = this.add_plats_section.controls.taux_tva.value;
     }
     if(this.add_plats_section.controls.base_ing.value !==null){
       let base_ings = this.add_plats_section.controls.base_ing.value;
-      plat.ingredients = this.data.plat.ingredients.filter((base_ing) => base_ings.map((ing) => ing.name).includes(base_ing.name));
-      // on ajoute la quantitée présente pour le plat entré dans le formulaire comme étant la quantitée 
-      plat.ingredients.map((ingredient) => {
-        const _ingredient = base_ings.find((base) => base.name === ingredient.name);
-        if(_ingredient !== undefined){
-          if((_ingredient.quantity !== null) && (_ingredient.quantity !== undefined)){
-            ingredient.quantity = _ingredient.quantity;
-          }
-          else{
-            ingredient.quantity = 0;
-          }
-          if((_ingredient.unity !== null) && (_ingredient.unity !== undefined)){
-            ingredient.unity = _ingredient.unity;
-          }
-          if((_ingredient.added_price !== null) && (_ingredient.added_price !== undefined)){
-            ingredient.added_price = _ingredient.added_price;
+      plat.ingredients = base_ings.flatMap((ingredient) => {
+        let tmp_ingredient = this.data.ingredients.find((_ingredient) => ingredient.name === _ingredient.name);
+        if((ingredient.name !== null) && (ingredient.name !== undefined)){
+          if((ingredient.quantity !== null) && (ingredient.quantity !== undefined)){
+            if((ingredient.unity !== null) && (ingredient.unity !== undefined)){
+              let _ingredient = new TIngredientBase(ingredient.name, ingredient.quantity, ingredient.unity);
+              if(tmp_ingredient !== undefined){
+                _ingredient.id?.push(tmp_ingredient.id);
+              }
+              else{
+                _ingredient.id = null;
+              }
+              if((ingredient.added_price !== null) && (ingredient.added_price  !== undefined)){
+                _ingredient.added_price = ingredient.added_price;
+              }
+              if((ingredient.unity !== null) && (ingredient.unity  !== undefined)){
+                _ingredient.unity = ingredient.unity;
+              }
+              return [_ingredient];
+            }
           }
         }
-        return ingredient
-      }); 
+        return [];
+      })
+      console.log(plat.ingredients);
     }
     if(this.add_plats_section.controls.base_conso.value !== null){
       let base_conso = this.add_plats_section.controls.base_conso.value;
-      plat.consommables = this.data.plat.consommables.filter((consommable) => base_conso.map((conso) => conso.name).includes(consommable.name));
+      plat.consommables = base_conso.flatMap((consommable) => {
+        let tmp_consommable = this.data.consommables.find((_consommable) => _consommable.name === consommable.name);
+        if(consommable.name !== null && consommable.name !== undefined){
+          if((consommable.quantity !== null) && (consommable.quantity !== undefined)){
+            if((consommable.unity !== null) && (consommable.unity !== undefined)){
+              let _consommable = new TConsoBase(consommable.name, consommable.quantity, consommable.unity);
+              if(tmp_consommable !== undefined && _consommable.id !== null){
+                _consommable.id?.push(tmp_consommable.id);
+              }
+              else{
+                _consommable.id = null;
+              }
+              return [_consommable];
+            }
+          }
+        }
+        return [];
+      })
+      console.log(plat.consommables);
     }
     if(this.add_plats_section.controls.etapes.value !== null){
       let base_etapes = this.add_plats_section.controls.etapes.value;
@@ -230,10 +259,10 @@ export class AddPlatsComponent implements OnInit {
         let _seconde =  0;
         let etape_to_add = new Cetape()
         if((etape.name !== null) && (etape.name !== undefined)){
-          etape_to_add.nom = etape.name;
+          etape_to_add.name = etape.name;
         }
         if((etape.comm !== null) && (etape.comm !== undefined)){
-          etape_to_add.commentaire = etape.comm;
+          etape_to_add.commentary = etape.comm;
         }
         if((etape.heure !== null) && (etape.heure !== undefined)){
           _heure = etape.heure * 3600;
@@ -244,7 +273,7 @@ export class AddPlatsComponent implements OnInit {
         if((etape.seconde !== null) && (etape.seconde !== undefined)){
           _seconde = etape.seconde;
         }
-        etape_to_add.temps = _heure + _minute + _seconde;
+        etape_to_add.time = _heure + _minute + _seconde;
         return etape_to_add;
       })
     }
@@ -262,7 +291,9 @@ export class AddPlatsComponent implements OnInit {
                               else{
                                   preparation.portions = 0;
                               }
-                              _preparation.id =  preparation.id;
+                              if(_preparation.id !== null){
+                                _preparation.id.push(preparation.id);  
+                              }
                               _preparation.name = preparation.name;
                               _preparation.portions = preparation.portions;
                               if(first_prepa !== undefined){
@@ -275,19 +306,29 @@ export class AddPlatsComponent implements OnInit {
                             return _preparation;
                           });
     }
-    plat.temps = this.plat_service.getFullTheoTimeToSec(plat, this.data.preparations);
+    plat.time = this.plat_service.getFullTheoTimeToSec(plat, this.data.preparations);
     plat.portion_cost = this.plat_service.getPortionCost(plat, this.data.preparations, this.data.ingredients);
     if(plat.portions !== undefined){
       plat.material_ratio = this.plat_service.getRatioMaterial(plat.portion_cost,plat as Cplat);
     }
     const prime_cost_prom = this.plat_service.getPrimCost(this.data.prop, this.data.restaurant, plat, this.data.preparations, this.data.consommables, this.data.ingredients).then((prime_cost) => plat.prime_cost = prime_cost);
     prime_cost_prom.then((prime_cost) => {
-      this.plat_interaction.setPlat(this.data.prop, this.data.restaurant, plat).finally(() => {
-        this._snackBar.open(`le plat ${plat.nom} vient d'être ajouté`, "fermer")
-      }).catch((e) => {
-        console.log(e);
-        this._snackBar.open(`le plat ${plat.nom} n'a pas pu être ajouté`, "fermer")
-      });
+      if(this.data.modification){
+        this.plat_interaction.updatePlat(this.data.prop, plat).finally(() => {
+          this._snackBar.open(`le plat ${plat.name} vient d'être modifié`, "fermer")
+        }).catch((e) => {
+          console.log(e);
+          this._snackBar.open(`le plat ${plat.name} n'a pas pu être modifié`, "fermer")
+        });
+      }
+      else{
+        this.plat_interaction.setPlat(this.data.prop,  plat).finally(() => {
+          this._snackBar.open(`le plat ${plat.name} vient d'être ajouté`, "fermer")
+        }).catch((e) => {
+          console.log(e);
+          this._snackBar.open(`le plat ${plat.name} n'a pas pu être ajouté`, "fermer")
+        });
+      }
     });
   }
 
@@ -382,7 +423,6 @@ export class AddPlatsComponent implements OnInit {
       quantity: new FormControl(quantity),
       unity: new FormControl(unity)
     });
-    new_conso.controls.unity.disable();
     this.getBaseConso().push(new_conso);
   }
 
@@ -417,10 +457,10 @@ export class AddPlatsComponent implements OnInit {
       const etapes = this.data.plat.etapes;
       if(etapes !== null){
         if((etapes[etape_length] !== undefined) && (etapes.length > 0)){
-          if(etapes[etape_length].nom !== null)  name = etapes[etape_length].nom as string;
-          if(etapes[etape_length].commentaire !== null) comm = etapes[etape_length].commentaire as string;
-          if(etapes[etape_length].temps !== null){
-            tmps = this.calcul_service_prepa.SecToArray(etapes[etape_length].temps)
+          if(etapes[etape_length].name !== null)  name = etapes[etape_length].name as string;
+          if(etapes[etape_length].commentary !== null) comm = etapes[etape_length].commentary as string;
+          if(etapes[etape_length].time !== null){
+            tmps = this.calcul_service_prepa.SecToArray(etapes[etape_length].time)
           } 
         }
       }

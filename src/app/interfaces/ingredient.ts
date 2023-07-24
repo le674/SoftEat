@@ -72,7 +72,7 @@ export class TIngredientBase{
     "quantity": number | null; 
     "unity":string | null;
     "added_price":number | null;
-    "id":string | null;
+    "id":Array<string> | null;
     constructor(name:string, quantity:number | null, unity:string | null){
         this.name = name;
         this.quantity = quantity;
@@ -99,13 +99,14 @@ export class TIngredientBase{
         this.added_price = null;
         this.quantity = null;
         this.unity = null;
-        this.id = ingredient.id;
+        this.id?.push(ingredient.id);
     }
     /**
      * On retourne l'ingréfdient de base mais uniquement les attributs de celui-ci
      * @returns {TIngredientBase} ingrédient de base avec uniquement les attributs
      */
-    public getData():{name:string, quantity:number | null, unity:string | null, added_price:number | null, id:string | null}{
+    public getData():{name:string, quantity:number | null, unity:string | null, added_price:number | null, id:Array<string> | null}{
+        
         return {
             name: this.name,
             quantity:this.quantity,
@@ -114,6 +115,18 @@ export class TIngredientBase{
             id:this.id
         }
     }
+    /**
+     * on copie un autre ingrédient de base dans cette objet
+     * @param ingredient ingrédient que l'on souhaite copier
+     */
+    public setData(ingredient:TIngredientBase){
+        this.name = ingredient.name;
+        this.id = ingredient.id;
+        this.added_price = ingredient.added_price;
+        this.quantity = ingredient.quantity;
+        this.unity = ingredient.unity;
+    }
+
 }
 /**
  * @class ingrédient dan la base de donnée 
@@ -331,6 +344,7 @@ export class CIngredient implements Ingredient {
      * permet de récupérer un objet constituant l'ingrédient à écrire en base de donnée
      * @param id identifiant du document que l'on souahite renvoyer pour l'ajout en base de donnée
      * @param proprietary_id identifiant du propriétaire 
+     * @returns {Object} ingrédient sous forme d'objet
     */
     getData(id:string | null, proprietary_id:string): any {
         if((this.proprietary_id === null) || this.proprietary_id === undefined){

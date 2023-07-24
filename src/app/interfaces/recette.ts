@@ -1,3 +1,4 @@
+import { TConsoBase } from "./consommable";
 import { CIngredient, TIngredientBase } from "./ingredient";
 import { Cpreparation, CpreparationBase } from "./preparation";
 
@@ -108,5 +109,28 @@ export class MiniConsommable{
         this.quantity = null;
         this.unity = null;
         this.cost =null;
+    }
+    /**
+     * permet d'attribuer au mini consommable les valeurs quantity, unity et cost
+     * @param quantity quantitée à ajouter dans le mini consommable
+     * @param unity unitée de la quantitée ajoutée
+     * @param cost coût du consommable
+     */
+    setConso(quantity:number | null, unity:string | null, cost: number | null){
+        this.quantity = quantity;
+        this.unity = unity;
+        this.cost = cost;
+    }
+    /**
+     * permet de convertir le mini consommable en un consommable de base 
+     * @param id identifiant du consommable de base dérivé du miniconsommable
+     * @returns 
+     */
+    toConsoBase(id:string | null): TConsoBase {
+        let consommable = new TConsoBase(this.name, this.quantity, this.unity);
+        if(consommable.id !== null && id !== null){
+            consommable.id.push(id);
+        }
+        return consommable;
     }
 }

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
@@ -12,13 +12,15 @@ import { PlatsInteractionService } from '../../../../app/services/menus/plats-in
 import { AddMenuComponent } from './add.menu/add.menu.component';
 import { DisplayMenuComponent } from './display.menu/display.menu.component';
 import { Cconsommable } from 'src/app/interfaces/consommable';
+import { Unsubscribe } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './app.menu.component.html',
   styleUrls: ['./app.menu.component.css']
 })
-export class AppMenuComponent implements OnInit, AfterViewInit {
+export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public menus: Array<Cmenu>
   private url: UrlTree;
@@ -28,6 +30,16 @@ export class AppMenuComponent implements OnInit, AfterViewInit {
   private ingredients: Array<CIngredient>
   private consommables: Array<Cconsommable>
   private plats: Array<Cplat>;
+  private req_ingredients!:Unsubscribe;
+  private req_preparations!:Unsubscribe;
+  private req_consommables!:Unsubscribe;
+  private req_plats!:Unsubscribe;
+  private req_menus!:Unsubscribe
+  private ingredients_sub!:Subscription;
+  private preparations_sub!:Subscription;
+  private consommables_sub!:Subscription;
+  private plats_sub!:Subscription;
+  private menus_sub!:Subscription;
 
   constructor(private menu_service: MenuInteractionService,
     router: Router, public dialog: MatDialog, private ingredient_service: IngredientsInteractionService,
@@ -41,22 +53,35 @@ export class AppMenuComponent implements OnInit, AfterViewInit {
     this.router = router;
     this.url = this.router.parseUrl(this.router.url);
   }
+  ngOnDestroy(): void {
+    this.req_ingredients();
+    this.req_consommables();
+    this.req_preparations();
+    this.req_plats();
+    this.req_menus();
+    this.ingredients_sub.unsubscribe();
+    this.consommables_sub.unsubscribe();
+    this.preparations_sub.unsubscribe();
+    this.plats_sub.unsubscribe();
+    this.menus_sub.unsubscribe();
+  }
 
   ngOnInit(): void {
     let user_info = this.url.queryParams;
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];
-    this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant)
-    this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients) => {
+    this.req_ingredients =  this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
+    this.req_consommables =  this.conso_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
+    this.req_plats = this.plat_service.getPlatFromRestaurantBDD(this.prop);
+    this.req_menus = this.menu_service.getMenuFromRestaurantBDD(this.prop);
+    this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients) => {
       this.ingredients = ingredients;
-      this.conso_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
-      this.conso_service.getConsommablesFromRestaurants().subscribe((consommables) => {
+      this.consommables_sub = this.conso_service.getConsommablesFromRestaurants().subscribe((consommables) => {
         this.consommables = consommables;
-        this.plat_service.getPlatFromRestaurantBDD(this.prop, this.restaurant);
-        this.plat_service.getPlatFromRestaurant().subscribe((plats: Array<Cplat>) => {
-          this.menu_service.getMenuFromRestaurantBDD(this.prop, this.restaurant);
-          this.menu_service.getMenuFromRestaurant().subscribe((menu: Array<Cmenu>) => {
-
+        this.plats_sub = this.plat_service.getPlatFromRestaurant().subscribe((plats: Array<Cplat>) => {
+          this.plats = plats;
+          this.menus_sub = this.menu_service.getMenuFromRestaurant().subscribe((menus: Array<Cmenu>) => {
+            this.menus = menus;
           })
         })
       })
@@ -102,17 +127,16 @@ export class AppMenuComponent implements OnInit, AfterViewInit {
       height: `${window.innerHeight}px`,
       width: `800px`,
       data: {
+        prop:this.prop,
+        restaurant: this.restaurant,
+        plats:this.plats,
         menu: menu
       }
     })
   }
 
   suppressMenu(menu: Cmenu): void {
-    this.menu_service.deleteMenu(this.prop, this.restaurant, menu).catch(() => {
-      this._snackBar.open("la suppression du menu n'a pas pu être réalisée", "fermer");
-    }).finally(() => {
-      this._snackBar.open(`le menu ${menu.nom} vient d'être supprimé`, "fermer")
-    });
+    
   }
 
 }

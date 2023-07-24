@@ -11,6 +11,7 @@ import { DisplayPreparationsComponent } from './display.preparation/display.prep
 import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
 import { Unsubscribe } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
+import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
 
 @Component({
   selector: 'app-preparations',
@@ -35,7 +36,7 @@ export class AppPreparationsComponent implements OnInit, OnDestroy{
 
   constructor(public dialog: MatDialog, private ingredient_service: IngredientsInteractionService,
   private consommable_service: ConsommableInteractionService,
-  router: Router, private _snackBar: MatSnackBar) { 
+  router: Router, private _snackBar: MatSnackBar, private preparation_service:PreparationInteractionService) { 
     this.preparations = [];
     this.prepa_names = [];
     this.router = router;
@@ -61,11 +62,15 @@ export class AppPreparationsComponent implements OnInit, OnDestroy{
     this.req_preparations = this.ingredient_service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
     this.req_consommables = this.consommable_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
     this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:Array<CIngredient>) => {
-     
       this.ingredients = ingredients;
       this.preparations_sub = this.ingredient_service.getPrepraparationsFromRestaurants().subscribe((preparations:Array<Cpreparation>) => {
         this.preparations = preparations;
+        console.log("preparation 1");
+        console.log(preparations);
+        
         this.consommables_sub = this.consommable_service.getConsommablesFromRestaurants().subscribe((consommables:Array<Cconsommable>) => {
+          console.log("consommable 1");
+          console.log(consommables);
           this.consommables = consommables;
         })
       })
@@ -119,12 +124,12 @@ export class AppPreparationsComponent implements OnInit, OnDestroy{
   }
   suppressPreparation(preparation: Cpreparation):void{
     if(preparation.name !== null){
-      /* this.ingredient_service.removeIngInBdd(preparation.nom.split(" ").join('_'), this.prop, this.restaurant, true).catch((e) => {
+      this.preparation_service.removePrepaInBdd(preparation,this.prop, this.restaurant).catch((e) => {
         console.log(e);
-        this._snackBar.open(`nous ne somme pas parvenu à supprimer le ${preparation.nom}`)
+        this._snackBar.open("Impossible de supprimer la préparation veuillez contacter softeat", "fermer");
       }).finally(() => {
-        this._snackBar.open(`la préparation ${preparation.nom} vient d'être suprrimé de la base de donnée`, "fermer")
-      }); */
-    }
+        this._snackBar.open("Nous venons de supprimer la préparation", "fermer")
+      })
+    } 
   }
 }

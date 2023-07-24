@@ -36,7 +36,13 @@ export class ConsommableInteractionService {
     } 
     this._consommables = [];
   }
-  getConsommablesFromRestaurantsBDD(restaurant_id:string, proprietaire_id:string){
+  /**
+   * Cette fonction permet de récupérer l'ensemble des consommable de la base de donnée
+   * @param proprietaire_id identifiant de l'enseigne qui possède les consommables
+   * @param restaurant_id identifiant du restaurant qui possède les consommables
+   * @returns {Unsubscribe} fonction de désabonnement à la récupération des consommables
+   */
+  getConsommablesFromRestaurantsBDD(proprietaire_id:string, restaurant_id:string){
     const consommables_ref = collection(doc(
       collection(
         doc(
@@ -97,6 +103,12 @@ export class ConsommableInteractionService {
       await updateDoc(consommable_ref, consommable.getData(null, prop))
   }
 
+  /**
+   * Permet de supprimer un consommable dans la base de donnée
+   * @param consommable  consommable à supprimer depuis la base de donnée 
+   * @param prop identifiant de l'enseigne qui possède le consommable
+   * @param restaurant  identifiant du restaurant qui possède le consommable
+   */
   async removeConsoInBdd(consommable: RowConsommable, prop:string, restaurant:string){
     const consommables_ref = doc(collection(doc(
       collection(

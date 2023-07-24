@@ -5,7 +5,7 @@ export class TConsoBase {
     name:string;
     quantity:number | null;
     unity:string | null;
-    id:string | null;
+    id:Array<string> | null;
     constructor(name:string, quantity:number | null, unity:string | null){
         this.name = name;
         this.quantity = quantity;
@@ -36,7 +36,7 @@ export class TConsoBase {
      * retourne un consommable que l'on peut ajouter dans la base de donnée
      * @returns {TConsoBase} à ajouter dans la base de donnée
      */
-    public getData():{name:string, quantity:number | null, unity:string | null, id:string | null}{
+    public getData():{name:string, quantity:number | null, unity:string | null, id:Array<string> | null}{
         return {
             name:this.name,
             quantity: this.quantity,
@@ -164,7 +164,7 @@ export class Cconsommable implements Consommable {
      */
     convertToBase():TConsoBase {
         let consommable = new TConsoBase(this.name, this.quantity, this.unity);
-        consommable.id = this.id;
+        consommable.id?.push(this.id);
         return consommable;
     }
 

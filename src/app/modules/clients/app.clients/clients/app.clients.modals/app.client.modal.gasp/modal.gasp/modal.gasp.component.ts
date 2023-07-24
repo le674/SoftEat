@@ -30,10 +30,10 @@ export class ModalGaspComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    this.plat_service.getPlatFromRestaurantBDD(this.data.prop, this.data.restaurant);
+    this.plat_service.getPlatFromRestaurantBDD(this.data.prop);
     this.plat_service.getPlatFromRestaurant().subscribe((plats) => {
       this.plats = plats;
-      this.plat_names = this.plats.map((plat) => plat.nom.split("_").join(" "));
+      this.plat_names = this.plats.map((plat) => plat.name.split("_").join(" "));
       const first_form = new FormGroup({
         name: new FormControl(this.plat_names[0], Validators.required),
         quantity: new FormControl(0),

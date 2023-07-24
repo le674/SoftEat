@@ -23,10 +23,10 @@ export class DisplayPlatsComponent implements OnInit {
 
   public plat:Cplat;
   public tmps_prepa_theo:string;
-  public prime_cost:number;
+  public prime_cost:number | null;
   public prix_ttc:number;
-  public portion_cost:number;
-  public material_ratio:number;
+  public portion_cost:number | null;
+  public material_ratio:number | null;
   public recommendation_price:number;
   public displayedColumnsIng: string[] = ['nom', 'quantity', 'unity', 'cost', 'cost_matiere'];
   public displayedColumnsConso: string[] = ['nom', 'quantity', 'unity', 'cost'];
@@ -116,7 +116,7 @@ export class DisplayPlatsComponent implements OnInit {
     //ont récupère les préprations uniquement qui sont 
 
     this.tmps_prepa_theo = this.plat_service.getFullTheoTimeFromSec(this.data.plat, this.data.preparations);
-    let price_ttc = this.calcul_service.getCostTtcFromTaux(this.data.plat.taux_tva, this.data.plat.prix);
+    let price_ttc = this.calcul_service.getCostTtcFromTaux(this.data.plat.taux_tva, this.data.plat.cost);
     if(this.data.plat.portion_cost !== undefined){
       let taux_tva = this.calcul_service.getCostTtcFromTaux(this.data.plat.taux_tva, this.recommendation_price);
       this.portion_cost = this.data.plat.portion_cost;
@@ -149,7 +149,12 @@ export class DisplayPlatsComponent implements OnInit {
       if(this.data.plat.preparations.length > 0){
           const res = this.data.plat.preparations.filter((prepa) => prepa.name !== null)
           this.displayed_prepa = res.map((_preparation) => {
-           const preparation = this.data.preparations.find((preparation) => preparation.id === _preparation.id);
+           const preparation = this.data.preparations.find((preparation) => {
+            if(_preparation.id !== null){
+              _preparation.id.includes(preparation.id)
+            }
+
+           });
            let cost = 0;
            let val_bouch = 0; 
            if((preparation !== undefined) && (preparation.ingredients !== null) ){
@@ -186,7 +191,11 @@ export class DisplayPlatsComponent implements OnInit {
           let cost = 0;
           let quantity = 0; 
           let unity = "";
-          let full_conso = this.data.consommables.find((_consommable) => _consommable.id === consommable.id);
+          let full_conso = this.data.consommables.find((_consommable) => {
+            if(consommable.id !== null){
+              consommable.id.push(_consommable.id);
+            }
+          });
           if(full_conso !== undefined){
             cost = full_conso.cost;
           }
@@ -199,7 +208,7 @@ export class DisplayPlatsComponent implements OnInit {
       }
     }
     if(this.data.plat.etapes !== null){
-      this.displayed_etape = this.data.plat.etapes.map((etape) => {return {nom: etape.nom, temps: etape.temps, commentaire: etape.commentaire}})
+      this.displayed_etape = this.data.plat.etapes.map((etape) => {return {nom: etape.name, temps: etape.time, commentaire: etape.commentary}})
       this.visibles.index_4 = new Array(this.displayed_etape.length).fill(false);
       this.dataSource_etape.data = this.displayed_etape;
     }

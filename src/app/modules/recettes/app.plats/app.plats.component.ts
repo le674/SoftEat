@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
@@ -12,20 +12,29 @@ import { PreparationInteractionService } from '../../../../app/services/menus/pr
 import { AddPlatsComponent } from './add.plats/add.plats.component';
 import { DisplayPlatsComponent } from './display.plats/display.plats.component';
 import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
+import { Unsubscribe } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-plats',
   templateUrl: './app.plats.component.html',
   styleUrls: ['./app.plats.component.css']
 })
-export class AppPlatsComponent implements OnInit {
+export class AppPlatsComponent implements OnInit, OnDestroy {
   public _preparations:Array<CpreparationBase>;
   public _ingredients:Array<TIngredientBase>;
   public _consommables: Array<TConsoBase>;
   public preparations:Array<Cpreparation>;
   public ingredients:Array<CIngredient>;
   public consommables: Array<Cconsommable>;
-
+  private req_ingredients!:Unsubscribe;
+  private req_preparations!:Unsubscribe;
+  private req_consommables!:Unsubscribe;
+  private req_plats!:Unsubscribe;
+  private ingredients_sub!:Subscription;
+  private preparations_sub!:Subscription;
+  private consommables_sub!:Subscription;
+  private plats_sub!:Subscription;
   private url: UrlTree;
   private router: Router;
   public plats: Array<Cplat>;
@@ -50,22 +59,37 @@ export class AppPlatsComponent implements OnInit {
     this.ingredients = [];
     this.carte = [];
   }
+  ngOnDestroy(): void {
+    this.req_ingredients();
+    this.req_consommables();
+    this.req_preparations();
+    this.req_plats();
+    this.ingredients_sub.unsubscribe();
+    this.consommables_sub.unsubscribe();
+    this.preparations_sub.unsubscribe();
+    this.plats_sub.unsubscribe();
+  }
   ngOnInit(): void {
     let user_info = this.url.queryParams;
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];
-    this.plat_service.getPlatFromRestaurantBDD(this.prop, this.restaurant);
-    this.plat_service.getPlatFromRestaurant().subscribe((plats:Cplat[]) => {
+    this.req_plats = this.plat_service.getPlatFromRestaurantBDD(this.prop);
+    this.req_ingredients = this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
+    this.req_consommables = this.conso_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
+    this.req_preparations = this.ingredient_service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
+    this.plats_sub = this.plat_service.getPlatFromRestaurant().subscribe((plats:Cplat[]) => {
       this.plats = plats;
+      if(this.plats !== undefined && this.plats !== null){
+        for (let category of this.categorie) {
+          this.carte.push(this.plats.filter((plat) => plat.type === category));
+        }
+      }
       this.categorie.map((categorie) => this.carte.push(plats.filter((plat) => plat.type === categorie)));
-      this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant)
-      this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:CIngredient[]) => {
+      this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:CIngredient[]) => {
         this.ingredients = ingredients;
-        this.conso_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
-        this.conso_service.getConsommablesFromRestaurants().subscribe((consommables:Cconsommable[]) => {
+        this.consommables_sub = this.conso_service.getConsommablesFromRestaurants().subscribe((consommables:Cconsommable[]) => {
           this.consommables = consommables;
-          this.ingredient_service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
-          this.ingredient_service.getPrepraparationsFromRestaurants().subscribe((preparations:Cpreparation[]) => {
+          this.preparations_sub = this.ingredient_service.getPrepraparationsFromRestaurants().subscribe((preparations:Cpreparation[]) => {
            this.preparations = preparations;
           })
         })
@@ -84,17 +108,18 @@ export class AppPlatsComponent implements OnInit {
         consommables: this.consommables,
         preparations: this.preparations,
         plat:null,
-        type: this.categorie[categorie]
+        type: this.categorie[categorie],
+        modification:false
       }
     });
   }
   suppressPlat(plat:Cplat){
-    if(plat.nom !== null){
-      this.plat_service.removePlatInBdd(plat.nom.split(" ").join('_'), this.prop, this.restaurant).catch((e) => {
+    if(plat.name !== null){
+      this.plat_service.removePlatInBdd(plat.name.split(" ").join('_'), this.prop, this.restaurant).catch((e) => {
         console.log(e);
-        this._snackBar.open(`nous ne somme pas parvenu à supprimer le ${plat.nom}`)
+        this._snackBar.open(`nous ne somme pas parvenu à supprimer le ${plat.name}`)
       }).finally(() => {
-        this._snackBar.open(`la préparation ${plat.nom.split(" ").join('_')} vient d'être suprrimé de la base de donnée`, "fermer")
+        this._snackBar.open(`la préparation ${plat.name} vient d'être suprrimé de la base de donnée`, "fermer")
       });
     }
   }
@@ -109,7 +134,7 @@ export class AppPlatsComponent implements OnInit {
         consommables: this.consommables,
         preparations: this.preparations,
         plat:plat,
-        type: ""
+        modification:true
       }
     });
   }
