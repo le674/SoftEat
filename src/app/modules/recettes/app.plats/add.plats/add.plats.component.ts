@@ -210,10 +210,7 @@ export class AddPlatsComponent implements OnInit {
             if((ingredient.unity !== null) && (ingredient.unity !== undefined)){
               let _ingredient = new TIngredientBase(ingredient.name, ingredient.quantity, ingredient.unity);
               if(tmp_ingredient !== undefined){
-                _ingredient.id?.push(tmp_ingredient.id);
-              }
-              else{
-                _ingredient.id = null;
+                _ingredient.id.push(tmp_ingredient.id);
               }
               if((ingredient.added_price !== null) && (ingredient.added_price  !== undefined)){
                 _ingredient.added_price = ingredient.added_price;
@@ -237,11 +234,8 @@ export class AddPlatsComponent implements OnInit {
           if((consommable.quantity !== null) && (consommable.quantity !== undefined)){
             if((consommable.unity !== null) && (consommable.unity !== undefined)){
               let _consommable = new TConsoBase(consommable.name, consommable.quantity, consommable.unity);
-              if(tmp_consommable !== undefined && _consommable.id !== null){
-                _consommable.id?.push(tmp_consommable.id);
-              }
-              else{
-                _consommable.id = null;
+              if(tmp_consommable !== undefined){
+                _consommable.id.push(tmp_consommable.id);
               }
               return [_consommable];
             }
@@ -347,12 +341,15 @@ export class AddPlatsComponent implements OnInit {
       if(index > this.unity_conso.length){
         if((consommable !== undefined) && (consommable.unity !== null)){
           this.unity_conso.push(consommable.unity);
-        } 
+        }
       }
       else{
         if((consommable !== undefined) && (consommable.unity !== null)){
           this.unity_conso[index] = consommable.unity;
         } 
+      }
+      if((this.getBaseConso().at(index) !== undefined)  && (consommable !== undefined)){
+        this.getBaseConso().at(index).controls.unity.setValue(consommable.unity);
       }
     }
   }

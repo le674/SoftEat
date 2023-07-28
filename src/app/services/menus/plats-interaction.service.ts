@@ -9,7 +9,7 @@ import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../../environ
 import { IngredientsInteractionService } from './ingredients-interaction.service';
 import { Cconsommable } from 'src/app/interfaces/consommable';
 import { Subject } from 'rxjs';
-import { collection, doc, DocumentSnapshot, Firestore, getFirestore, onSnapshot, setDoc, SnapshotOptions, Unsubscribe } from 'firebase/firestore';
+import { collection, deleteDoc, doc, DocumentSnapshot, Firestore, getFirestore, onSnapshot, setDoc, SnapshotOptions, Unsubscribe } from 'firebase/firestore';
 import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.service';
 
 @Injectable({
@@ -77,12 +77,24 @@ export class PlatsInteractionService {
     })
     return this.sub_plats;
   }
-
   getPlatFromRestaurant() {
     return this.plats.asObservable();;
   }
-  async removePlatInBdd(prop: string, restaurant: string, plat_id: string) {
-    
+  /**
+   * Suppression du plat dans la base de donnée 
+   * @param prop identifiant de l'enseigne dans lequel ont veut supprimer le plat
+   * @param restaurant identifiant de restaurant pour lequel on veut supprimer le plat
+   * @param plat plat a supprimer de la base de donnée
+   * @returns {void} suppression de l'ingrédient depuis la base de donnée
+   */
+  async removePlatInBdd(prop: string, plat: Cplat) {
+    const plat_ref = doc(collection(doc(
+          collection(
+            this.firestore, "proprietaires"
+            ), prop
+      ), "plats"),
+      plat.id).withConverter(this.plat_converter);
+    await deleteDoc(plat_ref);
   }
   /**
    * permet d'ajouter un plat à la bdd
@@ -90,8 +102,6 @@ export class PlatsInteractionService {
    * @param plat plat que l'ont veut ajouter à la bdd
    */
   async setPlat(prop: string, plat: Cplat) {
-    console.log("setPLat");
-    console.log(plat);
     const plats_ref = 
       doc(collection(
         doc(

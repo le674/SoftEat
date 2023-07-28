@@ -10,7 +10,7 @@ import { IngredientsInteractionService } from './ingredients-interaction.service
 import { PlatsInteractionService } from './plats-interaction.service';
 import { Cconsommable } from 'src/app/interfaces/consommable';
 import { Subject } from 'rxjs';
-import { collection, deleteDoc, doc, DocumentSnapshot, Firestore, getFirestore, onSnapshot, SnapshotOptions, Unsubscribe } from 'firebase/firestore';
+import { collection, deleteDoc, doc, DocumentSnapshot, Firestore, getFirestore, onSnapshot, setDoc, SnapshotOptions, Unsubscribe, updateDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -80,7 +80,7 @@ export class MenuInteractionService {
           this.firestore, "proprietaires"
         ), prop
       ), "menus"
-    ),menu.id).withConverter(this.menu_converter)
+    ),menu.id).withConverter(this.menu_converter);
     await deleteDoc(menus_ref);
   }
 
@@ -90,9 +90,35 @@ export class MenuInteractionService {
    * @param restaurant restaurant qui possède le menu
    * @param menu menu à ajouter dans la base de donnée
    */
-  async setMenu(prop: string, restaurant: string, menu: Cmenu) {
-    throw new Error('Method not implemented.');
+  async setMenu(prop: string,  menu: Cmenu) {
+    const menus_ref = 
+    doc(collection(
+      doc(
+        collection(
+          this.firestore, "proprietaires"
+        ), prop
+      ), "menus"
+    )).withConverter(this.menu_converter);
+    await setDoc(menus_ref, menu.getData(menus_ref.id))
   }
+
+  /**
+   * fonction qui permet de modifier un menu dans la base de donnée 
+   * @param prop identifiant du proprietaire qui possède le menu
+   * @param menu menu que nous souhaitons modifier dans la base de donnée
+   */
+  async updateMenu(prop:string, menu:Cmenu){
+    const menu_ref = 
+    doc(collection(
+      doc(
+        collection(
+          this.firestore, "proprietaires"
+        ), prop
+      ), "menus"
+    ), menu.id).withConverter(this.menu_converter);
+    await updateDoc(menu_ref, menu.getData(null));
+  }
+
   getMenuFromRestaurant() {
     return this.menus.asObservable();
   }

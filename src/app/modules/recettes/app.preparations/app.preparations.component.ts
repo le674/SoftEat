@@ -65,12 +65,7 @@ export class AppPreparationsComponent implements OnInit, OnDestroy{
       this.ingredients = ingredients;
       this.preparations_sub = this.ingredient_service.getPrepraparationsFromRestaurants().subscribe((preparations:Array<Cpreparation>) => {
         this.preparations = preparations;
-        console.log("preparation 1");
-        console.log(preparations);
-        
         this.consommables_sub = this.consommable_service.getConsommablesFromRestaurants().subscribe((consommables:Array<Cconsommable>) => {
-          console.log("consommable 1");
-          console.log(consommables);
           this.consommables = consommables;
         })
       })

@@ -1,9 +1,9 @@
 export class Address{
-    public postal_code:string;
-    public street_number: number;
+    public postal_code:string | null;
+    public street_number: number | null;
     public city: string;
-    public street: string;
-    constructor(postal_code:string, street_number:number, city:string, street:string){
+    public street: string | null;
+    constructor(postal_code:string | null, street_number:number | null, city:string, street:string | null){
         this.postal_code = postal_code;
         this.street_number = street_number;
         this.street = street;
@@ -14,6 +14,6 @@ export class Address{
      * @returns {string} représentation de l'adresse
      */
     public print():string{
-        return this.street_number + " " + this.street + " " +this.postal_code + " " + this.city
+        return this.street_number + " " + this.street + ", " +this.postal_code + " " + this.city
     }
 }

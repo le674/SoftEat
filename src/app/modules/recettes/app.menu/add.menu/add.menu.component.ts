@@ -6,10 +6,11 @@ import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CIngredient, TIngredientBase } from '../../../../../app/interfaces/ingredient';
 import { Cmenu } from '../../../../../app/interfaces/menu';
-import { Cplat } from '../../../../../app/interfaces/plat';
+import { CbasePlat, Cplat } from '../../../../../app/interfaces/plat';
 import { MenuInteractionService } from '../../../../../app/services/menus/menu-interaction.service';
 import { MenuCalculMenuService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.menu.service';
 import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-add.menu',
@@ -48,7 +49,8 @@ export class AddMenuComponent implements OnInit {
     ingredients: Array<CIngredient>,
     consommables: Array<Cconsommable>,
     plats: Array<Cplat>,
-    menu: Cmenu
+    menu: Cmenu,
+    modification:boolean
   }, private menu_service: MenuInteractionService, private _snackBar: MatSnackBar, private menu_calcul: MenuCalculMenuService) {
     this.unity_conso = [];
     this.unity_ing = [];
@@ -102,13 +104,19 @@ export class AddMenuComponent implements OnInit {
   }
 
   changeMenu() {
+
     let menu = new Cmenu();
-    let _ing = null;
-    let _conso = null;
-    let _plats = null;
-    const menu_ingredients = this.data.menu.ingredients;
-    const menu_consommables = this.data.menu.consommables;
-    const menu_plats = this.data.menu.plats;
+    let _ing:Array<TIngredientBase> | null = null;
+    let _conso:Array<TConsoBase> | null = null;
+    let _plts:Array<CbasePlat> | null = null;
+    let _ingredients = this.data.ingredients;
+    let _consommables = this.data.consommables;
+    let _plats = this.data.plats;
+    if(this.data.menu !== null){
+      if(this.data.menu.id !== undefined){
+        menu.id = this.data.menu.id;
+      }
+    }
     const name = this.add_menu_section.controls.name.value;
     const price = this.add_menu_section.controls.price.value;
     const ingredients = this.add_menu_section.controls.base_ing.controls.map((ingredient) => {
@@ -117,49 +125,85 @@ export class AddMenuComponent implements OnInit {
     const consommables = this.add_menu_section.controls.base_conso.controls.map((consommable) => {
       return { name: consommable.controls.name.value, quantity: consommable.controls.quantity.value, unity: consommable.controls.unity.value };
     });
-
     const plats = this.add_menu_section.controls.base_plat.controls.map((plat) => plat.controls.name.value);
     if ((name !== null) && (name !== undefined)) {
       menu.name = name;
       if ((price !== null) && (price !== undefined)) {
         menu.cost = price;
       }
-      if(menu_ingredients !== null){
-        _ing = menu_ingredients.filter((ingredient) => ingredients.map((ing) => ing.name)
-        .includes(ingredient.name));
-        _ing.forEach((full_ingredient) => {
-          const _ingredient = ingredients.find((ingredient) => full_ingredient.name === ingredient.name);
-          if (_ingredient !== undefined) {
-            if (_ingredient.quantity !== null) {
-              full_ingredient.quantity = _ingredient.quantity
+      if(_ingredients !== null && _ingredients !== undefined){
+        _ing = ingredients.flatMap((ingredient) => {
+          const _ingredient = _ingredients.find((_ingredient) => _ingredient.name === ingredient.name);
+          if(ingredient.name !== null){
+            let ing = new TIngredientBase(ingredient.name, ingredient.quantity, ingredient.unity);
+            ing.added_price = null;
+            if(_ingredient !== undefined){
+              ing.id.push(_ingredient.id);
             }
+            return [ing];
           }
-        });
+          return [];
+        })
       }
-      if(menu_consommables !== null){
-        _conso = menu_consommables.filter((consommable) => consommables.map((conso) => conso.name)
-        .includes(consommable.name));
-        _conso.forEach((full_consommable) => {
-          const _consommable = consommables.find((consommable) => full_consommable.name === consommable.name);
-          if (_consommable !== undefined) {
-            if (_consommable.quantity !== null) full_consommable.quantity = _consommable.quantity
+      if(_consommables !== null && _consommables !== undefined){
+        _conso = consommables.flatMap((consommable) => {
+          const _consommable = _consommables.find((_consommable) => _consommable.name === consommable.name);
+          if(consommable.name !== null){
+            let conso = new TConsoBase(consommable.name, consommable.quantity, consommable.unity);
+            if(_consommable !== undefined) conso.unity = _consommable?.unity;
+            if(_consommable !== undefined){
+              conso.id.push(_consommable.id); 
+            }
+            return [conso];
+          }
+          else{
+            return [];
           }
         })
       }
-      if(menu_plats !== null){
-        _plats = menu_plats.filter((plat) => plats.includes(plat.name));
+      if(_plats !== null && _plats !== undefined){
+        _plts = plats.flatMap((plat) => {
+          let plt = _plats.find((_plat) => {
+            if(_plat !== null){
+              return _plat.name === plat;
+            }
+            return false;
+          });
+          if(plat !== null){
+            let _plat = new CbasePlat(plat, "p", 1);
+            if(plt !== undefined) _plat.id = plt.id;
+            return [_plat];
+          }
+          return [];
+        })
       }
       menu.ingredients = _ing;
       menu.consommables = _conso;
-      menu.plats = _plats;
+      menu.plats = _plts;
       menu.taux_tva = this.menu_calcul.getTauxTvaVentilee(menu, this.data.ingredients, this.data.plats);
       menu.cost_ttc = this.menu_calcul.getPriceTTC(menu.cost, menu.taux_tva);
-      this.menu_service.setMenu(this.data.prop, this.data.restaurant, menu).catch(() => {
-        this._snackBar.open("le menu n'a pas été ajouté", "fermer");
-      }).finally(() => {
-        this._snackBar.open("le menu vient d'être ajouté", "fermer");
-      });
 
+      if(!this.data.modification){
+
+        this.menu_service.setMenu(this.data.prop,  menu).catch((e) => {
+          this._snackBar.open("le menu n'a pas été ajouté", "fermer");
+          const err = new Error(e); 
+          return throwError(() => err).subscribe((error) => {
+            console.log(error);
+          });
+        });
+        this._snackBar.open("le menu vient d'être ajouté", "fermer");
+      }
+      else{
+        this.menu_service.updateMenu(this.data.prop, menu).catch((e) => {
+          this._snackBar.open("le menu n'a pas été modifié", "fermer");
+          const err = new Error(e); 
+          return throwError(() => err).subscribe((error) => {
+            console.log(error);
+          });
+        });
+        this._snackBar.open("le menu vient d'être modifié", "fermer");
+      }
     }
   }
 
@@ -189,15 +233,6 @@ export class AddMenuComponent implements OnInit {
       }
     }
   }
-  // lorsque l'ingédient est un ingrédient en vrac ont enlève la possibilité de choisir pièce dans l'outils de séléction 
- changeIng(ingredient: MatOptionSelectionChange<string>, i: number) {
-   /*  let ing = this.ingredients.find((_ingredient) => _ingredient.name === ingredient.source.value);
-    if (ing !== undefined) {
-      if (ing.vrac === "oui") {
-        this.curr_ingredients_vrac.push(i);
-      }
-    } */
-  } 
   addInputIng() {
     let _curr_ings_length = this.getBaseIng().length;
     let name = "";
@@ -229,7 +264,7 @@ export class AddMenuComponent implements OnInit {
     let quantity = 0;
     let unity = "";
     if (this.data.menu !== null) {
-      if (this.data.menu.consommables !== null) {
+      if (this.data.menu.consommables !== null && this.data.menu.consommables !== undefined) {
         if (this.data.menu.consommables[_curr_conso_length] !== undefined) {
           let _curr_conso = this.data.menu.consommables[_curr_conso_length];
           name = _curr_conso.name;

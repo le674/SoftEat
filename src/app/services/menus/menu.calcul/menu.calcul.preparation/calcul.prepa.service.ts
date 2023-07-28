@@ -67,7 +67,8 @@ export class CalculPrepaService {
 
   async getPrimCost(etapes: Array<Cetape>, ingredients: Array<CIngredient>,
     _ingredients: Array<TIngredientBase>, consommables: Array<Cconsommable> | Array<MiniConsommable>) {
-    let sum_cost_ing = 0;
+    
+      let sum_cost_ing = 0;
     let sum_cost_conso = 0;
     let second_salary = 0;
     let full_time = 0;

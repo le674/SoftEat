@@ -28,9 +28,9 @@ export class Cetape implements Etape{
      */
     getData() {
         return {
-            nom: this.name,
-            commentaire: this.commentary,
-            temps: this.time
+            name: this.name,
+            commentary: this.commentary,
+            time: this.time
         }
     }
     /**

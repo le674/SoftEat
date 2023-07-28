@@ -115,7 +115,7 @@ export class AppPlatsComponent implements OnInit, OnDestroy {
   }
   suppressPlat(plat:Cplat){
     if(plat.name !== null){
-      this.plat_service.removePlatInBdd(plat.name.split(" ").join('_'), this.prop, this.restaurant).catch((e) => {
+      this.plat_service.removePlatInBdd(this.prop, plat).catch((e) => {
         console.log(e);
         this._snackBar.open(`nous ne somme pas parvenu à supprimer le ${plat.name}`)
       }).finally(() => {

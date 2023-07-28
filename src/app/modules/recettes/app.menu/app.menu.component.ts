@@ -31,12 +31,10 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   private consommables: Array<Cconsommable>
   private plats: Array<Cplat>;
   private req_ingredients!:Unsubscribe;
-  private req_preparations!:Unsubscribe;
   private req_consommables!:Unsubscribe;
   private req_plats!:Unsubscribe;
   private req_menus!:Unsubscribe
   private ingredients_sub!:Subscription;
-  private preparations_sub!:Subscription;
   private consommables_sub!:Subscription;
   private plats_sub!:Subscription;
   private menus_sub!:Subscription;
@@ -54,16 +52,14 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     this.url = this.router.parseUrl(this.router.url);
   }
   ngOnDestroy(): void {
+    this.req_menus();
+    this.req_plats();
     this.req_ingredients();
     this.req_consommables();
-    this.req_preparations();
-    this.req_plats();
-    this.req_menus();
+    this.menus_sub.unsubscribe();
+    this.plats_sub.unsubscribe();
     this.ingredients_sub.unsubscribe();
     this.consommables_sub.unsubscribe();
-    this.preparations_sub.unsubscribe();
-    this.plats_sub.unsubscribe();
-    this.menus_sub.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -74,9 +70,9 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     this.req_consommables =  this.conso_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
     this.req_plats = this.plat_service.getPlatFromRestaurantBDD(this.prop);
     this.req_menus = this.menu_service.getMenuFromRestaurantBDD(this.prop);
-    this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients) => {
+    this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:Array<CIngredient>) => {
       this.ingredients = ingredients;
-      this.consommables_sub = this.conso_service.getConsommablesFromRestaurants().subscribe((consommables) => {
+      this.consommables_sub = this.conso_service.getConsommablesFromRestaurants().subscribe((consommables:Array<Cconsommable>) => {
         this.consommables = consommables;
         this.plats_sub = this.plat_service.getPlatFromRestaurant().subscribe((plats: Array<Cplat>) => {
           this.plats = plats;
@@ -102,7 +98,8 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
         ingredients: this.ingredients,
         consommables: this.consommables,
         plats: this.plats,
-        menu: null
+        menu: null,
+        modification: false
       }
     });
   }
@@ -117,7 +114,8 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
         ingredients: this.ingredients,
         consommables: this.consommables,
         plats: this.plats,
-        menu: menu
+        menu: menu,
+        modification: true
       }
     });
   }

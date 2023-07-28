@@ -72,12 +72,13 @@ export class TIngredientBase{
     "quantity": number | null; 
     "unity":string | null;
     "added_price":number | null;
-    "id":Array<string> | null;
+    "id":Array<string>;
     constructor(name:string, quantity:number | null, unity:string | null){
         this.name = name;
         this.quantity = quantity;
         this.unity = unity;
         this.added_price = null;
+        this.id = [];
     }
     /**
      * Permet de récupérer de l'ingrédient de base un ingrédient affichable

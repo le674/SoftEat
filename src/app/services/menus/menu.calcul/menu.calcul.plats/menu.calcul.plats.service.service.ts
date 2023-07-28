@@ -14,6 +14,7 @@ export class MenuCalculPlatsServiceService {
   constructor(private prepa_service: CalculPrepaService) { }
 
   getPrimCost(prop: string, restaurant: string, plat: Cplat, _preparations: Array<Cpreparation>, _consommables: Array<Cconsommable>,
+    
     _ingredients: Array<CIngredient>): Promise<number> {
     let arr_ings: Array<TIngredientBase> = [];
     let consommables: Array<TConsoBase> = [];
@@ -173,9 +174,8 @@ export class MenuCalculPlatsServiceService {
         let _preparations = preparations.filter((preparation) => plat_preapartions.flatMap((prepa) => prepa.id).includes(preparation.id));
         prepa_ingredients = _preparations
           .filter((prep) => (prep.ingredients !== null) && (prep.ingredients !== undefined))
-          .map((preparation) => {
-            return (preparation.ingredients as TIngredientBase[])
-          }).flat();
+          .map((preparation) => (preparation.ingredients as TIngredientBase[]))
+          .flat();
       }
       arr_ingredients = arr_ingredients.concat(prepa_ingredients);
       let _ingredient = ingredients.filter((ingredient) => arr_ingredients.map((ingredient) => ingredient.name).includes(ingredient.name));

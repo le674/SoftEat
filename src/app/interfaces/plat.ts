@@ -236,6 +236,14 @@ export class CbasePlat{
        this.portions = portions;
        this.id = null;
    }
+   public getData(){
+      return {
+         name:this.name,
+         portions: this.portions,
+         unity: this.unity,
+         id: this.id
+      }
+   }
 }
 
 

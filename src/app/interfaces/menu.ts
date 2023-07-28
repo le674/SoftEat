@@ -17,7 +17,7 @@ export interface Menu{
     "plats":Array<CbasePlat> | null;
 
     setData(menu:Cmenu):void;
-    getData():void;
+    getData(id:string):void;
 }
 
 export class Cmenu implements Menu{
@@ -42,14 +42,14 @@ export class Cmenu implements Menu{
         this.cost_ttc = data.cost_ttc;
         this.taux_tva = data.taux_tva;
         if(data.ingredients !== null){
-            ingredients =  data.ingredients.map((ingredient:TIngredientBase) => {
+            this.ingredients =  data.ingredients.map((ingredient:TIngredientBase) => {
                 let _ingredient = new TIngredientBase(ingredient.name,ingredient.quantity,ingredient.unity);
                 _ingredient.setData(ingredient);
                 return _ingredient;
              });
         }
         if(data.consommables !== null && data.consommables !== undefined){
-            consommables = data.consommables.map((consommable:TConsoBase) => {
+            this.consommables = data.consommables.map((consommable:TConsoBase) => {
                 let _consommable = new TConsoBase(consommable.name, consommable.quantity, consommable.unity);
                 _consommable.setData(consommable);
                 return _consommable;
@@ -59,7 +59,7 @@ export class Cmenu implements Menu{
             consommables = null;
         }
         if(data.etapes !== null && data.etapes !== undefined){
-            etapes = data.etapes.map((etape) => {
+            this.etapes = data.etapes.map((etape) => {
                 let _etape = new Cetape();
                 _etape.setData(etape as Cetape);
                 return _etape;
@@ -69,7 +69,7 @@ export class Cmenu implements Menu{
             etapes = null;
         }
         if(data.plats !== null && data.plats !== undefined){
-            plats = data.plats.map((plat) => {
+            this.plats = data.plats.map((plat) => {
                 let _plat = new CbasePlat(plat.name,plat.unity,plat.portions);
                 _plat.id = plat.id;
                 return _plat;
@@ -77,12 +77,73 @@ export class Cmenu implements Menu{
         }
          
     }
-    public getData(){
+    /**
+     * permet de récupérer un menu depuis la base de donnée
+     * @param id identifiant du menu dans la base de donnée
+     * @returns {Object} JSON correspndant au menu 
+     */
+    public  getData(id:string | null){
         let ingredients:null | Array<Object> = null;
         let consommables:null | Array<Object> = null;
         let etapes:null | Array<Object> = null;
         let plats: null | Array<Object> = null;
-
+        if(this.ingredients !== undefined){
+            if(this.ingredients !== null){
+                ingredients = this.ingredients.map((ingredient) => ingredient.getData());
+            }
+        }
+        else{
+            this.ingredients = null;
+        }
+        if(this.consommables !== undefined){
+            if(this.consommables !== null){
+                consommables = this.consommables.map((consommable) => consommable.getData());
+            }
+        }
+        else{
+            this.consommables = null;
+        }
+        if(this.plats !== undefined){
+            if(this.plats !== null){
+                plats = this.plats.map((plat) => plat.getData());
+            }
+        }
+        else{
+            this.plats = null;
+        }
+        if(this.etapes !== undefined){
+            if(this.etapes !== null){
+                etapes = this.etapes.map((etape) => etape.getData());
+            }
+        }
+        else{
+            this.etapes = null;
+        }
+        if(id !== null){
+            this.id = id;
+        }
+        console.log({
+            id: this.id,
+            name: this.name,
+            taux_tva: this.taux_tva,
+            cost: this.cost,
+            cost_ttc: this.cost_ttc,
+            consommables: consommables,
+            ingredients: ingredients,
+            plats: plats,
+            etapes: etapes
+        });
+        return {
+            id: this.id,
+            name: this.name,
+            taux_tva: this.taux_tva,
+            cost: this.cost,
+            cost_ttc: this.cost_ttc,
+            consommables: consommables,
+            ingredients: ingredients,
+            plats: plats,
+            etapes: etapes
+        }
     }
 }
 

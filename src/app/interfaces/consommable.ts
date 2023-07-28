@@ -5,12 +5,12 @@ export class TConsoBase {
     name:string;
     quantity:number | null;
     unity:string | null;
-    id:Array<string> | null;
+    id:Array<string>;
     constructor(name:string, quantity:number | null, unity:string | null){
         this.name = name;
         this.quantity = quantity;
         this.unity = unity;
-        this.id = null;
+        this.id = [];
     }
     /**
      * convertion du consommable en ligne du tableau d'affichage des consommables de la section stock

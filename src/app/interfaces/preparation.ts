@@ -218,7 +218,7 @@ export class Cpreparation implements Preparation {
         if(data.consommables !== undefined){
             for(let consommable of consommables){
                 if(consommable.id === undefined){
-                    consommable.id = null;
+                    consommable.id = [];
                 } 
                 if(consommable.name === undefined){
                     consommable.name = "";
