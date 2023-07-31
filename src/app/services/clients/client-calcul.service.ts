@@ -8,9 +8,8 @@ export class ClientCalculService {
   constructor() { }
 
   addressToStringAddress(street_number:number | null, street:string | null, postal_code:string | null, city:string):string{
-    console.log(street);
     let street_number_str = "";
-    if(street === null || street === undefined || street === ""){
+    if(street === null || street === undefined || street === ""){ 
       street="";
     }
     else{

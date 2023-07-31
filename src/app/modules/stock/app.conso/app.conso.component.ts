@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -20,6 +20,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./app.conso.component.css']
 })
 export class AppConsoComponent implements OnInit, OnDestroy {
+  @Input() stock:string | null;
   public displayedColumns: string[] = ['nom', 'quantity', 'unity','cost', 'cost_ttc', 'date_reception', 'actions'];
   public dataSource: MatTableDataSource<RowConsommable>;
   public consommable_displayed: Array<RowConsommable>;
@@ -27,6 +28,7 @@ export class AppConsoComponent implements OnInit, OnDestroy {
   public size:string;
   // cette liste ne converne que les mobiles et est vaut false si l'accordéon n'est pas déroulé true sinon 
   public visibles: Array<boolean>;
+  public write:boolean;
   private page_number: number;
   private router: Router;
   private consommable_table: Array<Cconsommable>;
@@ -48,46 +50,54 @@ export class AppConsoComponent implements OnInit, OnDestroy {
     this.size = "";
     this.dataSource = new MatTableDataSource(this.consommable_displayed);
     this.url = this.router.parseUrl(this.router.url);
+    this.stock = null;
+    this.write = false;
   }
   ngOnDestroy(): void {
     this.req_consommables();
     this.consommables_sub.unsubscribe();
   }
   ngOnInit(): void{
-    let user_info = this.url.queryParams;
-    this.prop = user_info["prop"];
-    this.restaurant = user_info["restaurant"];
-    this.req_consommables = this.service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
-    this.consommables_sub = this.service.getConsommablesFromRestaurants().subscribe((consommables:Cconsommable[]) => {
-      for (let consommable of consommables) {
-        if((consommable.date_reception === undefined) || (consommable.date_reception === null)){
-          consommable.date_reception = new Date();
-        }
-        if((consommable.cost_ttc === undefined) || (consommable.cost_ttc === 0)){
-          if(consommable.taux_tva !== undefined){
-            consommable.cost_ttc = this.calc_service.getCostTtc(consommable.taux_tva, consommable.cost);
+    if(this.stock !== null){
+      if(this.stock.includes("w")) this.write = true;
+      if(this.stock.includes("r")){
+        let user_info = this.url.queryParams;
+        this.prop = user_info["prop"];
+        this.restaurant = user_info["restaurant"];
+        this.req_consommables = this.service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
+        this.consommables_sub = this.service.getConsommablesFromRestaurants().subscribe((consommables:Cconsommable[]) => {
+          for (let consommable of consommables) {
+            if((consommable.date_reception === undefined) || (consommable.date_reception === null)){
+              consommable.date_reception = new Date();
+            }
+            if((consommable.cost_ttc === undefined) || (consommable.cost_ttc === 0)){
+              if(consommable.taux_tva !== undefined){
+                consommable.cost_ttc = this.calc_service.getCostTtc(consommable.taux_tva, consommable.cost);
+              }
+            }
+            let row_consommable = new RowConsommable(consommable.name,
+               consommable.cost,
+               consommable.cost_ttc,
+               consommable.quantity,
+               consommable.unity,
+               consommable.date_reception.toLocaleString(),
+               consommable.marge,
+               consommable.id);
+            this.consommable_displayed.push(row_consommable);
+            this.visibles.push(false);
           }
-        }
-        let row_consommable = new RowConsommable(consommable.name,
-           consommable.cost,
-           consommable.cost_ttc,
-           consommable.quantity,
-           consommable.unity,
-           consommable.date_reception.toLocaleString(),
-           consommable.marge,
-           consommable.id);
-        this.consommable_displayed.push(row_consommable);
-        this.visibles.push(false);
+          this.consommable_table = consommables;
+          this.dataSource.data = this.consommable_displayed;
+        })
+          const first_event = new PageEvent();
+          first_event.length = this.consommable_displayed.length
+          first_event.pageSize = 6
+          first_event.pageIndex = 0
+          this.pageChanged(first_event);
+          this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("conso");
       }
-      this.consommable_table = consommables;
-      this.dataSource.data = this.consommable_displayed;
-    })
-      const first_event = new PageEvent();
-      first_event.length = this.consommable_displayed.length
-      first_event.pageSize = 6
-      first_event.pageIndex = 0
-      this.pageChanged(first_event);
-      this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("conso");
+
+    }
   }
   OpenAddConsoForm(){
     const dialogRef = this.dialog.open(AddConsoComponent, {

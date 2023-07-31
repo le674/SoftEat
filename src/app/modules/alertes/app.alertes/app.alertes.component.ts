@@ -41,7 +41,6 @@ export class AppAlertesComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    console.log("init : ", this.alerte_subscription.closed);
     let user_info = this.url.queryParams;
     this.prop = user_info["prop"];
     this.restaurant = user_info["restaurant"];

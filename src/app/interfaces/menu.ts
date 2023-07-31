@@ -122,17 +122,6 @@ export class Cmenu implements Menu{
         if(id !== null){
             this.id = id;
         }
-        console.log({
-            id: this.id,
-            name: this.name,
-            taux_tva: this.taux_tva,
-            cost: this.cost,
-            cost_ttc: this.cost_ttc,
-            consommables: consommables,
-            ingredients: ingredients,
-            plats: plats,
-            etapes: etapes
-        });
         return {
             id: this.id,
             name: this.name,

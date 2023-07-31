@@ -19,10 +19,8 @@
     <main>
         <h2>Données</h2>
         <table *ngIf="!windows_screen_mobile" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
             <!--- Note that these columns can be defined in any order.
                   The actual rendered columns are set as a property on the row definition" -->
-
             <!-- Position Column -->
             <ng-container matColumnDef="nom">
                 <th mat-header-cell *matHeaderCellDef> nom </th>
@@ -86,8 +84,8 @@
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> actions </th>
                 <td id="validate" mat-cell *matCellDef="let element;let cell_index = index; ">
-                  <i class="fa-regular fa-trash action_table" (click)="suppPrepa(element)"></i>
-                  <i class="fa-regular fa-pen action_table" (click)="modifPrepa(element)"></i>
+                  <i [ngClass]="write ?  '': 'disable'"  class="fa-regular fa-trash action_table" (click)="suppPrepa(element)"></i>
+                  <i [ngClass]="write ?  '': 'disable'"  class="fa-regular fa-pen action_table" (click)="modifPrepa(element)"></i>
                 </td>
             </ng-container>
 
@@ -157,8 +155,8 @@
                         </mat-list-item>
                     </mat-list>
                     <div id="modif-section">
-                        <i class="fa-regular fa-trash action_table" (click)="suppPrepa(preparation)"></i>
-                        <i class="fa-regular fa-pen action_table" (click)="modifPrepa(preparation)"></i>  
+                        <i [ngClass]="write ?  '': 'disable'"  class="fa-regular fa-trash action_table" (click)="suppPrepa(preparation)"></i>
+                        <i [ngClass]="write ?  '': 'disable'"  class="fa-regular fa-pen action_table" (click)="modifPrepa(preparation)"></i>  
                     </div>                    
                   </div>
                 </div>

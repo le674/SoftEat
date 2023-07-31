@@ -9,7 +9,6 @@ export class CalculService {
   constructor() { }
 
   getCostTtcFromCat(categorie_tva: string | null, cost: number): number | null {
-    console.log("getCostTtcFromCat");
     if(categorie_tva !== null){
       let taux_tva = 0;
       const taux_ving_poucent = ["boisson alcholisée"]

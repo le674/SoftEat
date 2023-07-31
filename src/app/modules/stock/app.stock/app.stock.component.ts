@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -19,7 +19,8 @@ import { RowIngredient } from 'src/app/interfaces/inventaire';
   styleUrls: ['./app.stock.component.css']
 })
 export class AppStockComponent implements OnInit, OnDestroy{
-
+  @Input() stock:string | null; 
+  public write:boolean;
   public windows_screen_mobile:boolean;
   public displayedColumns: string[] = ['nom', 'categorie_tva', 'quantity', 'quantity_unity',
     'unity', 'cost', 'cost_ttc', 'date_reception', 'dlc', 'actions'];
@@ -54,7 +55,9 @@ export class AppStockComponent implements OnInit, OnDestroy{
     this.url = this.router.parseUrl(this.router.url);
     this.visibles = [];
     this.size = "";
+    this.stock = null;
     this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("ing");
+    this.write = false;
   }
 
   ngOnDestroy(): void {
@@ -63,40 +66,45 @@ export class AppStockComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    let user_info:any = this.url.queryParams;
-    this.prop = user_info.prop;
-    this.restaurant = user_info.restaurant;
-    this.req_ingredients_brt = this.service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
-    const obs_ing = this.service.getIngredientsFromRestaurants()
-    this.req_merge_obs = obs_ing.subscribe((ingredients) => {
-      this.ingredients_displayed_br = [];
-      this.dataSource = new MatTableDataSource(this.ingredients_displayed_br);
-      this.ingredient_table = ingredients;
-      for (let ingredient of ingredients) {
-        // on vérifie si le nombre d'ingrédient présent est inférieur à la marge si c'est le cas on lève une alerte
-        if((ingredient.taux_tva === 0) || (ingredient.taux_tva === null)){
-          ingredient.getCostTtcFromCat();
-        }
-        else{
-          
-          ingredient.getCostTtcFromTaux(); 
-        }
-        const name = ingredient.name.split(' ').join('<br>');
-        const cost = ingredient.cost;
-        const unity = ingredient.unity;
-        const quantity = ingredient.quantity;
-        const quantity_unity = ingredient.quantity_unity;
-        const id = ingredient.id;
-        let row_ingredient = new RowIngredient(name, cost, quantity, quantity_unity, unity, id);
-        row_ingredient.setIngredient(ingredient);
-        this.ingredients_displayed_br.push(row_ingredient);
-        this.visibles.push(false);
-        const first_event = new PageEvent();
-        first_event.length = ingredients.length;
-        first_event.pageSize = 6
-        this.pageChangedFirst(first_event);
+    if(this.stock !== null){
+      if(this.stock.includes("w")) this.write = true;
+      if(this.stock.includes("r")){
+        let user_info:any = this.url.queryParams;
+        this.prop = user_info.prop;
+        this.restaurant = user_info.restaurant;
+        this.req_ingredients_brt = this.service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
+        const obs_ing = this.service.getIngredientsFromRestaurants()
+        this.req_merge_obs = obs_ing.subscribe((ingredients) => {
+          this.ingredients_displayed_br = [];
+          this.dataSource = new MatTableDataSource(this.ingredients_displayed_br);
+          this.ingredient_table = ingredients;
+          for (let ingredient of ingredients) {
+            // on vérifie si le nombre d'ingrédient présent est inférieur à la marge si c'est le cas on lève une alerte
+            if((ingredient.taux_tva === 0) || (ingredient.taux_tva === null)){
+              ingredient.getCostTtcFromCat();
+            }
+            else{
+              
+              ingredient.getCostTtcFromTaux(); 
+            }
+            const name = ingredient.name.split(' ').join('<br>');
+            const cost = ingredient.cost;
+            const unity = ingredient.unity;
+            const quantity = ingredient.quantity;
+            const quantity_unity = ingredient.quantity_unity;
+            const id = ingredient.id;
+            let row_ingredient = new RowIngredient(name, cost, quantity, quantity_unity, unity, id);
+            row_ingredient.setIngredient(ingredient);
+            this.ingredients_displayed_br.push(row_ingredient);
+            this.visibles.push(false);
+            const first_event = new PageEvent();
+            first_event.length = ingredients.length;
+            first_event.pageSize = 6
+            this.pageChangedFirst(first_event);
+          }
+        })
       }
-    })
+    }
   }
 
   OpenAddIngForm() {

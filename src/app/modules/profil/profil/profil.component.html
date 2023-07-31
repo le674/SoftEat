@@ -31,7 +31,6 @@
             </button>
         </div>
     </header>
-    
     <main>
         <p class="main_panel title">Informations</p>
         <mat-divider></mat-divider>
@@ -44,7 +43,6 @@
                         <mat-list-item class="main_panel">Enseigne</mat-list-item>
                         <mat-list-item class="main_panel">Adresse mail</mat-list-item>
                         <mat-list-item class="main_panel">Numéro</mat-list-item>
-                        <mat-list-item class="main_panel">Restaurants</mat-list-item>
                         <mat-list-item class="main_panel">Droits</mat-list-item>
                     </div>
                 </mat-list>
@@ -61,24 +59,14 @@
                             <p class="main_panel email_mob">{{user_db.email}}</p>
                         </mat-list-item>
                         <mat-list-item class="main_panel">
-                            <p class="main_panel email_mob">{{user_db.numero}}</p>
+                            <p class="main_panel email_mob">{{user_db.number}}</p>
                         </mat-list-item>
                         <mat-list-item class="main_panel">
                             <mat-form-field appearance="outline">
                                 <mat-label>droits d'accès (r : lecture, w : écriture)</mat-label>
                                 <mat-select>
-                                    <mat-option *ngFor="let droit of user_db.statut | keyvalue">
+                                    <mat-option *ngFor="let droit of user_db.statut | keyvalue" [value]="droit.key">
                                         {{droit.key}} : {{droit.value}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </mat-list-item>
-                        <mat-list-item class="main_panel">
-                            <mat-form-field appearance="outline">
-                                <mat-label>mes restaurants</mat-label> 
-                                <mat-select>
-                                    <mat-option *ngFor="let restaurant of user_db.restaurants">
-                                        {{restaurant}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -105,9 +93,6 @@
                         <mat-list-item class="main_panel">
                             <i class="fa-regular fa-pen pen_body disable"></i>
                         </mat-list-item>
-                        <mat-list-item class="main_panel">
-                            <i class="fa-regular fa-pen pen_body disable"></i>
-                        </mat-list-item>
                     </div>
                 </mat-list>
             </div>
@@ -122,28 +107,15 @@
                         <mat-list-item class="sub-title">Adresse mail</mat-list-item>
                         <mat-list-item>{{user_db.email}}</mat-list-item>
                         <mat-list-item class="sub-title">Numéro</mat-list-item>
-                        <mat-list-item>{{user_db.numero}}</mat-list-item>
+                        <mat-list-item>{{user_db.number}}</mat-list-item>
                         <mat-list-item class="sub-title selector-item">Droits</mat-list-item>
                         <mat-list-item>
                             <span matListItemLine> 
                             <mat-form-field appearance="outline">
                                     <mat-label>droits d'accès (r : lecture, w : écriture)</mat-label>
                                     <mat-select>
-                                        <mat-option *ngFor="let droit of user_db.statut | keyvalue">
+                                        <mat-option *ngFor="let droit of user_db.statut | keyvalue" [value]="droit.key">
                                             {{droit.key}} : {{droit.value}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </span>
-                        </mat-list-item>
-                        <mat-list-item class="sub-title selector-item">Restaurants</mat-list-item>
-                        <mat-list-item class="main_panel">
-                            <span matListItemLine>
-                                <mat-form-field appearance="outline">
-                                    <mat-label>mes restaurants</mat-label> 
-                                    <mat-select>
-                                        <mat-option *ngFor="let restaurant of user_db.restaurants">
-                                            {{restaurant}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>

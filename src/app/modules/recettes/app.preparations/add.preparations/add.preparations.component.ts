@@ -303,8 +303,6 @@ export class AddPreparationsComponent implements OnInit{
             val_bouch = this.prepa_service.getValBouchFromBasIng(this.base_ings, this.ingredients ,this.after_prep.quantity, this.after_prep.unity);
           }
           this.prepa_service.getPrimCost(this.etapes, this.ingredients, this.base_ings ,this.base_conso).then((prime_cost) => {
-              console.log("preparation prime_cost :");
-              console.log(prime_cost);
               let preparation = this.data.preparation;
               if(preparation === null){
                 preparation = new Cpreparation(this.calcul_service);
@@ -324,11 +322,7 @@ export class AddPreparationsComponent implements OnInit{
                     this._snackBar.open("nous somme parvenu à modifier la préparation", "fermer");
                   })
                 }
-                else{
-                  console.log("=========== preparation ==========");
-                  console.log(preparation);
-                  console.log("===================================");
-                                    
+                else{             
                   this.preparation_service.setPreparation(preparation, this.data.prop, this.data.restaurant).catch((e) => {
                     console.log(e);
                     this._snackBar.open("nous ne somme pas parvenu à ajouter la préparation veuillez contacter SoftEat", "fermer");

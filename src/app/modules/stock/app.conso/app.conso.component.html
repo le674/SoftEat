@@ -10,7 +10,7 @@
 <body>
     <header>
         <h1> Consommable </h1>
-        <div id="action-buttons">
+        <div *ngIf="write" id="action-buttons">
             <button mat-stroked-button (click)="OpenAddConsoForm()">
                 <i class="fa-regular fa-plus"></i>
                 Ajouter un consommable
@@ -66,8 +66,8 @@
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> actions </th>
                 <td id="validate" mat-cell *matCellDef="let element;let cell_index = index; ">
-                  <i class="fa-regular fa-trash action_table" (click)="suppConso(element)"></i>
-                  <i class="fa-regular fa-pen action_table" (click)="modifConso(element)"></i>
+                  <i  [ngClass]="write ?  '': 'disable'" class="fa-regular fa-trash action_table" (click)="suppConso(element)"></i>
+                  <i  [ngClass]="write ?  '': 'disable'" class="fa-regular fa-pen action_table" (click)="modifConso(element)"></i>
                 </td>
             </ng-container>
 
@@ -120,8 +120,8 @@
                     </mat-list-item>
                 </mat-list>
                 <div id="modif-section">
-                    <i class="fa-regular fa-trash action_table" (click)="suppConso(consommable)"></i>
-                    <i class="fa-regular fa-pen action_table" (click)="modifConso(consommable)"></i>  
+                    <i [ngClass]="write ?  '': 'disable'"  class="fa-regular fa-trash action_table" (click)="suppConso(consommable)"></i>
+                    <i [ngClass]="write ?  '': 'disable'"  class="fa-regular fa-pen action_table" (click)="modifConso(consommable)"></i>  
                 </div>                    
               </div>
             </div>

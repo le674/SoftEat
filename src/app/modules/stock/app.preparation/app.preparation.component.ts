@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -22,8 +22,9 @@ import { PreparationInteractionService } from 'src/app/services/menus/preparatio
   styleUrls: ['./app.preparation.component.css']
 })
 export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit {
-
+  @Input() stock:string | null;
   public windows_screen_mobile: boolean;
+  public write:boolean;
   public visibles: Array<boolean>;
   public displayedColumns: string[] = ['nom', 'quantity', 'quantity_unity',
     'unity', 'cost', 'date_reception', 'dlc', 'actions'];
@@ -55,6 +56,8 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     this.url = this.router.parseUrl(this.router.url);
     this.windows_screen_mobile = false;
     this.visibles = [];
+    this.write = false;
+    this.stock = null;
   }
 
   ngAfterViewInit(): void {
@@ -67,34 +70,39 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   ngOnInit(): void {
-    let user_info = this.url.queryParams;
-    this.prop = user_info["prop"];
-    this.restaurant = user_info["restaurant"];
-    this.req_ingredients_prep = this.service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
-
-    this.req_merge_obs = this.service.getPrepraparationsFromRestaurants().subscribe((preparations) => {
-      this.preparation_table = preparations;
-      this.displayed_prep = [];
-      this.dataSource = new MatTableDataSource(this.displayed_prep);
-      for(let preparation of preparations){
-        let ingredients = preparation.ingredients
-        const name = preparation.name;
-        const cost = preparation.cost;
-        const unity = preparation.unity;
-        const quantity = preparation.quantity;
-        const quantity_unity = preparation.quantity_unity;
-        const id = preparation.id;
-        let row_preparation = new RowPreparation(name, cost, quantity, quantity_unity, unity, id);
-        
-        row_preparation.setRowPreparation(preparation);
-        this.displayed_prep.push(row_preparation);
+    if(this.stock !== null){
+      if(this.stock.includes("w")) this.write = true;
+      if(this.stock.includes("r")){
+        let user_info = this.url.queryParams;
+        this.prop = user_info["prop"];
+        this.restaurant = user_info["restaurant"];
+        this.req_ingredients_prep = this.service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
+    
+        this.req_merge_obs = this.service.getPrepraparationsFromRestaurants().subscribe((preparations) => {
+          this.preparation_table = preparations;
+          this.displayed_prep = [];
+          this.dataSource = new MatTableDataSource(this.displayed_prep);
+          for(let preparation of preparations){
+            let ingredients = preparation.ingredients
+            const name = preparation.name;
+            const cost = preparation.cost;
+            const unity = preparation.unity;
+            const quantity = preparation.quantity;
+            const quantity_unity = preparation.quantity_unity;
+            const id = preparation.id;
+            let row_preparation = new RowPreparation(name, cost, quantity, quantity_unity, unity, id);
+            
+            row_preparation.setRowPreparation(preparation);
+            this.displayed_prep.push(row_preparation);
+          }
+          const first_event = new PageEvent();
+              first_event.length = preparations.length;
+              first_event.pageSize = 6
+              this.pageChangedFirst(first_event);
+        })
+        this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("prepa");
       }
-      const first_event = new PageEvent();
-          first_event.length = preparations.length;
-          first_event.pageSize = 6
-          this.pageChangedFirst(first_event);
-    })
-    this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("prepa");
+    }
   }
 
   OpenHelp() {

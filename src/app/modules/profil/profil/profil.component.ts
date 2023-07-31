@@ -15,6 +15,8 @@ import { ModifMdpComponent } from '../modif-mdp/modif-mdp.component';
 import { ModifNumberComponent } from '../modif-number/modif-number.component';
 import { CommonService } from '../../../../app/services/common/common.service';
 import { ModifMailComponent } from '../modif-mail/modif-mail.component';
+import { Employee } from 'src/app/interfaces/employee';
+import { Statut } from 'src/app/interfaces/statut';
 
 @Component({
   selector: 'app-profil',
@@ -26,33 +28,25 @@ export class ProfilComponent implements OnInit {
   private router: Router;
   private url: UrlTree;
   private auth : Auth;
-  public user_db: any;
+  public user_db: Employee;
   public enseigne:string;
   public restaurants: string;
   public not_mobile: boolean;
   public contact_form = new FormGroup({
     sender: new FormControl('', Validators.required),
     message: new FormControl('', Validators.required)
-  })
+  });
 
   constructor(private ofApp: FirebaseApp, router: Router, private service:UserInteractionService,
      private mail_service:MailServicesService,public dialog: MatDialog,
      private _snackBar: MatSnackBar, public mobile_service:CommonService) { 
+    this.user_db = new Employee("", new Statut(this.mobile_service), "", this.mobile_service);
     this.router = router;
   /*   this.user_db = new User() */
     this.enseigne = "";
     this.restaurants = "";
     this.not_mobile = false;
-    this.auth = getAuth(this.ofApp);
-    if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-      try {
-         // Point to the RTDB emulator running on localhost.
-         connectAuthEmulator(this.auth, FIREBASE_AUTH_EMULATOR_HOST);
-      } catch (error) {
-        console.log(error);
-      }
-    } 
-  
+    this.auth = getAuth(this.ofApp); 
     // Attention l'url doit contenir l'information concernant le restaurant et le proprietaire
     this.url = this.router.parseUrl(this.router.url)
   }
@@ -63,32 +57,20 @@ export class ProfilComponent implements OnInit {
     this.restaurants = user_info["restaurant"];
     onAuthStateChanged(this.auth, (user) => {
       if(user){
-        
-/*         const private_data = this.service.getUserFromUid(user.uid, this.enseigne).then((user) => {
-          this.user_db.restaurants = user.restaurants;
-          this.user_db.statut = user.statut;
-          return user
-        }) */
-/*         private_data.then((user_db) => {
-          this.service.getUserDataFromUid(user.uid, this.enseigne, this.restaurants).then((user) => {
-            this.user_db.name = user.name;
-            this.user_db.numero = user.numero;
-            this.user_db.surname = user.surname;
-            this.user_db.email = user.email;
-            if(this.user_db.name == "") this.user_db.name = "pas de nom inscrit"
-            if(this.user_db.surname == "") this.user_db.surname = "pas de prénom inscrit"
-            if(this.user_db.numero == "") this.user_db.numero = "pas de numéro inscrit"
-          })
-        }) */
+        let _user:User = new User();
+        _user.proprietary_id = this.enseigne;
+        _user.uid = user.uid;
+        this.service.getEmployeeBDD(_user);
+        this.service.getEmployee().subscribe((employee) => {
+          this.user_db = employee;
+        })
       }
     })
     this.not_mobile = this.mobile_service.getMobileBreakpoint("mobile");
-    console.log(this.not_mobile);
-    
   }
 
   suppCompte(){
-    if(this.auth.currentUser !== null){
+    if(this.auth.currentUser !== null && this.user_db !== null){
       this.mail_service.sendMailCompteSuppresse(this.user_db.email).subscribe((v) => {
         if(v === 'sended'){
           this._snackBar.open("la demande de suppression a été envoyée à SoftEat ils traiterons votre demande", "fermer")
@@ -122,7 +104,7 @@ export class ProfilComponent implements OnInit {
       data: {
         restaurant: this.restaurants,
         prop: this.enseigne,
-        uid: this.user_db.uid,
+        user: this.user_db,
         auth: this.auth
       }
     });
@@ -135,7 +117,7 @@ export class ProfilComponent implements OnInit {
       data: {
         restaurant: this.restaurants,
         prop: this.enseigne,
-        uid: this.user_db.uid
+        user: this.user_db
       }
     });
   }

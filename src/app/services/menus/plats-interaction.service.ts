@@ -118,7 +118,6 @@ export class PlatsInteractionService {
    * @param plat plat que l'ont veut modifier dans la bdd
    */
   async updatePlat(prop: string, plat: Cplat) {
-    console.log(plat);
     const plats_ref = 
       doc(collection(
         doc(

@@ -91,12 +91,9 @@ export class FactureImgService {
       preserve_interword_spaces: "1"
     })
     const { data: {blocks} } = await Worker.recognize(url_img, undefined, this.output);
-    console.log(blocks);
     Worker.terminate();
     if(blocks !== null){
       const parsed_txt = this.getTextShared(blocks)
-      console.log("parsed text",parsed_txt);
-      
       const tab_content = this.getTabContentImg(parsed_txt);
       return tab_content.then((parsed_pdf) => {
           this.shared_service.colonne_factures_actual = [{

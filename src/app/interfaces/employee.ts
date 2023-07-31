@@ -19,10 +19,11 @@ export class Employee {
     statut:Statut;
     surname:string | null;
     uid:string;
-    user_id:string;
+    user_uid:string;
+    [index:string]:any;
 
     constructor(email:string, statut:Statut, uid:string, private common_service: CommonService){
-        this.user_id = "";
+        this.user_uid = "";
         this.email = email;
         this.statut = statut;
         this.uid = uid;
@@ -119,6 +120,57 @@ export class Employee {
         statut.setStatut(this.statut);
         this.roles = statut.getRoles();
       }
+      
+      getData(): any {
+       let address = null;
+       if(this.address !== null){
+        address = {
+          postal_code: this.address.postal_code,
+          street_number: this.address.street_number,
+          city: this.address.city,
+          street: this.address.street
+        }
+       }
+       return {
+          current_restaurant: this.current_restaurant,
+          email: this.email,
+          name: this.name,
+          number: this.number,
+          roles: this.roles,
+          service: this.service,
+          surname: this.surname,
+          uid: this.uid,
+          user_uid: this.user_uid
+         }
+      }
+      /**
+       * permet de copier un JSON employee dans une instance de la classe employée
+       * @param employee employée à copier dans une instance de la classe
+       */
+      setData(employee: Employee) {
+        let statut = new Statut(this.common_service);
+        statut.setStatut(employee.statut);
+        let address = null;
+        new Statut(this.common_service);
+        if(employee.address !== null){
+          address =  new Address(
+            employee.address.postal_code,
+            employee.address.street_number,
+            employee.address.city,
+            employee.address.street);
+        }
+        this.email = employee.email;
+        this.id = employee.id;
+        this.current_restaurant = employee.current_restaurant;
+        this.name = employee.name;
+        this.number = employee.number;
+        this.roles = employee.roles;
+        this.surname = employee.surname;
+        this.uid = employee.uid;
+        this.user_uid = employee.user_uid;
+        this.address = address;  
+        this.statut = statut
+      }
 }
 
 export class EmployeeFull extends Employee{
@@ -141,7 +193,7 @@ export class EmployeeFull extends Employee{
     super.statut = employee.statut;
     super.service = employee.service;
     super.surname = employee.surname;
-    super.user_id = employee.user_id;
+    super.user_uid = employee.user_uid;
   }
   getRestaurantsIds(){
     return this.restaurants.map((restaurant) => restaurant.id);

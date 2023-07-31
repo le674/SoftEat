@@ -7,7 +7,7 @@ import { writeBatch, Firestore, DocumentSnapshot, SnapshotOptions, Unsubscribe, 
 import { Subject } from 'rxjs';
 import { CommonService } from './common/common.service';
 import { Employee, EmployeeFull } from '../interfaces/employee';
-import { orderBy, startAt, updateDoc } from 'firebase/firestore';
+import { getDoc, getDocs, orderBy, runTransaction, startAt, updateDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -56,10 +56,12 @@ export class UserInteractionService {
       toFirestore: (employee: Employee) => {
         return employee;
       },
-      fromFirestore: (snapshot: DocumentSnapshot<{ employee: Employee }>, options: SnapshotOptions) => {
+      fromFirestore: (snapshot: DocumentSnapshot<Employee>, options: SnapshotOptions) => {
         const data = snapshot.data(options);
         if (data !== undefined) {
-          return data;
+          let employee = new Employee(data.email, data.statut, data.uid, this.common_service);
+          employee.setData(data);
+          return employee;
         }
         else {
           return null;
@@ -103,9 +105,7 @@ export class UserInteractionService {
   }
   /**
     * @description attache un écouteur dans le noeud employees afin de récupérer les infos sur l'utilisateur 
-    * @param uid  identifiant unique de la personne dont nous souhaitons récupérer les informations
-    * @param restaurant identifiant du restaurant pour lequel nous voulons récupérer les informations
-    * @param prop identifiant du proprietaire pour lequel ont souhaitent récupérer les informations
+    * @param user  user permet de récupérer un employé à partir d'un user dans client
     * @returns {Unsubscribe} une fonction qui permet de se désabonner de l'écouteur attaché au noeud proprietaires/<id_prop>/restaurants/<id_restau>/employees/<id_employee>
   */
   getEmployeeBDD(user: User) {
@@ -134,6 +134,7 @@ export class UserInteractionService {
     }
     return this.sub_employee;
   }
+
   /**
       * @description attache un écouteur dans le noeud employees pour un groupe de collection restaurants
       * @param users ensembles des employées dont nous souhaitons récupérer les informations
@@ -208,7 +209,7 @@ export class UserInteractionService {
     const restaurants_ids = employee.getRestaurantsIds();
     const restaurant_prop = employee.getRestaurantsProp();
     user.related_restaurants = restaurant_prop;
-    const user_ref = doc(collection(this.firestore, "clients"), employee.user_id);
+    const user_ref = doc(collection(this.firestore, "clients"), employee.user_uid);
     batch.update(user_ref, {
       related_restaurants: user.related_restaurants
     });
@@ -229,6 +230,24 @@ export class UserInteractionService {
     }
     await batch.commit();
   }
+  /**
+   * cette fonction permet de modifier le numéro d'un employée 
+   * @param prop nom de l'enseigne dont fait partie l'employée
+   * @param employee employée pour lequel nous modifions le numéro
+   * @param number nouveau numéro associé à l'employé
+   */
+  async updateEmployee(prop: string, employee: Employee, attribut: string, valeur:string) {
+    const user_ref = 
+    doc(
+      collection(
+      doc(
+        collection(this.firestore, "proprietaires"), prop
+      ), "employees"
+    ),employee.id).withConverter(this.employee_converter);
+    employee[attribut] = valeur;
+    await updateDoc(user_ref, employee.getData())
+  }
+
   /**
    * @description récupération de l'observable qui contient les donnés écoutés sur le noeud clients/uid/
    * @returns {Observable}

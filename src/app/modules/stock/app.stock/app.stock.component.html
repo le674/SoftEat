@@ -10,7 +10,7 @@
 <body>
     <header>
         <h1> Ingrédients </h1>
-        <div id="action-buttons">
+        <div *ngIf="write" id="action-buttons">
             <button mat-stroked-button (click)="OpenAddIngForm()">
                 <i class="fa-regular fa-plus"></i>
                 Ajouter un ingrédient
@@ -87,8 +87,8 @@
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> actions </th>
                 <td id="validate" mat-cell *matCellDef="let element;let cell_index = index; ">
-                 <i class="fa-regular fa-trash action_table" (click)="suppIng(element)"></i>
-                 <i class="fa-regular fa-pen action_table" (click)="modifIng(element)"></i>
+                 <i [ngClass]="write ?  '': 'disable'" class="fa-regular fa-trash action_table"  (click)="suppIng(element)"></i>
+                 <i [ngClass]="write ? '' : 'disable'" class="fa-regular fa-pen action_table" (click)="modifIng(element)"></i>
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -167,8 +167,8 @@
                         </mat-list-item>
                     </mat-list>
                     <div id="modif-section">
-                        <i class="fa-regular fa-trash action_table" (click)="suppIng(ingredient)"></i>
-                        <i class="fa-regular fa-pen action_table" (click)="modifIng(ingredient)"></i>  
+                        <i [ngClass]="write ?  '': 'disable'" class="fa-regular fa-trash action_table" (click)="suppIng(ingredient)"></i>
+                        <i [ngClass]="write ?  '': 'disable'" class="fa-regular fa-pen action_table" (click)="modifIng(ingredient)"></i>  
                     </div>                    
                   </div>
                 </div>
