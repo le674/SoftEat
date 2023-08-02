@@ -199,6 +199,7 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
             this.all_user_subscription = this.user_services.getAllUsersFromProp().subscribe((users:Array<User>) => {
               this.all_employee_unsubscribe = this.user_services.getAllEmployeeBDD(this.proprietaire , this.uid);
               this.user_services.getAllEmployee().subscribe((employees) => {
+                
                 const employee = employees.find((employee) => employee.uid === user.uid);
                 if(employee !== undefined){
                   if(employee.roles?.includes("propriétaire")){

@@ -7,7 +7,7 @@ import { writeBatch, Firestore, DocumentSnapshot, SnapshotOptions, Unsubscribe, 
 import { Subject } from 'rxjs';
 import { CommonService } from './common/common.service';
 import { Employee, EmployeeFull } from '../interfaces/employee';
-import { getDoc, getDocs, orderBy, runTransaction, startAt, updateDoc } from 'firebase/firestore';
+import { updateDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -209,11 +209,11 @@ export class UserInteractionService {
     const restaurants_ids = employee.getRestaurantsIds();
     const restaurant_prop = employee.getRestaurantsProp();
     user.related_restaurants = restaurant_prop;
-    const user_ref = doc(collection(this.firestore, "clients"), employee.user_uid);
+    const user_ref = doc(collection(this.firestore, "clients"), employee.user_id);
     batch.update(user_ref, {
       related_restaurants: user.related_restaurants
     });
-    for (let index = 0; index < restaurants_ids.length; index++) {
+    for(let index = 0; index < restaurants_ids.length; index++) {
       employee.to_roles();
       const proprietaire = user.related_restaurants[index].proprietaire_id;
       const restaurant = user.related_restaurants[index].restaurant_id;
@@ -225,7 +225,7 @@ export class UserInteractionService {
         employee.id);
       batch.update(employee_ref, {
         roles: employee.roles,
-        statut: employee.statut
+        statut: employee.statut.getData()
       })
     }
     await batch.commit();
@@ -277,44 +277,4 @@ export class UserInteractionService {
   getAllEmployee() {
     return this.employees.asObservable();
   }
-  /* async setUser(prop: string, user: User) {  
-    let data_to_add = {};
-    const ref_db = ref(this.db);
-    const path_prop = `users/${prop}/${user.id}`
-    const path_dico = `users/${user.id}`
-    let restaurants: Array<{id:string, adresse:string}> = [];
-    restaurants = user.restaurants.filter((restaurant) => (restaurant !== null) && (restaurant !== undefined))
-      .map((restaurant) => {
-        return {id:restaurant.id, adresse: restaurant.adresse};
-      });
-    Object.assign(data_to_add, {
-      [path_dico]: {
-        email: user.email,
-        proprietaire:prop
-      },
-      [path_prop]: {
-        email: user.email,
-        statut: user.statut,
-        restaurant: restaurants
-      }
-    })
-    for (let restaurant of restaurants.map((restaurant) => restaurant.id)) {
-      Object.assign(data_to_add, {
-        [`resto_auth/${prop}/${restaurant}/${user.id}`]: user.email
-      })
-    }
-    await update(ref_db, data_to_add)
-  }
-  async updateEmail(prop: string, restaurant: string, user_uid: string, email: string) {
-    const ref_db = ref(this.db);
-    await update(ref_db, {
-      [`users/${prop}/${user_uid}/email/`]: email,
-      [`users/${user_uid}/email/`]: email,
-      [`user_${prop}/${prop}/${restaurant}/${user_uid}/email/`]: email
-    })
-  }
-  async updateNumber(prop: string, restaurant: string, user_uid: string, new_number: string) {
-    const ref_db = ref(this.db, `user_${prop}/${prop}/${restaurant}/${user_uid}/number/`);
-    await set(ref_db, new_number)
-  } */
 }

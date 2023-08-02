@@ -34,10 +34,10 @@
                                         <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="seePlat(plat)">
                                           <br>  <i class="fa-solid fa-eye"></i> <br> Consulter
                                         </a>
-                                        <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="modifPlat(plat)">
+                                        <a [ngClass]="write ?  '': 'disable'" class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="modifPlat(plat)">
                                             <br> <i class="fa-solid fa-pen"> </i> <br> Modifier
                                         </a>
-                                        <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="suppressPlat(plat)">
+                                        <a [ngClass]="write ?  '': 'disable'" class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="suppressPlat(plat)">
                                             <br> <i class="fa-solid fa-trash"> </i> <br> Supprimer
                                         </a>
                                     </div>
@@ -59,7 +59,7 @@
                                         <span *ngIf="cat === 'Entrée'">Cliquer pour ajouter une {{cat}}</span>
                                     </figcaption>
                                     <div class="tourbtn">
-                                        <a class="btn btn-sm" target="_blank" rel="noreferrer" (click)="addPlat(i)">
+                                        <a [ngClass]="write ?  '': 'disable'" class="btn btn-sm" target="_blank" rel="noreferrer" (click)="addPlat(i)">
                                             <i class="fa-solid fa-plus"></i> <br> Ajouter
                                         </a>
                                     </div>

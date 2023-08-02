@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonService } from '../../../../../app/services/common/common.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { Client, DisplayedClient } from '../../../../../app/interfaces/client';
@@ -20,11 +20,13 @@ import { Subscription, throwError } from 'rxjs';
   styleUrls: ['./clients.component.css']
 })
 export class ClientsComponent implements OnInit, OnDestroy {
+  @Input() clients:string | null;
+  public write:boolean;
   public windows_screen_mobile: boolean;
   public displayedColumns: string[] = ['name', 'surname', 'email', 'number',
     'adress', 'waste_alert', "promotions", 'order_number', 'actions'];
   public size: string;
-  public clients: Array<Client>;
+  public _clients: Array<Client>;
   public displayed_client: Array<DisplayedClient>;
   public dataSource: MatTableDataSource<DisplayedClient>;
   private page_number: number;
@@ -47,31 +49,39 @@ export class ClientsComponent implements OnInit, OnDestroy {
     this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("user");
     this.visibles = [];
     this.size = "";
-    this.clients = [];
+    this._clients = [];
     this.displayed_client = [];
     this.dataSource = new MatTableDataSource(this.displayed_client);
     this.prop = "";
     this.restaurant = "";
     this.url = this.router.parseUrl(this.router.url);
+    this.clients = null;
+    this.write = false;
   }
   ngOnDestroy(): void {
     this.req_clients();
     this.clients_sub.unsubscribe();
   }
   ngOnInit(): void {
-    this.displayed_client = [];
-    let user_info = this.url.queryParams;
-    this.prop = user_info["prop"];
-    this.restaurant = user_info["restaurant"];
-    this.req_clients = this.client_service.getClientsBDD(this.prop, this.restaurant);
-     this.clients_sub = this.client_service.getClients().subscribe((clients) => {
-      this.clients = clients;
-      this.displayed_client = this.client_calcul_service.clientToDisClient(clients);
-      const first_event = new PageEvent();
-      first_event.length = this.clients.length;
-      first_event.pageSize = 6;
-      this.pageChanged(first_event);
-    })
+    if(this.clients !== null){
+      if(this.clients.includes("w")) this.write = true;
+      if(this.clients.includes("r")){
+        this.displayed_client = [];
+        let user_info = this.url.queryParams;
+        this.prop = user_info["prop"];
+        this.restaurant = user_info["restaurant"];
+    
+        this.req_clients = this.client_service.getClientsBDD(this.prop, this.restaurant);
+         this.clients_sub = this.client_service.getClients().subscribe((clients) => {
+          this._clients = clients;
+          this.displayed_client = this.client_calcul_service.clientToDisClient(clients);
+          const first_event = new PageEvent();
+          first_event.length = this._clients.length;
+          first_event.pageSize = 6;
+          this.pageChanged(first_event);
+        })
+      }
+    }
   }
   pageChanged(event: PageEvent) {
     let datasource = [... this.displayed_client];
@@ -115,7 +125,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
     })
   }
   suppUser(dis_client: DisplayedClient) {
-    const client = this.clients.find((client) => client.number === dis_client.number);
+    const client = this._clients.find((client) => client.number === dis_client.number);
     if (client !== undefined) {
       this.client_service.suppClient(this.prop, this.restaurant, client.id).then(() => {
         this._snackBar.open("le client vient d'être supprimé", "fermer");

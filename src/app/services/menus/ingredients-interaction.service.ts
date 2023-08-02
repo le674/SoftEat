@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { CIngredient, TIngredientBase } from '../../../app/interfaces/ingredient';
 import { Cpreparation } from '../../../app/interfaces/preparation';
 import { CalculService } from './menu.calcul/menu.calcul.ingredients/calcul.service';
-import { addDoc, collection, deleteDoc, doc, onSnapshot, setDoc, updateDoc, writeBatch } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, setDoc, updateDoc, writeBatch } from 'firebase/firestore';
 import { RowIngredient } from 'src/app/interfaces/inventaire';
 
 
@@ -156,7 +156,6 @@ export class IngredientsInteractionService {
         ), restaurant_id
       ), "ingredients").withConverter(this.ingredient_converter);
     this.sub_ingredients = onSnapshot(ingredients_ref, (ingredients) => {
-
       this._ingredients = [];
       ingredients.forEach((ingredient) => {
           if(ingredient.exists()){
@@ -194,10 +193,32 @@ export class IngredientsInteractionService {
       })
       return this.sub_preparations;
   }
+  /**
+   * Cette fonction permet de scanner la fature sous format pdf ou image et de l'insérer dans la base de donnée
+   * @param prop_id identifiant de l'enseigne qui scanne la facture
+   * @param restaurant_id identifiant du restaurant qui scanne la facture
+   */
+  async getIngredientsFromRestaurantsProm(prop_id:string, restaurant_id:string){
+    this._ingredients = [];
+   const ingredients_ref = collection(doc(
+    collection(
+      doc(
+        collection(
+          this.firestore, "proprietaires"
+          ), prop_id
+        ), "restaurants"
+      ), restaurant_id
+    ), "ingredients").withConverter(this.ingredient_converter);
+    const querySnapshot = await getDocs(ingredients_ref);
+    querySnapshot.forEach((ingredient) => {
+      this._ingredients.push(ingredient.data() as CIngredient);
+    })
+    return this._ingredients;
+  }
+
   getIngredientsFromBaseIngBDD(){
     
   }
-  
   getIngredientsFromBaseIng(){
 
   }

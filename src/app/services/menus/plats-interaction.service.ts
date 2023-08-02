@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { child, connectDatabaseEmulator, Database, get, getDatabase, ref, remove, update } from 'firebase/database';
 import { Cetape } from '../../../app/interfaces/etape';
 import {TIngredientBase } from '../../../app/interfaces/ingredient';
-import { Cplat, Plat } from '../../../app/interfaces/plat';
+import { Cplat } from '../../../app/interfaces/plat';
 import { Cpreparation} from '../../../app/interfaces/preparation';
-import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../../environments/variables';
-import { IngredientsInteractionService } from './ingredients-interaction.service';
 import { Cconsommable } from 'src/app/interfaces/consommable';
 import { Subject } from 'rxjs';
 import { collection, deleteDoc, doc, DocumentSnapshot, Firestore, getFirestore, onSnapshot, setDoc, SnapshotOptions, Unsubscribe } from 'firebase/firestore';

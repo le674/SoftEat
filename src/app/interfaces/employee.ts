@@ -3,8 +3,6 @@ import { Address } from "./address";
 import { Restaurant } from "./restaurant";
 import { Statut } from "./statut";
 import { User } from "./user";
-
-
 export class Employee {
     address:Address | null;
     current_restaurant:string | null;
@@ -19,11 +17,11 @@ export class Employee {
     statut:Statut;
     surname:string | null;
     uid:string;
-    user_uid:string;
+    user_id:string;
     [index:string]:any;
 
     constructor(email:string, statut:Statut, uid:string, private common_service: CommonService){
-        this.user_uid = "";
+        this.user_id = "";
         this.email = email;
         this.statut = statut;
         this.uid = uid;
@@ -38,30 +36,31 @@ export class Employee {
         this.address = null;
         this.current_restaurant = null;
     }
+    /**
+     * permet de récupérer les statut qui sont autoriser pour le droit
+     * @param right droit qui peut être w (écriture) ou r(lecture) pour lequel nous voulons récupérer les statuts
+     * @returns liste de statuts 
+    */
     getStatus(right:string):string[]{
         let status = []
-        let roles = ["stock", "analyse", "budget", "facture", "planning"];
         for(let key in this.statut){
           const role = this.statut[key as keyof typeof this.statut] as string
-          if(typeof role === "string"){
-            if(role.includes(right)) status.push(key) 
-          } 
+            if(typeof role === "string"){
+              if(role.includes(right)) status.push(key) 
+            } 
           }
           return status
       }
-    
-      setStatus(status:string[], right:string){
+    /**
+     * Cette fonction permet d'attribuer un droit à un ensemble de status
+     * @param status liste des statut auxquels nous souhaitons attribuer un droit
+     * @param right droit à attribuer pour cette ensemble de statut
+     */
+    setStatus(status:string[], right:string){
         let roles = this.common_service.getStatut();
-        let _roles =  new Array();
-        _roles.push(this.statut.analyse);
-        _roles.push(this.statut.budget);
-        _roles.push(this.statut.facture);
-        _roles.push(this.statut.planning);
-        _roles.push(this.statut.stock);
-        
-        roles.forEach((role, index) => {
-          if(role === 'proprietaire'){
-            if(status.includes('proprietaire')){
+        roles.forEach((role) => {
+          if(role === 'propriétaire'){
+            if(status.includes('propriétaire')){
               this.roles?.push("propriétaire");
             } 
             else{
@@ -70,7 +69,7 @@ export class Employee {
           }
           else{
             if(this.statut !== null){
-              let u_role = _roles[index];
+              let u_role = this.statut[role];
               if(status.includes(role)){
                 if(typeof u_role === 'string'){
                   if(!u_role.includes('r')){
@@ -91,37 +90,33 @@ export class Employee {
                   }
                 }
               }
-              if(role === "analyse") this.statut.analyse = u_role;
-              if(role === "budget") this.statut.budget = u_role;
-              if(role === "facture") this.statut.facture = u_role;
-              if(role === "planning") this.statut.planning = u_role;
-              if(role === "stock") this.statut.stock = u_role;
+              this.statut[role] = u_role;
             }
           }
         })   
-      }
-    
-      setStatusFromUser(user:Employee){
+    }
+    /**
+     * permet de récupérer les status d'un employée et de les ajouter à cette instance d'employee
+     * @param user employee d'un restaurant
+     */
+    setStatusFromUser(user:Employee){
         this.statut = Object.assign({}, user.statut)
-      }
+    }
     
-    
-      remove_null(){
-        this.statut.analyse = "";
-        this.statut.budget = "";
-        this.statut.facture = "";
-        this.statut.stock = "";
-        this.statut.planning = "";
-      }
-    
-    
-      to_roles() {
-        let statut = new Statut(this.common_service);
-        statut.setStatut(this.statut);
-        this.roles = statut.getRoles();
-      }
-      
-      getData(): any {
+    /**
+     * Supprime les status null et les remplaces par une chaine de caractère vide
+     */
+    remove_null(){
+        for(let status of this.common_service.getStatut()){
+          this.statut[status] = "";
+        }
+    }
+    /**
+     * Permet de récupérer une instance d'employé sous la forme d'un JSON
+     * @returns un JSON qui représente l'employée
+     */
+    getData(): any {
+
        let address = null;
        if(this.address !== null){
         address = {
@@ -140,16 +135,16 @@ export class Employee {
           service: this.service,
           surname: this.surname,
           uid: this.uid,
-          user_uid: this.user_uid
+          user_id: this.user_id
          }
-      }
-      /**
-       * permet de copier un JSON employee dans une instance de la classe employée
-       * @param employee employée à copier dans une instance de la classe
-       */
-      setData(employee: Employee) {
+    }
+    /**
+      * permet de copier un JSON employee dans une instance de la classe employée
+      * @param employee employée à copier dans une instance de la classe
+    */
+    setData(employee: Employee) {
         let statut = new Statut(this.common_service);
-        statut.setStatut(employee.statut);
+        statut.setData(employee.statut);
         let address = null;
         new Statut(this.common_service);
         if(employee.address !== null){
@@ -167,15 +162,31 @@ export class Employee {
         this.roles = employee.roles;
         this.surname = employee.surname;
         this.uid = employee.uid;
-        this.user_uid = employee.user_uid;
+        this.user_id = employee.user_id;
         this.address = address;  
         this.statut = statut
+    }
+    to_roles() {
+      let statut = new Statut(this.common_service);
+      statut.setData(this.statut);
+      if(this.roles !== null && this.roles !== undefined){
+        this.roles = statut.getRoles(this.roles.includes("propriétaire"));
       }
+      else{
+        this.roles = statut.getRoles(false);
+      }
+  }
 }
-
 export class EmployeeFull extends Employee{
   proprietaire:string = "";
   restaurants: Array<Restaurant> = [];
+  /**
+   * Permet de filtrer à partir d'une liste d'identifiant des restaurants de
+   * l'employé parmit tout les restaurants uniquement les restauarants dont
+   * l'utilisateur à les droits d'accès 
+   * @param user eployée ou client de l'enseigne
+   * @param restaurants etout les restaurants de l'enseigne
+   */
   getAllRestaurant(user:User, restaurants:Array<Restaurant>){
     this.restaurants = [];
     if(user.related_restaurants !== null){
@@ -183,6 +194,10 @@ export class EmployeeFull extends Employee{
      this.restaurants = restaurants.filter((restaurant) => restaurants_ids.includes(restaurant.id))
     }
   }
+  /**
+   * permet d'initialiser la classe employée dont hérite la classe employee full
+   * @param employee employé du restaurant
+   */
   setEmployee(employee:Employee){
     super.address = employee.address;
     super.current_restaurant = employee.current_restaurant;
@@ -193,11 +208,19 @@ export class EmployeeFull extends Employee{
     super.statut = employee.statut;
     super.service = employee.service;
     super.surname = employee.surname;
-    super.user_uid = employee.user_uid;
+    super.user_id = employee.user_id;
   }
+  /**
+   * permet de récupérer l'ensemble des identifiants des restaurants auxquel appartient l'employé 
+   * @returns {Array<Restaurant>} liste de restaurants
+   */
   getRestaurantsIds(){
     return this.restaurants.map((restaurant) => restaurant.id);
   }
+  /**
+   * permet de récupérer une liste d'objets contenant l'identifiant du propriétaire et du restaurant
+   * @returns {Array<{proprietaire_id:string, restaurant_id:string}>} liste d'objets
+   */
   getRestaurantsProp(){
     return this.restaurants.map((restaurant) => {
       return {

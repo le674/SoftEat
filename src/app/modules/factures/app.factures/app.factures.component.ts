@@ -15,6 +15,7 @@ import { FactureSharedService } from '../../../../app/services/factures/facture_
 import { MatRadioChange } from '@angular/material/radio';
 import { CommonService } from '../../../../app/services/common/common.service';
 import { Visibles } from '../../autho/app.configue/app.configue.index';
+import { FacturePrintedResult } from 'src/app/interfaces/facture';
 
 @Component({
   selector: 'app-factures',
@@ -35,7 +36,7 @@ export class AppFacturesComponent implements OnInit {
     nom: string;
     categorie_tva: string;
     cost: number;
-    cost_ttc: number;
+    cost_ttc: number | null;
     quantity: number;
     quantity_unity: number;
     unity: string;
@@ -48,7 +49,7 @@ export class AppFacturesComponent implements OnInit {
     nom: string;
     categorie_tva: string;
     cost: number;
-    cost_ttc: number;
+    cost_ttc: number | null;
     quantity: number;
     quantity_unity: number;
     unity: string;
@@ -61,7 +62,7 @@ export class AppFacturesComponent implements OnInit {
     nom: string;
     categorie_tva: string;
     cost: number;
-    cost_ttc: number;
+    cost_ttc: number | null;
     quantity: number;
     quantity_unity: number;
     unity: string,
@@ -110,7 +111,7 @@ export class AppFacturesComponent implements OnInit {
   }
 
   getPdf(file_blob: any) {
-/* 
+ 
     if(file_blob.target !== undefined){
       if((file_blob.target.files[0] !== null) && (file_blob.target.files[0] !== undefined)){
         const pdf_file:File = file_blob.target.files[0];
@@ -133,7 +134,7 @@ export class AppFacturesComponent implements OnInit {
                 row_marge = ingredient.marge;
               }
               const add_to_tab = {
-                nom: ingredient.nom.split('_').join(" "),
+                nom: ingredient.name.split('_').join(" "),
                 categorie_tva: row_category_tva,
                 cost: ingredient.cost,
                 cost_ttc: ingredient.cost_ttc, // si le cout a changé dans la nouvelle facture ont calcule un cout moyen 
@@ -152,8 +153,7 @@ export class AppFacturesComponent implements OnInit {
           })
         });
       }
-     // const url = URL.createObjectURL();
-    } */
+    } 
   }
   getImg(file_blob: any) {
     if(file_blob.target !== undefined){
@@ -166,6 +166,44 @@ export class AppFacturesComponent implements OnInit {
           data: {
             url: url_img,
             type: "image"
+          }
+        });
+        dialog_ref.componentInstance.getDataSubject().subscribe((parsed_img:FacturePrintedResult[] | null) => {
+          if(parsed_img !== null){
+            let p_ingredients = this.service_factue_shared.convertParsedLstToIngs(parsed_img, this.prop, this.restaurant)
+            p_ingredients.then((ingredients) => {
+              this.ingredients_br = ingredients;
+              for (let ingredient of ingredients) {
+                let row_dlc = ""
+                let row_category_tva = ""
+                let row_marge = 0;
+                if(ingredient.dlc !== null){
+                  row_dlc = ingredient.dlc.toLocaleString();
+                }
+                if(ingredient.categorie_tva !== null){
+                  row_category_tva = ingredient.categorie_tva
+                }
+                if(ingredient.marge !== null){
+                  row_marge = ingredient.marge;
+                }
+                const add_to_tab = {
+                  nom: ingredient.name.split('_').join(" "),
+                  categorie_tva: row_category_tva,
+                  cost: ingredient.cost,
+                  cost_ttc: ingredient.cost_ttc, // si le cout a changé dans la nouvelle facture ont calcule un cout moyen 
+                  quantity: ingredient.quantity,
+                  quantity_unity: ingredient.quantity_unity,
+                  unity: ingredient.unity,
+                  date_reception: ingredient.date_reception.toLocaleString(),
+                  dlc: row_dlc,
+                  marge: row_marge,
+                  vrac: ingredient.vrac
+                }
+                this.ingredients_displayed_br.push(add_to_tab);
+              }
+              this.ingredients_displayed_br_tmp = this.ingredients_displayed_br;
+              this.dataSource.data = this.ingredients_displayed_br;
+            }) 
           }
         })
       }
@@ -181,7 +219,7 @@ export class AppFacturesComponent implements OnInit {
     nom: string;
     categorie_tva: string;
     cost: number;
-    cost_ttc: number;
+    cost_ttc: number | null;
     quantity: number;
     quantity_unity: number;
     unity: string;
@@ -303,7 +341,7 @@ export class AppFacturesComponent implements OnInit {
     nom: string;
     categorie_tva: string;
     cost: number;
-    cost_ttc: number;
+    cost_ttc: number | null;
     quantity: number;
     quantity_unity: number;
     unity: string;
@@ -328,7 +366,7 @@ export class AppFacturesComponent implements OnInit {
     supp_event.pageSize = 6
     this.pageChangedFirst(supp_event);
   }
-/* 
+
   addIngredients($event: MouseEvent) {
    if(this.ingredient){
     let is_added = true;
@@ -349,7 +387,7 @@ export class AppFacturesComponent implements OnInit {
       this._snackBar.open("les ingrédients viennent d'être ajoutés à la base de donnée", "fermer");
      }
    }
-  } */
+  } 
 
   pageChanged(event: PageEvent) {
     let datasource = [... this.ingredients_displayed_br];

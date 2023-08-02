@@ -30,7 +30,6 @@ export class ModifNumberComponent implements OnInit {
     this.dialogRef.close();
   }
   sendNewNumber() {
-    
     if (this.number_modification.valid && (this.number_modification.value.number != null) && (this.data.user !== null)){
       const updated = this.service.updateEmployee(this.data.prop, this.data.user, "number", this.number_modification.value.number).catch((error) => {
         this._snackBar.open("le numéro de téléphone n'a pas pu être modifié veuillez contacter SoftEat", "fermer")

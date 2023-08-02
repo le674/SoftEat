@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
@@ -21,6 +21,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./app.plats.component.css']
 })
 export class AppPlatsComponent implements OnInit, OnDestroy {
+  @Input() recette:string | null;
+  public write:boolean;
   public _preparations:Array<CpreparationBase>;
   public _ingredients:Array<TIngredientBase>;
   public _consommables: Array<TConsoBase>;
@@ -58,6 +60,8 @@ export class AppPlatsComponent implements OnInit, OnDestroy {
     this.consommables = [];
     this.ingredients = [];
     this.carte = [];
+    this.recette = null;
+    this.write = false;
   }
   ngOnDestroy(): void {
     this.req_ingredients();
@@ -70,31 +74,36 @@ export class AppPlatsComponent implements OnInit, OnDestroy {
     this.plats_sub.unsubscribe();
   }
   ngOnInit(): void {
-    let user_info = this.url.queryParams;
-    this.prop = user_info["prop"];
-    this.restaurant = user_info["restaurant"];
-    this.req_plats = this.plat_service.getPlatFromRestaurantBDD(this.prop);
-    this.req_ingredients = this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
-    this.req_consommables = this.conso_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
-    this.req_preparations = this.ingredient_service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
-    this.plats_sub = this.plat_service.getPlatFromRestaurant().subscribe((plats:Cplat[]) => {
-      this.plats = plats;
-      if(this.plats !== undefined && this.plats !== null){
-        for (let category of this.categorie) {
-          this.carte.push(this.plats.filter((plat) => plat.type === category));
-        }
-      }
-      this.categorie.map((categorie) => this.carte.push(plats.filter((plat) => plat.type === categorie)));
-      this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:CIngredient[]) => {
-        this.ingredients = ingredients;
-        this.consommables_sub = this.conso_service.getConsommablesFromRestaurants().subscribe((consommables:Cconsommable[]) => {
-          this.consommables = consommables;
-          this.preparations_sub = this.ingredient_service.getPrepraparationsFromRestaurants().subscribe((preparations:Cpreparation[]) => {
-           this.preparations = preparations;
+    if(this.recette !== null){
+      if(this.recette.includes("w")) this.write = true;
+      if(this.recette.includes("r")){
+        let user_info = this.url.queryParams;
+        this.prop = user_info["prop"];
+        this.restaurant = user_info["restaurant"];
+        this.req_plats = this.plat_service.getPlatFromRestaurantBDD(this.prop);
+        this.req_ingredients = this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
+        this.req_consommables = this.conso_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
+        this.req_preparations = this.ingredient_service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
+        this.plats_sub = this.plat_service.getPlatFromRestaurant().subscribe((plats:Cplat[]) => {
+          this.plats = plats;
+          if(this.plats !== undefined && this.plats !== null){
+            for (let category of this.categorie) {
+              this.carte.push(this.plats.filter((plat) => plat.type === category));
+            }
+          }
+          this.categorie.map((categorie) => this.carte.push(plats.filter((plat) => plat.type === categorie)));
+          this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:CIngredient[]) => {
+            this.ingredients = ingredients;
+            this.consommables_sub = this.conso_service.getConsommablesFromRestaurants().subscribe((consommables:Cconsommable[]) => {
+              this.consommables = consommables;
+              this.preparations_sub = this.ingredient_service.getPrepraparationsFromRestaurants().subscribe((preparations:Cpreparation[]) => {
+               this.preparations = preparations;
+              })
+            })
           })
         })
-      })
-    })
+      }
+    }
   }
   
   addPlat(categorie:number){

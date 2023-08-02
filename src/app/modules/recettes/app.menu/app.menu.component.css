@@ -283,3 +283,8 @@ h1{
     background-color: rgb(125, 181, 46);
     color: white;
 }
+.disable{
+  cursor: none;
+  pointer-events: none;
+  background-color: rgb(120,120,120);
+}

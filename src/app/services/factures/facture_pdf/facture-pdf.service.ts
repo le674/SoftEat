@@ -3,27 +3,14 @@ import * as pdfjsLib from 'pdfjs-dist';
 import { TextItem } from 'pdfjs-dist/types/src/display/api';
 import { FactureSharedService } from '../facture_shared/facture-shared.service';
 import { TextShared } from '../../../../app/interfaces/text';
+import { configue_facture_parser } from '../facture_configue';
+import { FactureColumnsPdf, FacturePivotsFullPdf } from 'src/app/interfaces/facture';
 @Injectable({
   providedIn: 'root'
 })
 export class FacturePdfService {
-  private colonne_factures: {
-    name: Array<string>,
-    description: Array<string>,
-    price: Array<string>,
-    quantity: Array<string>,
-    tva: Array<string>,
-    total: Array<string>
-  }
-  private colonne_factures_pivot: {
-    name: TextItem,
-    description?: TextItem,
-    price: TextItem,
-    quantity: TextItem,
-    tva?: TextItem,
-    total?: TextItem
-  }
-
+  private colonne_factures: FactureColumnsPdf;
+  private colonne_factures_pivot: FacturePivotsFullPdf;
   constructor(private shared_service:FactureSharedService) {
     const init_item: TextItem = {
       str: "",
@@ -71,7 +58,8 @@ export class FacturePdfService {
       }
       // on utilise cette fonction afin de mutualiser les fonctions de traitemnents du parsing des factures entre pdf et images
       const items_shared = this.shared_service.convertTextItemToTextSharedLst(items)
-      const parse_line_promise = this.shared_service.getLineTable(items_shared, factures_pivots).then((lines: TextShared[][]) => {
+      const parse_line_promise = this.shared_service.getLineTable(items_shared, factures_pivots, 1).then((lines: TextShared[][]) => {
+
         return this.shared_service.rangeValInCol(lines, factures_pivots).then((parsed_pdf) => {
           return parsed_pdf;
         });
@@ -156,8 +144,8 @@ export class FacturePdfService {
     //==============prix============ 
     const price = text_items.find((item) => {
       const is_price = this.colonne_factures.price.includes(item.str.toLowerCase().split(" ").join(""));
-      const y_max_coord = item.transform[5] < (this.colonne_factures_pivot.name.transform[5] + 20);
-      const y_min_coord = (this.colonne_factures_pivot.name.transform[5] - 20) < item.transform[5];
+      const y_max_coord = item.transform[5] < (this.colonne_factures_pivot.name.transform[5] + configue_facture_parser.error_row_dist);
+      const y_min_coord = (this.colonne_factures_pivot.name.transform[5] - configue_facture_parser.error_row_dist) < item.transform[5];
       return (is_price && y_max_coord && y_min_coord)
     });
     if (price !== undefined) {
@@ -169,8 +157,8 @@ export class FacturePdfService {
     //==============quantitée============ 
     const quantitee = text_items.find((item) => {
       const is_quant = this.colonne_factures.quantity.includes(item.str.toLowerCase().split(" ").join(""));
-      const y_max_coord = item.transform[5] < (this.colonne_factures_pivot.name.transform[5] + 20);
-      const y_min_coord = (this.colonne_factures_pivot.name.transform[5] - 20) < item.transform[5];
+      const y_max_coord = item.transform[5] < (this.colonne_factures_pivot.name.transform[5] + configue_facture_parser.error_row_dist);
+      const y_min_coord = (this.colonne_factures_pivot.name.transform[5] - configue_facture_parser.error_row_dist) < item.transform[5];
       return (is_quant && y_max_coord && y_min_coord)
     });
     if (quantitee !== undefined) {
@@ -182,8 +170,8 @@ export class FacturePdfService {
     // ============tva===================
     const tva = text_items.find((item) => {
       const is_tva = this.colonne_factures.tva.includes(item.str.toLowerCase().split(" ").join(""));
-      const y_max_coord = item.transform[5] < (this.colonne_factures_pivot.name.transform[5] + 20);
-      const y_min_coord = (this.colonne_factures_pivot.name.transform[5] - 20) < item.transform[5];
+      const y_max_coord = item.transform[5] < (this.colonne_factures_pivot.name.transform[5] + configue_facture_parser.error_row_dist);
+      const y_min_coord = (this.colonne_factures_pivot.name.transform[5] - configue_facture_parser.error_row_dist) < item.transform[5];
       return (is_tva && y_max_coord && y_min_coord)
     })
     if (tva !== undefined) {
@@ -192,8 +180,8 @@ export class FacturePdfService {
     // ============total===================
     const total = text_items.find((item) => {
       const is_tot = this.colonne_factures.total.includes(item.str.toLowerCase().split(" ").join(""));
-      const y_max_coord = item.transform[5] < (this.colonne_factures_pivot.name.transform[5] + 20);
-      const y_min_coord = (this.colonne_factures_pivot.name.transform[5] - 20) < item.transform[5];
+      const y_max_coord = item.transform[5] < (this.colonne_factures_pivot.name.transform[5] + configue_facture_parser.error_row_dist);
+      const y_min_coord = (this.colonne_factures_pivot.name.transform[5] - configue_facture_parser.error_row_dist) < item.transform[5];
       return (is_tot && y_max_coord && y_min_coord)
     });
     if (total !== undefined) {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
@@ -19,6 +19,7 @@ import { PreparationInteractionService } from 'src/app/services/menus/preparatio
   styleUrls: ['./app.preparations.component.css']
 })
 export class AppPreparationsComponent implements OnInit, OnDestroy{
+  @Input() recette:string | null;
   private url: UrlTree;
   private router: Router;
   private prop:string;
@@ -31,8 +32,9 @@ export class AppPreparationsComponent implements OnInit, OnDestroy{
   private consommables_sub!:Subscription;
   private ingredients:Array<CIngredient>;
   private consommables:Array<Cconsommable>;
-  public preparations: Array<Cpreparation>;
   private prepa_names: Array<string | null>;
+  public preparations: Array<Cpreparation>;
+  public write: boolean;
 
   constructor(public dialog: MatDialog, private ingredient_service: IngredientsInteractionService,
   private consommable_service: ConsommableInteractionService,
@@ -45,6 +47,8 @@ export class AppPreparationsComponent implements OnInit, OnDestroy{
     this.ingredients = [];
     this.consommables = [];
     this.url = this.router.parseUrl(this.router.url);
+    this.recette = null;
+    this.write = false;
   }
   ngOnDestroy(): void {
     this.req_ingredients();
@@ -55,21 +59,26 @@ export class AppPreparationsComponent implements OnInit, OnDestroy{
     this.preparations_sub.unsubscribe();
   }
   ngOnInit(): void {
-    let user_info = this.url.queryParams;
-    this.prop = user_info["prop"];
-    this.restaurant = user_info["restaurant"];
-    this.req_ingredients = this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
-    this.req_preparations = this.ingredient_service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
-    this.req_consommables = this.consommable_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
-    this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:Array<CIngredient>) => {
-      this.ingredients = ingredients;
-      this.preparations_sub = this.ingredient_service.getPrepraparationsFromRestaurants().subscribe((preparations:Array<Cpreparation>) => {
-        this.preparations = preparations;
-        this.consommables_sub = this.consommable_service.getConsommablesFromRestaurants().subscribe((consommables:Array<Cconsommable>) => {
-          this.consommables = consommables;
-        })
-      })
-    })
+    if(this.recette !== null){
+      if(this.recette.includes("w")) this.write = true;
+      if(this.recette.includes("r")){
+        let user_info = this.url.queryParams;
+        this.prop = user_info["prop"];
+        this.restaurant = user_info["restaurant"];
+        this.req_ingredients = this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
+        this.req_preparations = this.ingredient_service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
+        this.req_consommables = this.consommable_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
+        this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:Array<CIngredient>) => {
+          this.ingredients = ingredients;
+          this.preparations_sub = this.ingredient_service.getPrepraparationsFromRestaurants().subscribe((preparations:Array<Cpreparation>) => {
+            this.preparations = preparations;
+            this.consommables_sub = this.consommable_service.getConsommablesFromRestaurants().subscribe((consommables:Array<Cconsommable>) => {
+              this.consommables = consommables;
+            });
+          });
+        });
+      }
+    }
   }
   addPreparation():void {
    this.prepa_names =  this.preparations.map(prepa => prepa.name); 

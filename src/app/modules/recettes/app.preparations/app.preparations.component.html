@@ -28,10 +28,10 @@
                             <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="seePreparation(preparation)">
                               <br>  <i class="fa-solid fa-eye"></i> <br> Consulter
                             </a>
-                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="modifPreparation(preparation)">
+                            <a [ngClass]="write ?  '': 'disable'" class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="modifPreparation(preparation)">
                                 <br> <i class="fa-solid fa-pen"> </i> <br> Modifier
                             </a>
-                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="suppressPreparation(preparation)">
+                            <a [ngClass]="write ?  '': 'disable'" class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="suppressPreparation(preparation)">
                                 <br> <i class="fa-solid fa-trash"> </i> <br> Supprimer
                             </a>
                         </div>
@@ -50,7 +50,7 @@
                             <span class="description">Cliquer pour ajouter une préparation</span>
                         </figcaption>
                         <div class="tourbtn">
-                            <a class="btn btn-sm" target="_blank" rel="noreferrer" (click)="addPreparation()">
+                            <a [ngClass]="write ?  '': 'disable'" class="btn btn-sm" target="_blank" rel="noreferrer" (click)="addPreparation()">
                                 <i class="fa-solid fa-plus"></i> <br> Ajouter
                             </a>
                         </div>

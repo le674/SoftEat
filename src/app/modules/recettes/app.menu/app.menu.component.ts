@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
-import { CIngredient, TIngredientBase } from '../../../../app/interfaces/ingredient';
+import { CIngredient } from '../../../../app/interfaces/ingredient';
 import { Cmenu } from '../../../../app/interfaces/menu';
 import { Cplat } from '../../../../app/interfaces/plat';
 import { ConsommableInteractionService } from '../../../../app/services/menus/consommable-interaction.service';
@@ -21,7 +21,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./app.menu.component.css']
 })
 export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
-
+  @Input() recette:string | null;
   public menus: Array<Cmenu>
   private url: UrlTree;
   private prop: string;
@@ -38,7 +38,7 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   private consommables_sub!:Subscription;
   private plats_sub!:Subscription;
   private menus_sub!:Subscription;
-
+  public write:boolean;
   constructor(private menu_service: MenuInteractionService,
     router: Router, public dialog: MatDialog, private ingredient_service: IngredientsInteractionService,
     private conso_service: ConsommableInteractionService, private plat_service: PlatsInteractionService, private _snackBar: MatSnackBar) {
@@ -50,6 +50,8 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     this.restaurant = "";
     this.router = router;
     this.url = this.router.parseUrl(this.router.url);
+    this.recette = null;
+    this.write = false;
   }
   ngOnDestroy(): void {
     this.req_menus();
@@ -63,25 +65,30 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    let user_info = this.url.queryParams;
-    this.prop = user_info["prop"];
-    this.restaurant = user_info["restaurant"];
-    this.req_ingredients =  this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
-    this.req_consommables =  this.conso_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
-    this.req_plats = this.plat_service.getPlatFromRestaurantBDD(this.prop);
-    this.req_menus = this.menu_service.getMenuFromRestaurantBDD(this.prop);
-    this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:Array<CIngredient>) => {
-      this.ingredients = ingredients;
-      this.consommables_sub = this.conso_service.getConsommablesFromRestaurants().subscribe((consommables:Array<Cconsommable>) => {
-        this.consommables = consommables;
-        this.plats_sub = this.plat_service.getPlatFromRestaurant().subscribe((plats: Array<Cplat>) => {
-          this.plats = plats;
-          this.menus_sub = this.menu_service.getMenuFromRestaurant().subscribe((menus: Array<Cmenu>) => {
-            this.menus = menus;
+    if(this.recette !== null){
+      if(this.recette.includes("w")) this.write = true;
+      if(this.recette.includes("r")){
+        let user_info = this.url.queryParams;
+        this.prop = user_info["prop"];
+        this.restaurant = user_info["restaurant"];
+        this.req_ingredients =  this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
+        this.req_consommables =  this.conso_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
+        this.req_plats = this.plat_service.getPlatFromRestaurantBDD(this.prop);
+        this.req_menus = this.menu_service.getMenuFromRestaurantBDD(this.prop);
+        this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:Array<CIngredient>) => {
+          this.ingredients = ingredients;
+          this.consommables_sub = this.conso_service.getConsommablesFromRestaurants().subscribe((consommables:Array<Cconsommable>) => {
+            this.consommables = consommables;
+            this.plats_sub = this.plat_service.getPlatFromRestaurant().subscribe((plats: Array<Cplat>) => {
+              this.plats = plats;
+              this.menus_sub = this.menu_service.getMenuFromRestaurant().subscribe((menus: Array<Cmenu>) => {
+                this.menus = menus;
+              })
+            })
           })
         })
-      })
-    })
+      }
+    }
   }
   ngAfterViewInit(): void {
 

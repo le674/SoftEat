@@ -58,7 +58,7 @@ export class CommonService {
     return role_name; 
   }
   getStatut():Array<string>{
-    return ["analyse", "budget", "facture", "planning", "stock"];
+    return ["analyse", "budget", "facture", "planning", "stock", "recette", "clients"];
   }
   getColumnAdminTab():Array<string>{
     return ["id", "email", "restaurants", "read_right", "write_right", "validation"];

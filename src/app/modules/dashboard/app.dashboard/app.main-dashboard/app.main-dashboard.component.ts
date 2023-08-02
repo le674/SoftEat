@@ -1,12 +1,9 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import {initializeApp } from 'firebase/app';
 import { Unsubscribe } from 'firebase/database';
 import { first, Subscription } from 'rxjs';
 import { AlertesService } from '../../../../../app/services/alertes/alertes.service';
 import { AuthentificationService } from '../../../../../app/services/authentification.service';
-import { UserInteractionService } from 'src/app/services/user-interaction.service';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo",
@@ -21,7 +18,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 let email: string | null = null;
 let displayName: string | null = null;
 @Component({
@@ -34,20 +30,17 @@ let displayName: string | null = null;
 
 export class AppMainDashboardComponent implements OnInit, OnDestroy {
   @Output() public numP = new EventEmitter();
-  user = auth.currentUser;
+  public user:any;
   public hidden = true;
   public alert_num = 0;
   private prop:string;
   private restaurant:string;
-  private num:number;
   private alerte_subscription: Subscription; 
   private stock_unsubscribe!: Unsubscribe;
   private conso_unsubscribe!: Unsubscribe;
   
   constructor(public authService: AuthentificationService,
-    public alerte_service: AlertesService,
-    public employee_service:UserInteractionService){
-    this.num = 0;
+    public alerte_service: AlertesService){
     // on récupère dans le constructeur le paquet d'alertes 
     this.prop = "";
     this.restaurant = "";

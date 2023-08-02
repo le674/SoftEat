@@ -6,20 +6,15 @@ import { CIngredient } from '../../../../app/interfaces/ingredient';
 import { TextImg, TextShared } from '../../../../app/interfaces/text';
 import { IngredientsInteractionService } from '../../menus/ingredients-interaction.service';
 import { CalculService } from '../../menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { configue_facture_parser } from '../facture_configue';
+import { FactureColumnsFull, FacturePivotsFull, FacturePrintedResult } from 'src/app/interfaces/facture';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FactureSharedService {
 
-  public colonne_factures_actual: {
-    name: TextShared[],
-    description?: TextShared[],
-    price: TextShared[],
-    quantity: TextShared[],
-    tva?: TextShared[],
-    total?: TextShared[]
-  }[]
+  public colonne_factures_actual: FactureColumnsFull[]
 
   constructor(private ingredient_services:IngredientsInteractionService, private calcul_service:CalculService) {
     this.colonne_factures_actual = [{
@@ -34,27 +29,26 @@ export class FactureSharedService {
   // ligne ne sont pas a mm distance entre elle. Dans ce cas une ligne est ajouté à all_lines_table
   // sans que celle ci soit une ligne du tableau 
   // la valeur type peut être pdf ou bien iamge
-  async getLineTable(items: TextShared[], colonne_factures_pivot:{
-    name: TextShared;
-    description?: TextShared;
-    price: TextShared;
-    quantity: TextShared;
-    tva?: TextShared;
-    total?: TextShared;
-}) { 
-  
+  async getLineTable(items: TextShared[], colonne_factures_pivot:FacturePivotsFull, y_axis:number) { 
     let same_length_line = true;
     let all_lines_table: Array<Array<TextShared>> = [];
     // on  récupère la coordonnée en y du header en utilisant name par exemple
-    let curr_pivot_y = colonne_factures_pivot.name.coordinates[1];
+    let curr_pivot_y = colonne_factures_pivot.name.coordinates[y_axis];
     // on calcul la distance entre cette coordonnée et l'ensemble des ordonnées des autres éléments de la facture
     // on récupère uniquement celle qui sont supérieur à zéro car on veut la ligne du dessous
-    let dist_levels = items.map((item) => curr_pivot_y - item.coordinates[1]).filter((dist) => dist > 0);
+    let dist_levels = items.map((item) => curr_pivot_y - item.coordinates[y_axis]).filter((dist) => dist > 0);
     //on applique un minimum sur les distance pour trouver la chaine de caractère exactement en dessous
-    const first_line_gap = Math.min.apply(Math.min, dist_levels);
+    let first_line_gap = Math.min.apply(Math.min, dist_levels);
+    //lorsque la chaine de caractère exactement en dessous à une distance trop petit < 20 pixel on estime que c'est une erreur
+    // et que à l'oeil nue cela ne peut pas être un nouvelle élément
+    //on supprime donc la distance minimal pour en recalculer une autre
+    while(first_line_gap < configue_facture_parser.error_row_dist){
+      dist_levels = dist_levels.filter((dist) => dist !== first_line_gap);
+      first_line_gap = Math.min.apply(Math.min, dist_levels);
+    }
     // ont récupère la liste des mots qui sont uniquement en dessous et pas le reste
     // on prend 10 pixel entre le mot et les autres mot de la ligne au cas ou les mots ne sont pas au mm niveau
-    let l_next = items.filter((item) => ((curr_pivot_y - item.coordinates[1]) < first_line_gap + 10) && ((curr_pivot_y - item.coordinates[1]) > first_line_gap - 10));
+    let l_next = items.filter((item) => ((curr_pivot_y - item.coordinates[y_axis]) < first_line_gap + configue_facture_parser.error_row_dist) && ((curr_pivot_y - item.coordinates[y_axis]) > first_line_gap - configue_facture_parser.error_row_dist));
     // on enlève l_next de la liste de mots
     items = items.filter((item) => !l_next.includes(item));
     all_lines_table.push(l_next);
@@ -67,9 +61,9 @@ export class FactureSharedService {
     //2. le nombre d'élément de la ligne suivante parsé différe du nombre d'élément des autres ligne
     while ((first_line_gap === curr_line_gap) || same_length_line) {
       curr_pivot_y = next_pivot_y;
-      dist_levels = items.map((item) => curr_pivot_y - item.coordinates[1]).filter((dist) => dist > 0);
+      dist_levels = items.map((item) => curr_pivot_y - item.coordinates[y_axis]).filter((dist) => dist > 0);
       curr_line_gap = Math.min.apply(Math.min, dist_levels);
-      l_next = items.filter((item) => ((curr_pivot_y - item.coordinates[1]) < curr_line_gap + 10) && ((curr_pivot_y - item.coordinates[1]) > curr_line_gap - 10));
+      l_next = items.filter((item) => ((curr_pivot_y - item.coordinates[y_axis]) < curr_line_gap + configue_facture_parser.error_row_dist) && ((curr_pivot_y - item.coordinates[y_axis]) > curr_line_gap - configue_facture_parser.error_row_dist));
       items = items.filter((item) => !l_next.includes(item));
       all_lines_table.push(l_next);
       next_pivot_y = curr_pivot_y - curr_line_gap;
@@ -168,14 +162,7 @@ export class FactureSharedService {
 
  // cette fonction permet de convertire un objet contenant chacun des mots rangé dans la bonne colonne 
   //en les lignes à ajouter dans l'inventaire
-  convertColumnSetToPdf(column_set: {
-    name: TextShared[];
-    description?: TextShared[] | undefined;
-    price: TextShared[];
-    quantity: TextShared[];
-    tva?: TextShared[] | undefined;
-    total?: TextShared[] | undefined;
-  }[]) {
+  convertColumnSetToPdf(column_set: FactureColumnsFull[]) {
     return column_set.map((line) => {
       let parsed_pdf = {};
       //On concatène tout les attributs nom des différents mots du pdf 
@@ -245,14 +232,7 @@ export class FactureSharedService {
   // vérifie xh1 - xm0 soit inférieur aux autre avec xmi := l'ensemble des abscisse des mots de la première ligne
   // On fait pareil pour les autres lignes.
   // Pour les p ligne on détermine systématiquement n pivots ont a donc une matrice p x n
-  getAllPivots(line: TextShared[], colonne_factures_pivot:{
-    name: TextShared;
-    description?: TextShared;
-    price: TextShared;
-    quantity: TextShared;
-    tva?: TextShared;
-    total?: TextShared;
-}) {
+  getAllPivots(line: TextShared[], colonne_factures_pivot:FacturePivotsFull) {
     let des_col: number[] = [];
     let tva_col: number[] = [];
     let total_col: number[] = [];
@@ -303,23 +283,16 @@ export class FactureSharedService {
   convertTextItemToTextSharedLst(items: TextItem[]):TextShared[]{
     return items.map((item) => this.convertTextItemToTextShared(item));
   }
-/* 
-  async convertParsedLstToIngs(parsed_pdf: {
-    name: string;
-    description?: string | undefined;
-    price: number;
-    quantity: number;
-    tva?: number | undefined;
-    total?: number | undefined;
-}[], prop:string, restaurant:string):Promise<Array<CIngredient>>{
-    const _ingredients: Array<CIngredient> = [];
-    const ingredients = await this.ingredient_services.getIngredientsBrFromRestaurantsPROM(prop, restaurant);
+
+  async convertParsedLstToIngs(parsed_pdf:  FacturePrintedResult[], prop:string, restaurant:string):Promise<Array<CIngredient>>{
+    let _ingredients: Array<CIngredient> = [];
+    const ingredients = await this.ingredient_services.getIngredientsFromRestaurantsProm(prop, restaurant);
     for(let _ingredient of parsed_pdf){
       // Nous ne prennons pas en considération les aliments qui n'ont pas de nom
       if(_ingredient.name === undefined) continue;
       // Nous récupèrons les ingrédients depuis la base de donnée qui ont le même nom que ceux présent lors du parsing du pdf
       const name = _ingredient.name.trim().toLowerCase();
-      const ingredient = ingredients.find((ingredient) => ingredient.nom === name.split(" ").join("_"));
+      const ingredient = ingredients.find((ingredient) => ingredient.name === name.split(" ").join("_"));
       // Si il y'en a aucun ont ajoute les nouveau ingrédients sinon ont compare par rapport aux anciens 
       if(ingredient !== undefined){
         //On recalcule les quantitée avec les ingrédients scannés, deux cas comme d'habitude lorsque l'ingrédients est en vrac ou non  
@@ -332,7 +305,9 @@ export class FactureSharedService {
           ingredient.total_quantity = ingredient.total_quantity + _ingredient.quantity;
         }
         //On fait la moyenne des cout si ceux-ci ont changé
-        ingredient.cost_ttc = (ingredient.cost_ttc + _ingredient.price)/2
+        if(ingredient.cost_ttc !== null){
+          ingredient.cost_ttc = (ingredient.cost_ttc + _ingredient.price)/2
+        }
         if(typeof ingredient.dlc === "string"){
           ingredient.dlc = new Date(ingredient.dlc); 
         }
@@ -342,9 +317,9 @@ export class FactureSharedService {
         _ingredients.push(ingredient);
       }
       else{
-        const new_ingredient = new CIngredient(this.calcul_service, this.ingredient_services);
+        const new_ingredient = new CIngredient(this.calcul_service);
         const name = _ingredient.name.trim().toLowerCase();
-        new_ingredient.nom = name.split(" ").join("_");
+        new_ingredient.name = name.split(" ").join("_");
         new_ingredient.quantity = _ingredient.quantity;
         new_ingredient.total_quantity = _ingredient.quantity;
         new_ingredient.quantity_unity = 1;
@@ -362,5 +337,5 @@ export class FactureSharedService {
       }
     }
     return _ingredients;
-  } */
+  } 
 }
