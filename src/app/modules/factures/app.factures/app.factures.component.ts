@@ -15,7 +15,7 @@ import { FactureSharedService } from '../../../../app/services/factures/facture_
 import { MatRadioChange } from '@angular/material/radio';
 import { CommonService } from '../../../../app/services/common/common.service';
 import { Visibles } from '../../autho/app.configue/app.configue.index';
-import { FacturePrintedResult } from 'src/app/interfaces/facture';
+import { Facture, FacturePrintedResult } from 'src/app/interfaces/facture';
 
 @Component({
   selector: 'app-factures',
@@ -30,8 +30,7 @@ export class AppFacturesComponent implements OnInit {
   private page_number: number;
   private ingredient:boolean;
   private ingredients_br: Array<CIngredient>;
-
-  
+  private file!:File;
   public ingredients_displayed_br: Array<{
     nom: string;
     categorie_tva: string;
@@ -111,18 +110,17 @@ export class AppFacturesComponent implements OnInit {
   }
 
   getPdf(file_blob: any) {
- 
     if(file_blob.target !== undefined){
       if((file_blob.target.files[0] !== null) && (file_blob.target.files[0] !== undefined)){
-        const pdf_file:File = file_blob.target.files[0];
-        const url_pdf = URL.createObjectURL(pdf_file);
-        this.service_facture_pdf.parseFacture(url_pdf).then((parsed_pdf) => {
+        this.file = file_blob.target.files[0];
+        const blob_url = URL.createObjectURL(this.file);
+        this.service_facture_pdf.parseFacture(blob_url).then((parsed_pdf) => {
           let p_ingredients = this.service_factue_shared.convertParsedLstToIngs(parsed_pdf, this.prop, this.restaurant)
           p_ingredients.then((ingredients) => {
             this.ingredients_br = ingredients;
             for (let ingredient of ingredients) {
-              let row_dlc = ""
-              let row_category_tva = ""
+              let row_dlc = "";
+              let row_category_tva = "";
               let row_marge = 0;
               if(ingredient.dlc !== null){
                 row_dlc = ingredient.dlc.toLocaleString();
@@ -156,16 +154,20 @@ export class AppFacturesComponent implements OnInit {
     } 
   }
   getImg(file_blob: any) {
+   /*  this.blob = file_blob; */
     if(file_blob.target !== undefined){
       if((file_blob.target.files[0] !== null) && (file_blob.target.files[0] !== undefined)){
-        const image_file:File = file_blob.target.files[0];
-        const url_img = URL.createObjectURL(image_file);
+        this.file = file_blob.target.files[0];
+        const blob_url = URL.createObjectURL(this.file);
         const dialog_ref = this.dialog.open(FactureLoadComponent,{
           height: "400px",
           width: "400px",
           data: {
-            url: url_img,
-            type: "image"
+            url:  blob_url,
+            type: "image",
+            prop: null,
+            facture: null,
+            file: null
           }
         });
         dialog_ref.componentInstance.getDataSubject().subscribe((parsed_img:FacturePrintedResult[] | null) => {
@@ -209,7 +211,34 @@ export class AppFacturesComponent implements OnInit {
       }
     }
   }
-
+  sendFacture(){
+    const type = this.file.type
+    if(type !== null){
+      let curr_date = new Date();
+      let extension = Facture.getExtension().find((extension) => type.includes(extension));
+      if(extension !== undefined){
+        let facture = new Facture(curr_date, false);
+        facture.extension = extension; 
+        const dialog_ref = this.dialog.open(FactureLoadComponent,{
+          height: "400px",
+          width: "400px",
+          data: {
+            url:  null,
+            type: "archive-facture",
+            prop: this.prop,
+            facture: facture,
+            file: this.file
+          }
+        });
+      }
+      else{
+        this._snackBar.open("L'extension choisit est inconnue veuillez contacter softeat", "fermer")
+      }
+    }
+    else{
+      this._snackBar.open("Veuillez d'abord importer une facture", "fermer")
+    }
+  }
   revertModif(event:MouseEvent) {
    this.ingredients_displayed_br = this.ingredients_displayed_br_tmp;
    this.dataSource.data =  this.ingredients_displayed_br_tmp;
@@ -388,7 +417,6 @@ export class AppFacturesComponent implements OnInit {
      }
    }
   } 
-
   pageChanged(event: PageEvent) {
     let datasource = [... this.ingredients_displayed_br];
     this.page_number = event.pageIndex;
