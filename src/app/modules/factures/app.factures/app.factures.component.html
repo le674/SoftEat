@@ -40,6 +40,10 @@
                 <mat-radio-button name="chose-select" value="conso">Autres</mat-radio-button>
             </mat-radio-group>  
         </div>
+        <div id="slide-input">
+            <label for="mat-slide">Voulez-vous extraire les produits de la facture ?</label>
+            <mat-slide-toggle id="mat-slide" [labelPosition]="'before'" (change)="toggleExtract($event)"></mat-slide-toggle>
+        </div>
     </header>
         <table  *ngIf="!windows_screen_mobile" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
             <!--- Note that these columns can be defined in any order.

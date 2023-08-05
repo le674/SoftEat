@@ -14,22 +14,27 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
 import { MatOptionModule } from '@angular/material/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModifIngComponent } from './app.factures/app.factures.modif/modif.ing/modif.ing.component';
-import { CIngredient } from '../../../app/interfaces/ingredient';
 import { MatListModule } from '@angular/material/list';
-import {MatProgressBarModule} from '@angular/material/progress-bar'; 
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { FoldersComponent } from './app.archi/app.archi.folders/folders.component';
+import { AppArchiFilesComponent } from './app.archi/app.archi.files/app.archi.files.component'; 
 @NgModule({
   declarations: [
     ModifIngComponent,
     AppFacturesComponent,
     AppArchiComponent,
-    FactureLoadComponent
+    FactureLoadComponent,
+    FoldersComponent,
+    AppArchiFilesComponent
   ],
   imports: [
     MatFormFieldModule,
     FormsModule,
+    MatSlideToggleModule,
     MatSelectModule,
     MatListModule,
     MatInputModule,

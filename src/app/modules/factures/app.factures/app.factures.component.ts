@@ -16,6 +16,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { CommonService } from '../../../../app/services/common/common.service';
 import { Visibles } from '../../autho/app.configue/app.configue.index';
 import { Facture, FacturePrintedResult } from 'src/app/interfaces/facture';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-factures',
@@ -80,7 +81,7 @@ export class AppFacturesComponent implements OnInit {
     index_6: true,
     index_7: true
   };
-
+  public extract:boolean;
   displayedColumns: string[] = ['nom', 'categorie_tva', 'quantity', 'quantity_unity',
   'unity', 'cost', 'cost_ttc', 'date_reception', 'dlc', 'actions'];
   
@@ -101,6 +102,7 @@ export class AppFacturesComponent implements OnInit {
     this.ingredients_br = [];
     this.ingredient = true;
     this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("ing");
+    this.extract = false;
   }
 
   ngOnInit(): void {
@@ -113,71 +115,15 @@ export class AppFacturesComponent implements OnInit {
     if(file_blob.target !== undefined){
       if((file_blob.target.files[0] !== null) && (file_blob.target.files[0] !== undefined)){
         this.file = file_blob.target.files[0];
-        const blob_url = URL.createObjectURL(this.file);
-        this.service_facture_pdf.parseFacture(blob_url).then((parsed_pdf) => {
-          let p_ingredients = this.service_factue_shared.convertParsedLstToIngs(parsed_pdf, this.prop, this.restaurant)
-          p_ingredients.then((ingredients) => {
-            this.ingredients_br = ingredients;
-            for (let ingredient of ingredients) {
-              let row_dlc = "";
-              let row_category_tva = "";
-              let row_marge = 0;
-              if(ingredient.dlc !== null){
-                row_dlc = ingredient.dlc.toLocaleString();
-              }
-              if(ingredient.categorie_tva !== null){
-                row_category_tva = ingredient.categorie_tva
-              }
-              if(ingredient.marge !== null){
-                row_marge = ingredient.marge;
-              }
-              const add_to_tab = {
-                nom: ingredient.name.split('_').join(" "),
-                categorie_tva: row_category_tva,
-                cost: ingredient.cost,
-                cost_ttc: ingredient.cost_ttc, // si le cout a changé dans la nouvelle facture ont calcule un cout moyen 
-                quantity: ingredient.quantity,
-                quantity_unity: ingredient.quantity_unity,
-                unity: ingredient.unity,
-                date_reception: ingredient.date_reception.toLocaleString(),
-                dlc: row_dlc,
-                marge: row_marge,
-                vrac: ingredient.vrac
-              }
-              this.ingredients_displayed_br.push(add_to_tab);
-            }
-            this.ingredients_displayed_br_tmp = this.ingredients_displayed_br;
-            this.dataSource.data = this.ingredients_displayed_br;
-          })
-        });
-      }
-    } 
-  }
-  getImg(file_blob: any) {
-   /*  this.blob = file_blob; */
-    if(file_blob.target !== undefined){
-      if((file_blob.target.files[0] !== null) && (file_blob.target.files[0] !== undefined)){
-        this.file = file_blob.target.files[0];
-        const blob_url = URL.createObjectURL(this.file);
-        const dialog_ref = this.dialog.open(FactureLoadComponent,{
-          height: "400px",
-          width: "400px",
-          data: {
-            url:  blob_url,
-            type: "image",
-            prop: null,
-            facture: null,
-            file: null
-          }
-        });
-        dialog_ref.componentInstance.getDataSubject().subscribe((parsed_img:FacturePrintedResult[] | null) => {
-          if(parsed_img !== null){
-            let p_ingredients = this.service_factue_shared.convertParsedLstToIngs(parsed_img, this.prop, this.restaurant)
+        if(this.extract){
+          const blob_url = URL.createObjectURL(this.file);
+          this.service_facture_pdf.parseFacture(blob_url).then((parsed_pdf) => {
+            let p_ingredients = this.service_factue_shared.convertParsedLstToIngs(parsed_pdf, this.prop, this.restaurant)
             p_ingredients.then((ingredients) => {
               this.ingredients_br = ingredients;
               for (let ingredient of ingredients) {
-                let row_dlc = ""
-                let row_category_tva = ""
+                let row_dlc = "";
+                let row_category_tva = "";
                 let row_marge = 0;
                 if(ingredient.dlc !== null){
                   row_dlc = ingredient.dlc.toLocaleString();
@@ -205,20 +151,82 @@ export class AppFacturesComponent implements OnInit {
               }
               this.ingredients_displayed_br_tmp = this.ingredients_displayed_br;
               this.dataSource.data = this.ingredients_displayed_br;
-            }) 
-          }
-        })
+            })
+          });
+        }
+      }
+    } 
+  }
+  getImg(file_blob: any) {
+   /*  this.blob = file_blob; */
+    if(file_blob.target !== undefined){
+      if((file_blob.target.files[0] !== null) && (file_blob.target.files[0] !== undefined)){
+        this.file = file_blob.target.files[0];
+        if(this.extract){
+          const blob_url = URL.createObjectURL(this.file);
+          const dialog_ref = this.dialog.open(FactureLoadComponent,{
+            height: "400px",
+            width: "400px",
+            data: {
+              url:  blob_url,
+              type: "image",
+              prop: null,
+              facture: null,
+              file: null
+            }
+          });
+          dialog_ref.componentInstance.getDataSubject().subscribe((parsed_img:FacturePrintedResult[] | null) => {
+            if(parsed_img !== null){
+              let p_ingredients = this.service_factue_shared.convertParsedLstToIngs(parsed_img, this.prop, this.restaurant)
+              p_ingredients.then((ingredients) => {
+                this.ingredients_br = ingredients;
+                for (let ingredient of ingredients) {
+                  let row_dlc = ""
+                  let row_category_tva = ""
+                  let row_marge = 0;
+                  if(ingredient.dlc !== null){
+                    row_dlc = ingredient.dlc.toLocaleString();
+                  }
+                  if(ingredient.categorie_tva !== null){
+                    row_category_tva = ingredient.categorie_tva
+                  }
+                  if(ingredient.marge !== null){
+                    row_marge = ingredient.marge;
+                  }
+                  const add_to_tab = {
+                    nom: ingredient.name.split('_').join(" "),
+                    categorie_tva: row_category_tva,
+                    cost: ingredient.cost,
+                    cost_ttc: ingredient.cost_ttc, // si le cout a changé dans la nouvelle facture ont calcule un cout moyen 
+                    quantity: ingredient.quantity,
+                    quantity_unity: ingredient.quantity_unity,
+                    unity: ingredient.unity,
+                    date_reception: ingredient.date_reception.toLocaleString(),
+                    dlc: row_dlc,
+                    marge: row_marge,
+                    vrac: ingredient.vrac
+                  }
+                  this.ingredients_displayed_br.push(add_to_tab);
+                }
+                this.ingredients_displayed_br_tmp = this.ingredients_displayed_br;
+                this.dataSource.data = this.ingredients_displayed_br;
+              }) 
+            }
+          })
+        }
       }
     }
   }
   sendFacture(){
     const type = this.file.type
+    const name = this.file.name;
     if(type !== null){
       let curr_date = new Date();
       let extension = Facture.getExtension().find((extension) => type.includes(extension));
       if(extension !== undefined){
-        let facture = new Facture(curr_date, false);
+        let facture = new Facture(curr_date.toISOString(), false);
         facture.extension = extension; 
+        facture.name = name;
         const dialog_ref = this.dialog.open(FactureLoadComponent,{
           height: "400px",
           width: "400px",
@@ -437,7 +445,13 @@ export class AppFacturesComponent implements OnInit {
       this.ingredient = false;
     }
   }
-
+  /**
+   * permet de modifier l'extraction ou non des données de la facture ingrédients ou autres
+   * @param toogle changement de valeur du slide input
+   */
+  toggleExtract(toogle: MatSlideToggleChange) {
+    this.extract = toogle.source.checked;
+  }
   // adaptation mobile 
   getVisible(i: number):boolean{
     return this.visibles[('index_' + (i + 1)) as keyof typeof this.visibles]

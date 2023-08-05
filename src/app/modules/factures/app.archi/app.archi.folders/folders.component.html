@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div *ngFor="let _folders of decouperListe(folders, 3)">
+        <main>
+            <div class="folder" *ngFor="let folder of _folders">
+                <figure>
+                    <div class="image-folder" (click)="testClick($event, folder)">
+                        <img width="300" height="200" src='/assets/images/folder-g146320ac9_640.png'>
+                    </div>
+                    <figcaption>
+                        <h3>{{folder}}</h3>
+                    </figcaption>
+                </figure>
+            </div>
+        </main>
+    </div>
+</body>

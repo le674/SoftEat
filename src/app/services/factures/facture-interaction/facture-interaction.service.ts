@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import { Firestore } from '@angular/fire/firestore';
-import { DocumentSnapshot, SnapshotOptions, collection, doc, getFirestore, setDoc } from 'firebase/firestore';
+import { DocumentSnapshot, SnapshotOptions, Unsubscribe, collection, doc, getFirestore, onSnapshot, query, setDoc, where } from 'firebase/firestore';
 import { FirebaseStorage, getDownloadURL, getStorage, ref, uploadBytes, uploadBytesResumable} from "firebase/storage";
+import { Subject } from 'rxjs';
 import { Facture } from 'src/app/interfaces/facture';
 
 
@@ -13,17 +14,20 @@ export class FactureInteractionService {
   private firestore: Firestore;
   private storage:FirebaseStorage;
   private facture_converter:any;
+  private factures =  new Subject<Array<Facture>>();
+  private _factures:Array<Facture>;
+  private sub_factures!: Unsubscribe;
   constructor(private ofApp: FirebaseApp) { 
     this.firestore = getFirestore(ofApp);
     this.storage = getStorage(ofApp);
     this.facture_converter = {
-      toFirestore: (consommable:Facture) => {
-        return consommable;
+      toFirestore: (facture:Facture) => {
+        return facture;
       },
       fromFirestore: (snapshot:DocumentSnapshot<Facture>, options:SnapshotOptions) => {
         const data = snapshot.data(options);
         if(data !== undefined){
-          let facture = new Facture(data?.date_reception, data?.is_read);
+          let facture = new Facture(data.date_reception, data.is_read);
           facture.setData(data);
           return facture;
         }
@@ -31,7 +35,8 @@ export class FactureInteractionService {
           return null;
         }
       } 
-    } 
+    }
+    this._factures = [];
   }
 
 /**
@@ -68,5 +73,35 @@ export class FactureInteractionService {
         console.log(result.metadata.fullPath);
       });
     }
+  }
+  async getFactureFromStorage(path:string){
+    const filesRef = ref(this.storage, path);
+    return await getDownloadURL(filesRef)
+  }
+  getFactureBDD(prop: string, day:number, month:number,year:number){
+    const factures_ref =
+    query(
+      collection(
+        doc(
+          collection(
+            this.firestore, "proprietaires"
+          ), prop
+        ), "factures"
+      ),
+      where("day", "==", day),
+      where("month", "==", month),
+      where("year", "==", year)
+    ).withConverter(this.facture_converter);
+    this.sub_factures = onSnapshot(factures_ref, (factures) => {
+      this._factures = [];
+      factures.forEach((facture) => {
+        this._factures.push(facture.data() as Facture);
+      })
+      this.factures.next(this._factures);
+    })
+    return this.sub_factures;
+  }
+  getFacture() {
+    return this.factures.asObservable();
   }
 }

@@ -56,7 +56,7 @@ export interface FacturePrintedResult {
 }
 
 export class Facture{
-    date_reception:Date;
+    date_reception:string;
     day:number;
     month:number;
     year:number;
@@ -65,23 +65,26 @@ export class Facture{
     id:string | null;
     restaurant_id:string | null;
     path:string | null;
+    name:string;
 
-    constructor(date_reception:Date | null, is_read:boolean | null){
+    constructor(date_reception:string, is_read:boolean | null){
         if(is_read === null) is_read = false;
         if(date_reception === null){
-            this.date_reception = new Date();
+            this.date_reception = new Date().toISOString();
         }
         else{
             this.date_reception = date_reception;
         }
-        this.day = this.date_reception.getDay();
-        this.month = this.date_reception.getMonth();
-        this.year = this.date_reception.getFullYear();
+        const curr_date = new Date(date_reception);
+        this.day = curr_date.getDay();
+        this.month = curr_date.getMonth();
+        this.year = curr_date.getFullYear();
         this.is_read = is_read;
         this.restaurant_id = null;
         this.extension = null;
         this.id = null;
         this.path = null;
+        this.name = "";
     }
     /**
      * Cette fonction permet de copier un objet facture dans une instance de facture
@@ -97,6 +100,7 @@ export class Facture{
         this.id = facture.id;
         this.restaurant_id = facture.restaurant_id;
         this.path = facture.path;
+        this.name = facture.name;
     }
     /**
      * Cette fonction permet de récupérer l'objet facture sous forme d'un JSON 
@@ -112,7 +116,8 @@ export class Facture{
             is_read: this.is_read,
             id: this.id,
             restaurants_id: this.restaurant_id, 
-            path: this.path
+            path: this.path,
+            name:this.name
         }
     }
     /**

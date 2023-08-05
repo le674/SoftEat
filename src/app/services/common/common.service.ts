@@ -63,6 +63,18 @@ export class CommonService {
   getColumnAdminTab():Array<string>{
     return ["id", "email", "restaurants", "read_right", "write_right", "validation"];
   }
+  getMonths():Array<string>{
+    return ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"]
+  }
+  /**
+   * @param year année pour lequel on veut récupérer la liste de jours
+   * @param month mois pour lequel nous voulons récupérer la lise de jours
+   * @returns liste des jours 
+   */
+  getDays(year:number, month:number):Array<string>{
+    const num_days = new Date(year, month, 0).getDate();
+    return Array.from({length: num_days}, (_, i) => (i + 1).toString());
+  }
   incCounter():any{
     this.read_count = this.read_count + 1;
   }
