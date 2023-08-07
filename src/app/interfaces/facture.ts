@@ -49,7 +49,7 @@ export interface FacturePivotsFullPdf {
 export interface FacturePrintedResult {
     name: string;
     description?: string | undefined;
-    price: number;
+    price: number; 
     quantity: number;
     tva?: number | undefined;
     total?: number | undefined;
@@ -76,7 +76,7 @@ export class Facture{
             this.date_reception = date_reception;
         }
         const curr_date = new Date(date_reception);
-        this.day = curr_date.getDay();
+        this.day = curr_date.getDate();
         this.month = curr_date.getMonth();
         this.year = curr_date.getFullYear();
         this.is_read = is_read;

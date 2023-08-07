@@ -14,19 +14,52 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class FactureLoadComponent implements OnInit {
   private dataSubject = new BehaviorSubject<FacturePrintedResult[] | null>(null); // Initialisez avec une valeur par défaut
+  public load: boolean;
   constructor(private service_facture_img:FactureImgService, private service_facture_pdf:FacturePdfService,@Inject(MAT_DIALOG_DATA) public data:{
     url: string;
     type: string;
     prop: string;
     facture: Facture,
     file: File
-}, private _mat_dialog_ref:MatDialogRef<FactureLoadComponent>, private _snackBar:MatSnackBar, public facture_service:FactureInteractionService) { }
+}, private _mat_dialog_ref:MatDialogRef<FactureLoadComponent>, private _snackBar:MatSnackBar, public facture_service:FactureInteractionService) {
+  this.load = true;
+ }
 
   ngOnInit(): void {
     if(this.data.type === "image"){
       this.service_facture_img.parseFacturesImg(this.data.url).then((parsed_img) => {
         this.dataSubject.next(parsed_img); // Émettez la valeur
-        this._mat_dialog_ref.close(); // Fermez le dialog
+        this.load = false;
+        this.sleep(1000).then(() => {
+          this._mat_dialog_ref.close(); // Fermez le dialog
+        })
+      }).catch((error) => {
+        this._snackBar.open("problème lors de l'import de l'image veuillez contacter softeat", "fermer");
+        this._mat_dialog_ref.close();
+        let err = new Error(error);
+        return throwError(() => err).subscribe((error) => {
+          console.log(error);
+        });
+      }).finally(() => {
+        this._snackBar.open("Import de la facture sous format image terminé", "fermer");
+      }) 
+    }
+    if(this.data.type === "pdf"){
+      this.service_facture_pdf.parseFacture(this.data.url).then((parsed_pdf) => {
+        this.dataSubject.next(parsed_pdf); // Émettez la valeur
+        this.load = false;
+        this.sleep(1000).then(() => {
+          this._mat_dialog_ref.close(); // Fermez le dialog
+        })
+      }).catch((error) => {
+        this._snackBar.open("problème lors de l'import du pdf veuillez contacter softeat", "fermer");
+        this._mat_dialog_ref.close();
+        let err = new Error(error);
+        return throwError(() => err).subscribe((error) => {
+          console.log(error);
+        });
+      }).finally(() => {
+        this._snackBar.open("Import de la facture sous format pdf terminé", "fermer");
       }) 
     }
     if(this.data.type === "archive-facture"){
@@ -43,8 +76,11 @@ export class FactureLoadComponent implements OnInit {
             console.log(error);
           });
         }).finally(() => {
-          this._mat_dialog_ref.close(); // Fermez le dialog
-          this._snackBar.open("Téléchargement de la facture terminé", "fermer");
+          this.load = false;
+          this.sleep(10).then(() => {
+            this._mat_dialog_ref.close(); // Fermez le dialog
+            this._snackBar.open("Téléchargement de la facture terminé", "fermer");
+          })
         });
       })
     }
@@ -53,5 +89,7 @@ export class FactureLoadComponent implements OnInit {
   getDataSubject() {
     return this.dataSubject.asObservable();
   }
-  
+  sleep(ms:number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 }

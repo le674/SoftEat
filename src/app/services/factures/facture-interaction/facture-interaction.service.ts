@@ -78,7 +78,7 @@ export class FactureInteractionService {
     const filesRef = ref(this.storage, path);
     return await getDownloadURL(filesRef)
   }
-  getFactureBDD(prop: string, day:number, month:number,year:number){
+  getFactureBDD(prop: string, restaurants:string | null, day:number, month:number,year:number){
     const factures_ref =
     query(
       collection(

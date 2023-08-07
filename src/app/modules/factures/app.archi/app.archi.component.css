@@ -19,6 +19,10 @@ h1{
     background-color: rgb(125, 181, 46);
     color: white
 }
+#header-folders{
+    display: flex;
+    justify-content: space-between;
+}
 app-folders{
     position: absolute;
     top: 20%;

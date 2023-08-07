@@ -13,7 +13,7 @@ import { FacturePdfService } from 'src/app/services/factures/facture_pdf/facture
 })
 export class AppArchiFilesComponent implements OnInit {
   @Input() prop:string;
-  @Input() restaurant:string;
+  @Input() restaurant:string | null;
   @Input() dates:Array<string>;
   private req_factures!:Unsubscribe;
   public files:Array<Facture>;
@@ -31,7 +31,7 @@ export class AppArchiFilesComponent implements OnInit {
     const month = this.service_common.getMonths().findIndex((month) => month === this.dates[1]);
     const day =  this.dates[2];
     const year = this.dates[0];
-    this.req_factures = this.service.getFactureBDD(this.prop, +day, month, +year);
+    this.req_factures = this.service.getFactureBDD(this.prop, this.restaurant ,+day, month, +year);
     this.service.getFacture().subscribe((factures:Facture[]) => {
       this.files = factures;
     })
@@ -39,7 +39,6 @@ export class AppArchiFilesComponent implements OnInit {
   decouperListe(liste:Array<any>, tailleSousListe:number) {
     const sousListes = [];
     const nombreDeSousListes = Math.ceil(liste.length / tailleSousListe);
-  
     for (let i = 0; i < nombreDeSousListes; i++) {
       const debut = i * tailleSousListe;
       const fin = debut + tailleSousListe;
@@ -54,5 +53,6 @@ export class AppArchiFilesComponent implements OnInit {
         window.location.href = url;
       })
     }
-  } 
+  }
+   
 }

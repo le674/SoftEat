@@ -102,7 +102,7 @@ export class AppFacturesComponent implements OnInit {
     this.ingredients_br = [];
     this.ingredient = true;
     this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("ing");
-    this.extract = false;
+    this.extract = true;
   }
 
   ngOnInit(): void {
@@ -117,7 +117,18 @@ export class AppFacturesComponent implements OnInit {
         this.file = file_blob.target.files[0];
         if(this.extract){
           const blob_url = URL.createObjectURL(this.file);
-          this.service_facture_pdf.parseFacture(blob_url).then((parsed_pdf) => {
+          const dialog_ref = this.dialog.open(FactureLoadComponent,{
+            height: "400px",
+            width: "400px",
+            data: {
+              url:  blob_url,
+              type: "pdf",
+              prop: null,
+              facture: null,
+              file: null
+            }
+          });
+         dialog_ref.componentInstance.getDataSubject().subscribe((parsed_pdf) => {
             let p_ingredients = this.service_factue_shared.convertParsedLstToIngs(parsed_pdf, this.prop, this.restaurant)
             p_ingredients.then((ingredients) => {
               this.ingredients_br = ingredients;

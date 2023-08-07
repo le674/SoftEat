@@ -11,3 +11,11 @@ body{
 #spinner-container{
     margin-top: 60px;
 }
+h1{
+    font-weight: normal;
+    margin-left: 100px;
+}
+.fa-check{
+    color: rgb(125, 181, 46);
+    font-size: 200px;
+}

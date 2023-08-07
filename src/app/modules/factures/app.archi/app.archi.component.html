@@ -8,9 +8,12 @@
 </head>
 <body>
     <h1>Archivage</h1>
-    <button mat-fab id="return-button"  matTooltip="Retour en arrière" aria-label="boutton de retour" *ngIf="position !== 0" (click)="returnPage()">
-        <i class="fa-solid fa-arrow-left"></i>
-    </button>
+    <div id="header-folders">
+        <button mat-fab id="return-button"  matTooltip="Retour en arrière" aria-label="boutton de retour" *ngIf="position !== 0" (click)="returnPage()">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <mat-slide-toggle (change)="changeRestaurant($event)">Afficher les factures de tout les restaurants</mat-slide-toggle>
+    </div>
     <app-folders *ngIf="position <= 2" (folder)="selectDate($event)" [folders]="folders"></app-folders>
     <app-files *ngIf="position === 3" [prop]="prop" [restaurant]="restaurant" [dates]="full_date"></app-files>
 </body>

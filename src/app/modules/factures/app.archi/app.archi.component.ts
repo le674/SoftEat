@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Router, UrlTree } from '@angular/router';
 import { Facture } from 'src/app/interfaces/facture';
 import { CommonService } from 'src/app/services/common/common.service';
@@ -17,7 +18,8 @@ export class AppArchiComponent implements OnInit {
   public position:number;
   public full_date:Array<string>;
   public prop: string;
-  public restaurant: string;
+  public restaurant: string | null;
+  public all_restaurants:boolean;
   constructor(private router: Router, private service_common:CommonService) { 
     this.actual_date = new Date();
     this.folders = [];
@@ -28,11 +30,12 @@ export class AppArchiComponent implements OnInit {
     this.url = this.router.parseUrl(this.router.url);
     this.prop = "";
     this.restaurant = "";
+    this.all_restaurants = false;
   }
   ngOnInit(): void {
     let user_info = this.url.queryParams;
     this.prop = user_info["prop"];
-    this.restaurant = user_info["restaurant"];
+    this.restaurant = null;
     for (let index = 0; index < 6; index++) {
       let numeric_year = this.actual_date.getFullYear() - index;
       this.folders.push(numeric_year.toString());  
@@ -63,5 +66,14 @@ export class AppArchiComponent implements OnInit {
     }
     this.position = this.position - 1;
     this.full_date.pop();
+  }
+  changeRestaurant(change: MatSlideToggleChange) {
+   if(change.checked){
+    let user_info = this.url.queryParams;
+    this.restaurant = user_info["restaurant"]
+   }
+   else{
+    this.restaurant = null;
+   }
   }
 }
