@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,7 +20,9 @@ import { provideAuth } from '@angular/fire/auth';
 import { RecettesModule } from './modules/recettes/recettes.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
-
+import { AppMessagerieModule } from './modules/messagerie/app.module';
+import {registerLocaleData} from '@angular/common';
+import * as fr from '@angular/common/locales/fr';
 @NgModule({
   declarations: [
     AppComponent
@@ -36,6 +38,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     AppAuthoModule,
     AppBudgetModule,
     AppFacturesModule,
+    AppMessagerieModule,
     AppStockModule,
     AppAcceuilModule,
     RecettesModule,
@@ -59,11 +62,16 @@ import { ServiceWorkerModule } from '@angular/service-worker';
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
-  providers: [AuthentificationService],
+  providers: [
+    AuthentificationService,
+    { provide: LOCALE_ID, useValue: 'fr-FR' }
+  ],
   bootstrap: [AppComponent]
 })
 
 export class AppModule {
-
+  constructor(){
+    registerLocaleData(fr.default);
+  }
 
 }

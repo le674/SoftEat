@@ -19,7 +19,7 @@
 <body>
     <app-main-dashboard (numP)="numP = $event" ></app-main-dashboard>
     <div class = "panel">
-        <app-alertes *ngIf="numP==1"></app-alertes>
+        <app-messagerie *ngIf="numP==1"></app-messagerie>
         <app-profil *ngIf="numP==2"></app-profil>
         <app-stock *ngIf="numP==3" [stock]="status.stock"></app-stock>
         <app-conso *ngIf="numP==4" [stock]="status.stock"></app-conso>

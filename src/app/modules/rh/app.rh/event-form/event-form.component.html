@@ -1,0 +1,100 @@
+<div class="col-md-12">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Personnel<span class='required'>*</span></th>
+        <th>Motif<span class='required'>*</span></th>
+        <th>Évènement</th>
+        <th>Lieu<span class='required'>*</span></th>
+        <th>Prise de poste<span class='required'>*</span></th>
+        <th>Fin de poste<span class='required'>*</span></th>
+        <th>Répéter<span class='required'>*</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-xs-3">
+          <select #addPersonnel required class="width-block">
+            <option disabled selected value="">Personnel</option>
+            <optgroup *ngFor="let category of Categories" [label]="category">
+              <option *ngFor="let user of getCategoryUsers(category)" [value]="user.mail">{{ user.nom }}</option>
+            </optgroup>
+          </select>
+        </td>
+        <td class="col-xs-5">
+          <select #addMotif required>
+            <option disabled selected value="">Motif</option>
+            <option value="motif-option1">Travail</option>
+            <option value="motif-option2">Congés</option>
+            <option value="motif-option3">Entretien</option>
+            <option value="motif-option4">Maladie</option>
+          </select>
+        </td>
+        <td class="col-xs-3">
+          <input #addEvent class="form-control" type="text" placeholder="Évènement"
+            (input)="truncateInputValue(addEventInput.nativeElement)" />
+        </td>
+        <td class="col-xs-5">
+          <input #addLieu class="form-control" type="text" placeholder="Lieu"
+            (input)="truncateInputValue(addLieuInput.nativeElement)" required />
+        </td>
+        <td class="col-xs-5">
+          <input #addPrisePoste class="form-control date" type="datetime-local" [style.width]="dateWidth" required>
+        </td>
+        <td class="col-xs-5">
+          <input #addFinPoste class="form-control date" type="datetime-local" [style.width]="dateWidth" required>
+        </td>
+        <td class="col-xs-5">
+          <select #addRepeter required>
+            <option disabled selected value="">Répéter</option>
+            <option value="repeter-option2">Cette semaine</option>
+            <option value="repeter-option3">Chaque semaine</option>
+            <option value="repeter-option4">Chaque jour</option>
+            <option value="repeter-option1">Non</option>
+          </select>
+        </td>
+        <td class="col-xs-1 text-center">
+          <button
+            (click)="onClickAdd(addPersonnel.value, addMotif.value, addEvent.value, addLieu.value, addPrisePoste.value, addFinPoste.value, addRepeter.value)">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngFor="let row of rows; let i=index">
+        <td class="col-xs-3"><select [(ngModel)]="row.personnel">
+            <option disabled selected value="">Personnel</option>
+            <optgroup *ngFor="let category of Categories" [label]="category">
+              <option *ngFor="let user of getCategoryUsers(category)" [value]="user.mail" [selected]="row.personnel">{{
+                user.nom }}</option>
+            </optgroup>
+          </select></td>
+        <td class="col-xs-5"><select [(ngModel)]="row.motif">
+            <option disabled selected value="">Motif</option>
+            <option value="motif-option1" [selected]="row.motif === 'motif-option1'">Travail</option>
+            <option value="motif-option2" [selected]="row.motif === 'motif-option2'">Congés</option>
+            <option value="motif-option3" [selected]="row.motif === 'motif-option3'">Entretien</option>
+            <option value="motif-option4" [selected]="row.motif === 'motif-option4'">Maladie</option>
+          </select></td>
+        <td class="col-xs-3"><input [(ngModel)]="row.event" class="form-control editable" /></td>
+        <td class="col-xs-5"><input [(ngModel)]="row.lieu" class="form-control editable" /></td>
+        <td class="col-xs-5"><input [(ngModel)]="row.prisePoste" type="datetime-local" /></td>
+        <td class="col-xs-5"><input [(ngModel)]="row.finPoste" type="datetime-local" /></td>
+        <td class="col-xs-5"><select [(ngModel)]="row.repeter">
+            <option disabled selected value="">Répéter</option>
+            <option value="repeter-option2" [selected]="row.repeter === 'repeter-option2'">Cette semaine</option>
+            <option value="repeter-option3" [selected]="row.repeter === 'repeter-option3'">Chaque semaine</option>
+            <option value="repeter-option4" [selected]="row.repeter === 'repeter-option4'">Chaque jour</option>
+            <option value="repeter-option1" [selected]="row.repeter === 'repeter-option1'">Non</option>
+          </select></td>
+        <td class="col-xs-1 text-center">
+          <button (click)="deleteRow(i)">
+            <i class="fa-regular fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="col-md-1 pull-right">
+    <button class="btn btn-primary pull-right" (click)="saveRows()">Envoyer</button>
+  </div>
+</div>

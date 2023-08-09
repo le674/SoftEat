@@ -104,7 +104,7 @@ export class UserInteractionService {
     return this.sub_user;
   }
   /**
-    * @description attache un écouteur dans le noeud employees afin de récupérer les infos sur l'utilisateur 
+    * @description attache un écouteur dans le noeud employees afin de récupérer les infos sur l'utilisateur
     * @param user  user permet de récupérer un employé à partir d'un user dans client
     * @returns {Unsubscribe} une fonction qui permet de se désabonner de l'écouteur attaché au noeud proprietaires/<id_prop>/restaurants/<id_restau>/employees/<id_employee>
   */
@@ -121,16 +121,117 @@ export class UserInteractionService {
           ),
           where("uid", "==", uid),
           where("auth_rh", "array-contains", uid)).withConverter(this.employee_converter);
-            
+
         this.sub_employee = onSnapshot(employee_ref, (employees) => {
           employees.forEach((employee) => {
             this.employee.next(employee.data() as Employee)
-          }) 
+          })
           const source = employees.metadata.fromCache ? "cache local" : "serveur";
           console.log(`les données  de récupération des employees proviennent de ${source}`);
           this.common_service.incCounter();
         })
+        }
       }
+  }
+
+  async getProprietaireFromUsers(uid: string) {
+    const ref_db = ref(this.db);
+
+    await get(child(ref_db, `users/${uid}`)).then((user: any) => {
+
+      if (user.exists()) {
+        this.user.proprietaire = user.val().proprietaire;
+      }
+      else {
+        console.log("pas de proprietaire pour cette identifiant");
+
+      }
+    }).catch((error) => {
+      console.log(error);
+    })
+    return (this.user.proprietaire);
+  }
+
+  async getUserDataFromUid(uid: string, prop: string, restaurant: string) {
+    this.user = new User()
+    const ref_db = ref(this.db, `user_${prop}/${prop}/${restaurant}/${uid}`);
+    await get(ref_db).then((user: any) => {
+      if (user.exists()) {
+        this.user.id = uid;
+        this.user.email = user.val().email;
+        this.user.numero = user.val().number;
+        this.user.surname = user.val().surname;
+        this.user.name = user.val().name;
+      }
+    })
+    return this.user
+  }
+
+  async getUserFromUid(uid: string, prop: string) {
+    this.user = new User()
+    const ref_db = ref(this.db, `users/${prop}/${uid}`);
+    await get(ref_db).then((user: any) => {
+      if (user.exists()) {
+        user.child('restaurant').forEach((restaurant: any) => {
+          let tmp_restaurant = new Restaurant()
+          tmp_restaurant.id = restaurant.val().id
+          this.user.restaurants.push(tmp_restaurant)
+        });
+        // on supprime le premer utilisateur lié à la création de User
+        if ((this.user.restaurants.at(1)?.id != null) && (this.user.restaurants.at(1)?.id == "")) {
+          this.user.restaurants.shift();
+        }
+
+        this.user.statut.alertes = user.child("statut/alertes").val();
+        this.user.statut.analyse = user.child("statut/analyse").val();
+        this.user.statut.budget = user.child("statut/budget").val();
+        this.user.statut.facture = user.child("statut/facture").val();
+        this.user.statut.stock = user.child("statut/stock").val();
+        this.user.statut.planning = user.child("statut/planning").val();
+        this.user.statut.is_prop = user.child(`statut/is_prop`).val();
+        this.user.to_roles();
+        this.user.calendar.id = user.child("calendar/id").val();
+        this.user.calendar.api_key = user.child("calendar/api_key").val();
+      }
+    })
+    return this.user
+  }
+
+  async checkIsProp(uid: string, proprietaire: string) {
+    const ref_db = ref(this.db, `users/${proprietaire}/${uid}/statut/is_prop/`);
+    await get(ref_db).then((is_prop) => {
+      this.is_prop = is_prop.val()
+    })
+    return this.is_prop
+  }
+
+  async setUser(prop: string, user: User) {
+    let data_to_add = {};
+    const ref_db = ref(this.db);
+    const path_prop = `users/${prop}/${user.id}`
+    const path_dico = `users/${user.id}`
+    let restaurants: Array<{id:string, adresse:string}> = [];
+    restaurants = user.restaurants.filter((restaurant) => (restaurant !== null) && (restaurant !== undefined))
+      .map((restaurant) => {
+        return {id:restaurant.id, adresse: restaurant.adresse};
+      });
+
+    Object.assign(data_to_add, {
+      [path_dico]: {
+        email: user.email,
+        proprietaire:prop
+      },
+      [path_prop]: {
+        email: user.email,
+        statut: user.statut,
+        restaurant: restaurants
+      }
+    })
+
+    for (let restaurant of restaurants.map((restaurant) => restaurant.id)) {
+      Object.assign(data_to_add, {
+        [`resto_auth/${prop}/${restaurant}/${user.id}`]: user.email
+      })
     }
     return this.sub_employee;
   }
@@ -164,7 +265,7 @@ export class UserInteractionService {
   }
   /**
      * @description permet de récupérer tout les employé d'une enseigne ou les clients
-     * @param proprietaire 
+     * @param proprietaire
   */
   getAllUsersFromPropBDD(proprietaire: string, employee: boolean) {
     let user_ref = query(collection(this.firestore, "clients"),
@@ -231,13 +332,13 @@ export class UserInteractionService {
     await batch.commit();
   }
   /**
-   * cette fonction permet de modifier le numéro d'un employée 
+   * cette fonction permet de modifier le numéro d'un employée
    * @param prop nom de l'enseigne dont fait partie l'employée
    * @param employee employée pour lequel nous modifions le numéro
    * @param number nouveau numéro associé à l'employé
    */
   async updateEmployee(prop: string, employee: Employee, attribut: string, valeur:string) {
-    const user_ref = 
+    const user_ref =
     doc(
       collection(
       doc(

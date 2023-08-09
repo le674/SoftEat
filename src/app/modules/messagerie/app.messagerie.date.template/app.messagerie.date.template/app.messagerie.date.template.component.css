@@ -1,0 +1,17 @@
+div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+p {
+  padding-left: 1%;
+  padding-right: 1%;
+  background-color: rgb(125, 181, 46);
+  border-radius: 50px;
+  color: black;
+  margin: 0;
+}

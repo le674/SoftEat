@@ -8,7 +8,7 @@ export class User {
   public "related_restaurants": Array<{
       proprietaire_id:string,
       restaurant_id:string
-    
+
   }> | null;
   public "uid":string;
   public "id_employee":string | null;
