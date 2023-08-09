@@ -18,8 +18,13 @@ export class Employee {
     surname:string | null;
     uid:string;
     user_id:string;
+    public "calendar": {
+      id?:string;
+      api_key?:string;
+    };
+    time_work:string | null;
+    notifConversations!: { [conv: string]: number};
     [index:string]:any;
-
     constructor(email:string, statut:Statut, uid:string, private common_service: CommonService){
         this.user_id = "";
         this.email = email;
@@ -33,8 +38,11 @@ export class Employee {
         this.roles = null;
         this.name = null;
         this.id = "";
+        this.time_work = "";
         this.address = null;
         this.current_restaurant = null;
+        this.calendar = Object.assign({"id": ""},{"api_key": ""})
+        this.notifConversations = { 'ana': 0, 'com': 0, 'fac': 0, 'inv': 0, 'rec': 0}
     }
     /**
      * permet de récupérer les statut qui sont autoriser pour le droit
@@ -103,6 +111,14 @@ export class Employee {
         this.statut = Object.assign({}, user.statut)
     }
     
+    /**
+     * permet de retourner l'objet calandrier
+     * @returns calendrier contenant la clef de l'apiainsi que l'identifiant du calendrier 
+     */
+    getCalendar(): { id?: string; api_key?: string } {
+      return this.calendar;
+    }
+
     /**
      * Supprime les status null et les remplaces par une chaine de caractère vide
      */
