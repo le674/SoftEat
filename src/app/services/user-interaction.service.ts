@@ -132,10 +132,11 @@ export class UserInteractionService {
         })
         }
       }
+      return this.sub_employee;
   }
 
   async getProprietaireFromUsers(uid: string) {
-    const ref_db = ref(this.db);
+   /*  const ref_db = ref(this.db);
 
     await get(child(ref_db, `users/${uid}`)).then((user: any) => {
 
@@ -149,11 +150,11 @@ export class UserInteractionService {
     }).catch((error) => {
       console.log(error);
     })
-    return (this.user.proprietaire);
+    return (this.user.proprietaire); */
   }
 
   async getUserDataFromUid(uid: string, prop: string, restaurant: string) {
-    this.user = new User()
+    /* this.user = new User()
     const ref_db = ref(this.db, `user_${prop}/${prop}/${restaurant}/${uid}`);
     await get(ref_db).then((user: any) => {
       if (user.exists()) {
@@ -164,49 +165,20 @@ export class UserInteractionService {
         this.user.name = user.val().name;
       }
     })
-    return this.user
+    return this.user */
   }
 
-  async getUserFromUid(uid: string, prop: string) {
-    this.user = new User()
-    const ref_db = ref(this.db, `users/${prop}/${uid}`);
-    await get(ref_db).then((user: any) => {
-      if (user.exists()) {
-        user.child('restaurant').forEach((restaurant: any) => {
-          let tmp_restaurant = new Restaurant()
-          tmp_restaurant.id = restaurant.val().id
-          this.user.restaurants.push(tmp_restaurant)
-        });
-        // on supprime le premer utilisateur lié à la création de User
-        if ((this.user.restaurants.at(1)?.id != null) && (this.user.restaurants.at(1)?.id == "")) {
-          this.user.restaurants.shift();
-        }
-
-        this.user.statut.alertes = user.child("statut/alertes").val();
-        this.user.statut.analyse = user.child("statut/analyse").val();
-        this.user.statut.budget = user.child("statut/budget").val();
-        this.user.statut.facture = user.child("statut/facture").val();
-        this.user.statut.stock = user.child("statut/stock").val();
-        this.user.statut.planning = user.child("statut/planning").val();
-        this.user.statut.is_prop = user.child(`statut/is_prop`).val();
-        this.user.to_roles();
-        this.user.calendar.id = user.child("calendar/id").val();
-        this.user.calendar.api_key = user.child("calendar/api_key").val();
-      }
-    })
-    return this.user
-  }
 
   async checkIsProp(uid: string, proprietaire: string) {
-    const ref_db = ref(this.db, `users/${proprietaire}/${uid}/statut/is_prop/`);
+   /*  const ref_db = ref(this.db, `users/${proprietaire}/${uid}/statut/is_prop/`);
     await get(ref_db).then((is_prop) => {
       this.is_prop = is_prop.val()
     })
-    return this.is_prop
+    return this.is_prop */
   }
 
   async setUser(prop: string, user: User) {
-    let data_to_add = {};
+   /*  let data_to_add = {};
     const ref_db = ref(this.db);
     const path_prop = `users/${prop}/${user.id}`
     const path_dico = `users/${user.id}`
@@ -233,7 +205,7 @@ export class UserInteractionService {
         [`resto_auth/${prop}/${restaurant}/${user.id}`]: user.email
       })
     }
-    return this.sub_employee;
+    return this.sub_employee; */
   }
 
   /**

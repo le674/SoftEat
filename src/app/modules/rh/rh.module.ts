@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CalendarService } from './app.rh/calendar-view/calendar-data.service';
 import { BrowserModule } from '@angular/platform-browser';
-import { DayPilotModule } from 'daypilot-pro-angular';
+/* import { DayPilotModule } from 'daypilot-pro-angular';*/
 import { HttpClientModule } from '@angular/common/http';
 import { RhRoutingModule } from './rh-routing.module';
 import { AppRhComponent } from './app.rh/app.rh.component';
@@ -28,7 +28,7 @@ import { CalendarViewComponent } from './app.rh/calendar-view/calendar-view.comp
     MatDialogModule,
     BrowserModule,
     HttpClientModule,
-    DayPilotModule,
+ /*    DayPilotModule, */
   ],
   exports: [AppRhComponent, CalendarViewComponent],
   providers: [CalendarService],

@@ -24,6 +24,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { interval, take } from 'rxjs';
 import { MessageInfos } from '../app.messagerie.message.infos/message-infos';
+import { Employee } from 'src/app/interfaces/employee';
 
 @Component({
   selector: 'app-messagerie',
@@ -368,7 +369,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
           if (userRef) {
             // Query de récupération du user
             get(userRef).then((snapshot) => {
-              const user: User = snapshot.val();
+              const user: Employee = snapshot.val();
               const notifConversations = user.notifConversations || {};
               notifConversations[convId] = 1;
               // Mise à jour dans la BDD de la valeur de la clé de la conv du user
@@ -403,7 +404,7 @@ export class AppMessagerieComponent implements OnInit, AfterViewChecked {
       .then((userRef: DatabaseReference | null) => {
         if (userRef) {
           get(userRef).then((snapshot) => {
-            const user: User = snapshot.val();
+            const user: Employee = snapshot.val();
             const notifConversations = user.notifConversations || {};
             notifConversations[convId] = 0;
             update(userRef.ref, { notifConversations })

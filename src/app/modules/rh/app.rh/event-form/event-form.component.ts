@@ -6,7 +6,7 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { DayPilot } from 'daypilot-pro-angular';
+/* import { DayPilot } from 'daypilot-pro-angular'; */
 import { CalendarService } from '../calendar-view/calendar-data.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -32,7 +32,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
   Rh!: { nom: string; selectionne: boolean; mail: string }[];
   Autres!: { nom: string; selectionne: boolean; mail: string }[];
   firebaseApp: FirebaseApp | undefined;
-  newEvent?: DayPilot.EventData;
+/*   newEvent?: DayPilot.EventData; */
   constructor(
     private calendar: CalendarService,
     public dialogRef: MatDialogRef<EventFormComponent>,
@@ -185,7 +185,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
 
   async saveRows(): Promise<void> {
     // Sauvegarde de l'évènement
-    for (const row of this.rows) {
+    /* for (const row of this.rows) {
       this.newEvent = {
         start: row.prisePoste + ':00',
         end: row.finPoste + ':00',
@@ -330,7 +330,7 @@ export class EventFormComponent implements OnInit, AfterViewInit {
           break;
       }
     }
-    this.closeDialog();
+    this.closeDialog(); */
   }
 
   private isSameDay(date1: Date, date2: Date): boolean {
@@ -382,11 +382,11 @@ export class EventFormComponent implements OnInit, AfterViewInit {
     }
   }
 
-  addEvent(userId: string, newEvent: DayPilot.EventData): void {
+/*   addEvent(userId: string, newEvent: DayPilot.EventData): void {
     // Ajouter l'évènement au calendrier
     const prop = 'foodandboost_prop'; // table des utilisateurs
     this.calendar.add_event(prop, userId, newEvent);
-  }
+  } */
 
   closeDialog(): void {
     this.dialogRef.close(); // Fermer le dialog

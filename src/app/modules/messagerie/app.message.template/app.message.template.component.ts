@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Statut } from '../../../interfaces/statut';
 import { MessageModel } from '../messages_models/model';
+import { CommonService } from 'src/app/services/common/common.service';
 @Component({
   selector: 'message-template',
   templateUrl: './app.message.template.component.html',
@@ -13,17 +14,9 @@ export class AppMessageTemplateComponent implements OnInit {
 
   statut!: Statut;
 
-  constructor() {}
+  constructor(private service:CommonService) {}
 
   ngOnInit(): void {
-    this.statut = {
-      is_prop: false,
-      stock: '',
-      alertes: '',
-      analyse: '',
-      budget: '',
-      facture: '',
-      planning: '',
-    };
+    this.statut = new Statut(this.service);
   }
 }
