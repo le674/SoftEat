@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div *ngFor="let _files of decouperListe(files, 4)">
+        <main>
+            <div class="folder" *ngFor="let file of _files">
+                <figure>
+                    <div class="image-folder" (click)="displayFile(file)">
+                        <img width="150" *ngIf="file.extension === 'pdf'" height="200" src='/assets/images/icon-ge419846b0_640.png'>
+                    </div>
+                    <div class="image-folder" (click)="displayFile(file)">
+                        <img width="150" *ngIf="file.extension !== 'pdf'" height="200" src='/assets/images/icon-ga40df3c82_640.png'>
+                    </div>
+                    <figcaption>
+                        <p>{{file.name}}</p>
+                    </figcaption>
+                </figure>
+            </div>
+        </main>
+    </div>
+</body>

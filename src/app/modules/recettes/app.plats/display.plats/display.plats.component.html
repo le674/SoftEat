@@ -14,7 +14,7 @@
         </button>
     </div>
     <div id="border-top" class="border">
-        <p> <span class="indication">Nom :</span> {{plat.nom.split('_').join(' ')}}</p>
+        <p> <span class="indication">Nom :</span> {{plat.name}}</p>
         <div id="action-buttons">
             <button id="help" mat-mini-fab aria-label="aide" matTooltip="aide pour la fiche technique des plats" (click)="OpenHelp()">
                 <i class="fa-solid fa-question"></i>
@@ -28,7 +28,7 @@
     <div class="final_section" >
         <div class="section border">
             <div id="price_section">
-                <p> <span class="indication">Prix hors taxe:</span> {{plat.prix}} </p>
+                <p> <span class="indication">Prix hors taxe:</span> {{plat.cost}} </p>
                 <p> <span class="indication_algo">Prix recommandé par l'algorithme:</span> {{recommendation_price}} </p>
             </div>
             <p> <span class="indication">Taux de TVA :</span> {{plat.taux_tva}} </p> 
@@ -113,7 +113,7 @@
                           </mat-list-item>                        
                           <mat-list-item role="listitem">
                             <p>
-                              {{ingredient.cost_matiere}}  
+                              {{ingredient.cost_material}}  
                             </p>
                           </mat-list-item>
                        </mat-list>               

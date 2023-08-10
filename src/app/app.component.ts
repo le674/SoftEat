@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FirebaseApp } from "@angular/fire/app";
+import { Firestore } from '@angular/fire/firestore';
 import {Router } from '@angular/router';
 
 @Component({
@@ -8,10 +9,12 @@ import {Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'restoP';
-  constructor(private router: Router, private ofApp: FirebaseApp){
+  title = 'SoftEat';
+  constructor(private router: Router, private ofApp: FirebaseApp, private firestore:Firestore){
   }
   ngOnInit(){
 
   }
+
+
 }

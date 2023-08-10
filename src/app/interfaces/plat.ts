@@ -1,6 +1,8 @@
-import { Etape } from "./etape";
-import {Consommable, TIngredientBase} from "./ingredient";
-import { Cpreparation } from "./preparation";
+import { CalculService } from "../services/menus/menu.calcul/menu.calcul.ingredients/calcul.service";
+import {TConsoBase} from "./consommable";
+import {Cetape, Etape} from "./etape";
+import {TIngredientBase} from "./ingredient";
+import {Cpreparation, CpreparationBase} from "./preparation";
 
 export interface Plat{
     "unity":string;
@@ -11,150 +13,239 @@ export interface Plat{
      10% Glaces non conditionnées, Sandwiches / salades couverts, fruits de mers coquillage ouvert, boissons non alcoolisées, plat/menu
      20% boissons alhcolisées
     */
-    "categorie":string
-    "nom":string;
+    "category":string
+    "name":string;
     "portions":number;
     "ingredients":Array<TIngredientBase>;
-    "consommables":Array<Consommable>;
-    "etapes":Array<Etape>;
-    "preparations":Array<Cpreparation>;
-    "prix":number;
+    "consommables":Array<TConsoBase> | null;
+    "etapes":Array<Etape> | null;
+    "preparations":Array<CpreparationBase> | null;
+    "cost":number;
     /* dépend de la catégorie appliquée*/
-    "taux_tva":number;
-    "prime_cost":number;
-    "material_cost":number;
-    "portion_cost":number;
-    "material_ratio":number;
-    "temps":number;
-
-    getType():string;
-    setType(type:string):void;
-    getNom():string;
-    setNom(nom:string):void;
-    getPortion():number;
-    setPortions(portion:number):void;
-    setIngredients(ingredients:Array<TIngredientBase>):void;
-    getIngredients():Array<TIngredientBase>;
-    setConsommbale(consommables:Array<Consommable>):void;
-    getConsommbale():Array<Consommable>;
-    getEtapes():Array<Etape>;
-    setEtapes(etapes:Array<Etape>):void;
-    getPreparations():Array<Cpreparation>;
-    setPreparations(preparations:Array<Cpreparation>):void;
-    setPrix(prix:number):void;
-    getPrix():number;
-    setTauxTva(tva:number):void;
-    getTauxTva():number;
-    getUnity():string;
-    setUnity(unity:string):void;
+    "taux_tva":number | null;
+    "prime_cost":number | null;
+    "material_cost":number | null;
+    "portion_cost":number | null;
+    "material_ratio":number | null;
+    "time":number | null;
+    setData(data: Cplat):void;
+    getData(id:string | null, prop:string):Object;
 }
 
 export class Cplat implements Plat{
     "unity": string;
     "type": string;
-    "categorie": string;
-    "nom": string;
+    "category": string;
+    "categorie_restaurant":string | null;
+    "name": string;
     "portions": number;
     "ingredients": TIngredientBase[];
-    "consommables": Consommable[];
-    "etapes": Etape[];
-    "preparations": Cpreparation[];
-    "prix": number;
-    "taux_tva": number;
-    "prime_cost": number;
-    "material_cost": number;
-    "portion_cost": number;
-    "material_ratio": number;
-    "temps":number;
+    "consommables": TConsoBase[] | null;
+    "etapes": Etape[] | null;
+    "preparations": CpreparationBase[] | null;
+    "cost": number;
+    "taux_tva": number | null;
+    "prime_cost": number | null;
+    "material_cost": number | null;
+    "portion_cost": number | null;
+    "material_ratio": number | null;
+    "time":number | null;
+    "proprietary_id":string;
+    "id":string;
 
     constructor(){
         this.unity = '';
         this.type = '';
-        this.categorie = '';
-        this.nom = '';
+        this.category = '';
+        this.categorie_restaurant = '';
+        this.name = '';
         this.portions = 0;
-        this.prix = 0;
+        this.cost = 0;
         this.taux_tva = 0;
         this.material_cost = 0;
         this.portion_cost = 0;
         this.material_ratio = 0;
         this.prime_cost = 0;
-        this.temps = 0;
+        this.time = 0;
         this.ingredients = [];
         this.consommables = [];
         this.etapes = [];
 
     }
-
-
-    getNom(): string {
-        return this.nom
-    }
-    setNom(nom: string): void {
-        this.nom = nom
-    }
-    getPortion(): number {
-        return this.portions
-    }
-    setPortions(portion: number): void {
-        this.portions = portion
-    }
-    setCategorie(categorie: string) {
-       this.categorie = categorie;
-    }
-    getCategorie(categorie: string) {
-        return categorie;
+    /**
+     * Cette fonction peremet de construire un objet plat à partir du JSON de la
+     * base de donnée
+     * @param data données à intégrer comme plat
+    */
+    public setData(data: Cplat) {
+     let ingredients:Array<TIngredientBase> = [];
+     let consommables:Array<TConsoBase> | null = [];
+     let etapes:Array<Etape> | null = [];
+     let preparations:Array<CpreparationBase> | null = [];
+     ingredients =  data.ingredients.map((ingredient:TIngredientBase) => {
+      let _ingredient = new TIngredientBase(ingredient.name,ingredient.quantity,ingredient.unity);
+      _ingredient.setData(ingredient);
+      return _ingredient;
+   });
+   if(data.consommables !== null && data.consommables !== undefined){
+      consommables = data.consommables.map((consommable:TConsoBase) => {
+          let _consommable = new TConsoBase(consommable.name, consommable.quantity, consommable.unity);
+          _consommable.setData(consommable);
+          return _consommable;
+      })
+   }
+   else{
+      consommables = null;
+   }
+   if(data.etapes !== null && data.etapes !== undefined){
+      etapes = data.etapes.map((etape) => {
+          let _etape = new Cetape();
+          _etape.setData(etape as Cetape);
+          return _etape;
+      })
+   }
+   else{
+      etapes = null;
+   }
+   if(data.preparations !== null && data.preparations !== undefined){
+      preparations = data.preparations.map((preparation:CpreparationBase) => {
+          let _preparation = new CpreparationBase();
+          _preparation.setData(preparation);
+          return _preparation;
+      });
+   }
+   else{
+      this.preparations = null;
+   }
+     this.name = data.name;
+     this.category = data.category;
+     this.cost = data.cost;
+     this.id = data.id;
+     this.proprietary_id = data.proprietary_id
+     this.portions = data.portions;
+     this.unity = data.unity;
+     this.type = data.type;
+     this.ingredients = ingredients;
+     this.consommables = consommables;
+     this.preparations = preparations;
+     this.etapes = etapes;
+     if(data.taux_tva !== undefined){
+        this.taux_tva = data.taux_tva;
      }
-    setIngredients(ingredients: TIngredientBase[]): void {
-        this.ingredients = ingredients
+     else{
+        this.taux_tva = null;
+     }
+     if(data.time !== undefined){
+        this.time = data.time
+     }
+     else{
+        this.time = null;
+     }
+     if(data.material_ratio !== undefined){
+        this.material_ratio = data.material_ratio;
+     }
+     else{
+        this.material_ratio = null;
+     }
+     if(data.material_cost !== undefined){
+        this.material_cost = data.material_cost;
+     }
+     else{
+        this.material_cost = null;
+     }
+     if(data.prime_cost !== undefined){
+        this.prime_cost = data.prime_cost;
+     }
+     else{
+        this.prime_cost = null;
+     }
+     if(data.portion_cost !== undefined){
+        this.portion_cost = data.portion_cost;
+     }
+     else{
+        this.portion_cost = null;
+     }
+     if(data.categorie_restaurant !== undefined){
+        this.categorie_restaurant = data.categorie_restaurant;
+     }
+     else{
+        this.categorie_restaurant = null;
+     }
+
     }
-    getIngredients(): TIngredientBase[] {
-        return this.ingredients
-    }
-    setConsommbale(consommables: Consommable[]): void {
-        this.consommables = consommables;
-    }
-    getConsommbale(): Consommable[] {
-       return this.consommables
-    }
-    getType(): string {
-        return this.type;
-    }
-    setType(type: string): void {
-        this.type = type;
-    }
-   
-    getEtapes(): Etape[] {
-       return this.etapes;
-    }
-    setEtapes(etapes: Etape[]): void {
-        this.etapes = etapes;
-    }
-    getPreparations(): Cpreparation[] {
-        return this.preparations;
-    }
-    setPreparations(preparations: Cpreparation[]): void {
-        this.preparations = preparations;
-    }
-    setPrix(prix: number): void {
-        this.prix = prix;
-    }
-    getPrix(): number {
-       return this.prix;
-    }
-    setTauxTva(tva: number): void {
-       this.taux_tva = tva;
-    }
-    getTauxTva(): number {
-        return this.taux_tva;
-    }
-    getUnity(): string {
-        return this.unity;
-    }
-    setUnity(unity: string): void {
-       this.unity = unity;
+    /**
+     * permet de convertir cette instance de Cplat en un objet 
+     * @param id id du plat si aucun null
+     * @param prop id de l'enseigne
+     * @returns {Object} objet qui représente le plat
+    */
+    public getData(id:string | null, prop:string): Object {
+        let preparations:null | Array<Object> = null;
+        let ingredients:null | Array<Object> = null;
+        let consommables:null | Array<Object> = null;
+        let etapes:null | Array<Object> = null;
+        if((this.ingredients !== null) && (this.ingredients !== undefined)){
+            ingredients = this.ingredients.map((ingredient) => ingredient.getData());
+        }
+        if((this.consommables !== null) && (this.ingredients !== undefined)){
+            consommables = this.consommables?.map((consommable) => consommable.getData());
+        }
+        if((this.etapes !== null) && (this.etapes !== undefined)){
+            etapes = this.etapes.map((etape) => etape.getData());
+        }
+        if((this.preparations !== null) && (this.preparations !== undefined)){
+         preparations = this.preparations.map((preparation) => preparation.getData());
+        }
+        if ((this.proprietary_id === null) || this.proprietary_id === undefined) {
+            this.proprietary_id = prop;
+        }
+        if (id !== null) {
+            this.id = id;
+        }   
+        return {
+            name: this.name,
+            categorie_restaurant: this.categorie_restaurant,
+            etapes: etapes,
+            ingredients: ingredients,
+            consommables: consommables,
+            preparations: preparations,
+            time: this.time,
+            cost: this.cost,
+            portions: this.portions,
+            unity: this.unity,
+            category: this.category,
+            taux_tva: this.taux_tva,
+            type: this.type,
+            portion_cost: this.portion_cost,
+            material_ratio: this.material_ratio,
+            prime_cost: this.prime_cost,
+            material_cost: this.material_cost,
+            proprietary_id: this.proprietary_id,
+            id: this.id
+        }
     }
 }
+export class CbasePlat{
+   "name":string;
+   "portions":number | null;
+   "unity":string;
+   "id":string | null;
+   constructor(name:string, unity:string, portions:number | null){
+       this.name = name;
+       this.unity = unity;
+       this.portions = portions;
+       this.id = null;
+   }
+   public getData(){
+      return {
+         name:this.name,
+         portions: this.portions,
+         unity: this.unity,
+         id: this.id
+      }
+   }
+}
+
 
 export class Mplat{
     "name":string;

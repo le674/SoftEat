@@ -1,60 +1,74 @@
-import { AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Auth, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { Router } from '@angular/router';
 import { ShortUser, User } from '../../../../app/interfaces/user';
-import { InteractionRestaurantService } from '../app.autho/interaction-restaurant.service';
 import { UserInteractionService } from '../../../../app/services/user-interaction.service';
 import { Restaurant } from '../../../../app/interfaces/restaurant';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
 import { Visibles } from './app.configue.index';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { AddConfigueSalaryComponent } from './add.configue.salary/add.configue.salary.component';
-import { AddConfigueEmployeeComponent } from './add.configue.employee/add.configue.employee/add.configue.employee.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { MobileUserDataComponent } from './mobile.user.data/mobile.user.data/mobile.user.data.component';
 import { CommonService } from '../../../../app/services/common/common.service';
+import { CommonCacheServices } from 'src/app/services/common/common.cache.services.service';
+import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
+import { Unsubscribe } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
+import { EmployeeFull } from 'src/app/interfaces/employee';
+import { MatSelectChange } from '@angular/material/select';
+import { AddConfigueEmployeeComponent } from './add.configue.employee/add.configue.employee/add.configue.employee.component';
+import { AddConfigueSalaryComponent } from './add.configue.salary/add.configue.salary.component';
+import { MobileUserDataComponent } from './mobile.user.data/mobile.user.data/mobile.user.data.component';
 
 @Component({
   selector: 'app-app.configue',
   templateUrl: './app.configue.component.html',
   styleUrls: ['./app.configue.component.css']
 })
-export class AppConfigueComponent implements OnInit{
+export class AppConfigueComponent implements OnInit, OnDestroy {
   private uid: string;
   private proprietaire: string;
+  private user: User;
+  private users: Array<EmployeeFull>;
 
   private rest_max_length: number;
   public restau_list: Array<Restaurant>;
 
-  private users: Array<User>;
+  private user_unsubscribe!: Unsubscribe;
+  private all_user_unsubscribe!:Unsubscribe;
+  private all_employee_unsubscribe!:Unsubscribe;
+  private all_restaurants_unsubscribe!:Unsubscribe;
+  private user_subscription!:Subscription;
+  private all_user_subscription!:Subscription;
+  private all_employee_subscription!:Subscription;
+  private all_restaurants_subscription!:Subscription;
+
   // prop_user est semblable à curr_user cependant prop_user contient 
   //pas uniquement les restaurants (prop_user.restaurants) et roles(prop_user.roles) assigné à 
   //l'utilisateur x mais tout les restaurant et tout les roles
-  
+
   private curr_user: {
-    user0: Array<User>,
-    user1: Array<User>,
-    user2: Array<User>,
-    user3: Array<User>,
-    user4: Array<User>,
-    user5: Array<User>,
-    user6: Array<User>
+    user0: Array<EmployeeFull>,
+    user1: Array<EmployeeFull>,
+    user2: Array<EmployeeFull>,
+    user3: Array<EmployeeFull>,
+    user4: Array<EmployeeFull>,
+    user5: Array<EmployeeFull>,
+    user6: Array<EmployeeFull>
   }
   public prop_user: Array<ShortUser>;
 
   public dataSource: {
-    data0:  MatTableDataSource<ShortUser>;
-    data1:  MatTableDataSource<ShortUser>;
-    data2:  MatTableDataSource<ShortUser>;
-    data3:  MatTableDataSource<ShortUser>;
-    data4:  MatTableDataSource<ShortUser>;
-    data5:  MatTableDataSource<ShortUser>;
-    data6:  MatTableDataSource<ShortUser>;
+    data0: MatTableDataSource<ShortUser>;
+    data1: MatTableDataSource<ShortUser>;
+    data2: MatTableDataSource<ShortUser>;
+    data3: MatTableDataSource<ShortUser>;
+    data4: MatTableDataSource<ShortUser>;
+    data5: MatTableDataSource<ShortUser>;
+    data6: MatTableDataSource<ShortUser>;
   }
   private filter_datasource: {
     na: Array<ShortUser>,
@@ -72,7 +86,8 @@ export class AppConfigueComponent implements OnInit{
   private curr_categorie: number;
 
   private roles: string[];
-  private auth:Auth;
+  private length_statut:number;
+  private auth: Auth;
   public statuts: string[];
 
   public visibles: Visibles = {
@@ -84,7 +99,7 @@ export class AppConfigueComponent implements OnInit{
     index_6: true,
     index_7: true
   };
-  public is_prop:boolean;
+  public is_prop: boolean;
   public windows_screen_mobile: boolean;
 
   @ViewChild(MatPaginator)
@@ -99,13 +114,17 @@ export class AppConfigueComponent implements OnInit{
   @ViewChildren("options_write")
   options_write!: QueryList<MatOption>
 
-  constructor(public dialog: MatDialog, private service: InteractionRestaurantService, private user_services: UserInteractionService,
-    private ofApp: FirebaseApp, private router: Router,  private _snackBar: MatSnackBar,
-    private _bottomSheet: MatBottomSheet, public mobile_service:CommonService) {
+
+
+  constructor(public dialog: MatDialog, private user_services: UserInteractionService,
+    private ofApp: FirebaseApp, private router: Router, private _snackBar: MatSnackBar,
+    private _bottomSheet: MatBottomSheet, private common_service: CommonService,
+    private cache_service: CommonCacheServices, private restaurant_service: RestaurantService) {
     this.prop_user = [];
     this.users = [];
-    this.display_columns = ["id", "email", "restaurants", "read_right", "write_right", "validation"];
-    this.roles = ["alertes",  "stock", "analyse", "budget", "facture", "planning"];
+    this.display_columns = this.common_service.getColumnAdminTab();
+    this.roles = this.common_service.getStatut();
+    this.length_statut = this.common_service.getStatut().length;
     const first_user = new ShortUser();
     first_user.restaurants = "1,2";
     first_user.roles = "1,2";
@@ -120,13 +139,13 @@ export class AppConfigueComponent implements OnInit{
       "data6": new MatTableDataSource([first_user]),
     }
     this.curr_user = {
-      "user0": [new User()],
-      "user1": [new User()],
-      "user2": [new User()],
-      "user3": [new User()],
-      "user4": [new User()],
-      "user5": [new User()],
-      "user6": [new User()]
+      "user0": [],
+      "user1": [],
+      "user2": [],
+      "user3": [],
+      "user4": [],
+      "user5": [],
+      "user6": []
     };
 
     this.filter_datasource = {
@@ -148,98 +167,101 @@ export class AppConfigueComponent implements OnInit{
     this.rest_max_length = 0;
     this.curr_categorie = 0;
     this.is_prop = false;
-    this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("user");
-    this.auth =  getAuth(this.ofApp);
+    this.windows_screen_mobile = this.common_service.getMobileBreakpoint("user");
+    this.auth = getAuth(this.ofApp);
+    this.user = new User();
+  }
+  ngOnDestroy(): void {
+    this.user_unsubscribe();
+    this.user_subscription.unsubscribe();
+    this.all_user_unsubscribe();
+    this.all_user_subscription.unsubscribe();
+    if(this.all_restaurants_unsubscribe !== undefined){
+      this.all_restaurants_unsubscribe();
+    }
+    if(this.all_restaurants_subscription !== undefined){
+      this.all_restaurants_subscription.unsubscribe();
+    }
   }
   ngOnInit(): void {
-    onAuthStateChanged(this.auth, (user) => {
+    const auth = getAuth(this.ofApp);
+    onAuthStateChanged(auth, (user) => {
       if (user) {
-        const prop_user = this.user_services.getProprietaireFromUsers(user.uid).then((name: string) => {
-          this.proprietaire = name;
-          return (name);
-        })
-
-        const all_id = prop_user.then((name) => {
-          this.user_services.checkIsProp(user.uid, this.proprietaire).then((is_prop:boolean) => {     
-            this.is_prop = is_prop;
-          })
-          const all_id = this.user_services.getAllIdFromProp(name).then((props) => {
-            return (props)
-          })
-          return (all_id)
-        })
-
-       all_id.then((users) => {
-          if (users.employee !== null) {
-            const rest_prom = this.service.getAllRestaurants(this.proprietaire).then((restau_list) => {
-              this.restau_list = restau_list;
-              return (restau_list)
-            })
-            const employees = users.employee
-            
-            for (let i = 0; i < employees.length; i++) {
-                let user = new User()
-                user.id = employees[i].id;
-                user.email = employees[i].email;
-                user.restaurants = (employees[i].restaurants === null) ? [] : employees[i].restaurants
-                user.setStatusFromUser(employees[i]) 
-                this.users.push(user)
-                rest_prom.then((restau_list) => {
-
-                let row_user = new ShortUser()
-
-                row_user.id = employees[i].id;
-                row_user.email = employees[i].email;
-                row_user.restToString(restau_list);
-                row_user.row_roles = this.roles.toString()
-                this.rest_max_length = restau_list.length
-                this.prop_user.push(row_user)
-                if(i === (employees.length - 1)){
-                  const first_event = new PageEvent();
-                  first_event.length = this.prop_user.length
-                  first_event.pageSize = 6
-                  first_event.pageIndex = 0
-                  this.pageChanged(first_event, 0);
-                  this.pageChanged(first_event, 1);
-                  this.pageChanged(first_event, 2);
-                  this.pageChanged(first_event, 3); 
-                  this.pageChanged(first_event, 4);
-                  this.pageChanged(first_event, 5);
-                  this.pageChanged(first_event, 6);
-                }
-              }).catch((e) => {
-                console.log("erreur pour la fonction getAllRestaurant qui est", e);
+        this.uid = user.uid;
+        this.user_unsubscribe = this.user_services.getUserFromUidBDD(this.uid); 
+        this.user_subscription = this.user_services.getUserFromUid().subscribe((user: User) => {
+        this.user = user;
+        if(user.proprietary_id !== null){
+          this.proprietaire = user.proprietary_id;
+        }
+        if (this.user.related_restaurants !== null) {
+            this.all_user_unsubscribe = this.user_services.getAllUsersFromPropBDD(this.proprietaire, true);
+            this.all_user_subscription = this.user_services.getAllUsersFromProp().subscribe((users:Array<User>) => {
+              this.all_employee_unsubscribe = this.user_services.getAllEmployeeBDD(this.proprietaire , this.uid);
+              this.user_services.getAllEmployee().subscribe((employees) => {
                 
-              })
-            }
-          }
-          else {
-            console.log("pas d'utilisateur");
-          }
-          return this.users
-        });
+                const employee = employees.find((employee) => employee.uid === user.uid);
+                if(employee !== undefined){
+                  if(employee.roles?.includes("propriétaire")){
+                    this.is_prop = true;
+                  }
+                }
+                this.restaurant_service.getAllRestaurantsFromPropBDD(this.user);
+                this.restaurant_service.getAllRestaurantsFromProp().subscribe((restaurants) => {
+                  this.users = [];
+                  this.prop_user = [];
+                  for(let employee of employees){
+                    let row_user = new ShortUser();
+                    let _employee = new EmployeeFull(employee.email, employee.statut, employee.uid, this.common_service);
+                    _employee.setEmployee(employee);
+                    _employee.proprietaire = this.proprietaire;
+                    _employee.getAllRestaurant(user, restaurants);
+                    row_user.setRowUser(employee, this.common_service.getStatut(), restaurants);
+                    this.users.push(_employee);
+                    this.rest_max_length = restaurants.length;
+                    this.prop_user.push(row_user);
+                    const first_event = new PageEvent();
+                    first_event.length = this.prop_user.length
+                    first_event.pageSize = 6
+                    first_event.pageIndex = 0
+                    this.clearDataSource();
+                    this.pageChanged(first_event, 0);
+                    this.pageChanged(first_event, 1);
+                    this.pageChanged(first_event, 2);
+                    this.pageChanged(first_event, 3); 
+                    this.pageChanged(first_event, 4);
+                    this.pageChanged(first_event, 5);
+                    this.pageChanged(first_event, 6);
+                  }
+                })
+              })            
+            })
+          } 
+        })
       }
     })
   }
-
-  pageChanged(event: PageEvent, i: number) {
-    event.length;
-    let users_data = [] as User[];
-    this.curr_user["user" + i as keyof typeof this.curr_user] = this.users;
-    let role_names = ["","cuisinié", "serveur",
-     ["analyste", "economiste", "prévisionniste", "comptable", "comptable +"], "RH", "gérant", "proprietaire"] 
+   clearDataSource() {
+      this.dataSource.data0 = new MatTableDataSource([new ShortUser()]);
+      this.dataSource.data1 = new MatTableDataSource([new ShortUser()]);
+      this.dataSource.data2 = new MatTableDataSource([new ShortUser()]);
+      this.dataSource.data3 = new MatTableDataSource([new ShortUser()]);
+      this.dataSource.data4 = new MatTableDataSource([new ShortUser()]);
+      this.dataSource.data5 = new MatTableDataSource([new ShortUser()]);
+      this.dataSource.data6 = new MatTableDataSource([new ShortUser()]);
+   }
+   pageChanged(event: PageEvent, i: number) {
+    let role_names = this.common_service.getRoles();
     for(let i = 0; i < this.users.length; i++){
-      this.users[i].to_roles();
       if(this.prop_user.at(i) !== undefined){
-        this.prop_user[i].roles = this.users[i].roles.toString();
+        const roles = this.users[i].roles;
+        if(roles !== null){
+          this.prop_user[i].roles = roles.toString();
+        }
       }
     }
-    
-    let datasource = [... this.prop_user];
-
+    let datasource = [...this.prop_user];
     this.page_number = event.pageIndex;
-
-
     if(typeof role_names[i] === "string"){
       datasource = datasource.filter((data) => data.roles === role_names[i])
     }
@@ -247,19 +269,20 @@ export class AppConfigueComponent implements OnInit{
       datasource = datasource.filter((data) => {
         let role_check = role_names[i] as string[]
         let is_role = role_check.map((role) => {
-          return data.roles.includes(role)
+            return data.roles.includes(role)
         })
         return(is_role.reduce((previousValue,currentValue) => {
           return(currentValue || previousValue)
         }))
       })
     }
-
     let datasource_ids = datasource.map((data) => data.id);
-    let datas_user = this.curr_user[("user"+ i) as keyof typeof  this.curr_user].filter((user) => datasource_ids.includes(user.id));
+    this.curr_user["user" + i as keyof typeof this.curr_user] = this.users;
+    let datas_user = this.curr_user[("user"+ i) as keyof typeof  this.curr_user].filter((user) => {
+      if(user.id !== null) return datasource_ids.includes(user.id);
+      return false;
+    });
     this.curr_user[("user" + i) as keyof typeof  this.curr_user] = datas_user;
-    
-    
     datasource = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
     if (datasource != null) {
       this.dataSource["data" + i  as keyof typeof this.dataSource].data =  datasource;
@@ -281,7 +304,7 @@ export class AppConfigueComponent implements OnInit{
       }
       if (user) {
         if (user.restaurants !== null) {
-          let restaurants = user.restaurants.map((restaurant) => restaurant.id)
+          let restaurants = user.restaurants.map((restaurant) => restaurant.name)
           let options = this.options.filter((option: MatOption, index_opt: number) => {  
             const min_length = this.rest_max_length * prev_index + cum_length_pages*this.rest_max_length
             const max_length = this.rest_max_length * (prev_index + 1) + cum_length_pages*this.rest_max_length
@@ -293,9 +316,9 @@ export class AppConfigueComponent implements OnInit{
         }
       }
     }
-  }
+  } 
 
-  // permet de séléctionner les droits en écriture pour un utilisateur lors de l'ouverture de la liste déroulante
+ // permet de séléctionner les droits en écriture pour un utilisateur lors de l'ouverture de la liste déroulante
   get_read_right(event: boolean, index: number,  categorie:number) {
     if (event) {
       // on récupère l'utilisateur de la liste
@@ -311,24 +334,20 @@ export class AppConfigueComponent implements OnInit{
       let user = this.curr_user["user" + categorie as keyof typeof this.curr_user].at(index);
       let i = 0;
       if (user) {
-        // on supprime la propriété is_propr de user
-        delete user.statut.is_prop
-        // on filtre les statut pour ne récupérer que ceux qui sont lié à l'utilisateur danzs le tableau
+        // on filtre les statut pour ne récupérer que ceux qui sont lié à l'utilisateur dans le tableau
         let options = this.options_read.filter((option: MatOption, index_opt: number) => {
-          const min_length = 6* (prev_index + cum_length_pages)
-          const max_length = 6* (prev_index + cum_length_pages + 1)
+          const min_length = this.length_statut* (prev_index + cum_length_pages)
+          const max_length = this.length_statut* (prev_index + cum_length_pages + 1)
           return ((index_opt >= min_length) && (index_opt < max_length))
         })
-        if(user.is_prop){
-          // si l'utilisateur est un propriétaire 
-          options_list.push(options.at(0))
-        }
         for(let key in user.statut){
+
           // on vérifie pour chacun des role de l'utilisateur si celui-ci inclue r (lecture)
           const role = user.statut[key as keyof typeof user.statut] as string
           if(typeof role === "string"){
             if(role.includes('r')){
-              options_list.push(options.at(i))
+              const option = options.find((option) => option.value === key);
+              if(option !== undefined) options_list.push(option);
             }
           }
           i = i + 1 
@@ -355,20 +374,17 @@ export class AppConfigueComponent implements OnInit{
       let i = 0;
       let options_list = []
       if (user) {
-        delete user.statut.is_prop
         let options = this.options_write.filter((option: MatOption, index_opt: number) => {
-          const min_length = 6 * (prev_index + cum_length_pages) 
-          const max_length = 6 * (prev_index + cum_length_pages + 1)
+          const min_length = this.length_statut * (prev_index + cum_length_pages) 
+          const max_length = this.length_statut * (prev_index + cum_length_pages + 1)
           return ((index_opt >= min_length) && (index_opt < max_length))
         })
-        if(user.is_prop){
-          options_list.push(options.at(0))
-        }
         for(let key in user.statut){
           const role = user.statut[key as keyof typeof user.statut] as string
           if(typeof role === "string"){
             if(role.includes('w')){
-              options_list.push(options.at(i))
+              const option = options.find((option) => option.value === key);
+              if(option !== undefined) options_list.push(option);
             }
           }
           i = i + 1 
@@ -382,38 +398,35 @@ export class AppConfigueComponent implements OnInit{
 
   set_restaurants(event:MatSelectChange, index:number,  categorie:number){
     // ici ont récupère l'ensemble des restaurants selectionnés
-    const restaurants = event.value
+    let restaurants = event.value
     // ici ont récupère l'utilisateur
     index = 6 * this.page_number + index
     let user = this.curr_user["user" +  this.curr_categorie as keyof typeof this.curr_user].at(index);
     if(user?.restaurants !== undefined){
-/*       user.restaurants.forEach((restaurant:Restaurant, index:number) => {
+       user.restaurants.forEach((_restaurant:Restaurant, index:number) => {
         // on enlève dans les restaureants utilisateurs tout les restaurants qui ne sont pas séléctionné
         //les restaurants sont conv
-        restaurants.filter((restaurant: {id: any;}) => (restaurant !== restaurant.id))
+        restaurants.filter((restaurant:string) => (restaurant !== _restaurant.id))
       })
-       */
+      restaurants = user.restaurants.filter((restaurant) => restaurants.includes(restaurant.name));
       user.restaurants = [];
-
       for(let restaurant of restaurants){
-        let restau = new Restaurant()
-        restau.id = restaurant 
-        user.restaurants.push(restau)
+        user.restaurants.push(restaurant);
       }
       // on créer une liste de restaurants qui sont unique
-      user.restaurants = user.restaurants.filter((restaurant, index, self) => self.map((restau) => restau.id).indexOf(restaurant.id) === index) 
+      user.restaurants = user.restaurants.filter((restaurant, index, self) => self.map((restau) => restau.id).indexOf(restaurant.id) === index); 
     }
   }
 
   set_read_right(event:MatSelectChange, index:number,  categorie:number){
-    index = 6 * this.page_number + index;
+    index = this.length_statut * this.page_number + index;
     const new_rights = event.value;
     const user = this.curr_user["user" +  this.curr_categorie as keyof typeof this.curr_user].at(index);
     user?.setStatus(new_rights, "r");  
   }
 
   set_write_right(event:MatSelectChange, index:number,  categorie:number){
-    index = 6 * this.page_number + index;
+    index = this.length_statut * this.page_number + index;
     const new_rights = event.value;
     const user = this.curr_user["user" +  this.curr_categorie as keyof typeof this.curr_user].at(index);
     user?.setStatus(new_rights, "w"); 
@@ -438,9 +451,13 @@ export class AppConfigueComponent implements OnInit{
     //On ajoute l'utilisateur à la base de donnée  
     if(user !== undefined){
       if(filter_user != undefined) user.restaurants = filter_user
-      this.user_services.setUser(this.proprietaire, user)
+      this.user_services.setEmployeeBDD(user).then(() => {
+        this._snackBar.open("vous avez bien modifié l'ultilisateur", "fermer");   
+      }).catch((e) => {
+        console.log(e);
+        this._snackBar.open("vous n'avez pas modifié l'ultilisateur", "fermer"); 
+      })
     }
-    this._snackBar.open("vous avez bien modifier l'ultilisateur", "fermer")
   }
 
   //Récupération des datasource en fonction des différentes catégorie 
@@ -547,5 +564,3 @@ export class AppConfigueComponent implements OnInit{
     }
   }
 }
-
-

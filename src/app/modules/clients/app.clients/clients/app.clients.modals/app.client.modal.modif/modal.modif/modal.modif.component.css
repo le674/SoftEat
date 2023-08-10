@@ -39,11 +39,15 @@ p{
 }
 
 .title{
+    font-size: larger;
+    font-weight: normal;
+    color: rgb(125, 181, 46);
+}
+.subtitle{
     font-size: large;
     font-weight: normal;
     color: rgb(125, 181, 46);
 }
-
 #last{
     display: block;
 }
@@ -93,28 +97,19 @@ p{
 mat-form-field{
     margin-left: 20px;
 }
-
 .selectSection{
     display: flex;
     justify-content: space-between;
     margin-top: 5px;
     margin-bottom: 10px;
 }
-
-.time{
-    width: 70px;
- }
- 
-
 mat-radio-button{
   margin-right: 5px;
 }
-
 .mat-select {
     width: fit-content !important;
     min-width: 100%;
 }
-
 ::ng-deep .mat-form-field-infix {
     min-width: 120px !important;
     width: fit-content !important;
@@ -143,15 +138,25 @@ mat-radio-button{
     margin-top: 30px;
 }
 
-.full-container{
+#form-field{
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
 }
-
-.container-content{
+.address-par{
+    margin-left: 15px;
+}
+.cell{
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
+    margin-top: 20px;
+    margin-right: 30px;
+}
+.postal-cell{
+    max-width: 100px;
+}
+.number-cell{
+    max-width: 100px;
 }
 #time-form{
     display: flex;
@@ -167,6 +172,11 @@ mat-radio-button{
 /*===========================================================================================*/
 #gasp{
     margin-bottom: 55px;
+}
+#address{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
 }
 mat-radio-group{
     margin-bottom: 25px;

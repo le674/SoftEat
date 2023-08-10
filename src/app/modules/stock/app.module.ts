@@ -19,7 +19,7 @@ import { AppPreparationComponent } from './app.preparation/app.preparation.compo
 import { AppAddPreparationComponent } from './app.preparation/app.preparation.modals/app.add.preparation/app.add.preparation.component';
 import { AppHelpPreparationComponent } from './app.preparation/app.preparation.modals/app.help.preparation/app.help.preparation/app.help.preparation.component';
 import { MatListModule } from '@angular/material/list';
-import { Cconsommable } from '../../../app/interfaces/ingredient';
+import { Cconsommable } from 'src/app/interfaces/consommable';
 
 @NgModule({
   declarations: [
@@ -52,7 +52,6 @@ import { Cconsommable } from '../../../app/interfaces/ingredient';
     AppConsoComponent
   ],
   providers: [
-    Cconsommable
   ],
 })
 export class AppStockModule {}

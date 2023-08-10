@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CIngredient } from '../../../../../app/interfaces/ingredient';
+import { CIngredient, TIngredientBase } from '../../../../../app/interfaces/ingredient';
 
 @Injectable({
   providedIn: 'root'
@@ -8,25 +8,30 @@ export class CalculService {
 
   constructor() { }
 
-  getCostTtcFromCat(categorie_tva: string, cost: number): number {
-    let taux_tva = 0;
-    const taux_ving_poucent = ["boisson alcholisée"]
-    const taux_dix_pourcent = ["produit alimentaire non conditionnée", "fruit de mer coquillage ouvert", "boisson non alcholisée non conditionnée"];
-    const taux_cinq_pourcent = ["pain", "patisserie", "fruit de mer coquillage fermés", "produit alimentaire conditionnée", "boisson non alcholisée conditionnée"];
-    if (taux_ving_poucent.includes(categorie_tva)) {
-      taux_tva = 20;
-    }
-    else {
-      if (taux_dix_pourcent.includes(categorie_tva)) {
-        taux_tva = 10;
+  getCostTtcFromCat(categorie_tva: string | null, cost: number): number | null {
+    if(categorie_tva !== null){
+      let taux_tva = 0;
+      const taux_ving_poucent = ["boisson alcholisée"]
+      const taux_dix_pourcent = ["produit alimentaire non conditionnée", "fruit de mer coquillage ouvert", "boisson non alcholisée non conditionnée"];
+      const taux_cinq_pourcent = ["pain", "patisserie", "fruit de mer coquillage fermés", "produit alimentaire conditionnée", "boisson non alcholisée conditionnée"];
+      if (taux_ving_poucent.includes(categorie_tva)) {
+        taux_tva = 20;
       }
       else {
-        if (taux_cinq_pourcent.includes(categorie_tva)) {
-          taux_tva = 5.5;
+        if (taux_dix_pourcent.includes(categorie_tva)) {
+          taux_tva = 10;
+        }
+        else {
+          if (taux_cinq_pourcent.includes(categorie_tva)) {
+            taux_tva = 5.5;
+          }
         }
       }
+      return this.ToCentime(cost + cost * (taux_tva / 100));
     }
-    return this.ToCentime(cost + cost * (taux_tva / 100));
+    else{
+      return null;
+    }
   }
 
 
@@ -51,8 +56,13 @@ export class CalculService {
     return 0;
   }
 
-  getCostTtcFromTaux(taux_tva: number, cost: number): number {
-    return this.ToCentime(cost + cost * (taux_tva / 100))
+  getCostTtcFromTaux(taux_tva: number | null, cost: number): number | null{
+    if(taux_tva !== null){
+      return this.ToCentime(cost + cost * (taux_tva / 100));
+    }
+    else{
+      return null;
+    }
   }
 
 
@@ -73,37 +83,41 @@ export class CalculService {
   }
 
 
-  stringToDate(date_time: string): Date {
+  stringToDate(date_time: string): Date | null{
     console.log(date_time);
     let date_time_array = date_time.split(" ")
     let time = date_time_array[1];
-
     let date = date_time_array[0];
-
-    const date_array = date.split('/');
-    const time_array = time.split(':').map((time) => Number(time));
-
-    const date_array_num = date_array.reverse().map((date) => Number(date));
-    const date_time_array_num = date_array_num.concat(time_array);
-
-    return new Date(date_time_array_num[0], date_time_array_num[1] - 1,
-      date_time_array_num[2], date_time_array_num[3], date_time_array_num[4], date_time_array_num[5])
+    if(date !== undefined && time !== undefined){
+      const date_array = date.split('/');
+      const time_array = time.split(':').map((time) => Number(time));
+      if(date_array !== undefined && time_array !== undefined){
+        const date_array_num = date_array.reverse().map((date) => Number(date));
+        const date_time_array_num = date_array_num.concat(time_array);
+    
+        return new Date(date_time_array_num[0], date_time_array_num[1] - 1,
+          date_time_array_num[2], date_time_array_num[3], date_time_array_num[4], date_time_array_num[5])
+      }
+      return null;
+    }
+    return null;
   }
-
+/* 
   removeQuantityAftPrepa(not_prep_ing: CIngredient[], base_ing: { name: string; quantity: number; }[],
     quantity_bef_add: number, quantity_aft_add: number, is_vrac: boolean) {
-
     if (not_prep_ing.length === base_ing.length) {
       not_prep_ing.forEach((ingredient, index: number) => {
         // on applique la réduction uniquement dans le cas le nombre d'ingrédients préparés est plus important
         if (quantity_aft_add > quantity_bef_add) {
           //cas 1 l'aliment est acheté en vrac du coup ingredient.quantity = 0
-          if (is_vrac) {
+          if (is_vrac && (ingredient.quantity_unity !== null)) {
             ingredient.quantity_unity = ingredient.quantity_unity - base_ing[index].quantity * (quantity_aft_add - quantity_bef_add);
           }
           // cas 2 l'ingrédient n'est pas acheté en vrac
           else {
-            ingredient.quantity = ingredient.quantity - (base_ing[index].quantity / ingredient.quantity_unity) * (quantity_aft_add - quantity_bef_add);
+            if((ingredient.quantity !== null) && (ingredient.quantity_unity !== null)){
+              ingredient.quantity = ingredient.quantity - (base_ing[index].quantity / ingredient.quantity_unity) * (quantity_aft_add - quantity_bef_add);
+            }
           }
         }
       })
@@ -113,7 +127,7 @@ export class CalculService {
       console.log("les ingrédient récupérés sur le formulaire ne coincide pas avec les ingrédient de base récupéré dans la bdd");
     }
     return null;
-  }
+  } */
 
 
   convertQuantity(quantity: number, unity: string): number {
@@ -177,8 +191,8 @@ export class CalculService {
 
   sortTwoListStringByName(l1: Array<CIngredient>, l2: { name: string; quantity: number; unity: string; quantity_unity: number; cost: number }[]) {
     l1 = l1.sort((a, b) => {
-      const nameA = a.nom.toLocaleUpperCase();
-      const nameB = b.nom.toLocaleUpperCase();
+      const nameA = a.name.toLocaleUpperCase();
+      const nameB = b.name.toLocaleUpperCase();
       if (nameA < nameB) {
         return -1
       }

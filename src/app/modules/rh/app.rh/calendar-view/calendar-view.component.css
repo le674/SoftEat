@@ -1,0 +1,63 @@
+.container {
+    display: flex;
+    flex-direction: row;
+}
+
+.navigator {
+    margin-right: 10px;
+    display: none;
+}
+
+.content {
+    flex-grow: 1;
+}
+
+.buttons {
+    margin-bottom: 10px;
+    display: flex;
+}
+
+button {
+    background-color: rgb(125, 181, 46);
+    color: white;
+    border: 0;
+    padding: .5rem 1rem;
+    width: 80px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 5px;
+    height: 60px;
+}
+
+.calendar {
+    width: 800px !important;
+    height: 800px !important;
+}
+
+.navig {
+    font-weight: 900;
+    font-size: larger;
+}
+
+.addEvent {
+    width: 110px;
+}
+
+button.selected {
+    background-color: rgb(98, 143, 35);
+}
+
+.important-event {
+    font-weight: bold;
+    color: darkblue;
+}
+
+span {
+    /* Ajoutez ici les styles spécifiques pour le span */
+    font-weight: bold;
+    font-size: 35px;
+    color: rgb(98, 143, 35);
+    flex-grow: 1;
+    align-self: center;
+    text-align: center;
+}

@@ -9,7 +9,8 @@
 <body>
     <div id="first-container">
         <div id="spinner-container">
-            <mat-spinner diameter="200"></mat-spinner>    
+            <i class="fa-solid fa-check" *ngIf="!load"></i>
+            <mat-spinner diameter="200" *ngIf="load"></mat-spinner>    
         </div>
     </div>
 </body>

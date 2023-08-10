@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonService } from '../../../../../app/services/common/common.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { Client, DisplayedClient } from '../../../../../app/interfaces/client';
@@ -11,18 +11,22 @@ import { ModalModifComponent } from './app.clients.modals/app.client.modal.modif
 import { ClientCalculService } from 'src/app/services/clients/client-calcul.service';
 import { ModalMsgComponent } from './app.clients.modals/app.client.modal.msg/modal.msg/modal.msg.component';
 import { ModalGaspComponent } from './app.clients.modals/app.client.modal.gasp/modal.gasp/modal.gasp.component';
+import { Unsubscribe } from 'firebase/firestore';
+import { Subscription, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-clients',
   templateUrl: './clients.component.html',
   styleUrls: ['./clients.component.css']
 })
-export class ClientsComponent implements OnInit {
+export class ClientsComponent implements OnInit, OnDestroy {
+  @Input() clients:string | null;
+  public write:boolean;
   public windows_screen_mobile: boolean;
   public displayedColumns: string[] = ['name', 'surname', 'email', 'number',
     'adress', 'waste_alert', "promotions", 'order_number', 'actions'];
   public size: string;
-  public clients: Array<Client>;
+  public _clients: Array<Client>;
   public displayed_client: Array<DisplayedClient>;
   public dataSource: MatTableDataSource<DisplayedClient>;
   private page_number: number;
@@ -31,6 +35,9 @@ export class ClientsComponent implements OnInit {
   private prop: string;
   private restaurant: string;
   public visibles: Array<boolean>;
+  private req_clients!:Unsubscribe;
+  private clients_sub!:Subscription;
+
   constructor(public mobile_service: CommonService, router: Router,
     private client_service: ClientsService, private client_calcul_service: ClientCalculService,
     public dialog: MatDialog,
@@ -42,26 +49,39 @@ export class ClientsComponent implements OnInit {
     this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("user");
     this.visibles = [];
     this.size = "";
-    this.clients = [];
+    this._clients = [];
     this.displayed_client = [];
     this.dataSource = new MatTableDataSource(this.displayed_client);
     this.prop = "";
     this.restaurant = "";
     this.url = this.router.parseUrl(this.router.url);
+    this.clients = null;
+    this.write = false;
+  }
+  ngOnDestroy(): void {
+    this.req_clients();
+    this.clients_sub.unsubscribe();
   }
   ngOnInit(): void {
-    this.displayed_client = [];
-    let user_info = this.url.queryParams;
-    this.prop = user_info["prop"];
-    this.restaurant = user_info["restaurant"];
-    this.client_service.getClients(this.prop, this.restaurant).then((clients) => {
-      this.clients = clients;
-      this.displayed_client = this.client_calcul_service.clientToDisClient(clients);
-      const first_event = new PageEvent();
-      first_event.length = this.clients.length;
-      first_event.pageSize = 6
-      this.pageChanged(first_event);
-    })
+    if(this.clients !== null){
+      if(this.clients.includes("w")) this.write = true;
+      if(this.clients.includes("r")){
+        this.displayed_client = [];
+        let user_info = this.url.queryParams;
+        this.prop = user_info["prop"];
+        this.restaurant = user_info["restaurant"];
+    
+        this.req_clients = this.client_service.getClientsBDD(this.prop, this.restaurant);
+         this.clients_sub = this.client_service.getClients().subscribe((clients) => {
+          this._clients = clients;
+          this.displayed_client = this.client_calcul_service.clientToDisClient(clients);
+          const first_event = new PageEvent();
+          first_event.length = this._clients.length;
+          first_event.pageSize = 6;
+          this.pageChanged(first_event);
+        })
+      }
+    }
   }
   pageChanged(event: PageEvent) {
     let datasource = [... this.displayed_client];
@@ -76,9 +96,10 @@ export class ClientsComponent implements OnInit {
     this.visibles[arrow_index] = !this.visibles[arrow_index];
   }
   modifUser(client: DisplayedClient) {
+    
     const dialogRef = this.dialog.open(ModalModifComponent, {
       height: `850px`,
-      width: `500px`,
+      width: `900px`,
       data: {
         restaurant: this.restaurant,
         prop: this.prop,
@@ -104,12 +125,16 @@ export class ClientsComponent implements OnInit {
     })
   }
   suppUser(dis_client: DisplayedClient) {
-    const client = this.clients.find((client) => client.number === dis_client.number);
+    const client = this._clients.find((client) => client.number === dis_client.number);
     if (client !== undefined) {
-      this.client_service.suppClient(this.prop, this.restaurant, client).then(() => {
+      this.client_service.suppClient(this.prop, this.restaurant, client.id).then(() => {
         this._snackBar.open("le client vient d'être supprimé", "fermer");
-      }).catch(() => {
+      }).catch((e) => {
         this._snackBar.open("nous n'avons pas réussit à supprimer le client", "fermer");
+        const err = new Error(e); 
+        return throwError(() => err).subscribe((error) => {
+          console.log(error);
+        });
       });
     }
   }

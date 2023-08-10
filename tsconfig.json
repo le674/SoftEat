@@ -2,6 +2,9 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    //attention cette option devrait être mit à false à terme elle permet simplement 
+    //d'éviter les problème de build du paquet avec pdfjs-dist
+    "skipLibCheck": true,
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,

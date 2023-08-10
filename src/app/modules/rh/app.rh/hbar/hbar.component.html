@@ -1,0 +1,51 @@
+<body>
+    
+    <div id="hbar" class="flex-container">
+        <div style="flex-grow: 0.2" id="restants">
+            <p> Total : 6 semaines</p>
+            <p *ngIf="conges > 1">Restant: <span [ngStyle]="getCongesColorStyle(conges)">{{ conges }} Jours</span></p>
+            <p *ngIf="conges <= 1">Restant: <span [ngStyle]="getCongesColorStyle(conges)">{{ conges }} Jour</span></p>
+
+        </div>
+        <div style="flex-grow: 1" id="motif">
+            <button #autofillConge (click)="autofillInput(autofillConge.innerText)">Congés</button>
+            <button #autofillRTT (click)="autofillInput(autofillRTT.innerText)">RTT</button>
+            <button #autofillMate (click)="autofillInput(autofillMate.innerText)">Maternité</button>
+            <button #autofillPate (click)="autofillInput(autofillPate.innerText)">Paternité</button>
+            <button #autofillExce (click)="autofillInput(autofillExce.innerText)">Exceptionnels</button>
+        </div>
+        <div style="flex-grow: 5">
+            <h2> Demande de congés payés </h2>
+            <form #form="ngForm" (ngSubmit)="onSubmit()">
+                <div class="line">
+                    <label for="motif">Motif</label>
+                    <input #motif id="motif" name="motif" type="text" placeholder="Champ obligatoire*"
+                        [style.width]="dateWidth" [(ngModel)]="form.value.motif" required>
+                </div>
+                <div class="line">
+                    <label for="dateDebut">Date début</label>
+                    <input #dateDebut id="dateDebut" name="dateDebut" type="date" [style.width]="dateWidth"
+                        [(ngModel)]="form.value.dateDebut" required>
+                </div>
+                <div class="line">
+                    <label for="dateFin">Date fin</label>
+                    <input #dateFin id="dateFin" name="dateFin" type="date" [style.width]="dateWidth"
+                        [(ngModel)]="form.value.dateFin" required>
+                </div>
+                <div class="picker">
+                    <input type="file" id="fileInput" name="fileInput" class="file-input"
+                        (change)="displayFileName($event)">
+                    <label for="fileInput" class="file-label">Joindre un fichier</label>
+                </div>
+                <div *ngIf="selectedFileName" class="file-info">
+                    <p class="selected">{{ selectedShortenedFileName }}</p>
+                    <button class="unchoose-button" (click)="unchooseFile()">&cross;</button>
+                </div>
+
+                <div class="submit">
+                    <input class="mat-stroked-button" type="submit" value="Envoyer">
+                </div>
+            </form>
+        </div>
+    </div>
+</body>

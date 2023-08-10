@@ -4,6 +4,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Client, DisplayedClient } from '../../../../../../../../app/interfaces/client';
 import { ClientsService } from '../../../../../../../../app/services/clients/clients.service';
+import { Address } from 'src/app/interfaces/address';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-modal.modif',
@@ -16,7 +18,10 @@ export class ModalModifComponent implements OnInit {
     surname: new FormControl(''),
     email: new FormControl(''),
     number: new FormControl('', Validators.required),
-    adress: new FormControl(''),
+    postal_code: new FormControl(""),
+    street: new FormControl(""),
+    street_number: new FormControl(0),
+    city: new FormControl("", Validators.required),
     waste_alert: new FormControl(""),
     promotion: new FormControl(""),
     order_number: new FormControl(0)
@@ -31,6 +36,8 @@ export class ModalModifComponent implements OnInit {
 
   }
   ngOnInit(): void {
+    
+    this.data.clients
     if(this.data.client.name !== undefined){
       this.modif_clients_section.controls.name.setValue(this.data.client.name);
     }
@@ -40,8 +47,17 @@ export class ModalModifComponent implements OnInit {
     if(this.data.client.email !== undefined){
       this.modif_clients_section.controls.email.setValue(this.data.client.email);
     }
-    if(this.data.client.adress !== undefined){
-      this.modif_clients_section.controls.adress.setValue(this.data.client.adress)
+    if(this.data.client.postal_code !== undefined){
+      this.modif_clients_section.controls.postal_code.setValue(this.data.client.postal_code)
+    }
+    if(this.data.client.city !== undefined){
+      this.modif_clients_section.controls.city.setValue(this.data.client.city)
+    }
+    if(this.data.client.street !== undefined){
+      this.modif_clients_section.controls.street.setValue(this.data.client.street)
+    }
+    if(this.data.client.street_number !== undefined){
+      this.modif_clients_section.controls.street_number.setValue(this.data.client.street_number)
     }
     if(this.data.client.order_number !== undefined){
       this.modif_clients_section.controls.order_number.setValue(this.data.client.order_number)
@@ -63,8 +79,11 @@ export class ModalModifComponent implements OnInit {
     if(this.data.client.number !== undefined){
       const client = this.data.clients.find((client) => this.data.client.number === client.number);
       if(client !== undefined){
-
-        const adress = this.modif_clients_section.controls.adress.value;
+        client.address = new Address(null, null, "", null);
+        const postal_code = this.modif_clients_section.controls.postal_code.value;
+        const city = this.modif_clients_section.controls.city.value;
+        const street = this.modif_clients_section.controls.street.value;
+        const street_number = this.modif_clients_section.controls.street_number.value;
         const name =  this.modif_clients_section.controls.name.value;
         const surname =  this.modif_clients_section.controls.surname.value;
         const email =  this.modif_clients_section.controls.email.value;
@@ -84,8 +103,17 @@ export class ModalModifComponent implements OnInit {
         if((number !== null) && (number !== undefined)){
           client.number = number;
         }
-        if((adress !== null) && (adress !== undefined)){
-          client.adress = adress;
+        if((postal_code !== null) && (postal_code !== undefined)){
+          client.address.postal_code = postal_code;
+        }
+        if((city !== null) && (city !== undefined)){
+          client.address.city = city;
+        }
+        if((street !== null) && (street !== undefined)){
+          client.address.street = street;
+        }
+        if((street_number !== null) && (street_number !== undefined)){
+          client.address.street_number = street_number;
         }
         if((order_number !== null) && (order_number !== undefined)){
           client.order_number = order_number;
@@ -106,10 +134,14 @@ export class ModalModifComponent implements OnInit {
             client.waste_alert = false;
           }
         }        
-        this.client_service.setClient(this.data.prop,this.data.restaurant,client).then(() => {
+        this.client_service.setClient(this.data.prop, this.data.restaurant, client).then(() => {
 
-        }).catch(() => {
+        }).catch((e) => {
           this._snackBar.open("le client n'a pas pu être modifié","fermer")
+          const err = new Error(e);
+          return throwError(() => err).subscribe((error) => {
+            console.log(error);
+          });
         }).then(() => {
           this._snackBar.open("le client vient d'être modifié","fermer")
         });

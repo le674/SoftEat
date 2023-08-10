@@ -107,3 +107,8 @@ ul{
     font-weight: bolder;
     color: rgb(125, 181, 46);
 }
+.disable{
+    cursor: none;
+    pointer-events: none;
+    background-color: rgb(120,120,120);
+}

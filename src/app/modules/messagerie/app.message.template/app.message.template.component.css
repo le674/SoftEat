@@ -1,0 +1,51 @@
+.message {
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.message_infos {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.time_sent p {
+  color: rgb(100, 100, 100);
+}
+
+.name {
+  font-weight: bold;
+  padding-right: 30px;
+  white-space: nowrap;
+}
+
+.message_content,
+.name {
+  color: black;
+  margin-bottom: -10px;
+}
+
+.message_outer {
+  display: flex;
+}
+
+.message_inner {
+  flex: 1;
+  display: flex;
+}
+
+.message_spacer {
+  flex: 1;
+}
+
+.message_bubble {
+  max-width: calc(100% - 67px);
+  overflow-wrap: break-word;
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  max-width: 70%;
+  margin-bottom: 5px;
+}

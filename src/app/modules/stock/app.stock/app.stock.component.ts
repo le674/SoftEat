@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,6 +11,7 @@ import { IngredientsInteractionService } from '../../../../app/services/menus/in
 import { CalculService } from '../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.component';
 import { CommonService } from '../../../../app/services/common/common.service';
+import { RowIngredient } from 'src/app/interfaces/inventaire';
 
 @Component({
   selector: 'app-stock',
@@ -18,38 +19,15 @@ import { CommonService } from '../../../../app/services/common/common.service';
   styleUrls: ['./app.stock.component.css']
 })
 export class AppStockComponent implements OnInit, OnDestroy{
-
+  @Input() stock:string | null; 
+  public write:boolean;
   public windows_screen_mobile:boolean;
   public displayedColumns: string[] = ['nom', 'categorie_tva', 'quantity', 'quantity_unity',
     'unity', 'cost', 'cost_ttc', 'date_reception', 'dlc', 'actions'];
   public size:string;
-  public dataSource: MatTableDataSource<{
-    nom: string;
-    categorie_tva: string;
-    cost: number;
-    cost_ttc: number;
-    quantity: number;
-    quantity_unity: number;
-    unity: string,
-    date_reception: string;
-    dlc: string;
-    marge:number;
-    vrac:string;
-  }>;
+  public dataSource: MatTableDataSource<RowIngredient>;
 
-  public ingredients_displayed_br: Array<{
-    nom: string;
-    categorie_tva: string;
-    cost: number;
-    cost_ttc: number;
-    quantity: number;
-    quantity_unity: number;
-    unity: string;
-    date_reception: string;
-    dlc: string;
-    marge:number;
-    vrac:string;
-  }>;
+  public ingredients_displayed_br: Array<RowIngredient>;
 
   private page_number: number;
   private router: Router;
@@ -77,7 +55,9 @@ export class AppStockComponent implements OnInit, OnDestroy{
     this.url = this.router.parseUrl(this.router.url);
     this.visibles = [];
     this.size = "";
+    this.stock = null;
     this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("ing");
+    this.write = false;
   }
 
   ngOnDestroy(): void {
@@ -86,53 +66,45 @@ export class AppStockComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    let user_info = this.url.queryParams;
-    this.prop = user_info["prop"];
-    this.restaurant = user_info["restaurant"];
-    this.req_ingredients_brt = this.service.getIngredientsBrFromRestaurantsBDD(this.prop, this.restaurant);
-    const obs_ing = this.service.getIngredientsBrFromRestaurants()
-    this.req_merge_obs = obs_ing.subscribe((ingBR) => {
-      let val_bouch: any = "veuillez entre les ingrédients de bases"
-      this.ingredients_displayed_br = [];
-      this.dataSource = new MatTableDataSource(this.ingredients_displayed_br);
-      this.ingredient_table = ingBR;
-      for (let i = 0; i < ingBR.length; i++) {
-        // on vérifie si le nombre d'ingrédient présent est inférieur à la marge si c'est le cas on lève une alerte
-        ingBR[i].getInfoDico().then((ingredient: any) => {
-          if ((ingBR[i].getTauxTva() === 0) || (ingBR[i].getTauxTva === undefined)) {
-            ingredient.getCostTtcFromCat();
-          }
-          else {
-            ingredient.getCostTtcFromTaux();
-          }
-          let row_ingredient = {
-            nom: ingBR[i].nom.split('_').join('<br>'),
-            categorie_tva: ingredient.categorie_tva.split(' ').join('<br>'),
-            cost: ingredient.cost,
-            cost_ttc: ingredient.cost_ttc,
-            val_bouch: 0,
-            bef_prep: 0,
-            after_prep: 0,
-            quantity: ingredient.quantity,
-            quantity_unity: ingredient.quantity_unity,
-            unity: ingredient.unity_unitary,
-            cuisinee: 'non',
-            date_reception: ingredient.date_reception.toLocaleString(),
-            dlc: ingredient.dlc.toLocaleString(),
-            marge: ingredient.marge,
-            vrac: ingredient.vrac
-          };
-          this.ingredients_displayed_br.push(row_ingredient);
-          this.visibles.push(false);
-          if (i === ingBR.length - 1) {
+    if(this.stock !== null){
+      if(this.stock.includes("w")) this.write = true;
+      if(this.stock.includes("r")){
+        let user_info:any = this.url.queryParams;
+        this.prop = user_info.prop;
+        this.restaurant = user_info.restaurant;
+        this.req_ingredients_brt = this.service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
+        const obs_ing = this.service.getIngredientsFromRestaurants()
+        this.req_merge_obs = obs_ing.subscribe((ingredients) => {
+          this.ingredients_displayed_br = [];
+          this.dataSource = new MatTableDataSource(this.ingredients_displayed_br);
+          this.ingredient_table = ingredients;
+          for (let ingredient of ingredients) {
+            // on vérifie si le nombre d'ingrédient présent est inférieur à la marge si c'est le cas on lève une alerte
+            if((ingredient.taux_tva === 0) || (ingredient.taux_tva === null)){
+              ingredient.getCostTtcFromCat();
+            }
+            else{
+              
+              ingredient.getCostTtcFromTaux(); 
+            }
+            const name = ingredient.name.split(' ').join('<br>');
+            const cost = ingredient.cost;
+            const unity = ingredient.unity;
+            const quantity = ingredient.quantity;
+            const quantity_unity = ingredient.quantity_unity;
+            const id = ingredient.id;
+            let row_ingredient = new RowIngredient(name, cost, quantity, quantity_unity, unity, id);
+            row_ingredient.setIngredient(ingredient);
+            this.ingredients_displayed_br.push(row_ingredient);
+            this.visibles.push(false);
             const first_event = new PageEvent();
-            first_event.length = ingBR.length;
+            first_event.length = ingredients.length;
             first_event.pageSize = 6
             this.pageChangedFirst(first_event);
           }
         })
       }
-    })
+    }
   }
 
   OpenAddIngForm() {
@@ -144,108 +116,107 @@ export class AppStockComponent implements OnInit, OnDestroy{
         prop: this.prop,
         is_modif: false,
         ingredient: {
-          nom: "",
-          categorie: "",
+          name: "",
+          categorie_restaurant: null,
+          categorie_tva: null,
+          taux_tva: null,
+          cost: 0,
           quantity: 0,
           quantity_unity: 0,
+          total_quantity: 0,
           unity: "",
-          unitary_cost: 0,
-          dlc: 0,
           date_reception: new Date(),
+          dlc: 0,
+          cost_ttc: null,
+          is_similar:0,
           marge: 0,
-          vrac: 'non'
+          vrac: 'non',
+          base_ingredient_id:null,
+          id:""
         }
       }
     });
   }
 
-  modifIng(ele: {
-    nom: string;
-    categorie_tva: string;
-    cost: number;
-    cost_ttc: number;
-    quantity: number;
-    quantity_unity: number;
-    unity: string;
-    dlc: string;
-    marge: number;
-    vrac: string;
-    date_reception: string;
-  }) {
+  modifIng(ele: RowIngredient) {
+    let dlc = ""
+    let categorie_tva = "";
+    let _ingredient = this.ingredient_table.find((ingredient) => ingredient.id === ele.id);
+    if(ele.dlc !== null){
+      dlc = ele.dlc;
+    }
+    if(ele.categorie_tva !== null){
+      categorie_tva = ele.categorie_tva;
+    }
     let res_dlc = 0;
     let var_base_ing: Array<{ name: string; quantity_unity: number; quantity: number; unity: string; cost: number }> = [];
-    const dlc = this.calc_service.stringToDate(ele.dlc);
-    if (ele.date_reception !== undefined) {
+    
+    const dlc_date = this.calc_service.stringToDate(dlc);
+    if (ele.date_reception !== undefined && ele.date_reception !== null) {
       const date_reception = this.calc_service.stringToDate(ele.date_reception);
-      res_dlc = (dlc.getTime() - date_reception.getTime()) / (1000 * 60 * 60 * 24)
+      if(dlc_date !== null && date_reception !== null){
+        res_dlc = (dlc_date.getTime() - date_reception.getTime()) / (1000 * 60 * 60 * 24)
+      }
+      else{
+        res_dlc = 0;
+      }
     }
 
+    ele.name = ele.name.split('<br>').join(' ')
+    ele.categorie_tva = categorie_tva.split('<br>').join(' ')
+    let ingredient = new CIngredient(this.calc_service)
 
-    ele.nom = ele.nom.split('<br>').join('_')
-    ele.categorie_tva = ele.categorie_tva.split('<br>').join(' ')
-    let ingredient = new CIngredient(this.calc_service, this.service)
-
-    ingredient.nom = ele.nom;
+    ingredient.name = ele.name;
     ingredient.categorie_tva = ele.categorie_tva;
     ingredient.cost = ele.cost;
     ingredient.quantity = ele.quantity;
     ingredient.quantity_unity = ele.quantity_unity;
-    const dialogRef = this.dialog.open(AddIngComponent, {
-      height: `${window.innerHeight}px`,
-      width: `${window.innerWidth - window.innerWidth / 15}px`,
-      data: {
-        restaurant: this.restaurant,
-        prop: this.prop,
-        is_modif: true,
-        ingredient: {
-          /* cuisinee: ele.cuisinee, */
-          nom: ele.nom,
-          categorie: ele.categorie_tva,
-          quantity: ele.quantity,
-          quantity_unity: ele.quantity_unity,
-          unity: ele.unity,
-          unitary_cost: ele.cost,
-          dlc: res_dlc,
-          date_reception: ele.date_reception,
-          base_ing: var_base_ing,
-          not_prep: this.ingredient_table,
-         /*  quantity_after_prep: ele.after_prep, */
-          marge: ele.marge,
-          vrac: ele.vrac
+    if(_ingredient !== undefined){
+      const dialogRef = this.dialog.open(AddIngComponent, {
+        height: `${window.innerHeight}px`,
+        width: `${window.innerWidth - window.innerWidth / 15}px`,
+        data: {
+          restaurant: this.restaurant,
+          prop: this.prop,
+          is_modif: true,
+          ingredient: {
+            id:ele.id,
+            /* cuisinee: ele.cuisinee, */
+            name: ele.name,
+            categorie_restaurant: _ingredient.categorie_restaurant,
+            categorie_tva: _ingredient.categorie_tva,
+            taux_tva: _ingredient.taux_tva,
+            cost: _ingredient.cost,
+            quantity: ele.quantity,
+            quantity_unity: ele.quantity_unity,
+            total_quantity: _ingredient.total_quantity,
+            unity: ele.unity,
+            unitary_cost: ele.cost,
+            date_reception: ele.date_reception,
+            dlc: res_dlc,
+            cost_ttc: _ingredient.cost_ttc,
+            marge: ele.marge,
+            vrac: ele.vrac,
+            base_ingredient_id: null,
+            base_ing: var_base_ing,
+            not_prep: this.ingredient_table,
+           /*  quantity_after_prep: ele.after_prep, */
+          }
         }
-      }
-    });
-   
+      });
+    }
+    else{
+      throw `No Ingredient founded for array element of id ${ele.id} and name ${ele.name}`;
+    }
   }
 
-  suppIng(ele: {
-    nom: string;
-    categorie_tva: string;
-    cost: number;
-    cost_ttc: number;
-    quantity: number;
-    quantity_unity: number;
-    unity: string;
-    date_reception: string;
-    dlc: string;
-  }) {
-
-    this.service.removeIngInBdd(ele.nom.split('<br>').join('_'), this.prop, this.restaurant, false).then(() => {
+  suppIng(ele: RowIngredient) {
+    this.service.removeIngInBdd(ele, this.prop, this.restaurant).then(() => {
       this._snackBar.open("l'ingrédient vient d'être supprimé de la base de donnée du restaurant", "fermer")
     }).catch(() => {
       this._snackBar.open("l'ingrédient n'a pas pu être supprimé de la base de donnée du restaurant", "fermer")
     });
-
-    //on regénère la datasource 
-    const is_same =  this.ingredients_displayed_br.map((ingredient) => ingredient.nom !== ele.nom.split('<br>').join('_'));
-    this.ingredients_displayed_br = this.ingredients_displayed_br.filter((ingredient) => ingredient.nom !== ele.nom.split('<br>').join('_'));
-    this.visibles = this.visibles.filter((is_visible,index_vis) => is_same[index_vis]);
-    const supp_event = new PageEvent();
-    supp_event.length = this.ingredients_displayed_br.length;
-    supp_event.pageSize = 6
-    this.pageChangedFirst(supp_event);
   }
-
   pageChanged(event: PageEvent) {
     let datasource = [... this.ingredients_displayed_br];
     this.page_number = event.pageIndex;

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,7 +10,8 @@ import { AppFacturesModule } from './modules/factures/app.module';
 import { AppStockModule } from './modules/stock/app.module';
 import { AppAcceuilModule } from './modules/acceuil/app.module';
 import { AppDashboardModule } from './modules/dashboard/app.module';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import {getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getFirestore, provideFirestore ,persistentLocalCache, persistentMultipleTabManager, initializeFirestore } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { AuthentificationService } from './services/authentification.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -19,7 +20,9 @@ import { provideAuth } from '@angular/fire/auth';
 import { RecettesModule } from './modules/recettes/recettes.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
-
+import { AppMessagerieModule } from './modules/messagerie/app.module';
+import {registerLocaleData} from '@angular/common';
+import * as fr from '@angular/common/locales/fr';
 @NgModule({
   declarations: [
     AppComponent
@@ -35,28 +38,40 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     AppAuthoModule,
     AppBudgetModule,
     AppFacturesModule,
+    AppMessagerieModule,
     AppStockModule,
     AppAcceuilModule,
-    AppAuthoModule,
     RecettesModule,
+    AppRoutingModule,
     // permet d'initialiser les services firebase à utiliser une fois dans
     //le app.module les objet de classe FirebaseApp contiendrons alors la configuration pour l'api firebase présent dans l'environnement
     provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirestore(() => {
+      initializeFirestore(getApp(), {
+        localCache: persistentLocalCache({
+            tabManager: persistentMultipleTabManager()
+        })
+      })
+      return getFirestore();
+    }),
     provideAuth(() => getAuth()),
-    AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     })
-
   ],
-  providers: [AuthentificationService],
+  providers: [
+    AuthentificationService,
+    { provide: LOCALE_ID, useValue: 'fr-FR' }
+  ],
   bootstrap: [AppComponent]
 })
 
 export class AppModule {
-
+  constructor(){
+    registerLocaleData(fr.default);
+  }
 
 }

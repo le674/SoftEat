@@ -2,10 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppAuthoComponent } from './app.autho/app.autho.component';
 import { AppRoutingModule } from './app-routing.module';
-import { InteractionRestaurantService } from './app.autho/interaction-restaurant.service';
 import { AppConfigueComponent } from './app.configue/app.configue.component';
 import { AppModalModule } from './app.modals/app.modal.module'
-import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSelectModule} from '@angular/material/select'; 
@@ -20,10 +19,12 @@ import { AddConfigueEmployeeComponent } from './app.configue/add.configue.employ
 import { MatListModule } from '@angular/material/list';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import { MobileUserDataComponent } from './app.configue/mobile.user.data/mobile.user.data/mobile.user.data.component';
+import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
+import { CommonCacheServices } from 'src/app/services/common/common.cache.services.service';
 @NgModule({
   declarations: [
     AppAuthoComponent,
-    AppConfigueComponent,
+   AppConfigueComponent, 
     AddConfigueSalaryComponent,
     AddConfigueEmployeeComponent,
     MobileUserDataComponent
@@ -50,7 +51,7 @@ import { MobileUserDataComponent } from './app.configue/mobile.user.data/mobile.
     AppAuthoComponent
   ],
   providers: [
-    InteractionRestaurantService
+    CommonCacheServices
   ]
 })
 export class AppAuthoModule {}

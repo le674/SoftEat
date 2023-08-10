@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
-import { Cconsommable, TIngredientBase } from '../../../../app/interfaces/ingredient';
+import { CIngredient } from '../../../../app/interfaces/ingredient';
 import { Cmenu } from '../../../../app/interfaces/menu';
 import { Cplat } from '../../../../app/interfaces/plat';
 import { ConsommableInteractionService } from '../../../../app/services/menus/consommable-interaction.service';
@@ -11,111 +11,137 @@ import { MenuInteractionService } from '../../../../app/services/menus/menu-inte
 import { PlatsInteractionService } from '../../../../app/services/menus/plats-interaction.service';
 import { AddMenuComponent } from './add.menu/add.menu.component';
 import { DisplayMenuComponent } from './display.menu/display.menu.component';
+import { Cconsommable } from 'src/app/interfaces/consommable';
+import { Unsubscribe } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './app.menu.component.html',
   styleUrls: ['./app.menu.component.css']
 })
-export class AppMenuComponent implements OnInit, AfterViewInit {
-
+export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() recette:string | null;
   public menus: Array<Cmenu>
   private url: UrlTree;
-  private prop:string;
-  private restaurant:string;
+  private prop: string;
+  private restaurant: string;
   private router: Router;
-  private ingredients: Array<TIngredientBase>
+  private ingredients: Array<CIngredient>
   private consommables: Array<Cconsommable>
   private plats: Array<Cplat>;
-
-  constructor(private menu_service:MenuInteractionService,
-    router: Router,  public dialog: MatDialog, private ingredient_service: IngredientsInteractionService,
-    private conso_service: ConsommableInteractionService, private plat_service: PlatsInteractionService, private _snackBar:MatSnackBar) {
-    this.menus = [];  
+  private req_ingredients!:Unsubscribe;
+  private req_consommables!:Unsubscribe;
+  private req_plats!:Unsubscribe;
+  private req_menus!:Unsubscribe
+  private ingredients_sub!:Subscription;
+  private consommables_sub!:Subscription;
+  private plats_sub!:Subscription;
+  private menus_sub!:Subscription;
+  public write:boolean;
+  constructor(private menu_service: MenuInteractionService,
+    router: Router, public dialog: MatDialog, private ingredient_service: IngredientsInteractionService,
+    private conso_service: ConsommableInteractionService, private plat_service: PlatsInteractionService, private _snackBar: MatSnackBar) {
+    this.menus = [];
     this.ingredients = [];
     this.consommables = [];
     this.plats = [];
     this.prop = "";
-    this.restaurant = "";  
-    this.router = router; 
+    this.restaurant = "";
+    this.router = router;
     this.url = this.router.parseUrl(this.router.url);
+    this.recette = null;
+    this.write = false;
+  }
+  ngOnDestroy(): void {
+    this.req_menus();
+    this.req_plats();
+    this.req_ingredients();
+    this.req_consommables();
+    this.menus_sub.unsubscribe();
+    this.plats_sub.unsubscribe();
+    this.ingredients_sub.unsubscribe();
+    this.consommables_sub.unsubscribe();
   }
 
   ngOnInit(): void {
-    let user_info = this.url.queryParams;
-    this.prop = user_info["prop"];
-    this.restaurant = user_info["restaurant"];
-    this.ingredient_service.getIngredientsBrFromRestaurantsPROM(this.prop, this.restaurant).then((ingredients) => {
-      this.ingredients = ingredients.map((ingredient) => {
-        return ingredient.convertToBase()
-      });
-    }).then(() => {
-      this.conso_service.getConsommablesFromRestaurantsFiltreIds(this.prop, this.restaurant).then((consos) => {
-        this.consommables = consos;
-      }).then(() => {
-        this.plat_service.getPlatFromRestaurant(this.prop, this.restaurant).then((plats) => {
-            this.plats = plats;
-        }).then(() => {
-          this.menu_service.getMenusFromRestaurants(this.prop, this.restaurant, this.ingredients, this.consommables, this.plats).then((menus) => {
-            this.menus = menus;   
+    if(this.recette !== null){
+      if(this.recette.includes("w")) this.write = true;
+      if(this.recette.includes("r")){
+        let user_info = this.url.queryParams;
+        this.prop = user_info["prop"];
+        this.restaurant = user_info["restaurant"];
+        this.req_ingredients =  this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
+        this.req_consommables =  this.conso_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
+        this.req_plats = this.plat_service.getPlatFromRestaurantBDD(this.prop);
+        this.req_menus = this.menu_service.getMenuFromRestaurantBDD(this.prop);
+        this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:Array<CIngredient>) => {
+          this.ingredients = ingredients;
+          this.consommables_sub = this.conso_service.getConsommablesFromRestaurants().subscribe((consommables:Array<Cconsommable>) => {
+            this.consommables = consommables;
+            this.plats_sub = this.plat_service.getPlatFromRestaurant().subscribe((plats: Array<Cplat>) => {
+              this.plats = plats;
+              this.menus_sub = this.menu_service.getMenuFromRestaurant().subscribe((menus: Array<Cmenu>) => {
+                this.menus = menus;
+              })
+            })
           })
-      })
-    })
-  })
-}
-
+        })
+      }
+    }
+  }
   ngAfterViewInit(): void {
-    
+
   }
 
-  addMenu():void{
+  addMenu(): void {
 
     const dialogRef = this.dialog.open(AddMenuComponent, {
       height: `${window.innerHeight - window.innerWidth / 10}px`,
       width: `${window.innerWidth - window.innerWidth / 10}px`,
-      data:{
+      data: {
         prop: this.prop,
         restaurant: this.restaurant,
         ingredients: this.ingredients,
-        consommables:this.consommables,
-        plats:this.plats,
-        menu:null
+        consommables: this.consommables,
+        plats: this.plats,
+        menu: null,
+        modification: false
       }
     });
   }
 
-  modifyMenu(menu:Cmenu):void{
-    console.log(menu);
+  modifyMenu(menu: Cmenu): void {
     const dialogRef = this.dialog.open(AddMenuComponent, {
       height: `${window.innerHeight - window.innerWidth / 10}px`,
       width: `${window.innerWidth - window.innerWidth / 10}px`,
-      data:{
+      data: {
         prop: this.prop,
         restaurant: this.restaurant,
         ingredients: this.ingredients,
-        consommables:this.consommables,
-        plats:this.plats,
-        menu:menu
+        consommables: this.consommables,
+        plats: this.plats,
+        menu: menu,
+        modification: true
       }
     });
   }
 
-  seeMenu(menu:Cmenu):void{
+  seeMenu(menu: Cmenu): void {
     const dialogRef = this.dialog.open(DisplayMenuComponent, {
       height: `${window.innerHeight}px`,
       width: `800px`,
-      data:{
-        menu:menu
+      data: {
+        prop:this.prop,
+        restaurant: this.restaurant,
+        plats:this.plats,
+        menu: menu
       }
     })
   }
 
-  suppressMenu(menu:Cmenu):void{
-      this.menu_service.deleteMenu(this.prop, this.restaurant, menu).catch(() => {
-        this._snackBar.open("la suppression du menu n'a pas pu être réalisée", "fermer");
-      }).finally(() => {
-        this._snackBar.open(`le menu ${menu.nom} vient d'être supprimé`, "fermer")
-      });
+  suppressMenu(menu: Cmenu): void {
+    
   }
 
 }

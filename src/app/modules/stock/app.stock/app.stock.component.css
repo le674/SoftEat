@@ -60,7 +60,11 @@ ul{
 .fa-trash{
     margin-right: 3px;
 }
-
+.disable{
+    cursor: none;
+    pointer-events: none;
+    background-color: rgb(120,120,120);
+}
 /* mobile */
 .accordion-item {
     margin-top: 1%;

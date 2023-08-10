@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {TextShared } from 'src/app/interfaces/text';
 import * as Tesseract from 'tesseract.js';
 import { FactureSharedService } from '../facture_shared/facture-shared.service';
+import { configue_facture_parser } from '../facture_configue';
+import { FactureColumns, FactureColumnsFull, FacturePivotsFull } from 'src/app/interfaces/facture';
 
 
 @Injectable({
@@ -10,32 +12,10 @@ import { FactureSharedService } from '../facture_shared/facture-shared.service';
 export class FactureImgService {
   private output:Tesseract.OutputFormats;
   private parsed_doc: TextShared[];
-  private colonne_factures: {
-    name: Array<string>,
-    description: Array<string>,
-    price: Array<string>,
-    quantity: Array<string>,
-    tva: Array<string>
-  }
+  private colonne_factures: FactureColumns;
+  private colonne_factures_actual: FactureColumnsFull[]
 
-
-  private colonne_factures_actual: {
-    name: TextShared[],
-    description?: TextShared[],
-    price: TextShared[],
-    quantity: TextShared[],
-    tva?: TextShared[],
-    total?: TextShared[]
-  }[]
-
-  private colonne_factures_pivot: {
-    name: TextShared,
-    description?: TextShared,
-    price: TextShared,
-    quantity: TextShared,
-    tva?: TextShared,
-    total?: TextShared
-  }
+  private colonne_factures_pivot: FacturePivotsFull
 
   constructor(private shared_service:FactureSharedService){
     this.output = {
@@ -91,12 +71,9 @@ export class FactureImgService {
       preserve_interword_spaces: "1"
     })
     const { data: {blocks} } = await Worker.recognize(url_img, undefined, this.output);
-    console.log(blocks);
     Worker.terminate();
     if(blocks !== null){
       const parsed_txt = this.getTextShared(blocks)
-      console.log("parsed text",parsed_txt);
-      
       const tab_content = this.getTabContentImg(parsed_txt);
       return tab_content.then((parsed_pdf) => {
           this.shared_service.colonne_factures_actual = [{
@@ -123,7 +100,8 @@ export class FactureImgService {
   }
   getTabContentImg(items_img:TextShared[]){
     this.getColumnNameImg(items_img);
-    const parse_line_promise = this.shared_service.getLineTable(items_img, this.colonne_factures_pivot).then((lines: TextShared[][]) => {
+    const parse_line_promise = this.shared_service.getLineTable(items_img, this.colonne_factures_pivot, 1).then((lines: TextShared[][]) => {
+      
       return this.shared_service.rangeValInCol(lines, this.colonne_factures_pivot).then((parsed_pdf) => {
         return parsed_pdf;
       });
@@ -149,38 +127,38 @@ export class FactureImgService {
         this.colonne_factures_pivot.name = description;
       }
       else {
-        throw "le tableau doit contenir au moin une colonne pour le nom des produits";
+        throw "le tableau doit contenir au moins une colonne pour le nom des produits";
       }
     }
     const price = items_img.find((item) => {
       const is_price = this.testSimilarityColArray(this.colonne_factures.price, item.text.toLowerCase().split(" ").join(""));
-      const y_max_coord =  item.coordinates[1] < (this.colonne_factures_pivot.name.coordinates[1] + 20);
-      const y_min_coord = (this.colonne_factures_pivot.name.coordinates[1] - 20) < item.coordinates[1];
+      const y_max_coord =  item.coordinates[1] < (this.colonne_factures_pivot.name.coordinates[1] + configue_facture_parser.error_row_dist);
+      const y_min_coord = (this.colonne_factures_pivot.name.coordinates[1] - configue_facture_parser.error_row_dist) < item.coordinates[1];
       return (is_price && y_max_coord && y_min_coord)
     });
     if (price !== undefined) {
       this.colonne_factures_pivot.price = price;
     }
     else {
-      throw "le tableau doit contenir au moin une colonne pour le prix des produits";
+      throw "le tableau doit contenir au moins une colonne pour le prix des produits";
     }
     const quantitee = items_img.find((item) => {
       const is_quant = this.testSimilarityColArray(this.colonne_factures.quantity, item.text.toLowerCase().split(" ").join(""));
-      const y_max_coord = item.coordinates[1] < (this.colonne_factures_pivot.name.coordinates[1] + 20);
-      const y_min_coord = (this.colonne_factures_pivot.name.coordinates[1] - 20) < item.coordinates[1];
+      const y_max_coord = item.coordinates[1] < (this.colonne_factures_pivot.name.coordinates[1] + configue_facture_parser.error_row_dist);
+      const y_min_coord = (this.colonne_factures_pivot.name.coordinates[1] - configue_facture_parser.error_row_dist) < item.coordinates[1];
       return (is_quant && y_max_coord && y_min_coord)
     });
     if (quantitee !== undefined) {
       this.colonne_factures_pivot.quantity = quantitee;
     }
     else {
-      throw "le tableau doit contenir au moin une colonne pour la quantitée des produits";
+      throw "le tableau doit contenir au moins une colonne pour la quantitée des produits";
     }
     // ============tva===================
     const tva = items_img.find((item) => {
       const is_tva =  this.testSimilarityColArray(this.colonne_factures.tva, item.text.toLowerCase().split(" ").join(""));
-      const y_max_coord = item.coordinates[1] < (this.colonne_factures_pivot.name.coordinates[1] + 20);
-      const y_min_coord = (this.colonne_factures_pivot.name.coordinates[1] - 20) < item.coordinates[1];
+      const y_max_coord = item.coordinates[1] < (this.colonne_factures_pivot.name.coordinates[1] + configue_facture_parser.error_row_dist);
+      const y_min_coord = (this.colonne_factures_pivot.name.coordinates[1] - configue_facture_parser.error_row_dist) < item.coordinates[1];
       return (is_tva && y_max_coord && y_min_coord)
     })
     if (tva !== undefined) {
@@ -202,7 +180,7 @@ export class FactureImgService {
                 .map((is_same) => is_same ? 1 : 0 as number)
                 .reduce((sum, sum_next) => sum + sum_next);
       const is_same_pourcent = (_is_same_coeff/word_array.length)*100;
-      if(is_same_pourcent > 50){
+      if(is_same_pourcent > configue_facture_parser.same_pourcent){
         return true;
       }
       else{
@@ -216,7 +194,7 @@ export class FactureImgService {
   // et m1 le mot récupéré depuis l'OCR ont fait m0 est m1 si et seulement si
   // le taux de similarité  est vérifié entre m0 et m1 est > 50%
   // le nombre de caractère entre les deux mots est identiques
-  // Attention : en utilisant cette technique il ne faut jamais avoir comme nonm de colonne 
+  // Attention : en utilisant cette technique il ne faut jamais avoir comme nom de colonne 
   // deux nom avec une similaritée > 50% et de même taille  par exemple les mots quelle et quette seront confondus
   testSimilarityColArray(words:string[], _word:string){
     return words.map((character) => this.testSimilarityCol(character, _word))

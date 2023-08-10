@@ -151,6 +151,14 @@ h2{
 .mat-list-item{
     margin-bottom: 10px;
 }
+#slide-input{
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-start;
+}
+#mat-slide {
+    margin-left: 70px;
+}
 @media screen and (min-width: 876px) and (max-width: 946px) { 
     #all-buttons{
         display: flex;

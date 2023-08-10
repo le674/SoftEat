@@ -11,11 +11,12 @@ import { AppDashboardComponent } from './app.dashboard/app.dashboard.component';
 import { AppMainDashboardComponent } from './app.dashboard/app.main-dashboard/app.main-dashboard.component';
 import { ProfilModule } from '../profil/profil.module';
 import {MatMenuModule} from '@angular/material/menu';
-import {MatBadgeModule} from '@angular/material/badge'; 
+import {MatBadgeModule} from '@angular/material/badge';
 import { RecettesModule } from '../recettes/recettes.module';
 import { AppAnalyseModule } from '../analyse/app.module';
 import { AlertesService } from '../../../app/services/alertes/alertes.service';
 import { ClientsModule } from '../clients/clients.module';
+import { AppMessagerieModule } from '../messagerie/app.module';
 
 
 
@@ -23,9 +24,9 @@ import { ClientsModule } from '../clients/clients.module';
   declarations: [
     AppDashboardComponent,
     AppMainDashboardComponent,
-    
+
   ],
-  imports: [ 
+  imports: [
     AppRoutingModule,
     CommonModule,
     ClientsModule,
@@ -39,7 +40,8 @@ import { ClientsModule } from '../clients/clients.module';
     ProfilModule,
     RecettesModule,
     MatMenuModule,
-    MatBadgeModule
+    MatBadgeModule,
+    AppMessagerieModule
   ],
   exports: [
     AppDashboardComponent

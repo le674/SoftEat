@@ -1,70 +1,87 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
-import { Cconsommable, TIngredientBase } from '../../../../app/interfaces/ingredient';
-import { Cpreparation } from '../../../../app/interfaces/preparation';
+import { CIngredient, TIngredientBase } from '../../../../app/interfaces/ingredient';
+import { Cpreparation, CpreparationBase } from '../../../../app/interfaces/preparation';
 import { ConsommableInteractionService } from '../../../../app/services/menus/consommable-interaction.service';
 import { IngredientsInteractionService } from '../../../../app/services/menus/ingredients-interaction.service';
 import { AddPreparationsComponent } from './add.preparations/add.preparations.component';
 import { DisplayPreparationsComponent } from './display.preparation/display.preparations/display.preparations.component';
+import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
+import { Unsubscribe } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
+import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
 
 @Component({
   selector: 'app-preparations',
   templateUrl: './app.preparations.component.html',
   styleUrls: ['./app.preparations.component.css']
 })
-export class AppPreparationsComponent implements OnInit {
+export class AppPreparationsComponent implements OnInit, OnDestroy{
+  @Input() recette:string | null;
   private url: UrlTree;
   private router: Router;
-  public preparations: Array<Cpreparation>;
-  private prepa_names: Array<string | null>;
   private prop:string;
   private restaurant:string;
-  private full_ing_lst: Array<TIngredientBase>;
-  private full_conso_lst: Array<Cconsommable>;
+  private req_ingredients!:Unsubscribe;
+  private req_preparations!:Unsubscribe;
+  private req_consommables!:Unsubscribe;
+  private ingredients_sub!:Subscription;
+  private preparations_sub!:Subscription;
+  private consommables_sub!:Subscription;
+  private ingredients:Array<CIngredient>;
+  private consommables:Array<Cconsommable>;
+  private prepa_names: Array<string | null>;
+  public preparations: Array<Cpreparation>;
+  public write: boolean;
 
   constructor(public dialog: MatDialog, private ingredient_service: IngredientsInteractionService,
   private consommable_service: ConsommableInteractionService,
-  router: Router, private _snackBar: MatSnackBar) { 
+  router: Router, private _snackBar: MatSnackBar, private preparation_service:PreparationInteractionService) { 
     this.preparations = [];
-    this.full_ing_lst = [];
-    this.full_conso_lst = [];
     this.prepa_names = [];
     this.router = router;
     this.prop = "";
     this.restaurant = "";
+    this.ingredients = [];
+    this.consommables = [];
     this.url = this.router.parseUrl(this.router.url);
+    this.recette = null;
+    this.write = false;
   }
-
+  ngOnDestroy(): void {
+    this.req_ingredients();
+    this.req_consommables();
+    this.req_preparations();
+    this.ingredients_sub.unsubscribe();
+    this.consommables_sub.unsubscribe();
+    this.preparations_sub.unsubscribe();
+  }
   ngOnInit(): void {
-    let user_info = this.url.queryParams;
-    this.prop = user_info["prop"];
-    this.restaurant = user_info["restaurant"];
-
-    this.ingredient_service.getIngredientsBrFromRestaurantsPROM(this.prop, this.restaurant).then((ingredients) => {
-      this.full_ing_lst = ingredients.map((ingredient) => ingredient.convertToBase());
-    });
-
-    this.ingredient_service.getIngredientsPrepFromRestaurantsPROMForMenu(this.prop,this.restaurant).then((preparations) => {
-      let nom_prep = "";
-      for (let index = 0; index < preparations.length; index++) {
-        if(preparations[index].nom !== null){
-         nom_prep = preparations[index].nom?.split("_").join(" ") as string;
-         preparations[index].nom = nom_prep;
-         this.preparations.push(preparations[index]);
-        }
+    if(this.recette !== null){
+      if(this.recette.includes("w")) this.write = true;
+      if(this.recette.includes("r")){
+        let user_info = this.url.queryParams;
+        this.prop = user_info["prop"];
+        this.restaurant = user_info["restaurant"];
+        this.req_ingredients = this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
+        this.req_preparations = this.ingredient_service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
+        this.req_consommables = this.consommable_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
+        this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:Array<CIngredient>) => {
+          this.ingredients = ingredients;
+          this.preparations_sub = this.ingredient_service.getPrepraparationsFromRestaurants().subscribe((preparations:Array<Cpreparation>) => {
+            this.preparations = preparations;
+            this.consommables_sub = this.consommable_service.getConsommablesFromRestaurants().subscribe((consommables:Array<Cconsommable>) => {
+              this.consommables = consommables;
+            });
+          });
+        });
       }
-    });
-
-    this.consommable_service.getConsommablesFromRestaurants(this.prop, this.restaurant).then((consommables) => {
-      this.full_conso_lst = consommables;
-    })
-
+    }
   }
-
   addPreparation():void {
-   this.prepa_names =  this.preparations.map(prepa => prepa.nom); 
+   this.prepa_names =  this.preparations.map(prepa => prepa.name); 
    this.dialog.open(AddPreparationsComponent, {
       height: `${window.innerHeight}px`,
       width: `900px`,
@@ -72,14 +89,9 @@ export class AppPreparationsComponent implements OnInit {
         prop: this.prop,
         restaurant: this.restaurant,
         names: this.prepa_names,
-        name:"",
-        full_ingredients: this.full_ing_lst,
-        full_consommables: this.full_conso_lst,
-        ingredients: [],
-        consommables: [],
-        etapes: [],
-        unity: "",
-        quantity_after_prep: 0,
+        _ingredients: this.ingredients,
+        _consommables: this.consommables,
+        preparation: null,
         modification: false
       }
     });
@@ -93,14 +105,9 @@ export class AppPreparationsComponent implements OnInit {
         prop: this.prop,
         restaurant: this.restaurant,
         names: this.prepa_names,   
-        name:preparation.nom,
-        full_ingredients: this.full_ing_lst,
-        full_consommables: this.full_conso_lst,
-        ingredients:preparation.base_ing,
-        consommables: preparation.consommables,
-        etapes: preparation.etapes,
-        unity: preparation.unity,
-        quantity_after_prep: preparation.quantity_after_prep,
+        _ingredients: this.ingredients,
+        _consommables: this.consommables,
+        preparation:preparation,
         modification: true
       } 
     })
@@ -113,26 +120,20 @@ export class AppPreparationsComponent implements OnInit {
       data: {
         prop: this.prop,
         restaurant: this.restaurant,
-        name:preparation.nom,
-        ingredients: preparation.base_ing,
-        consommables: preparation.consommables,
-        etapes: preparation.etapes,
-        unity: preparation.unity,
-        quantity_after_prep: preparation.quantity_after_prep,
-        val_bouch: preparation.val_bouch,
-        temps: preparation.temps,
-        prime_cost: preparation.prime_cost
+        _ingredients: this.ingredients,
+        _consommables: this.consommables, 
+        preparation: preparation,
       }
     })
   }
   suppressPreparation(preparation: Cpreparation):void{
-    if(preparation.nom !== null){
-      this.ingredient_service.removeIngInBdd(preparation.nom.split(" ").join('_'), this.prop, this.restaurant, true).catch((e) => {
+    if(preparation.name !== null){
+      this.preparation_service.removePrepaInBdd(preparation,this.prop, this.restaurant).catch((e) => {
         console.log(e);
-        this._snackBar.open(`nous ne somme pas parvenu à supprimer le ${preparation.nom}`)
+        this._snackBar.open("Impossible de supprimer la préparation veuillez contacter softeat", "fermer");
       }).finally(() => {
-        this._snackBar.open(`la préparation ${preparation.nom} vient d'être suprrimé de la base de donnée`, "fermer")
-      });
-    }
+        this._snackBar.open("Nous venons de supprimer la préparation", "fermer")
+      })
+    } 
   }
 }

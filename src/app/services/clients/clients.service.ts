@@ -1,61 +1,73 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { Database, DatabaseReference, connectDatabaseEmulator, get, getDatabase, ref, remove, update } from 'firebase/database';
 import { Client } from '../../../app/interfaces/client';
-import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../../environments/variables';
 import { Mplat } from 'src/app/interfaces/plat';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { catchError, throwError } from 'rxjs';
-
+import { Subject, catchError, throwError } from 'rxjs';
+import { DocumentSnapshot, Firestore, SnapshotOptions, Unsubscribe, collection, deleteDoc, doc, getFirestore, onSnapshot, updateDoc } from 'firebase/firestore';
 @Injectable({
   providedIn: 'root'
 })
 export class ClientsService {
-  private db: Database;
-  private clients: Array<Client>;
+  private _clients: Array<Client>;
+  private clients = new Subject<Array<Client>>();
   private host:string;
+  private firestore: Firestore;
+  private client_converter: any;
+  private sub_clients!: Unsubscribe;
   constructor(private ofApp: FirebaseApp, private http: HttpClient){
-    this.db = getDatabase(ofApp);
-    if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-      try {
-        connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
-      } catch (error) {
-        console.log(error);
-      }  
-    }
-    this.clients = [];
+    this.firestore = getFirestore(ofApp);
+    this._clients = [];
+    this.client_converter = {
+      toFirestore: (menu: Client) => {
+        return menu;
+      },
+      fromFirestore: (snapshot: DocumentSnapshot<Client>, options: SnapshotOptions) => {
+        const data = snapshot.data(options);
+        if (data !== undefined) {
+          let client = new Client();
+          client.setData(data)
+          return client;
+        }
+        else {
+          return null;
+        }
+      }
+    };
     // hôte sur lequel on réalise la requête d'envoie de SMS
     this.host = "https://us-central1-psofteat-65478545498421319564.cloudfunctions.net/sendMessage";
   }
 /**
- * Récupération d'un client depuis la base de donnée
+ * Récupération des clients depuis la base de donnée
  * @param prop propriétaire qui possèdes les fiches clients
  * @param restaurant restaurant ayant des fiches clients
  * @returns void
  */
-async getClients(prop:string, restaurant:string){
-    let ref_db: DatabaseReference;
-    const path = `clients_${prop}_${restaurant}/${prop}/${restaurant}/`;
-    ref_db = ref(this.db, path);
-    await get(ref_db).then((bdd_clients) => {
-      bdd_clients.forEach((bdd_client) => {
-        const client = new Client();
-        if(bdd_client.key !== null){
-          client.id = bdd_client.key;
-          client.adress = bdd_client.child("address").val();
-          client.promotion = bdd_client.child("promotion").val();
-          client.email = bdd_client.child("email").val();
-          client.number = bdd_client.child("number").val();
-          client.name = bdd_client.child("name").val();
-          client.surname = bdd_client.child("surname").val();
-          client.is_contacted = bdd_client.child("is_contacted").val();
-          client.waste_alert = bdd_client.child("wast_prev").val();
-          this.clients.push(client)
-        }
-      })
+ public getClientsBDD(prop:string , restaurant:string){
+  const clients_ref =
+  collection(
+    doc(
+      collection(
+        doc(
+          collection(
+            this.firestore, "proprietaires"
+          ), prop
+        ), "restaurants"
+      ), restaurant
+    ), "clients"
+  ).withConverter(this.client_converter);
+  this.sub_clients = onSnapshot(clients_ref, (clients) => {
+    this._clients = [];
+    clients.forEach((client) => {
+      if (client.exists()) {
+        this._clients.push(client.data() as Client)
+      }
     })
-    return this.clients;
-  }
+    this.clients.next(this._clients);
+  })
+  return this.sub_clients;
+ }
+
   /**
    * Suppression d'un client de la base de donnée
    * @param prop propriétaire qui possèdes les fiches clients
@@ -63,11 +75,22 @@ async getClients(prop:string, restaurant:string){
    * @param client client que l'on supprime de la base de donnée
    * @returns void
    */
-  async suppClient(prop:string, restaurant:string, client: Client) {
-    let ref_db: DatabaseReference;
-    const path = `clients_${prop}_${restaurant}/${prop}/${restaurant}/${client.id}`;
-    ref_db = ref(this.db, path);
-    return await remove(ref_db);
+  async suppClient(prop: string,  restaurant:string,  client_id: string) {
+    const clients_ref =
+    doc(
+      collection(
+        doc(
+          collection(
+          doc(
+            collection(
+                this.firestore, "proprietaires"
+              ),prop
+            ),"restaurants"
+          ),restaurant
+        ),"clients"
+      ),client_id
+    ).withConverter(this.client_converter);
+    await deleteDoc(clients_ref);
   }
   /**
    * Ajout d'un client à la bdd 
@@ -76,13 +99,22 @@ async getClients(prop:string, restaurant:string){
    * @param client client que l'on ajoute à la base de donnée
    * @returns void
    */
-  async setClient(prop:string,restaurant:string,client: Client) {
-    let ref_db: DatabaseReference;
-    const path = `clients_${prop}_${restaurant}/${prop}/${restaurant}`;
-    ref_db = ref(this.db,path);
-    return await update(ref_db, {
-        [`${client.id}`]:client
-    })
+  async setClient(prop: string,  restaurant:string, client: Client) {
+    const clients_ref =
+    doc(
+      collection(
+        doc(
+          collection(
+          doc(
+            collection(
+                this.firestore, "proprietaires"
+              ),prop
+            ),"restaurants"
+          ),restaurant
+        ),"clients"
+      ),client.id
+    ).withConverter(this.client_converter);
+    await updateDoc(clients_ref, client.getData());
   }
   /**
    * Envoie de sms contenant des informations sur la campagne de destockage 
@@ -132,5 +164,9 @@ async getClients(prop:string, restaurant:string){
     }
     // Return an observable with a user-facing error message.
     return throwError(() => new Error('Something bad happened; please try again later.'));
+  }
+
+  getClients() {
+    return this.clients.asObservable();
   }
 }
