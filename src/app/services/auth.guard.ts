@@ -16,7 +16,7 @@ if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
 
 @Injectable({
   providedIn: 'root'
-}) 
+})
 
 export class AuthGuard implements CanActivate {
   

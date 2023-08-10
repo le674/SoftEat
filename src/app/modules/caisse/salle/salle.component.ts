@@ -4,19 +4,14 @@ interface Table {
   number: number;
   seats: number;
 }
-let tables: {numTable: number, }[]=[];
 
 @Component({
   selector: 'app-salle',
   templateUrl: './salle.component.html',
   styleUrls: ['./salle.component.css']
 })
-
 export class SalleComponent {
-  constructor() { 
-    
-
-  }
+  constructor() { }
 
   tableOccupied(tableNumber: number): boolean {
     // Ajoutez ici la logique pour vérifier si la table est occupée ou non
