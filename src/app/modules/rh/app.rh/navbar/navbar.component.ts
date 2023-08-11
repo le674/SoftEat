@@ -78,18 +78,18 @@ export class NavbarComponent implements OnInit {
       const index = this.select.indexOf(liste.nom);
       const indexMail = this.selectMail.indexOf(liste.mail);
       if (index !== -1 && indexMail !== -1) {
-     /*    this.select.splice(index, 1);
+        this.select.splice(index, 1);
         this.selectMail.splice(indexMail, 1);
         this.new_users = this.selectMail.join(',');
         console.log(this.new_users);
-        this.calendarService.changeUsers(this.new_users); */
+        this.calendarService.changeUsers(this.new_users); 
       }
     } else {
-    /*   this.select.push(liste.nom);
+      this.select.push(liste.nom);
       this.selectMail.push(liste.mail);
       this.new_users = this.selectMail.join(',');
       console.log(this.new_users);
-      this.calendarService.changeUsers(this.new_users); */
+      this.calendarService.changeUsers(this.new_users); 
     }
 
     liste.selectionne = !liste.selectionne;
@@ -129,7 +129,7 @@ export class NavbarComponent implements OnInit {
 
   // Ajouter ou supprimer tous les serveurs
   addAllServeurs() {
-  /*   this.addAllItems(
+  this.addAllItems(
       this.Serveurs,
       this.selectAllServeurs,
       this.select,
@@ -139,12 +139,12 @@ export class NavbarComponent implements OnInit {
     this.selectAllServeurs = !this.selectAllServeurs;
     this.new_users = this.selectMail.join(',');
     console.log(this.new_users);
-    this.calendarService.changeUsers(this.new_users); */
+    this.calendarService.changeUsers(this.new_users); 
   }
 
   // Ajouter ou supprimer tous les autres employés
   addAllAutres() {
-/*     this.addAllItems(
+     this.addAllItems(
       this.Autres,
       this.selectAllAutres,
       this.select,
@@ -154,12 +154,12 @@ export class NavbarComponent implements OnInit {
     this.selectAllAutres = !this.selectAllAutres;
     this.new_users = this.selectMail.join(',');
     console.log(this.new_users);
-    this.calendarService.changeUsers(this.new_users); */
+    this.calendarService.changeUsers(this.new_users); 
   }
 
   // Ajouter ou supprimer toutes les ressources humaines
   addAllRh() {
-/*     this.addAllItems(
+    this.addAllItems(
       this.Rh,
       this.selectAllRh,
       this.select,
@@ -169,12 +169,12 @@ export class NavbarComponent implements OnInit {
     this.selectAllRh = !this.selectAllRh;
     this.new_users = this.selectMail.join(',');
     console.log(this.new_users);
-    this.calendarService.changeUsers(this.new_users); */
+    this.calendarService.changeUsers(this.new_users); 
   }
 
   // Ajouter ou supprimer tous les gérants
   addAllGerants() {
- /*    this.addAllItems(
+    this.addAllItems(
       this.Gerants,
       this.selectAllGerants,
       this.select,
@@ -184,7 +184,7 @@ export class NavbarComponent implements OnInit {
     this.selectAllGerants = !this.selectAllGerants;
     this.new_users = this.selectMail.join(',');
     console.log(this.new_users);
-    this.calendarService.changeUsers(this.new_users); */
+    this.calendarService.changeUsers(this.new_users); 
   }
 
   // Récupérer les données utilisateur depuis la base de données

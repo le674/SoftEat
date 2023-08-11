@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-/*
 import { DayPilot } from 'daypilot-pro-angular';
 import {
   FIREBASE_DATABASE_EMULATOR_HOST,
@@ -20,7 +19,7 @@ import {
   equalTo,
 } from 'firebase/database';
 import { FirebaseApp, initializeApp } from '@angular/fire/app';
-import { BehaviorSubject } from 'rxjs'; */
+import { BehaviorSubject } from 'rxjs'; 
 
 interface Event {
   start: string;
@@ -33,7 +32,7 @@ interface Event {
 
 @Injectable()
 export class CalendarService {
-  /* events: DayPilot.EventData[] = [];
+  events: DayPilot.EventData[] = [];
   private firebaseConfig = environment.firebase;
   private firebaseApp = initializeApp(this.firebaseConfig);
   private db = getDatabase(this.firebaseApp);
@@ -194,5 +193,5 @@ export class CalendarService {
   changeUsers(newUsers: string) {
     //Change la liste d'utilisateurs sélectionnés dynamiquement
     this.users.next(newUsers);
-  } */
+  } 
 }

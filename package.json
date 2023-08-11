@@ -29,6 +29,7 @@
     "@popperjs/core": "^2.11.7",
     "@types/plotly.js": "^2.12.18",
     "bootstrap": "^5.2.3",
+    "daypilot-pro-angular": "https://npm.daypilot.org/daypilot-pro-angular/trial/2023.2.5592.tar.gz",
     "firebase": "^9.22.0",
     "firebaseui": "^6.0.2",
     "nodemailer": "^6.9.2",
