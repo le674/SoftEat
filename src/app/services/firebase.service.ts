@@ -10,6 +10,8 @@ import { CalculService } from './menus/menu.calcul/menu.calcul.ingredients/calcu
 import { InteractionBddFirestore } from '../interfaces/interaction_bdd';
 import { Subject } from 'rxjs';
 
+type Class<T> = new (...args:any[]) => T;
+
 @Injectable({
     providedIn: 'root'
 })
@@ -32,7 +34,7 @@ export class FirebaseService {
      * @param class_instance instance de la classe de l'objet à récupérer dans la base de donnée
      * @returns 
     */
-    getFromFirestoreBDD(paths:Array<string> | string, class_instance:InteractionBddFirestore){
+    getFromFirestoreBDD(paths:Array<string> | string, class_instance:Class<InteractionBddFirestore>){
         let _paths:Array<string> = [];
         if(typeof paths === "string"){
             _paths = paths.split("/");
@@ -47,7 +49,14 @@ export class FirebaseService {
             fromFirestore: (snapshot: DocumentSnapshot<InteractionBddFirestore>, options: SnapshotOptions) => {
                 const data = snapshot.data(options);
                 if (data !== undefined) {
-                    let instance = class_instance.getInstance();
+                    let instance:InteractionBddFirestore;
+                    if(class_instance.name === "CIngredient"){
+                        instance =  (new class_instance(this.service)).getInstance();
+                    }
+                    else{
+                        instance =  (new class_instance()).getInstance();
+                    }
+                    console.log(class_instance.name);
                     instance.setData(data);
                     return instance;
                 }

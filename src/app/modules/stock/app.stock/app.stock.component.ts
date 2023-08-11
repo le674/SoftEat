@@ -74,8 +74,8 @@ export class AppStockComponent implements OnInit, OnDestroy{
         let user_info:any = this.url.queryParams;
         this.prop = user_info.prop;
         this.restaurant = user_info.restaurant;
-        
-        this.req_ingredients_brt = this.firebase_service.getFromFirestoreBDD(["proprietaires", this.prop, "restaurants", this.restaurant, "ingredients"], new CIngredient(this.calc_service));
+
+        this.req_ingredients_brt = this.firebase_service.getFromFirestoreBDD(["proprietaires", this.prop, "restaurants", this.restaurant, "ingredients"], CIngredient);
         const obs_ing = this.firebase_service.getFromFirestore()
         this.req_merge_obs = obs_ing.subscribe((ingredients) => {
           this.ingredients_displayed_br = [];
