@@ -167,8 +167,8 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     const unity = this.add_ing_section.value["unity"]?.split(' ')[0];
 
     /* On crée un ingrédient à partir des données récupéré depuis le formulaire puis on l'ajoute à la bdd */
-    if (name !== undefined) {
-      new_ing.setNom(name);
+    if (name !== undefined && name !== null) {
+      new_ing.name = name;
     }
 
     if ((this.add_ing_section.value["name_tva"] !== undefined) && (this.add_ing_section.value["name_tva"] !== null)) {

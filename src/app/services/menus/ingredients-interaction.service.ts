@@ -30,55 +30,9 @@ export class IngredientsInteractionService {
 
   constructor(private ofApp: FirebaseApp, private service: CalculService) {
     this.firestore = getFirestore(ofApp);
-    this.ingredient_converter = {
-      toFirestore: (ingredient:CIngredient) => {
-        return ingredient;
-      },
-      fromFirestore: (snapshot:DocumentSnapshot<CIngredient>, options:SnapshotOptions) => {
-        const data = snapshot.data(options);
-        let ingredient = new CIngredient(this.service);
-        ingredient.setData(data);
-        if(data !== undefined){
-          return ingredient;
-        }
-        else{
-          return null;
-        }
-      } 
-    }
-    this.base_ingredient_converter = {
-      toFirestore: (ingredient:TIngredientBase) => {
-        return ingredient;
-      },
-      fromFirestore: (snapshot:DocumentSnapshot<TIngredientBase>, options:SnapshotOptions) => {
-        const data = snapshot.data(options);
-        if(data !== undefined){
-          let ingredient = new TIngredientBase(data.name, data.quantity, data.unity);
-          ingredient.id = data.id;
-          ingredient.added_price = data.added_price;
-          return ingredient;
-        }
-        else{
-          return null;
-        }
-      } 
-    }
-    this.preparation_converter = {
-      toFirestore: (preparation:Cpreparation) => {
-        return preparation;
-      },
-      fromFirestore: (snapshot:DocumentSnapshot<Cpreparation>, options:SnapshotOptions) => {
-        const data = snapshot.data(options);
-        if(data !== undefined){
-          let preparation = new Cpreparation(this.service);
-          preparation.setData(data)
-          return preparation;
-        }
-        else{
-          return null;
-        }
-      } 
-    }
+    this.ingredient_converter = CIngredient.getConverter(this.service);
+    this.base_ingredient_converter = TIngredientBase.getConverter();
+    this.preparation_converter = Cpreparation.getConverter(this.service);
     this._ingredients = [];
     this._preparations = [];
     this.ingredients_minimal = [];

@@ -12,6 +12,7 @@ import { CalculService } from '../../../../app/services/menus/menu.calcul/menu.c
 import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.component';
 import { CommonService } from '../../../../app/services/common/common.service';
 import { RowIngredient } from 'src/app/interfaces/inventaire';
+import { FirebaseService } from 'src/app/services/firebase.service';
 
 @Component({
   selector: 'app-stock',
@@ -44,7 +45,8 @@ export class AppStockComponent implements OnInit, OnDestroy{
 
 
   constructor(private service: IngredientsInteractionService, private calc_service: CalculService,
-    router: Router, public dialog: MatDialog, private _snackBar: MatSnackBar, public mobile_service:CommonService) {
+    router: Router, public dialog: MatDialog, private _snackBar: MatSnackBar, public mobile_service:CommonService,
+    private firebase_service:FirebaseService) {
     this.page_number = 1;
     this.prop = "";
     this.restaurant = "";
@@ -72,13 +74,14 @@ export class AppStockComponent implements OnInit, OnDestroy{
         let user_info:any = this.url.queryParams;
         this.prop = user_info.prop;
         this.restaurant = user_info.restaurant;
-        this.req_ingredients_brt = this.service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
-        const obs_ing = this.service.getIngredientsFromRestaurants()
+        
+        this.req_ingredients_brt = this.firebase_service.getFromFirestoreBDD(["proprietaires", this.prop, "restaurants", this.restaurant, "ingredients"], new CIngredient(this.calc_service));
+        const obs_ing = this.firebase_service.getFromFirestore()
         this.req_merge_obs = obs_ing.subscribe((ingredients) => {
           this.ingredients_displayed_br = [];
           this.dataSource = new MatTableDataSource(this.ingredients_displayed_br);
-          this.ingredient_table = ingredients;
-          for (let ingredient of ingredients) {
+          this.ingredient_table = ingredients as Array<CIngredient>;
+          for (let ingredient of this.ingredient_table) {
             // on vérifie si le nombre d'ingrédient présent est inférieur à la marge si c'est le cas on lève une alerte
             if((ingredient.taux_tva === 0) || (ingredient.taux_tva === null)){
               ingredient.getCostTtcFromCat();

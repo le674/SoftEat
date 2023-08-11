@@ -1,7 +1,9 @@
+import { DocumentSnapshot, SnapshotOptions } from "@angular/fire/firestore";
 import { CalculService } from "../services/menus/menu.calcul/menu.calcul.ingredients/calcul.service";
 import { TConsoBase } from "./consommable";
 import { Etape } from "./etape";
 import { TIngredientBase } from "./ingredient";
+import { InteractionBddFirestore } from "./interaction_bdd";
 
 
 export interface AfterPreparation {
@@ -9,36 +11,8 @@ export interface AfterPreparation {
     "unity": string
 }
 
-export interface Preparation {
-    "name": string | null;
-    "categorie_restaurant": string;
-    "ingredients": Array<TIngredientBase> | null;
-    "consommables": Array<TConsoBase> | null;
-    "cost": number;
-    "quantity": number;
-    "quantity_unity": number;
-    "total_quantity": number;
-    "unity": string;
-    "marge": number;
-    "vrac": string;
-    "dlc": Date;
-    "date_reception": Date;
-    "id": string;
-    "proprietary_id": string;
 
-    getNom(): string | null;
-    setNom(nom: string): void;
-    getPortion(): number;
-    setPortions(portion: number): void;
-    setIngredients(ingredients: Array<TIngredientBase> | null): void;
-    getIngredients(): Array<TIngredientBase> | null;
-    setConsommbale(consommables: Array<TConsoBase> | null): void;
-    getConsommbale(): Array<TConsoBase> | null;
-    setData(data:Cpreparation):void;
-    getData(id:string | null, prop:string):any;
-}
-
-export class Cpreparation implements Preparation {
+export class Cpreparation implements InteractionBddFirestore {
     "name": string;
     "categorie_restaurant": string;
     "etapes": Array<Etape> | null;
@@ -65,7 +39,7 @@ export class Cpreparation implements Preparation {
     "id": string;
     "proprietary_id": string;
 
-    constructor(private service: CalculService) {
+    constructor(public service: CalculService) {
         this.name = "";
         this.categorie_restaurant = "";
         this.etapes = null;
@@ -92,9 +66,15 @@ export class Cpreparation implements Preparation {
         this.id = "";
         this.proprietary_id = "";
     }
-
+    /**
+     * permet de retourner une isntance de Cpreparation
+     * @returns une instance Cpreparation
+    */
+    getInstance(){
+        return new Cpreparation(this.service) as Cpreparation;
+    }
     // permet d'initialiser certain attributs pour l'objet préparation lorsque celui-ci a des attributs null
-    setDefautPrep() {
+    public setDefautPrep() {
         this.categorie_restaurant = (this.categorie_restaurant === null) ? "" : this.categorie_restaurant;
         this.cost = (this.cost === null) ? 0 : this.cost;
         this.date_reception = (this.date_reception === null) ? new Date() : this.date_reception;
@@ -102,35 +82,35 @@ export class Cpreparation implements Preparation {
         this.unity = (this.unity === null) ? "" : this.unity;
         this.vrac = (this.vrac === null) ? 'non' : this.vrac;
     }
-    getNom(): string | null {
+    public getNom(): string | null {
         return this.name
     }
-    setNom(name: string): void {
+    public setNom(name: string): void {
         this.name = name
     }
-    getPortion(): number {
+    public getPortion(): number {
         return this.portions
     }
-    setPortions(portion: number): void {
+    public setPortions(portion: number): void {
         this.portions = portion
     }
-    setIngredients(ingredients: TIngredientBase[]): void {
+    public setIngredients(ingredients: TIngredientBase[]): void {
         this.ingredients = ingredients
     }
-    getIngredients(): TIngredientBase[] | null {
+    public getIngredients(): TIngredientBase[] | null {
         return this.ingredients
     }
-    setConsommbale(consommables: TConsoBase[]): void {
+    public setConsommbale(consommables: TConsoBase[]): void {
         this.consommables = consommables;
     }
-    getConsommbale(): TConsoBase[] | null {
+    public getConsommbale(): TConsoBase[] | null {
         return this.consommables
     }
     /**
      * Cette fonction permet dedupliquer une prépartion
      * @param data préparation à ajouter dans la base de donnée
      */
-    setData(data: Cpreparation):void {
+    public setData(data: Cpreparation):void {
         let ingredients = new Array<TIngredientBase>();
         let consommables = new Array<TConsoBase>();
         if (data.ingredients !== null && data.ingredients !== undefined) {
@@ -285,7 +265,7 @@ export class Cpreparation implements Preparation {
      * @param prop identifiant du propriétaire 
      * @returns {any} json de l'objet Cpreparation
     */
-    getData(id: string | null, prop: string):any {
+    public getData(id: string | null, prop: string):any {
         let ingredients:null | Array<Object> = null;
         let consommables:null | Array<Object> = null;
         let etapes:null | Array<Object> = null;
@@ -336,12 +316,35 @@ export class Cpreparation implements Preparation {
      * Convertion de la préparation en préparation de base
      * @returns {CpreparationBase}
      */
-    convertToBase(): CpreparationBase {
+    public convertToBase(): CpreparationBase {
         let preparation = new CpreparationBase();
         preparation.portions = this.portions;
         preparation.name = this.name;
         preparation.id = null;
         return preparation;
+    }
+
+    /**
+     * Cette fonction permet de retourner un objet  qui permet l'intéraction entre la base de donnée et l'objet  
+     * @returns {any} convertisseur de la preparation pour l'ajout en base 
+     */
+    public static getConverter(service:CalculService):any{
+        return {
+            toFirestore: (preparation:Cpreparation) => {
+              return preparation;
+            },
+            fromFirestore: (snapshot:DocumentSnapshot<Cpreparation>, options:SnapshotOptions) => {
+              const data = snapshot.data(options);
+              if(data !== undefined){
+                let preparation = new Cpreparation(service);
+                preparation.setData(data)
+                return preparation;
+              }
+              else{
+                return null;
+              }
+            } 
+          }
     }
 }
 
