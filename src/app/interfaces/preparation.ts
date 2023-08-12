@@ -82,29 +82,13 @@ export class Cpreparation implements InteractionBddFirestore {
         this.unity = (this.unity === null) ? "" : this.unity;
         this.vrac = (this.vrac === null) ? 'non' : this.vrac;
     }
-    public getNom(): string | null {
-        return this.name
-    }
-    public setNom(name: string): void {
-        this.name = name
-    }
-    public getPortion(): number {
-        return this.portions
-    }
-    public setPortions(portion: number): void {
-        this.portions = portion
-    }
-    public setIngredients(ingredients: TIngredientBase[]): void {
-        this.ingredients = ingredients
-    }
-    public getIngredients(): TIngredientBase[] | null {
-        return this.ingredients
-    }
-    public setConsommbale(consommables: TConsoBase[]): void {
-        this.consommables = consommables;
-    }
-    public getConsommbale(): TConsoBase[] | null {
-        return this.consommables
+    /**
+     * Cette fonction permet de récupérer un chemin vers les préparations dans firestore
+     * @param prop enseigne qui possède les préparations
+     * @param restaurant restaurant qui possède les préparations
+     */
+    public static getPathsToFirestore(proprietary_id: string, restaurant_id: string): string[] {
+        return ["proprietaires",proprietary_id, "restaurants", restaurant_id, "preparations"];
     }
     /**
      * Cette fonction permet dedupliquer une prépartion
@@ -145,6 +129,7 @@ export class Cpreparation implements InteractionBddFirestore {
             this.id = data.id;
         }
         if (typeof data.date_reception === "string") {
+            
             const date_reception = this.service.stringToDate(data.date_reception);
             if (date_reception !== null) {
                 this.date_reception = date_reception;

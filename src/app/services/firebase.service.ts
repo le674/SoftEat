@@ -34,7 +34,9 @@ export class FirebaseService {
      * @param class_instance instance de la classe de l'objet à récupérer dans la base de donnée
      * @returns 
     */
-    getFromFirestoreBDD(paths:Array<string> | string, class_instance:Class<InteractionBddFirestore>){
+    public getFromFirestoreBDD(paths:Array<string> | string, class_instance:Class<InteractionBddFirestore>){
+
+        this.interaction_data = new Subject<Array<InteractionBddFirestore>>();
         let _paths:Array<string> = [];
         if(typeof paths === "string"){
             _paths = paths.split("/");
@@ -50,13 +52,7 @@ export class FirebaseService {
                 const data = snapshot.data(options);
                 if (data !== undefined) {
                     let instance:InteractionBddFirestore;
-                    if(class_instance.name === "CIngredient"){
-                        instance =  (new class_instance(this.service)).getInstance();
-                    }
-                    else{
-                        instance =  (new class_instance()).getInstance();
-                    }
-                    console.log(class_instance.name);
+                    instance =  this.constructInstance(class_instance).getInstance();
                     instance.setData(data);
                     return instance;
                 }
@@ -83,11 +79,20 @@ export class FirebaseService {
         })
         return this.sub_function;
     }
-    getEmailLocalStorage() {
+    /**
+     * Cette fonction permet depuis le local storage de récupérer le mail d'un employée
+     * @returns {string} chaîne de caractère représentant l'email de l'utilisateur
+     */
+    public getEmailLocalStorage() {
         const email = localStorage.getItem("user_email") as string;
         return email;
     }  
-    async getUserStatutsLocalStorage(email: string): Promise<Statut> { 
+    /**
+     * Permet de récupérer les status présent dans le local storage de l'utilisateur
+     * @param email identifiant email de l'utilisateur
+     * @returns les status de l'utilisateur
+     */
+    public async getUserStatutsLocalStorage(email: string): Promise<Statut> { 
         const usersRef = ref(this.db, 'users/foodandboost_prop');
         const usersSnapShot = await get(usersRef); // Ici : Erreur permission dinied
 
@@ -108,7 +113,12 @@ export class FirebaseService {
             }
         });
     }
-    async getUserDataReference(user_email: string): Promise<DatabaseReference> { // | null
+    /**
+     * Permet de récupérer la référence de l'utilisateur dans la base de donnée
+     * @param user_email email de l'utilisateur
+     * @returns reférence de la position de l'user si celui dans la base de donnée et le même que celui passé en paramètre
+     */
+    public async getUserDataReference(user_email: string): Promise<DatabaseReference> { // | null
         const usersRef = ref(this.db, 'users/foodandboost_prop');
         const usersSnapShot = await get(usersRef); // Ici : Erreur permission dinied
       
@@ -124,7 +134,11 @@ export class FirebaseService {
             // resolve(null); // Si aucun utilisateur ne correspond à l'email fourni
         });
     }
-    async fetchConvListUsers(): Promise<{ [conv: string]: string[] }> { // Promise<any>
+    /**
+     * Récupération depuis la base de donnée d'une liste d'utilisateurs
+     * @returns la liste d'utilisateurs dans le noeud users/foodandboost_prop
+     */
+    public async fetchConvListUsers(): Promise<{ [conv: string]: string[] }> { // Promise<any>
         const usersRef = ref(this.db, 'users/foodandboost_prop');
         const usersSnapShot = await get(usersRef); // Ici : Erreur permission dinied
         const convListUsers = { 'ana': [''], 'com': [''], 'fac': [''], 'inv': [''], 'rec': [''], 'plan': [''], 'rh': ['']};
@@ -150,9 +164,26 @@ export class FirebaseService {
             }
         });
     } 
-    getFromFirestore(){
+    public getFromFirestore(){
         return this.interaction_data.asObservable();
-    } 
+    }
+    /**
+     * permet de construire une instance en fonction du constructeur de la class,
+     * cette fonction est uniquement utilisé dans getFromFirestoreBDD
+     * @param Class class dont nous voulons retourner une instance
+     */ 
+    private constructInstance(Class:Class<InteractionBddFirestore>, ...args:any[]){
+        if(Class.name === "CIngredient"){
+            return new Class(this.service);
+        }
+        if(Class.name === "Cpreparation"){
+            return new Class(this.service);
+        }
+        if(Class.name === "Cconsommable"){
+            return new Class(this.service);
+        }
+        return new Class();
+    }
 }
 
 

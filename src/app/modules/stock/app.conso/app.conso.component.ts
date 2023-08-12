@@ -8,7 +8,7 @@ import { ConsommableInteractionService } from '../../../../app/services/menus/co
 import { CalculConsoServiceTsService } from '../../../../app/services/menus/menu.calcul/menu.calcul.consommable/calcul.conso.service.ts.service';
 import { AddConsoComponent } from './app.conso.modals/add-ing/add.ing/add.conso.component';
 import { CommonService } from '../../../../app/services/common/common.service';
-import { Cconsommable, Consommable } from 'src/app/interfaces/consommable';
+import { Cconsommable } from 'src/app/interfaces/consommable';
 import { RowConsommableRecette } from 'src/app/interfaces/recette';
 import { RowConsommable } from 'src/app/interfaces/inventaire';
 import { Unsubscribe } from 'firebase/firestore';

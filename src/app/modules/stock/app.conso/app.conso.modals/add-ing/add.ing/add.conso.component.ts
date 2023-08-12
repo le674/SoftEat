@@ -114,15 +114,15 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
     const unity = this.add_cons_section.controls.unity.value;
     /* On crée un ingrédient à partir des données récupéré depuis le formulaire puis on l'ajoute à la bdd */
     if (name !== undefined) {
-      new_conso.setNom(name);
+      new_conso.name = name;
     }
-    if (this.add_cons_section.value["taux_tva"] !== undefined) {
-      new_conso.setTauxTva(this.add_cons_section.value["taux_tva"]);
+    if (this.add_cons_section.value["taux_tva"] !== undefined && this.add_cons_section.value["taux_tva"] !== null) {
+      new_conso.taux_tva = this.add_cons_section.value["taux_tva"];
     }
     if (this.add_cons_section.value["quantity"] !== undefined) {
-      new_conso.setQuantity(this.add_cons_section.value["quantity"]);
       if(this.add_cons_section.value["quantity"] !== null) {
-        new_conso.setTotalQuantity(this.add_cons_section.value["quantity"])
+        new_conso.quantity = this.add_cons_section.value["quantity"];
+        new_conso.total_quantity = this.add_cons_section.value["quantity"];
         if(this.data.consommable.quantity !== undefined){
           if((this.data.consommable.quantity < this.add_cons_section.value["quantity"]) || (!this.data.is_modif)){
             new_conso.total_quantity =  this.add_cons_section.value["quantity"];
@@ -130,25 +130,20 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
         }
       }
     }
-
-    if (unity !== undefined) {
-      new_conso.setUnity(unity);
+    if (unity !== undefined && unity !== null) {
+      new_conso.unity = unity;
+    }
+    if(this.add_cons_section.value["cost"] !== undefined && this.add_cons_section.value["cost"] !== null){
+      new_conso.cost = this.add_cons_section.value["cost"];
     }
 
-    if(this.add_cons_section.value["cost"] !== undefined){
-      new_conso.setCost(this.add_cons_section.value["cost"]);
+    if(this.add_cons_section.value["cost_ttc"] !== undefined && this.add_cons_section.value["cost_ttc"] !== null){
+      new_conso.cost_ttc = this.add_cons_section.value["cost_ttc"]
     }
-
-    if(this.add_cons_section.value["cost_ttc"] !== undefined){
-      new_conso.setCostTTC(this.add_cons_section.value["cost_ttc"]);
+    if(this.add_cons_section.value["marge"] !== undefined && this.add_cons_section.value["marge"] !== null){
+      new_conso .marge = this.add_cons_section.value["marge"];
     }
-
-    if(this.add_cons_section.value["marge"] !== undefined){
-     if(this.add_cons_section.value["marge"] !== null) new_conso.setMarge(this.add_cons_section.value["marge"]);
-    }
-
-
-    if(new_conso.getQuantity() < new_conso.getMarge()){
+    if(new_conso.quantity < new_conso.marge){
       //alors on affiche une alerte 
       const msg = "le consommable ".concat(new_conso.name).concat(" arrive en rupture de stock.");
       this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "conso");

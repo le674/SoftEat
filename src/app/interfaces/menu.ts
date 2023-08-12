@@ -1,4 +1,4 @@
-import { Consommable, TConsoBase } from "./consommable";
+import {TConsoBase } from "./consommable";
 import { Cetape, Etape } from "./etape";
 import {TIngredientBase } from "./ingredient";
 import { CbasePlat, Plat } from "./plat";

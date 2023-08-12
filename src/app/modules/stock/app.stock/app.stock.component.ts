@@ -27,9 +27,8 @@ export class AppStockComponent implements OnInit, OnDestroy{
     'unity', 'cost', 'cost_ttc', 'date_reception', 'dlc', 'actions'];
   public size:string;
   public dataSource: MatTableDataSource<RowIngredient>;
-
   public ingredients_displayed_br: Array<RowIngredient>;
-
+  private path_to_ingredients:Array<string>;
   private page_number: number;
   private router: Router;
   private ingredient_table: Array<CIngredient>;
@@ -50,6 +49,7 @@ export class AppStockComponent implements OnInit, OnDestroy{
     this.page_number = 1;
     this.prop = "";
     this.restaurant = "";
+    this.path_to_ingredients = [];
     this.router = router;
     this.ingredient_table = [];
     this.ingredients_displayed_br = [];
@@ -74,8 +74,8 @@ export class AppStockComponent implements OnInit, OnDestroy{
         let user_info:any = this.url.queryParams;
         this.prop = user_info.prop;
         this.restaurant = user_info.restaurant;
-
-        this.req_ingredients_brt = this.firebase_service.getFromFirestoreBDD(["proprietaires", this.prop, "restaurants", this.restaurant, "ingredients"], CIngredient);
+        this.path_to_ingredients = CIngredient.getPathsToFirestore(this.prop, this.restaurant);
+        this.req_ingredients_brt = this.firebase_service.getFromFirestoreBDD(this.path_to_ingredients, CIngredient);
         const obs_ing = this.firebase_service.getFromFirestore()
         this.req_merge_obs = obs_ing.subscribe((ingredients) => {
           this.ingredients_displayed_br = [];

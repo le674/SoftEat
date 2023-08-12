@@ -160,13 +160,6 @@ export class CIngredient implements InteractionBddFirestore {
 
     }
     /**
-     * permet de retourner une isntance de CIngredient
-     * @returns une instance CIngredient
-     */
-    getInstance(){
-        return new CIngredient(this.service) as CIngredient;
-    }
-    /**
      * Permet de convertire un ingrédient en ingrédient_base qui contiennent moins d'information 
      * que les ingrédients et qui sont donc plus légées
      * @returns {TIngredientBase} une instance d'un ingrédient de base
@@ -174,6 +167,21 @@ export class CIngredient implements InteractionBddFirestore {
     public convertToBase(): TIngredientBase {
         let ingredient: TIngredientBase = new TIngredientBase(this.name, this.quantity, this.unity);
         return ingredient
+    }
+    /**
+     * Permet de récupérer les ingrédients dans une enseigne et une restaurant donné
+     * @param proprietary_id identifiant de l'enseigne pour lequel nous voulons récupérer les ingrédients
+     * @param  restaurant_id identifiant du restauarnt pour lequel nous voulons récupérer les ingrédients
+     */
+    public static getPathsToFirestore(proprietary_id:string, restaurant_id:string){
+        return ["proprietaires",proprietary_id, "restaurants", restaurant_id, "ingredients"]
+    }
+    /**
+     * permet de retourner une isntance de CIngredient
+     * @returns une instance CIngredient
+     */
+    public getInstance(){
+        return new CIngredient(this.service) as CIngredient;
     }
     /**
      * permet de récupérer le cout ttc d'un ingrédient à partir de la catégorie de tva et du cout

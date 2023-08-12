@@ -1,12 +1,13 @@
 import { CalculService } from "../services/menus/menu.calcul/menu.calcul.ingredients/calcul.service";
+import { InteractionBddFirestore } from "./interaction_bdd";
 import { RowConsommableRecette } from "./recette";
 
 export class TConsoBase {
-    name:string;
-    quantity:number | null;
-    unity:string | null;
-    id:Array<string>;
-    constructor(name:string, quantity:number | null, unity:string | null){
+    name: string;
+    quantity: number | null;
+    unity: string | null;
+    id: Array<string>;
+    constructor(name: string, quantity: number | null, unity: string | null) {
         this.name = name;
         this.quantity = quantity;
         this.unity = unity;
@@ -17,8 +18,8 @@ export class TConsoBase {
      * @param cost cout du consommable
      * @returns {RowConsommableRecette} ligne de la section stock d'affichage des consommables
      */
-    public toRowConsoRecette(cost:number): RowConsommableRecette {
-        let consommable = new RowConsommableRecette(this.name, cost, this.quantity,this.unity);
+    public toRowConsoRecette(cost: number): RowConsommableRecette {
+        let consommable = new RowConsommableRecette(this.name, cost, this.quantity, this.unity);
         return consommable;
     }
     /**
@@ -26,7 +27,7 @@ export class TConsoBase {
      * @param consommable conso que l'on souhaite copier
      * @returns {void}
      */
-    public setData(consommable:TConsoBase){
+    public setData(consommable: TConsoBase) {
         this.id = consommable.id;
         this.name = consommable.name;
         this.quantity = consommable.quantity;
@@ -36,9 +37,9 @@ export class TConsoBase {
      * retourne un consommable que l'on peut ajouter dans la base de donnée
      * @returns {TConsoBase} à ajouter dans la base de donnée
      */
-    public getData():{name:string, quantity:number | null, unity:string | null, id:Array<string> | null}{
+    public getData(): { name: string, quantity: number | null, unity: string | null, id: Array<string> | null } {
         return {
-            name:this.name,
+            name: this.name,
             quantity: this.quantity,
             unity: this.unity,
             id: this.id
@@ -47,46 +48,10 @@ export class TConsoBase {
 
 }
 
-
-export interface Consommable {
-    [x: string]: any;
-    "name": string;
-    "cost": number;
+export class Cconsommable implements InteractionBddFirestore {
+    "categorie_restaurant": string | null;
     "quantity": number;
-    "unity": string;
-    "taux_tva": number;
-    "cost_ttc": number;
-    "marge": number;
-    "date_reception":Date;
-    "total_quantity":number;
-
-    getNom(): string;
-    setNom(nom: string | null): void;
-    getCost(): number;
-    setCost(cost: number | null): void;
-    getCostTTC(): number;
-    setCostTTC(cost: number | null): void;
-    getTotalQuantity():number;
-    setTotalQuantity(quantity:number):void;
-    getTotalQuantity():number;
-    getTauxTva(): number;
-    setTauxTva(taux: number | null): void;
-    getQuantity(): number;
-    setQuantity(quantity: number | null): void;
-    getUnity(): string;
-    setUnity(unity: string | null): void;
-    getDateReception():Date;
-    setDateReception(val: Date | null):void;
-    getMarge():number;
-    setMarge(marge:number):void;
-}
-
-
-
-export class Cconsommable implements Consommable {
-    "categorie_restaurant":string | null;
-    "quantity": number;
-    "total_quantity":number;
+    "total_quantity": number;
     "name": string;
     "cost": number;
     "unity": string;
@@ -94,91 +59,47 @@ export class Cconsommable implements Consommable {
     "cost_ttc": number;
     "date_reception": Date;
     "marge": number;
-    "id":string;
-    "proprietary_id":string;
-    
-    constructor(private service: CalculService) { 
-    }
+    "id": string;
+    "proprietary_id": string;
+    [x: string]: any;
 
-    getNom(): string {
-        return this.name
-    }
-    setNom(nom: string | null): void {
-        if (nom !== null) this.name = nom;
-    }
-    getCost(): number {
-        return this.cost
-    }
-    setCost(cost: number | null): void {
-        if (cost !== null) this.cost = cost
-    }
-    
-    getCostTTC(): number {
-        return this.cost_ttc
-    }
-
-    setCostTTC(cost: number | null): void {
-        if (cost !== null) this.cost_ttc = cost
-    }
-
-    getTauxTva(): number {
-        return this.taux_tva;
-    }
-    setTauxTva(taux: number | null): void {
-        if (taux !== null) this.taux_tva = taux;
-    }
-
-    getQuantity(): number {
-        return this.quantity
-    }
-    setQuantity(quantity: number | null): void {
-        if (quantity !== null) this.quantity = quantity;
-    }
-    setTotalQuantity(quantity:number):void{
-        this.total_quantity = quantity;
-    }
-    getTotalQuantity():number{
-        return this.total_quantity;
-    }
-    getUnity(): string {
-        return this.unity
-    }
-    setUnity(unity: string | null): void {
-        if (unity !== null) this.unity = unity
-    }
-    getDateReception(): Date {
-        return this.date_reception;
-    }
-    setDateReception(val: Date | null): void {
-        if (val !== null) this.date_reception = val;
-    }
-    getMarge(): number {
-       return this.marge;
-    }
-    setMarge(marge: number): void {
-       this.marge = marge;
+    constructor(private service: CalculService) {
     }
     /**
      * transformation du consommable pour le stock en consommable pour le recette
      * @returns {TConsoBase} consommable sous forme réduite pour la recette
      */
-    convertToBase():TConsoBase {
+    public convertToBase(): TConsoBase {
         let consommable = new TConsoBase(this.name, this.quantity, this.unity);
         consommable.id?.push(this.id);
         return consommable;
     }
-
+    /**
+      * Permet de récupérer les ingrédients dans une enseigne et une restaurant donné
+      * @param proprietary_id identifiant de l'enseigne pour lequel nous voulons récupérer les ingrédients
+      * @param  restaurant_id identifiant du restauarnt pour lequel nous voulons récupérer les ingrédients
+    */
+    public static getPathsToFirestore(proprietary_id: string, restaurant_id: string) {
+        return ["proprietaires", proprietary_id, "restaurants", restaurant_id, "consommables"];
+    }
+   /**
+    * permet de retourner une isntance de CIngredient
+    * @returns une instance CIngredient
+   */
+    public getInstance(): InteractionBddFirestore {
+        return new Cconsommable(this.service) as Cconsommable;
+    }
     /**
      * 
      * @param id identifiant du consommable dans la base de donnée
      * @param prop identifiant d" l'enseigne qui possède le consommable
      * @returns {void}
      */
-    getData(id: string | null, prop: string): any {
-        if((this.proprietary_id === null) || this.proprietary_id === undefined){
+    public getData(id: string | null, prop: string): any {
+        if ((this.proprietary_id === null) || this.proprietary_id === undefined) {
             this.proprietary_id = prop;
         }
-        if(id !== null){
+        if (id !== null) {
             this.id = id;
         }
         return {
@@ -194,15 +115,15 @@ export class Cconsommable implements Consommable {
             quantity: this.quantity,
             unity: this.unity,
             total_quantity: this.total_quantity,
-         }
+        }
     }
     /**
      * cette fonction permet de construire un consommable à partir du JSON de la
      * base de donnée
      * @param data données à intégrer comme consommable
      */
-    setData(data: Cconsommable | undefined){
-        if(data !== undefined){
+    public setData(data: Cconsommable | undefined) {
+        if (data !== undefined) {
             this.categorie_restaurant = data.categorie_restaurant;
             this.id = data.id;
             this.proprietary_id = data.proprietary_id;
@@ -215,12 +136,12 @@ export class Cconsommable implements Consommable {
             this.cost = data.cost;
             this.taux_tva = data.taux_tva;
             this.cost_ttc = data.cost_ttc;
-            if(typeof data.date_reception === "string"){
+            if (typeof data.date_reception === "string") {
                 const date_reception = this.service.stringToDate(data.date_reception);
-                if(date_reception !== null){
+                if (date_reception !== null) {
                     this.date_reception = date_reception;
                 }
-                else{
+                else {
                     this.date_reception = new Date();
                 }
             }

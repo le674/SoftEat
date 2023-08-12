@@ -12,7 +12,7 @@ import { CalculService } from '../../../../../app/services/menus/menu.calcul/men
 import { MenuCalculPlatsServiceService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.plats/menu.calcul.plats.service.service';
 import { CalculPrepaService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
 import { PlatsInteractionService } from '../../../../../app/services/menus/plats-interaction.service';
-import { Cconsommable, Consommable, TConsoBase } from 'src/app/interfaces/consommable';
+import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
 
 @Component({
   selector: 'app-add.plats',

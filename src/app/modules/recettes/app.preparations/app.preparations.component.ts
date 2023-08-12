@@ -12,6 +12,8 @@ import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
 import { Unsubscribe } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { InteractionBddFirestore } from 'src/app/interfaces/interaction_bdd';
 
 @Component({
   selector: 'app-preparations',
@@ -24,6 +26,9 @@ export class AppPreparationsComponent implements OnInit, OnDestroy{
   private router: Router;
   private prop:string;
   private restaurant:string;
+  private path_to_ingredients:Array<string>;
+  private path_to_preparation:Array<string>;
+  private path_to_consommable:Array<string>;
   private req_ingredients!:Unsubscribe;
   private req_preparations!:Unsubscribe;
   private req_consommables!:Unsubscribe;
@@ -38,7 +43,8 @@ export class AppPreparationsComponent implements OnInit, OnDestroy{
 
   constructor(public dialog: MatDialog, private ingredient_service: IngredientsInteractionService,
   private consommable_service: ConsommableInteractionService,
-  router: Router, private _snackBar: MatSnackBar, private preparation_service:PreparationInteractionService) { 
+  router: Router, private _snackBar: MatSnackBar, private preparation_service:PreparationInteractionService,
+  private firestore:FirebaseService) {
     this.preparations = [];
     this.prepa_names = [];
     this.router = router;
@@ -49,6 +55,9 @@ export class AppPreparationsComponent implements OnInit, OnDestroy{
     this.url = this.router.parseUrl(this.router.url);
     this.recette = null;
     this.write = false;
+    this.path_to_ingredients = [];
+    this.path_to_preparation = [];
+    this.path_to_consommable = [];
   }
   ngOnDestroy(): void {
     this.req_ingredients();
@@ -65,15 +74,18 @@ export class AppPreparationsComponent implements OnInit, OnDestroy{
         let user_info = this.url.queryParams;
         this.prop = user_info["prop"];
         this.restaurant = user_info["restaurant"];
-        this.req_ingredients = this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
-        this.req_preparations = this.ingredient_service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
-        this.req_consommables = this.consommable_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
-        this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:Array<CIngredient>) => {
-          this.ingredients = ingredients;
-          this.preparations_sub = this.ingredient_service.getPrepraparationsFromRestaurants().subscribe((preparations:Array<Cpreparation>) => {
-            this.preparations = preparations;
-            this.consommables_sub = this.consommable_service.getConsommablesFromRestaurants().subscribe((consommables:Array<Cconsommable>) => {
-              this.consommables = consommables;
+        this.path_to_ingredients = CIngredient.getPathsToFirestore(this.prop, this.restaurant);
+        this.path_to_preparation = Cpreparation.getPathsToFirestore(this.prop, this.restaurant);
+        this.path_to_consommable = Cconsommable.getPathsToFirestore(this.prop, this.restaurant);
+        this.req_ingredients = this.firestore.getFromFirestoreBDD(this.path_to_ingredients,CIngredient);
+        this.ingredients_sub = this.firestore.getFromFirestore().subscribe((ingredients:Array<InteractionBddFirestore>) => {
+          this.req_preparations = this.firestore.getFromFirestoreBDD(this.path_to_preparation, Cpreparation);
+          this.ingredients = ingredients as Array<CIngredient>;
+          this.preparations_sub = this.firestore.getFromFirestore().subscribe((preparations:Array<InteractionBddFirestore>) => {
+            this.req_consommables = this.firestore.getFromFirestoreBDD(this.path_to_consommable,Cconsommable);
+            this.preparations = preparations as Array<Cpreparation>;
+            this.consommables_sub = this.firestore.getFromFirestore().subscribe((consommables:Array<InteractionBddFirestore>) => {
+              this.consommables = consommables as Array<Cconsommable>;;
             });
           });
         });

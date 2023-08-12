@@ -12,9 +12,8 @@ export interface InteractionBddFirestore {
      * @param args 
      */
     getData(...args:any[]):any;
-
     /**
      * Permet de récupérer une instance de l'interface
      */
-    getInstance():InteractionBddFirestore;
+     getInstance():InteractionBddFirestore;
 }
