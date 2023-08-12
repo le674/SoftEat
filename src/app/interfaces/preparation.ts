@@ -195,7 +195,7 @@ export class Cpreparation implements InteractionBddFirestore {
                     consommable.unity = null;
                 }
             }
-            this.consommables = data.consommables;
+            this.consommables = consommables;
         }
         if(data.marge !== undefined){
             this.marge = data.marge;
@@ -250,6 +250,7 @@ export class Cpreparation implements InteractionBddFirestore {
      * @returns {any} json de l'objet Cpreparation
     */
     public getData(id:string | null):any {
+
         if(id !== null){
             this.id = id;
         }
@@ -259,7 +260,7 @@ export class Cpreparation implements InteractionBddFirestore {
         if((this.ingredients !== null) && (this.ingredients !== undefined)){
             ingredients = this.ingredients.map((ingredient) => ingredient.getData());
         }
-        if((this.consommables !== null) && (this.ingredients !== undefined)){
+        if((this.consommables !== null) && (this.consommables !== undefined)){
             consommables = this.consommables?.map((consommable) => consommable.getData());
         }
         if((this.etapes !== null) && (this.etapes !== undefined)){

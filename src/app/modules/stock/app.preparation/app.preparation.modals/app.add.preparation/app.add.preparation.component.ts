@@ -2,13 +2,13 @@ import { AfterContentInit, ChangeDetectorRef, Component, Inject, OnInit } from '
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CIngredient, TIngredientBase } from '../../../../../../app/interfaces/ingredient';
-import { Cpreparation, CpreparationBase } from '../../../../../../app/interfaces/preparation';
+import { CIngredient } from '../../../../../../app/interfaces/ingredient';
+import { Cpreparation } from '../../../../../../app/interfaces/preparation';
 import { AddPreparationsComponent } from '../../../../../../app/modules/recettes/app.preparations/add.preparations/add.preparations.component';
 import { AlertesService } from '../../../../../../app/services/alertes/alertes.service';
-import { IngredientsInteractionService } from '../../../../../../app/services/menus/ingredients-interaction.service';
 import { CalculService } from '../../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
-import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-app.add.preparation',
@@ -35,14 +35,14 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit, OnI
   /*   private base_ing_full: Array<CIngredient>; */
   private readonly _mat_dialog_ref: MatDialogRef<AddPreparationsComponent>;
   private is_modif: boolean;
-  constructor(public dialogRef: MatDialogRef<AddPreparationsComponent>, private changeDetector: ChangeDetectorRef,
+  constructor(public dialogRef: MatDialogRef<AddPreparationsComponent>, 
     private _snackBar: MatSnackBar, private formBuilder: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: {
       restaurant: string,
       prop: string,
       is_modif: boolean,
       preparation: Cpreparation
-    }, public calcul_service: CalculService, public service: IngredientsInteractionService,
-    public service_alertes: AlertesService, public prepa_service:PreparationInteractionService) {
+    }, public calcul_service: CalculService, public service: FirebaseService,
+    public service_alertes: AlertesService) {
     this.current_inputs = 0;
     this.is_vrac = false;
     this.index_inputs = [];
@@ -85,8 +85,11 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit, OnI
     }
   }
   changePreparation() {
+    
+    let path_preparation = Cpreparation.getPathsToFirestore(this.data.prop, this.data.restaurant);
     let new_prepa:Cpreparation;
     new_prepa = new Cpreparation(this.calcul_service);
+    new_prepa.proprietary_id = this.data.prop;
     new_prepa.setData(this.data.preparation);
     /* On crée un ingrédient à partir des données récupéré depuis le formulaire puis on l'ajoute à la bdd */
     if (this.data.preparation.name !== undefined) {
@@ -124,19 +127,27 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit, OnI
       new_prepa.dlc = this.data.preparation.date_reception;
     }    
       if(this.data.is_modif){
-        this.prepa_service.updatePreparationInBdd(new_prepa, this.data.prop, this.data.restaurant).then(() => {
+        this.service.updateFirestoreData(new_prepa.id,new_prepa,path_preparation, Cpreparation).then(() => {
           this._snackBar.open("l'ingrédient vient d'être modifié dans la base de donnée du restaurant", "fermer");
         }).catch((e) => {
-          console.log(e);
+          const error = new Error(e);
           this._snackBar.open("nous n'avons pas réussit à modifier l'ingrédient dans la base de donnée", "fermer");
+          return throwError(() => error).subscribe((error) => {
+            console.log(error);
+            
+          });
         })
       }
       else{
-        this.prepa_service.setPreparationInBdd(new_prepa, this.data.prop, this.data.restaurant).then(() => {
-          this._snackBar.open("l'ingrédient vient d'être ajouté à la base de donnée du restaurant", "fermer");
+        this.service.setFirestoreData(new_prepa, path_preparation, Cpreparation).then(() => {
+          this._snackBar.open("l'ingrédient vient d'être ajouter à la base de donnée du restaurant", "fermer");
         }).catch((e) => {
-          console.log(e);
-          this._snackBar.open("nous n'avons pas réussit à envoyer l'ingrédient dans la base de donnée", "fermer");
+          this._snackBar.open("nous n'avons pas réussit à ajouter l'ingrédient dans la base de donnée", "fermer");
+          const error = new Error(e);
+          return throwError(() => error).subscribe((error) => {
+            console.log(error);
+            
+          });
         })
       this.dialogRef.close() 
       }

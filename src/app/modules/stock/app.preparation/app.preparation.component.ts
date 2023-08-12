@@ -92,7 +92,6 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
             const quantity_unity = preparation.quantity_unity;
             const id = preparation.id;
             let row_preparation = new RowPreparation(name, cost, quantity, quantity_unity, unity, id);
-            
             row_preparation.setRowPreparation(preparation);
             this.displayed_prep.push(row_preparation);
           }
@@ -126,7 +125,6 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
         res_dlc = (dlc.getTime() - date_reception.getTime()) / (1000 * 60 * 60 * 24)
       }
     }
-    ele.name = ele.name.split('<br>').join('_');
     const preparations = this.preparation_table.filter((preparation) => preparation.name === ele.name)
     // TO DO remplacer les window.alert
     // On récupère les ingrédients de bases que l'on envoie 
