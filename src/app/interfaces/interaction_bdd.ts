@@ -9,11 +9,12 @@ export interface InteractionBddFirestore {
     setData(...args:any[]):any;
     /**
      * Permet de transformer un JSON en objet afin de récupérer le JSON depuis al base de donnée
+     * @param id identifiant de l'objet que l'on veut ajouter dans la base de donnée
      * @param args 
      */
-    getData(...args:any[]):any;
+    getData(id:string | null,...args:any[]):any;
     /**
      * Permet de récupérer une instance de l'interface
      */
-     getInstance():InteractionBddFirestore;
+    getInstance():InteractionBddFirestore;
 }

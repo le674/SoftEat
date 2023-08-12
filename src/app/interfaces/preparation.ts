@@ -246,11 +246,13 @@ export class Cpreparation implements InteractionBddFirestore {
 
     /**
      * permet de récupérer un objet constituant l'ingrédient à écrire en base de donnée
-     * @param id identifiant du document que l'on souahite renvoyer pour l'ajout en base de donnée
-     * @param prop identifiant du propriétaire 
+     * @param id identifiant de l'objet à ajouter en base de donnée
      * @returns {any} json de l'objet Cpreparation
     */
-    public getData(id: string | null, prop: string):any {
+    public getData(id:string | null):any {
+        if(id !== null){
+            this.id = id;
+        }
         let ingredients:null | Array<Object> = null;
         let consommables:null | Array<Object> = null;
         let etapes:null | Array<Object> = null;
@@ -262,12 +264,6 @@ export class Cpreparation implements InteractionBddFirestore {
         }
         if((this.etapes !== null) && (this.etapes !== undefined)){
             etapes = this.etapes.map((etape) => etape.getData());
-        }
-        if ((this.proprietary_id === null) || this.proprietary_id === undefined) {
-            this.proprietary_id = prop;
-        }
-        if (id !== null) {
-            this.id = id;
         }
         return {
             name: this.name,

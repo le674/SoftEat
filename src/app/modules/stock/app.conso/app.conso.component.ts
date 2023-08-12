@@ -4,15 +4,15 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, UrlTree } from '@angular/router';
-import { ConsommableInteractionService } from '../../../../app/services/menus/consommable-interaction.service';
 import { CalculConsoServiceTsService } from '../../../../app/services/menus/menu.calcul/menu.calcul.consommable/calcul.conso.service.ts.service';
 import { AddConsoComponent } from './app.conso.modals/add-ing/add.ing/add.conso.component';
 import { CommonService } from '../../../../app/services/common/common.service';
 import { Cconsommable } from 'src/app/interfaces/consommable';
-import { RowConsommableRecette } from 'src/app/interfaces/recette';
 import { RowConsommable } from 'src/app/interfaces/inventaire';
 import { Unsubscribe } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { InteractionBddFirestore } from 'src/app/interfaces/interaction_bdd';
 
 @Component({
   selector: 'app-conso',
@@ -37,21 +37,25 @@ export class AppConsoComponent implements OnInit, OnDestroy {
   private restaurant:string;
   private req_consommables!:Unsubscribe;
   private consommables_sub!:Subscription;
-  constructor(private service:ConsommableInteractionService, private calc_service:CalculConsoServiceTsService,
-    router: Router, public dialog: MatDialog,  private _snackBar: MatSnackBar, public mobile_service:CommonService) { 
+  private firestore_path:Array<string>;
+  constructor(private calc_service:CalculConsoServiceTsService,router: Router, public dialog: MatDialog,
+    private _snackBar: MatSnackBar, public mobile_service:CommonService,
+    private firestore:FirebaseService) { 
+    this.consommable_table = [];
+    this.consommable_displayed = [];
+    this.firestore_path = [];
+    this.visibles = [];
     this.page_number = 1;
     this.prop = "";
     this.restaurant = "";
     this.router = router;
-    this.consommable_table = [];
-    this.consommable_displayed = [];
-    this.windows_screen_mobile = false
-    this.visibles = [];
+    this.windows_screen_mobile = false;
     this.size = "";
     this.dataSource = new MatTableDataSource(this.consommable_displayed);
     this.url = this.router.parseUrl(this.router.url);
     this.stock = null;
     this.write = false;
+
   }
   ngOnDestroy(): void {
     this.req_consommables();
@@ -64,9 +68,11 @@ export class AppConsoComponent implements OnInit, OnDestroy {
         let user_info = this.url.queryParams;
         this.prop = user_info["prop"];
         this.restaurant = user_info["restaurant"];
-        this.req_consommables = this.service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
-        this.consommables_sub = this.service.getConsommablesFromRestaurants().subscribe((consommables:Cconsommable[]) => {
-          for (let consommable of consommables) {
+        this.firestore_path = Cconsommable.getPathsToFirestore(this.prop, this.restaurant);
+        this.req_consommables = this.firestore.getFromFirestoreBDD(this.firestore_path, Cconsommable);
+        this.consommables_sub = this.firestore.getFromFirestore().subscribe((consommables:Array<InteractionBddFirestore>) => {
+          let _consommables = consommables as Array<Cconsommable>
+          for (let consommable of _consommables) {
             if((consommable.date_reception === undefined) || (consommable.date_reception === null)){
               consommable.date_reception = new Date();
             }
@@ -86,7 +92,7 @@ export class AppConsoComponent implements OnInit, OnDestroy {
             this.consommable_displayed.push(row_consommable);
             this.visibles.push(false);
           }
-          this.consommable_table = consommables;
+          this.consommable_table = _consommables;
           this.dataSource.data = this.consommable_displayed;
         })
           const first_event = new PageEvent();
@@ -157,7 +163,7 @@ export class AppConsoComponent implements OnInit, OnDestroy {
   }
   suppConso(ele:RowConsommable){
     let is_prep = false
-    this.service.removeConsoInBdd(ele, this.prop, this.restaurant).then(() => {
+    this.firestore.removeFirestoreBDD(ele.id, this.firestore_path).then(() => {
       this._snackBar.open("l'ingrédient vient d'être supprimé de la base de donnée du restaurant", "fermer")
     }).catch(() => {
       this._snackBar.open("l'ingrédient n'a pas pu être supprimé de la base de donnée du restaurant", "fermer")

@@ -53,7 +53,7 @@ export class IngredientsInteractionService {
           ), "restaurants"
         ), restaurant
       ), "ingredients")).withConverter(this.ingredient_converter);
-    await setDoc(ingredients_ref, ingredient.getData(ingredients_ref.id, prop))
+    await setDoc(ingredients_ref, ingredient.getData(ingredients_ref.id))
   }
   /**
    * modification d'un ingrédient de la base de donnée
@@ -72,7 +72,7 @@ export class IngredientsInteractionService {
         ), restaurant_id
       ), "ingredients"),
       ingredient.id).withConverter(this.ingredient_converter);
-      await updateDoc(ingredients_ref, ingredient.getData(null, proprietaire_id))
+      await updateDoc(ingredients_ref, ingredient.getData(null))
   }
   /**
    * Suppréssion de l'ingrédient ddans la base de donnée 
@@ -80,7 +80,7 @@ export class IngredientsInteractionService {
    * @param prop enseigne qui possède l'ingrédient
    * @param restaurant restaurant qui possède l'ingrédient
    */
-  async removeIngInBdd(ingredient: RowIngredient, prop: string, restaurant: string) {
+  async removeIngInBdd(ingredient_id: string, prop: string, restaurant: string) {
     const ingredients_ref = doc(collection(doc(
       collection(
         doc(
@@ -90,7 +90,7 @@ export class IngredientsInteractionService {
           ), "restaurants"
         ), restaurant
       ), "ingredients"),
-      ingredient.id).withConverter(this.ingredient_converter);
+      ingredient_id).withConverter(this.ingredient_converter);
     await deleteDoc(ingredients_ref); 
   }
   /**

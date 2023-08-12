@@ -73,7 +73,7 @@ export class PreparationInteractionService {
           ), "restaurants"
         ), restaurant
       ), "preparations")).withConverter(this.preparation_converter);
-      await setDoc(preparation_ref, preparation.getData(preparation_ref.id, prop))
+      await setDoc(preparation_ref, preparation.getData(preparation_ref.id))
   }
   /**
    * permet de modifier une préparation dans la base de donnée 
@@ -92,7 +92,7 @@ export class PreparationInteractionService {
         ), restaurant
       ), "preparations"),
       preparation.id).withConverter(this.preparation_converter);
-      await updateDoc(ingredients_ref, preparation.getData(null,prop))
+      await updateDoc(ingredients_ref, preparation.getData(null))
   }
 
   /**
@@ -112,7 +112,7 @@ export class PreparationInteractionService {
             ), "restaurants"
           ), restaurant
         ), "preparations")).withConverter(this.preparation_converter);
-      await setDoc(preparation_ref, preparation.getData(preparation_ref.id, prop));
+      await setDoc(preparation_ref, preparation.getData(preparation_ref.id));
     }
   }
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Cmenu } from '../../../../app/interfaces/menu';
-import { CbasePlat, Cplat, Plat } from '../../../../app/interfaces/plat';
+import { CbasePlat, Cplat } from '../../../../app/interfaces/plat';
 import { CalculService } from './menu.calcul.ingredients/calcul.service';
 import { MenuCalculPlatsServiceService } from './menu.calcul.plats/menu.calcul.plats.service.service';
 import { CIngredient } from 'src/app/interfaces/ingredient';

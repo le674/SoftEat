@@ -59,7 +59,6 @@ export class TIngredientBase {
      * @returns {TIngredientBase} ingrédient de base avec uniquement les attributs
      */
     public getData(): { name: string, quantity: number | null, unity: string | null, added_price: number | null, id: Array<string> | null } {
-
         return {
             name: this.name,
             quantity: this.quantity,
@@ -247,19 +246,14 @@ export class CIngredient implements InteractionBddFirestore {
 
     /**
      * permet de récupérer un objet constituant l'ingrédient à écrire en base de donnée
-     * @param id identifiant du document que l'on souahite renvoyer pour l'ajout en base de donnée
-     * @param proprietary_id identifiant du propriétaire 
      * @returns {Object} ingrédient sous forme d'objet
     */
-    getData(id: string | null, proprietary_id: string): any {
-        if ((this.proprietary_id === null) || this.proprietary_id === undefined) {
-            this.proprietary_id = proprietary_id;
+    public getData(id:string | null): any {
+        if(id !== null){
+            this.id = id;
         }
         if (this.base_ingredient_id === undefined) {
             this.base_ingredient_id = null;
-        }
-        if (id !== null) {
-            this.id = id;
         }
         return {
             name: this.name,

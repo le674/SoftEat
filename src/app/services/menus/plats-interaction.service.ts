@@ -107,7 +107,7 @@ export class PlatsInteractionService {
             ), prop
           ), "plats"
         )).withConverter(this.plat_converter);
-    await setDoc(plats_ref, plat.getData(plats_ref.id, prop))
+    await setDoc(plats_ref, plat.getData(plats_ref.id))
   }
     /**
    * permet de modifier un plat dans la bdd
@@ -123,6 +123,6 @@ export class PlatsInteractionService {
             ), prop
           ), "plats"
         ), plat.id).withConverter(this.plat_converter);
-    await setDoc(plats_ref, plat.getData(null, prop))
+    await setDoc(plats_ref, plat.getData(null))
   }
 }

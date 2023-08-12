@@ -95,11 +95,8 @@ export class Cconsommable implements InteractionBddFirestore {
      * @param prop identifiant d" l'enseigne qui possède le consommable
      * @returns {void}
      */
-    public getData(id: string | null, prop: string): any {
-        if ((this.proprietary_id === null) || this.proprietary_id === undefined) {
-            this.proprietary_id = prop;
-        }
-        if (id !== null) {
+    public getData(id:string | null): any {
+        if(id !== null){
             this.id = id;
         }
         return {

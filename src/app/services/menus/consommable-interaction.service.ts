@@ -81,7 +81,7 @@ export class ConsommableInteractionService {
           ), "restaurants"
         ), restaurant
       ), "consommables")).withConverter(this.consommable_converter);
-    await setDoc(consommable_ref, consommable.getData(consommable_ref.id, prop))
+    await setDoc(consommable_ref, consommable.getData(consommable_ref.id))
   }
   /**
    * 
@@ -100,7 +100,7 @@ export class ConsommableInteractionService {
         ), restaurant
       ), "consommables"),
       consommable.id).withConverter(this.consommable_converter);
-      await updateDoc(consommable_ref, consommable.getData(null, prop))
+      await updateDoc(consommable_ref, consommable.getData(null))
   }
 
   /**

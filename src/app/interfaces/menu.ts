@@ -1,7 +1,7 @@
 import {TConsoBase } from "./consommable";
 import { Cetape, Etape } from "./etape";
 import {TIngredientBase } from "./ingredient";
-import { CbasePlat, Plat } from "./plat";
+import { CbasePlat} from "./plat";
 import { CpreparationBase } from "./preparation";
 
 export interface Menu{

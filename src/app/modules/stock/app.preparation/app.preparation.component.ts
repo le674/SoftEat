@@ -8,13 +8,12 @@ import { Unsubscribe } from 'firebase/auth';
 import { Subscription } from 'rxjs';
 import { CIngredient, TIngredientBase } from '../../../../app/interfaces/ingredient';
 import { Cpreparation } from '../../../../app/interfaces/preparation';
-import { IngredientsInteractionService } from '../../../../app/services/menus/ingredients-interaction.service';
 import { CalculService } from '../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AppAddPreparationComponent } from './app.preparation.modals/app.add.preparation/app.add.preparation.component';
 import { AppHelpPreparationComponent } from './app.preparation.modals/app.help.preparation/app.help.preparation/app.help.preparation.component';
 import { CommonService } from '../../../../app/services/common/common.service';
 import { RowPreparation } from 'src/app/interfaces/inventaire';
-import { PreparationInteractionService } from 'src/app/services/menus/preparation-interaction.service';
+import { FirebaseService } from 'src/app/services/firebase.service';
 
 @Component({
   selector: 'app-prepa',
@@ -40,22 +39,24 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
   private restaurant: string;
   private req_ingredients_prep!: Unsubscribe;
   private req_merge_obs!: Subscription
+  private firestore_path:Array<string>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
-  constructor(private service: IngredientsInteractionService, private prepa_service:PreparationInteractionService,
-    private calc_service: CalculService, router: Router, public dialog: MatDialog, private _snackBar: MatSnackBar, public mobile_service:CommonService) {
+  constructor(private calc_service: CalculService, router: Router, public dialog: MatDialog,
+     private _snackBar: MatSnackBar, public mobile_service:CommonService, private firestore_service:FirebaseService) {
+    this.preparation_table = [];
+    this.ingredients_table = [];
+    this.displayed_prep = [];
+    this.visibles = [];
+    this.firestore_path = [];
     this.page_number = 1;
     this.prop = "";
     this.restaurant = "";
     this.router = router;
-    this.preparation_table = [];
-    this.ingredients_table = [];
-    this.displayed_prep = [];
     this.dataSource = new MatTableDataSource(this.displayed_prep);
     this.url = this.router.parseUrl(this.router.url);
     this.windows_screen_mobile = false;
-    this.visibles = [];
     this.write = false;
     this.stock = null;
   }
@@ -76,13 +77,13 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
         let user_info = this.url.queryParams;
         this.prop = user_info["prop"];
         this.restaurant = user_info["restaurant"];
-        this.req_ingredients_prep = this.service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
-    
-        this.req_merge_obs = this.service.getPrepraparationsFromRestaurants().subscribe((preparations) => {
-          this.preparation_table = preparations;
+        this.firestore_path = Cpreparation.getPathsToFirestore(this.prop, this.restaurant);
+        this.req_ingredients_prep = this.firestore_service.getFromFirestoreBDD(this.firestore_path, Cpreparation);
+        this.req_merge_obs = this.firestore_service.getFromFirestore().subscribe((preparations) => {
+          this.preparation_table = preparations as Array<Cpreparation>;
           this.displayed_prep = [];
           this.dataSource = new MatTableDataSource(this.displayed_prep);
-          for(let preparation of preparations){
+          for(let preparation of this.preparation_table){
             let ingredients = preparation.ingredients
             const name = preparation.name;
             const cost = preparation.cost;
@@ -149,7 +150,7 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
     });
   }
    suppPrepa(preparation:RowPreparation) {
-    this.prepa_service.removePrepaInBdd(preparation, this.prop, this.restaurant).then(() => {
+    this.firestore_service.removeFirestoreBDD(preparation.id, this.firestore_path).then(() => {
       this._snackBar.open("l'ingrédient vient d'être supprimé de la base de donnée du restaurant", "fermer")
     }).catch(() => {
       this._snackBar.open("l'ingrédient n'a pas pu être supprimé de la base de donnée du restaurant", "fermer")

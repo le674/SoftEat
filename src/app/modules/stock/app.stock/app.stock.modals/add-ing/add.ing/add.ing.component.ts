@@ -3,9 +3,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CalculService } from '../../../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { CIngredient } from '../../../../../../../app/interfaces/ingredient';
-import { IngredientsInteractionService } from '../../../../../../../app/services/menus/ingredients-interaction.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AlertesService } from '../../../../../../../app/services/alertes/alertes.service';
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-add.ing',
@@ -61,7 +62,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
         base_ing: Array<string> | null,
         not_prep: Array<CIngredient>
       }
-    }, private service: IngredientsInteractionService, private changeDetector: ChangeDetectorRef,
+    }, private service: FirebaseService, private changeDetector: ChangeDetectorRef,
     private _snackBar: MatSnackBar, private service_alertes: AlertesService) {
     this._mat_dialog_ref = dialogRef;
     /*  this.is_prep = false; */
@@ -70,8 +71,6 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
     this.is_modif = this.data.is_modif;
     this.is_vrac = true;
   }
-
-
   ngOnInit(): void {
     if (this.data.ingredient.vrac !== undefined) {
       if (this.data.ingredient.vrac === "oui") {
@@ -84,10 +83,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       this.clickRadioVrac(this.is_vrac)
     }
   }
-
-
   ngAfterContentInit(): void {
-
     //après initialisatin du contenu ont ajoute les éléments dans le formulaire
     const unity = this.calcul_service.convertUnity(this.data.ingredient.unity, true);
     this.add_ing_section.get("name")?.setValue(this.data.ingredient.name);
@@ -108,7 +104,6 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       this.add_ing_section.get("marge")?.setValue(0);
     }
   }
-
   ngAfterViewInit(): void {
     // après initialisation de la vue on ajoute la tva selon la catégorie
     this.taux.nativeElement.value = this.calcul_service.getTauxFromCat(this.data.ingredient.categorie_tva)
@@ -116,18 +111,16 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       this.clickRadioVrac(true)
     }
   }
-
   ngAfterViewChecked(): void {
     // on fait ceci car dans le cycle de vie de angular 
     this.changeDetector.detectChanges();
   }
-
-
   changeIngredient() {
     let new_ing_aft_prepa = null;
     let new_ing: CIngredient;
     new_ing = new CIngredient(this.calcul_service);
     let act_quant = 0;
+    new_ing.proprietary_id = this.data.prop;
     if(this.data.ingredient.base_ingredient_id !== undefined){
       new_ing.base_ingredient_id = this.data.ingredient.base_ingredient_id;
     }
@@ -247,20 +240,28 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       }
     }
     if (this.add_ing_section.valid) {
+      let path = CIngredient.getPathsToFirestore(this.data.prop, this.data.restaurant);
       if (this.is_modif) {
-        this.service.updateIngInBdd(new_ing as CIngredient, this.data.prop, this.data.restaurant).then(() => {
+        this.service.updateFirestoreData(new_ing.id,new_ing as CIngredient, path, CIngredient).then(() => {
           this._snackBar.open("l'ingrédient vient d'être modifié dans la base de donnée du restaurant", "fermer");
         }).catch((e) => {
             this._snackBar.open("nous n'avons pas réussit à modifier l'ingrédient dans la base de donnée", "fermer");
+            let error = new Error(e)
+            return throwError(() => error).subscribe((error) => {
+              console.log(error);
+            });
         })
         this.dialogRef.close()
       }
       else {
-        this.service.setIngInBdd(new_ing as CIngredient, this.data.prop, this.data.restaurant).then(() => {
+        this.service.setFirestoreData(new_ing as CIngredient, path, CIngredient).then(() => {
           this._snackBar.open("l'ingrédient vient d'être ajouté dans la base de donnée du restaurant", "fermer");
         }).catch((e) => {
-          
           this._snackBar.open("nous n'avons pas réussit à ajouter l'ingrédient dans la base de donnée", "fermer");
+          let error = new Error(e)
+          return throwError(() => error).subscribe((error) => {
+            console.log(error);
+          });
       })
       }
     }
@@ -268,7 +269,6 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       this._snackBar.open("veuillez valider l'ensemble des champs", "fermer");
     }
   }
-
   clickRadioVrac(state: boolean) {
     this.is_vrac = state
     // dans le cas ou on a clické sur le boutton pour spécifier l'ingrésient en vrac on remet l'input à 0 
@@ -280,11 +280,9 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
       this.add_ing_section.get("quantity")?.setValue(this.data.ingredient.quantity);
     }
   }
-
   addTaux(event: Object): void {
     const taux = this.calcul_service.getTauxFromCat(event["value" as keyof typeof event].toString());
     this.taux.nativeElement.value = taux;
-
   }
   closePopup(click: MouseEvent) {
     this._mat_dialog_ref.close();

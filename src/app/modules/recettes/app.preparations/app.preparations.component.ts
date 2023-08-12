@@ -41,10 +41,7 @@ export class AppPreparationsComponent implements OnInit, OnDestroy{
   public preparations: Array<Cpreparation>;
   public write: boolean;
 
-  constructor(public dialog: MatDialog, private ingredient_service: IngredientsInteractionService,
-  private consommable_service: ConsommableInteractionService,
-  router: Router, private _snackBar: MatSnackBar, private preparation_service:PreparationInteractionService,
-  private firestore:FirebaseService) {
+  constructor(public dialog: MatDialog, router: Router, private _snackBar: MatSnackBar, private firestore:FirebaseService) {
     this.preparations = [];
     this.prepa_names = [];
     this.router = router;
@@ -140,7 +137,7 @@ export class AppPreparationsComponent implements OnInit, OnDestroy{
   }
   suppressPreparation(preparation: Cpreparation):void{
     if(preparation.name !== null){
-      this.preparation_service.removePrepaInBdd(preparation,this.prop, this.restaurant).catch((e) => {
+      this.firestore.removeFirestoreBDD(preparation.id,this.path_to_preparation).catch((e) => {
         console.log(e);
         this._snackBar.open("Impossible de supprimer la préparation veuillez contacter softeat", "fermer");
       }).finally(() => {

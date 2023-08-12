@@ -7,7 +7,6 @@ import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/auth';
 import {Subscription } from 'rxjs';
 import { CIngredient } from '../../../../app/interfaces/ingredient';
-import { IngredientsInteractionService } from '../../../../app/services/menus/ingredients-interaction.service';
 import { CalculService } from '../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.component';
 import { CommonService } from '../../../../app/services/common/common.service';
@@ -43,7 +42,7 @@ export class AppStockComponent implements OnInit, OnDestroy{
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
-  constructor(private service: IngredientsInteractionService, private calc_service: CalculService,
+  constructor(private calc_service: CalculService,
     router: Router, public dialog: MatDialog, private _snackBar: MatSnackBar, public mobile_service:CommonService,
     private firebase_service:FirebaseService) {
     this.page_number = 1;
@@ -214,7 +213,7 @@ export class AppStockComponent implements OnInit, OnDestroy{
   }
 
   suppIng(ele: RowIngredient) {
-    this.service.removeIngInBdd(ele, this.prop, this.restaurant).then(() => {
+    this.firebase_service.removeFirestoreBDD(ele.id, this.path_to_ingredients).then(() => {
       this._snackBar.open("l'ingrédient vient d'être supprimé de la base de donnée du restaurant", "fermer")
     }).catch(() => {
       this._snackBar.open("l'ingrédient n'a pas pu être supprimé de la base de donnée du restaurant", "fermer")
