@@ -39,7 +39,7 @@
                             <mat-form-field appearance="fill">
                                 <mat-label>Choisir l'ingrédients</mat-label>
                                 <mat-select (selectionChange)="getUnity($event, 'ing', i)" formControlName="name">
-                                     <mat-option (onSelectionChange)="changeIng($event, i)"  *ngFor="let ingredient of ingredients" [value]="ingredient.name">{{ingredient.name.split('_').join(' ')}}</mat-option>
+                                     <mat-option   *ngFor="let ingredient of ingredients" [value]="ingredient.name">{{ingredient.name.split('_').join(' ')}}</mat-option>
                                 </mat-select>
                              </mat-form-field>
                             <mat-form-field appearance="fill">
@@ -129,7 +129,7 @@
                             <mat-form-field appearance="fill">
                                 <mat-label>Choisir le plat</mat-label>
                                 <mat-select formControlName="name">
-                                     <mat-option *ngFor="let plat of plats" [value]="plat.nom">{{plat.nom.split('_').join(' ')}}</mat-option>
+                                     <mat-option *ngFor="let plat of plats" [value]="plat.name">{{plat.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>

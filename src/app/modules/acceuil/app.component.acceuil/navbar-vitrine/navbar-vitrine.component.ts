@@ -53,6 +53,7 @@ export class NavbarVitrineComponent implements OnInit {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
    // The user object has basic properties such as display name, email, etc.
+        localStorage.setItem("user_email", user.email as string);
    displayName = user.displayName;
    email = user.email;
    const photoURL = user.photoURL;
@@ -132,7 +133,6 @@ export class NavbarVitrineComponent implements OnInit {
     }
   }
   hideImage(image: HTMLImageElement) { 
-    console.log("test");
     if(window.matchMedia("(max-width: 990px)").matches){
       image.remove() 
     }

@@ -15,7 +15,7 @@
                     <i class="fa-solid fa-laptop-file"></i>
                     Scanner la facture
                 </button>
-                <button mat-stroked-button>
+                <button  mat-stroked-button (click)="sendFacture()">
                     <i class="fa-regular fa-circle-down"></i>
                     Archiver une facture
                 </button>
@@ -39,6 +39,10 @@
                 <mat-radio-button name="chose-select" value="ing" [checked] ="true">Ingrédients</mat-radio-button>
                 <mat-radio-button name="chose-select" value="conso">Autres</mat-radio-button>
             </mat-radio-group>  
+        </div>
+        <div id="slide-input">
+            <label for="mat-slide">Voulez-vous extraire les produits de la facture ?</label>
+            <mat-slide-toggle id="mat-slide" [labelPosition]="'before'" (change)="toggleExtract($event)"></mat-slide-toggle>
         </div>
     </header>
         <table  *ngIf="!windows_screen_mobile" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
@@ -157,7 +161,7 @@
             </div>
         </div> 
         <div class="group-buttons">
-            <button mat-stroked-button (click)="addIngredients($event)">
+            <button mat-stroked-button> <!-- (click)="addIngredients($event)">-->
                 <i class="fa-solid fa-check"></i>
                 Ajout dans l'inventaire
             </button>

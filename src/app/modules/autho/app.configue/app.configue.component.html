@@ -13,10 +13,10 @@
     <img src="/assets/images/SoftEat_Quadrichromie.png" alt="">
     <ul>
       <li>
-        <button class="btn acceuil" (click)="AddEmployee()"  type="submit">Ajouter un employé</button>
+        <button class="btn acceuil" (click)="AddEmployee()" type="submit">Ajouter un employé</button>
       </li>
       <li>
-        <button class="btn acceuil" (click)="clicAcceuil()"  type="submit">Acceuil</button>
+        <button class="btn acceuil" (click)="clicAcceuil()" type="submit">Acceuil</button>
       </li>
       <li>
         <button class="btn" (click)="clicdeConnexion()" id="deco" type="submit">Déconnexion</button>
@@ -39,24 +39,26 @@
           [attr.aria-labelledby]="'heading_' + statut.split(' ')[0]" data-bs-parent="#accordionExample">
           <div class="accordion-body">
             <div>
-              <table *ngIf="!windows_screen_mobile" #table mat-table [dataSource]="getDataSource(i)" class="mat-elevation-z8">
-                <!-- ID Column -->
+              <table *ngIf="!windows_screen_mobile" #table mat-table [dataSource]="getDataSource(i)"
+                class="mat-elevation-z8">
+                ID Column
                 <ng-container matColumnDef="id">
                   <th mat-header-cell *matHeaderCellDef> Token </th>
                   <td mat-cell *matCellDef="let element"> {{element.id}} </td>
                 </ng-container>
-                <!-- EMAIL Column -->
+                EMAIL Column
                 <ng-container matColumnDef="email">
                   <th mat-header-cell *matHeaderCellDef> Email </th>
                   <td mat-cell *matCellDef="let element"> {{element.email}} </td>
                 </ng-container>
-                <!-- Restaurants Column -->
+                Restaurants Column
                 <ng-container matColumnDef="restaurants">
                   <th mat-header-cell *matHeaderCellDef> Restaurants </th>
                   <td mat-cell *matCellDef="let element; let cell_index = index;">
                     <mat-form-field appearance="fill">
                       <mat-label>restaurants</mat-label>
-                      <mat-select (selectionChange)="set_restaurants($event, cell_index, i)" (openedChange)="get_restaurant($event,cell_index, i)" multiple>
+                      <mat-select (selectionChange)="set_restaurants($event, cell_index, i)"
+                        (openedChange)="get_restaurant($event,cell_index, i)" multiple>
                         <mat-option [disabled]="!is_prop" #options *ngFor="let restau of element.restaurants.split(',')"
                           [value]="restau">{{restau}}</mat-option>
                       </mat-select>
@@ -64,13 +66,14 @@
                   </td>
                 </ng-container>
 
-                <!-- Right Column lecture -->
+                Right Column lecture
                 <ng-container matColumnDef="read_right">
                   <th mat-header-cell *matHeaderCellDef> droits lecture </th>
                   <td mat-cell *matCellDef="let element; let cell_index = index;">
                     <mat-form-field appearance="fill">
                       <mat-label>droits</mat-label>
-                      <mat-select (selectionChange)="set_read_right($event, cell_index, i)" (openedChange)="get_read_right($event,cell_index, i)" multiple>
+                      <mat-select (selectionChange)="set_read_right($event, cell_index, i)"
+                        (openedChange)="get_read_right($event,cell_index, i)" multiple>
                         <mat-option #options_read *ngFor="let right of element.row_roles.split(',')"
                           [value]="right">{{right}}</mat-option>
                       </mat-select>
@@ -78,52 +81,53 @@
                   </td>
                 </ng-container>
 
-                <!-- Right Column écriture -->
+                Right Column écriture
                 <ng-container matColumnDef="write_right">
                   <th mat-header-cell *matHeaderCellDef> droits écriture </th>
                   <td mat-cell *matCellDef="let element; let cell_index = index;">
                     <mat-form-field appearance="fill">
                       <mat-label>droits</mat-label>
-                      <mat-select (selectionChange)="set_write_right($event, cell_index, i)" (openedChange)="get_write_right($event,cell_index, i)" multiple>
+                      <mat-select (selectionChange)="set_write_right($event, cell_index, i)"
+                        (openedChange)="get_write_right($event,cell_index, i)" multiple>
                         <mat-option #options_write *ngFor="let right of element.row_roles.split(',')"
                           [value]="right">{{right}}</mat-option>
                       </mat-select>
                     </mat-form-field>
                   </td>
                 </ng-container>
-                <!-- Validation des accès -->
+                Validation des accès
                 <ng-container matColumnDef="validation">
                   <th mat-header-cell *matHeaderCellDef> cliquer pour valider </th>
                   <td id="validate" mat-cell *matCellDef="let element;let cell_index = index; ">
-                    <i class="fa-regular fa-pen" id="form_right" type="submit" (click)="modifEmployee(cell_index, i)"></i>
+                    <i class="fa-regular fa-pen" id="form_right" type="submit"
+                      (click)="modifEmployee(cell_index, i)"></i>
                   </td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="display_columns"></tr>
                 <tr mat-row *matRowDef="let row; columns: display_columns;"></tr>
               </table>
-              <mat-paginator *ngIf="!windows_screen_mobile" #paginator (page)="pageChanged($event, i)" [length]="prop_user.length" [pageSizeOptions]="[6]"
-                showFirstLastButtons>
+              <mat-paginator *ngIf="!windows_screen_mobile" #paginator (page)="pageChanged($event, i)"
+                [length]="prop_user.length" [pageSizeOptions]="[6]" showFirstLastButtons>
               </mat-paginator>
               <ng-container *ngIf='windows_screen_mobile'>
-                <mat-action-list *ngFor="let user of getUsers(i)">     
+                <mat-action-list *ngFor="let user of getUsers(i)">
                   <button mat-list-item class="main_panel" (click)="changeUserInfo(user)">
                     {{user.email}}
                   </button>
-               </mat-action-list>
+                </mat-action-list>
               </ng-container>
             </div>
           </div>
         </div>
       </div>
-    </div>  
+    </div>
   </main>
   <footer>
     <button mat-stroked-button class="acceuil" (click)="addSalaryRestaurant()">
       <i class="fa-regular fa-plus"></i>
       Ajouter le salaire moyen des cuisiniées
-  </button>
+    </button>
   </footer>
 </body>
-
 </html>

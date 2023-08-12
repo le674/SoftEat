@@ -6,54 +6,86 @@
 </div>
 <form [formGroup]="modif_clients_section" (ngSubmit)="changeClient()">
     <p class="title">Modifier les information sur le client</p>
-    <div class="section_fileds">
-        <div class="container-content"> 
-            <div class="full-container"> 
-                <p>Prénom</p>
-                <p>Nom</p>
-                <p>Email</p>
-                <p>Numéro</p>
-                <p>Adress</p>
-                <p>Notif. gaspillage</p>
-                <p>Notif. promotions</p>
-                <p>Nombre de commandes</p>
+    <div id="form-field">
+        <div class="cell">
+            <p class="subtitle">Prénom</p>
+            <mat-form-field class="classic-field"  appearance="fill">
+                <mat-label>Entrer le prénom du client</mat-label>
+                <input matInput formControlName="name" placeholder="Ex. test">
+            </mat-form-field>
+        </div>
+        <div class="cell">
+            <p class="subtitle">Nom</p>
+            <mat-form-field class="classic-field" appearance="fill">
+                <mat-label>Entrer le nom du client</mat-label>
+                <input matInput formControlName="surname" placeholder="Ex. dupont">
+            </mat-form-field>
+        </div>
+        <div class="cell">
+            <p class="subtitle">Email</p>
+            <mat-form-field class="classic-field" appearance="fill">
+                <mat-label>Entrer l'email du client</mat-label>
+                <input matInput  formControlName="email" placeholder="test.dupont@gtes.com">
+            </mat-form-field>
+        </div>
+        <div class="cell">
+            <p class="subtitle">Numéro</p>
+            <mat-form-field class="classic-field" appearance="fill">
+                <mat-label>Entrer le numéro du client</mat-label>
+                <input matInput formControlName="number" placeholder="0677777777777">
+            </mat-form-field>
+        </div>
+        <p class="subtitle">address</p>
+        <div id="address">
+            <div class="cell number-cell">
+                <p class="address-par">Numéro de voie</p>
+                <mat-form-field class="classic-field number-cell" appearance="fill">
+                    <input class="number-cell" matInput formControlName="street_number" placeholder="2">
+                </mat-form-field>
             </div>
-            <div class="full-container"> 
-                <mat-form-field class="classic-field"  appearance="fill">
-                    <mat-label>Entrer le prénom du client</mat-label>
-                    <input matInput formControlName="name" placeholder="Ex. test">
-                </mat-form-field>
+            <div class="cell">
+                <p class="address-par">Nom de voie</p>
                 <mat-form-field class="classic-field" appearance="fill">
-                    <mat-label>Entrer le nom du client</mat-label>
-                    <input matInput formControlName="surname" placeholder="Ex. dupont">
+                    <mat-label>Entrer le nom de la voie du client</mat-label>
+                    <input matInput formControlName="street" placeholder="Rue Des Endives">
                 </mat-form-field>
-                <mat-form-field class="classic-field" appearance="fill">
-                    <mat-label>Entrer l'email du client</mat-label>
-                    <input matInput  formControlName="email" placeholder="test.dupont@gtes.com">
+            </div>
+            <div class="cell postal-cell">
+                <p class="address-par">Code postal</p>
+                <mat-form-field class="classic-field postal-cell" appearance="fill">
+                    <input matInput class="postal-cell" formControlName="postal_code" placeholder="42000">
                 </mat-form-field>
-                <mat-form-field class="classic-field" appearance="fill">
-                    <mat-label>Entrer le numéro du client</mat-label>
-                    <input matInput formControlName="number" placeholder="0677777777777">
-                </mat-form-field>
-                <mat-form-field class="classic-field" appearance="fill">
-                    <mat-label>Entrer l'adresse du client</mat-label>
-                    <input matInput formControlName="adress" placeholder="2 Rue Des Endives, Paris">
-                </mat-form-field>
-                <mat-radio-group id="gasp" formControlName="waste_alert"  aria-label="Select an option">
-                    <mat-radio-button value="oui">Oui</mat-radio-button>
-                    <mat-radio-button value="non">Non</mat-radio-button>
-                </mat-radio-group> 
-                <mat-radio-group formControlName="promotion"  aria-label="Select an option">
-                    <mat-radio-button value="oui">Oui</mat-radio-button>
-                    <mat-radio-button value="non">Non</mat-radio-button>
-                </mat-radio-group>  
-                <mat-form-field class="classic-field" appearance="fill">
-                    <mat-label>Entrer le nombre de commande faite par ce client</mat-label>
-                    <input matInput type="number" formControlName="order_number" placeholder="7">
+            </div>
+            <div class="cell">
+                <p class="address-par">Ville</p>
+                <mat-form-field class="classic-field " appearance="fill">
+                    <mat-label>Entrer la ville du client</mat-label>
+                    <input matInput formControlName="city" placeholder="Saint-Étienne">
                 </mat-form-field>
             </div>
         </div>
+        <div class="cell">
+            <p class="subtitle">Notification gaspillage</p>
+            <mat-radio-group id="gasp" formControlName="waste_alert"  aria-label="Select an option">
+                <mat-radio-button value="oui">Oui</mat-radio-button>
+                <mat-radio-button value="non">Non</mat-radio-button>
+            </mat-radio-group> 
+        </div>
+        <div class="cell"> 
+            <p class="subtitle">Notification promotion</p>
+            <mat-radio-group formControlName="promotion"  aria-label="Select an option">
+                <mat-radio-button value="oui">Oui</mat-radio-button>
+                <mat-radio-button value="non">Non</mat-radio-button>
+            </mat-radio-group>  
+        </div>
+        <div class="cell"> 
+            <p class="subtitle">Nombre de commande</p>
+            <mat-form-field class="classic-field" appearance="fill">
+                <mat-label>Entrer le nombre de commande faite par ce client</mat-label>
+                <input matInput type="number" formControlName="order_number" placeholder="7">
+            </mat-form-field>
+        </div>
+        <button mat-stroked-button id="add" type="submit"> Modifier </button>
     </div>
-    <button mat-stroked-button id="add" type="submit"> Modifier </button>
 </form>
 

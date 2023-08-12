@@ -22,7 +22,6 @@ export class FooterComponent implements OnInit {
   private router: Router;
   private url: UrlTree;
   private auth : Auth;
-  public user_db: User;
   public enseigne:string;
   public restaurants: string;
   public not_mobile: boolean;
@@ -34,7 +33,6 @@ export class FooterComponent implements OnInit {
   constructor(private ofApp: FirebaseApp, private _snackBar: MatSnackBar, router: Router,
     private mail_service:MailServicesService, public dialog: MatDialog, public mobile_service:CommonService) {
     this.router = router;
-    this.user_db = new User()
     this.enseigne = "";
     this.restaurants = "";
     this.not_mobile = false;

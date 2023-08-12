@@ -5,8 +5,20 @@
             <input matInput  formControlName="id" placeholder="Ex. foodandboost">
         </mat-form-field>
         <mat-form-field appearance="fill">
-            <mat-label>Entrer l'adresse du restaurant</mat-label>
-            <input matInput  formControlName="adresse" placeholder="Ex. 2 rue des mimosa, 42000 Saint-Étienne">
+            <mat-label>Ville</mat-label>
+            <input matInput formControlName="city" placeholder="Ex. Saint-Étienne">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer le code postal du restaurant</mat-label>
+            <input matInput formControlName="postal_code" placeholder="Ex. 42000">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Numéro de rue</mat-label>
+            <input matInput formControlName="street_number" placeholder="Ex. 42000">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Rue</mat-label>
+            <input matInput formControlName="street" placeholder="Ex. 42000">
         </mat-form-field>
         <div>
             <div mat-dialog-actions id="actions">

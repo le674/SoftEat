@@ -49,7 +49,6 @@ AppSendMail.get('/', (req, res) => {
     };
     //on retourne le résultat de l'envoie de mail
     return transporter.sendMail(mailOptions, (erro, info) => {
-        console.log(info);
         if (erro) {
             return res.send(erro.toString());
         }

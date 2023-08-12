@@ -1,4 +1,14 @@
-import { Component, OnInit, ViewEncapsulation} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import { FirebaseApp } from '@angular/fire/app';
+import { Auth, getAuth, onAuthStateChanged } from '@angular/fire/auth';
+import { Router, UrlTree } from '@angular/router';
+import { Unsubscribe } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
+import { Employee } from 'src/app/interfaces/employee';
+import { Statut } from 'src/app/interfaces/statut';
+import { User } from 'src/app/interfaces/user';
+import { CommonService } from 'src/app/services/common/common.service';
+import { UserInteractionService } from 'src/app/services/user-interaction.service';
 
 @Component({
   selector: 'app-app.dashboard',
@@ -6,13 +16,48 @@ import { Component, OnInit, ViewEncapsulation} from '@angular/core';
   styleUrls: ['./app.dashboard.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class AppDashboardComponent implements OnInit {
-  
+export class AppDashboardComponent implements OnInit, OnDestroy {
+  private prop:string;
+  private restaurant:string;
+  private user_subscription: Subscription; 
+  private url: UrlTree;
+  private auth:Auth;
   public numP = 1;
+  public status:Statut;
+  private router: Router;
+  private user_unsubscribe!:Unsubscribe;
+  private sub_user!:Subscription;
 
-  constructor() {}
-
-  ngOnInit(): void {
+  constructor(public common_service:CommonService,
+    router: Router,
+    private app:FirebaseApp,
+    private employee_service:UserInteractionService) {
+    this.router = router;
+    this.prop = "";
+    this.restaurant = "";
+    this.user_subscription = new Subscription();
+    this.status = new Statut(this.common_service);
+    this.url = this.router.parseUrl(this.router.url);
+    this.auth = getAuth(app);
   }
-
+  ngOnDestroy(): void {
+   this.user_unsubscribe();
+   this.sub_user.unsubscribe();
+  }
+  ngOnInit(): void {
+    let user_info = this.url.queryParams;
+    this.prop = user_info["prop"];
+    this.restaurant = user_info["restaurant"];
+    onAuthStateChanged(this.auth, (user) => {
+      if(user !== null){
+        let _user = new User()
+        _user.proprietary_id = this.prop;
+        _user.uid = user.uid;
+        this.user_unsubscribe = this.employee_service.getEmployeeBDD(_user);
+        this.sub_user = this.employee_service.getEmployee().subscribe((employee:Employee) => {
+          this.status = employee.statut;
+        })
+      }
+    });
+  }
 }

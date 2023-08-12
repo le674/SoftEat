@@ -1,0 +1,29 @@
+body{
+    width: auto;
+    display: flex;
+    flex-direction: column;
+}
+header{
+    margin-bottom: 5%;
+}
+main{
+      display: flex;
+      justify-content: flex-start;
+}
+p{
+      font-size: medium;
+      font-weight: normal;
+      color: black;
+      margin-left: 5px;   
+}
+.folder{
+    margin-right: 75px;
+}
+
+.image-folder{
+    pointer-events: stroke;
+    cursor: pointer;
+}
+.image-folder:hover{
+    filter: opacity(50%);
+}

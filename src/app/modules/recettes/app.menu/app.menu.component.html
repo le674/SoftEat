@@ -25,20 +25,20 @@
                         </div>
                         <figcaption>
                             <h3 class="entry-title">
-                                <a>{{menu.nom}}</a>
+                                <a>{{menu.name}}</a>
                             </h3>
                             <span class="tourprice">
-                                <span class="currency">EUR. </span><span class="price">{{menu.prix}}</span>
+                                <span class="currency">EUR. </span><span class="price">{{menu.cost}}</span>
                             </span>
                         </figcaption>
                         <div class="tourbtn">
                             <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="seeMenu(menu)">
                               <br>  <i class="fa-solid fa-eye"></i> <br> Consulter
                             </a>
-                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="modifyMenu(menu)">
+                            <a [ngClass]="write ?  '': 'disable'"  class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="modifyMenu(menu)">
                                 <br> <i class="fa-solid fa-pen"> </i> <br> Modifier
                             </a>
-                            <a class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="suppressMenu(menu)">
+                            <a [ngClass]="write ?  '': 'disable'"  class="btn btn-sm rest-bn" target="_blank" rel="noreferrer" (click)="suppressMenu(menu)">
                                 <br> <i class="fa-solid fa-trash"> </i> <br> Supprimer
                             </a>
                         </div>
@@ -57,7 +57,7 @@
                             <span class="description">Cliquer pour ajouter un menu</span>
                         </figcaption>
                         <div class="tourbtn">
-                            <a class="btn btn-sm" target="_blank" rel="noreferrer" (click)="addMenu()">
+                            <a [ngClass]="write ?  '': 'disable'"  class="btn btn-sm" target="_blank" rel="noreferrer" (click)="addMenu()">
                                 <i class="fa-solid fa-plus"></i> <br> Ajouter
                             </a>
                         </div>
