@@ -1,5 +1,4 @@
 import { DocumentSnapshot, SnapshotOptions } from "@angular/fire/firestore";
-import { IngredientsInteractionService } from "../services/menus/ingredients-interaction.service";
 import { CalculService } from "../services/menus/menu.calcul/menu.calcul.ingredients/calcul.service";
 import { InteractionBddFirestore } from "./interaction_bdd";
 

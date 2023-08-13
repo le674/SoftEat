@@ -9,9 +9,9 @@ import {CIngredient, TIngredientBase } from '../../../../../app/interfaces/ingre
 import { AfterPreparation, Cpreparation } from '../../../../../app/interfaces/preparation';
 import { CalculService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { CalculPrepaService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
-import { PreparationInteractionService } from '../../../../../app/services/menus/preparation-interaction.service';
 import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
 import { MiniConsommable } from 'src/app/interfaces/recette';
+import { FirebaseService } from 'src/app/services/firebase.service';
 
 @Component({
   selector: 'app-add.preparations',
@@ -49,7 +49,7 @@ export class AddPreparationsComponent implements OnInit{
   private base_ings: Array<TIngredientBase>;
   private _base_ings: Array<TIngredientBase>;
   private base_conso: Array<MiniConsommable>;
-  
+  private path_to_preparation:Array<string>;
   private etapes: Array<Cetape>;
   private after_prep:AfterPreparation = {quantity: 0, unity:""}; 
   private is_stock:boolean;
@@ -67,8 +67,8 @@ export class AddPreparationsComponent implements OnInit{
     _consommables: Array<Cconsommable>,
     preparation: Cpreparation | null,
     modification:boolean
-    }, private preparation_service: PreparationInteractionService,
-    private prepa_service:CalculPrepaService, private _snackBar: MatSnackBar) { 
+    },
+    private prepa_service:CalculPrepaService, private _snackBar: MatSnackBar, private firestore:FirebaseService) { 
     if(this.data._ingredients !== null){
       this.ingredients = this.data._ingredients;
     }
@@ -84,6 +84,7 @@ export class AddPreparationsComponent implements OnInit{
     if(this.data.modification){
       this.setTrue()
     }
+    this.path_to_preparation = [];
     this.is_stock = false;  
     this._base_ings = [];
     this.base_ings = [];
@@ -96,6 +97,7 @@ export class AddPreparationsComponent implements OnInit{
 
 
   ngOnInit(): void {
+    this.path_to_preparation = Cpreparation.getPathsToFirestore(this.data.prop, this.data.restaurant);
     // pour le moment dans consommable ont met p au lieu d'une autre unitée.  car ont ne gère pas encore les quantitée unitaire
     //pour les consommables 
     if(this.data.preparation !== null){
@@ -315,15 +317,15 @@ export class AddPreparationsComponent implements OnInit{
               preparation.unity = this.after_prep.unity;
               if(preparation !== null){
                 if(this.data.modification){
-                  this.preparation_service.updatePreparationInBdd(preparation, this.data.prop, this.data.restaurant).catch((e) => {
+                  this.firestore.updateFirestoreData(preparation.id, preparation, this.path_to_preparation, Cpreparation).catch((e) => {
                     console.log(e);
                     this._snackBar.open("nous ne somme pas parvenu à modifier la préparation veuillez contacter SoftEat", "fermer");
                   }).finally(() => {
                     this._snackBar.open("nous somme parvenu à modifier la préparation", "fermer");
                   })
                 }
-                else{             
-                  this.preparation_service.setPreparation(preparation, this.data.prop, this.data.restaurant).catch((e) => {
+                else{      
+                  this.firestore.setFirestoreData(preparation, this.path_to_preparation, Cpreparation).catch((e) => {
                     console.log(e);
                     this._snackBar.open("nous ne somme pas parvenu à ajouter la préparation veuillez contacter SoftEat", "fermer");
                   }).finally(() => {

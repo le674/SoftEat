@@ -22,6 +22,8 @@ import { MatSelectChange } from '@angular/material/select';
 import { AddConfigueEmployeeComponent } from './add.configue.employee/add.configue.employee/add.configue.employee.component';
 import { AddConfigueSalaryComponent } from './add.configue.salary/add.configue.salary.component';
 import { MobileUserDataComponent } from './mobile.user.data/mobile.user.data/mobile.user.data.component';
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { InteractionBddFirestore } from 'src/app/interfaces/interaction_bdd';
 
 @Component({
   selector: 'app-app.configue',
@@ -33,7 +35,7 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
   private proprietaire: string;
   private user: User;
   private users: Array<EmployeeFull>;
-
+  private path_to_restaurant:Array<string>;
   private rest_max_length: number;
   public restau_list: Array<Restaurant>;
 
@@ -119,9 +121,10 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
   constructor(public dialog: MatDialog, private user_services: UserInteractionService,
     private ofApp: FirebaseApp, private router: Router, private _snackBar: MatSnackBar,
     private _bottomSheet: MatBottomSheet, private common_service: CommonService,
-    private cache_service: CommonCacheServices, private restaurant_service: RestaurantService) {
+    private cache_service: CommonCacheServices, private firestore:FirebaseService) {
     this.prop_user = [];
     this.users = [];
+    this.path_to_restaurant = []
     this.display_columns = this.common_service.getColumnAdminTab();
     this.roles = this.common_service.getStatut();
     this.length_statut = this.common_service.getStatut().length;
@@ -194,20 +197,20 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
         if(user.proprietary_id !== null){
           this.proprietaire = user.proprietary_id;
         }
+        this.path_to_restaurant = Restaurant.getPathsToFirestore(this.proprietaire);
         if (this.user.related_restaurants !== null) {
             this.all_user_unsubscribe = this.user_services.getAllUsersFromPropBDD(this.proprietaire, true);
             this.all_user_subscription = this.user_services.getAllUsersFromProp().subscribe((users:Array<User>) => {
               this.all_employee_unsubscribe = this.user_services.getAllEmployeeBDD(this.proprietaire , this.uid);
               this.user_services.getAllEmployee().subscribe((employees) => {
-                
                 const employee = employees.find((employee) => employee.uid === user.uid);
                 if(employee !== undefined){
                   if(employee.roles?.includes("propriétaire")){
                     this.is_prop = true;
                   }
                 }
-                this.restaurant_service.getAllRestaurantsFromPropBDD(this.user);
-                this.restaurant_service.getAllRestaurantsFromProp().subscribe((restaurants) => {
+                this.firestore.getFromFirestoreBDD(this.path_to_restaurant, Restaurant);
+                this.firestore.getFromFirestore().subscribe((restaurants:Array<InteractionBddFirestore>)  => {
                   this.users = [];
                   this.prop_user = [];
                   for(let employee of employees){
@@ -215,8 +218,8 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
                     let _employee = new EmployeeFull(employee.email, employee.statut, employee.uid, this.common_service);
                     _employee.setEmployee(employee);
                     _employee.proprietaire = this.proprietaire;
-                    _employee.getAllRestaurant(user, restaurants);
-                    row_user.setRowUser(employee, this.common_service.getStatut(), restaurants);
+                    _employee.getAllRestaurant(user, restaurants as Array<Restaurant>);
+                    row_user.setRowUser(employee, this.common_service.getStatut(), restaurants as Array<Restaurant>);
                     this.users.push(_employee);
                     this.rest_max_length = restaurants.length;
                     this.prop_user.push(row_user);

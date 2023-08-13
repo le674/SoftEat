@@ -1,16 +1,15 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CIngredient, TIngredientBase } from '../../../../../app/interfaces/ingredient';
 import { Cmenu } from '../../../../../app/interfaces/menu';
 import { CbasePlat, Cplat } from '../../../../../app/interfaces/plat';
-import { MenuInteractionService } from '../../../../../app/services/menus/menu-interaction.service';
 import { MenuCalculMenuService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.menu.service';
 import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
 import { throwError } from 'rxjs';
+import { FirebaseService } from 'src/app/services/firebase.service';
 
 @Component({
   selector: 'app-add.menu',
@@ -51,7 +50,7 @@ export class AddMenuComponent implements OnInit {
     plats: Array<Cplat>,
     menu: Cmenu,
     modification:boolean
-  }, private menu_service: MenuInteractionService, private _snackBar: MatSnackBar, private menu_calcul: MenuCalculMenuService) {
+  },private firestore:FirebaseService, private _snackBar: MatSnackBar, private menu_calcul: MenuCalculMenuService) {
     this.unity_conso = [];
     this.unity_ing = [];
     this.curr_ingredients_vrac = [];
@@ -104,7 +103,7 @@ export class AddMenuComponent implements OnInit {
   }
 
   changeMenu() {
-
+    let path_to_menu = Cmenu.getPathsToFirestore(this.data.prop);
     let menu = new Cmenu();
     let _ing:Array<TIngredientBase> | null = null;
     let _conso:Array<TConsoBase> | null = null;
@@ -184,8 +183,7 @@ export class AddMenuComponent implements OnInit {
       menu.cost_ttc = this.menu_calcul.getPriceTTC(menu.cost, menu.taux_tva);
 
       if(!this.data.modification){
-
-        this.menu_service.setMenu(this.data.prop,  menu).catch((e) => {
+        this.firestore.setFirestoreData(menu, path_to_menu, Cmenu).catch((e) => {
           this._snackBar.open("le menu n'a pas été ajouté", "fermer");
           const err = new Error(e); 
           return throwError(() => err).subscribe((error) => {
@@ -195,7 +193,7 @@ export class AddMenuComponent implements OnInit {
         this._snackBar.open("le menu vient d'être ajouté", "fermer");
       }
       else{
-        this.menu_service.updateMenu(this.data.prop, menu).catch((e) => {
+        this.firestore.updateFirestoreData(menu.id,menu,path_to_menu,Cmenu).catch((e) => {
           this._snackBar.open("le menu n'a pas été modifié", "fermer");
           const err = new Error(e); 
           return throwError(() => err).subscribe((error) => {

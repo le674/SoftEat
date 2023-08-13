@@ -1,7 +1,8 @@
 import { Address } from "./address";
 import { Cconsommable } from "./consommable";
 import { CIngredient } from "./ingredient";
-import { Menu } from "./menu";
+import { InteractionBddFirestore } from "./interaction_bdd";
+import { Cmenu } from "./menu";
 
 export class UserRestaurant {
     "proprietaire": string;
@@ -18,35 +19,55 @@ export interface UserRestaurantRole {
   "restaurants": Array<Restaurant>;
 }
 
-export class Restaurant {
+export class Restaurant implements InteractionBddFirestore {
     "name":string | null;
     "id": string;
     "address": Address | null;
-    "menus": Array<Menu> | null;
-    "ingredients":Array<CIngredient> | null;
-    "consommables":Array<Cconsommable> | null;
+    "proprietary_id":string;
 
     constructor(address:Address | null){
       this.address = address;
       this.id = ""
-      this.menus = []
+      this.proprietary_id = "";
     }
-
-    getId(){
-      return this.id
-    }
-
-    setId(id:string){
-      this.id = id;
-    }
-    setRestaurant(data: Restaurant) {
-      this.name = data.name;
-      this.id = data.id;
-      if(data.address !== null){
-        this.address = new Address(data.address.postal_code, data.address.street_number, data.address.city, data.address.street); 
+    /**
+     * Permet de copier un restaurant dans cet instance de restaurant
+     * @param restaurant données du restaurant à copier dans cett instance de restaurant 
+     */
+    setData(restaurant:Restaurant) {
+      let address = null;
+      if(restaurant.address !== null){
+        address = new Address(restaurant.address.postal_code, restaurant.address.street_number, restaurant.address.city,restaurant.address.street);
       }
-      this.menus = data.menus;
-      this.ingredients = data.ingredients;
-      this.consommables = data.consommables;
+      this.id = restaurant.id;
+      this.name = restaurant.name;
+      this.address = address;
+      this.proprietary_id = restaurant.proprietary_id;
     }
+    /**
+     * Récupération d'un objet restaurant
+     * @returns {Object} objet restaurant
+     */
+    getData(id: string | null, ...args: any[]) {
+      let address = null;
+      if(this.address !== null){
+        address = this.address.getData(null);
+      }
+      return {
+        name: this.name,
+        id:this.id,
+        address: address,
+        proprietary_id:this.proprietary_id
+      }
+    }
+    /**
+     * Cette fonction permet de retourner une nouvelle instance de restaurant copie de celle-ci
+     * @returns permet de retourner une instance de restaurant
+     */
+    getInstance(): InteractionBddFirestore {
+     return new Restaurant(this.address);
+    }
+    public static getPathsToFirestore(proprietary_id: string): string[] {
+      return ["proprietaires", proprietary_id, "restaurants"]
+  }
 }

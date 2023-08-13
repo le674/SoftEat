@@ -1,26 +1,10 @@
 import {TConsoBase } from "./consommable";
 import { Cetape, Etape } from "./etape";
 import {TIngredientBase } from "./ingredient";
+import { InteractionBddFirestore } from "./interaction_bdd";
 import { CbasePlat} from "./plat";
-import { CpreparationBase } from "./preparation";
 
-export interface Menu{
-    /* on ventile lorsque l'on a une boisson alcholisée dans le menu pour réduire le taux, pareil lorsque on peut bénéficier de taux réduit 
-    par example si il y'a du pain dans le menu */
-    "name":string;
-    "taux_tva":number | null;
-    "cost":number;
-    "cost_ttc":number | null;
-    "consommables":Array<TConsoBase> | null;
-    "ingredients":Array<TIngredientBase> | null;
-    "etapes":Array<Etape> | null;
-    "plats":Array<CbasePlat> | null;
-
-    setData(menu:Cmenu):void;
-    getData(id:string):void;
-}
-
-export class Cmenu implements Menu{
+export class Cmenu implements InteractionBddFirestore{
     "id":string;
     "name":string;
     "taux_tva": number | null;
@@ -31,6 +15,10 @@ export class Cmenu implements Menu{
     "etapes": Etape[] | null;
     "plats": CbasePlat[] | null;
     
+    /**
+     * permet de transformer les donnée JSON récupérer depuis la bdd firestore en objet MENU
+     * @param data donnée Json récupérer depuis la base ded onnée firestore
+     */
     public setData(data: Cmenu) {
         let ingredients:Array<TIngredientBase> = [];
         let consommables:Array<TConsoBase> | null = [];
@@ -133,6 +121,20 @@ export class Cmenu implements Menu{
             plats: plats,
             etapes: etapes
         }
+    }
+    /**
+     * chemin vers l'ensemble des menus dans firestore
+     * @param prop enseigne pour laquel nous souhaitons récupérer le menu
+     */
+    public static getPathsToFirestore(proprietary_id: string):string[] {
+        return ["proprietaires", proprietary_id, "menus"]
+    }
+    /**
+     * permet de construire une instance de la class menu
+     * @returns {Cmenu} une instance de menu
+     */
+    public getInstance(): InteractionBddFirestore {
+        return new Cmenu();
     }
 }
 

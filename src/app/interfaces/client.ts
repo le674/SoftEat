@@ -1,6 +1,7 @@
 import { Address } from "./address";
+import { InteractionBddFirestore } from "./interaction_bdd";
 
-export class Client {
+export class Client implements InteractionBddFirestore {
     public "id":string 
     public "name": string;
     public "surname": string;
@@ -27,10 +28,26 @@ export class Client {
       this.uid = "";
     }
     /**
+     * Permet de retourner une instance d'un objet client
+     * @returns un objet client
+     */
+    public getInstance(): InteractionBddFirestore {
+      return new Client();
+    }
+    /**
+     * Permet de récupérer le chemin vers l'ensemble des clients du restaurants
+     * @param proprietary_id identifiant de l'enseigne permettant l'accès aux clients
+     * @param restaurant_id identifiant du restaurants contenants l'ensemble des clients
+     * @returns {Array<string>} chemin vers les clients du restaurant
+     */
+    public static getPathsToFirestore(proprietary_id: string, restaurant_id:string):string[]{
+      return ["proprietaires", proprietary_id, "restaurants", restaurant_id, "clients"];
+    }
+    /**
      * Permet de créer une instance de l'objet client à partir d'un JSON client de la base de donnée
      * @param data donnée client récupéré depuis la base de donnée
      */
-    setData(data: Client) {
+    public setData(data: Client) {
 
       this.id = data.id;
       this.name = data.name;
@@ -53,7 +70,7 @@ export class Client {
      * permet de convertir un objet client en un JSON pour l'insérer dans la bdd
      * @returns {Object} objet client sous forme de JSON
      */
-    getData(): any {
+    public getData(): any {
       let address = null;
       if(this.address !== null){
         address = {

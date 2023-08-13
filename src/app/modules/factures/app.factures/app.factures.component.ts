@@ -6,7 +6,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router, UrlTree } from '@angular/router';
 import { CIngredient } from '../../../../app/interfaces/ingredient';
 import { FacturePdfService } from '../../../../app/services/factures/facture_pdf/facture-pdf.service';
-import { IngredientsInteractionService } from '../../../../app/services/menus/ingredients-interaction.service';
 import { CalculService } from '../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { FactureImgService } from '../../../../app/services/factures/facture_img/facture-img.service';
 import { FactureLoadComponent } from './app.factures.load/facture-load/facture-load.component';
@@ -17,6 +16,8 @@ import { CommonService } from '../../../../app/services/common/common.service';
 import { Visibles } from '../../autho/app.configue/app.configue.index';
 import { Facture, FacturePrintedResult } from 'src/app/interfaces/facture';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-factures',
@@ -87,7 +88,7 @@ export class AppFacturesComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private service: IngredientsInteractionService, router: Router, 
+  constructor(private service: FirebaseService, router: Router, 
     public dialog: MatDialog, private calc_service: CalculService, private _snackBar:MatSnackBar,
     private service_facture_pdf:FacturePdfService, private service_facture_img:FactureImgService,
     private service_factue_shared:FactureSharedService, public mobile_service:CommonService) { 
@@ -416,12 +417,16 @@ export class AppFacturesComponent implements OnInit {
   }
 
   addIngredients($event: MouseEvent) {
+   let path_to_ingredient = CIngredient.getPathsToFirestore(this.prop, this.restaurant);
    if(this.ingredient){
     let is_added = true;
     for(let ingredient of this.ingredients_br){
-      this.service.setIngInBdd(ingredient,this.prop, this.restaurant).catch((e) => {
+      this.service.setFirestoreData(ingredient,path_to_ingredient, CIngredient).catch((e) => {
         is_added = false;
-        console.log(e);
+        let err = new Error(e);
+        return throwError(() => err).subscribe((err) => {
+          console.log(err);
+        })
       }).then(() => {
         this.ingredients_br = [];
         this.ingredients_displayed_br = [];

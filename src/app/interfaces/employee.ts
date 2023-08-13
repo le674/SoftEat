@@ -1,9 +1,10 @@
 import { CommonService } from "../services/common/common.service";
 import { Address } from "./address";
+import { InteractionBddFirestore } from "./interaction_bdd";
 import { Restaurant } from "./restaurant";
 import { Statut } from "./statut";
 import { User } from "./user";
-export class Employee {
+export class Employee implements InteractionBddFirestore {
     address:Address | null;
     current_restaurant:string | null;
     email:string;
@@ -181,6 +182,20 @@ export class Employee {
         this.user_id = employee.user_id;
         this.address = address;  
         this.statut = statut
+    }
+   /**
+      * Permet de retourner une nouvelle instance de employee depuis la base de donnée
+      * @returns {Employee} un employee depuis la base de donnée
+   */
+    getInstance(): InteractionBddFirestore {
+      return new Employee(this.email, this.statut, this.uid, this.common_service);
+    }
+   /**
+     * chemin vers l'ensemble des employees dans firestore
+     * @param prop enseigne pour laquel nous souhaitons récupérer les employees
+   */
+    public static getPathsToFirestore(proprietary_id: string): string[] {
+      return ["proprietaires", proprietary_id, "employees"]
     }
     to_roles() {
       let statut = new Statut(this.common_service);

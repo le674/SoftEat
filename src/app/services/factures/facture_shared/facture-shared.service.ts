@@ -4,10 +4,10 @@ import { Injectable } from '@angular/core';
 import { TextItem } from 'pdfjs-dist/types/src/display/api';
 import { CIngredient } from '../../../../app/interfaces/ingredient';
 import { TextImg, TextShared } from '../../../../app/interfaces/text';
-import { IngredientsInteractionService } from '../../menus/ingredients-interaction.service';
 import { CalculService } from '../../menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { configue_facture_parser } from '../facture_configue';
 import { FactureColumnsFull, FacturePivotsFull, FacturePrintedResult } from 'src/app/interfaces/facture';
+import { FirebaseService } from '../../firebase.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class FactureSharedService {
 
   public colonne_factures_actual: FactureColumnsFull[]
 
-  constructor(private ingredient_services: IngredientsInteractionService, private calcul_service: CalculService) {
+  constructor(private services: FirebaseService, private calcul_service: CalculService) {
     this.colonne_factures_actual = [{
       name: [],
       price: [],
@@ -283,7 +283,8 @@ export class FactureSharedService {
   }
   async convertParsedLstToIngs(parsed_pdf: FacturePrintedResult[] | null, prop: string, restaurant: string): Promise<Array<CIngredient>> {
     let _ingredients: Array<CIngredient> = [];
-    const ingredients = await this.ingredient_services.getIngredientsFromRestaurantsProm(prop, restaurant);
+    let path_ingredient = CIngredient.getPathsToFirestore(prop, restaurant);
+    let ingredients = (await this.services.getFromFirestoreProm(path_ingredient, CIngredient)) as Array<CIngredient>;
     if (parsed_pdf !== null) {
       for (let _ingredient of parsed_pdf) {
         // Nous ne prennons pas en considération les aliments qui n'ont pas de nom

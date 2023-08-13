@@ -11,8 +11,9 @@ import { Cpreparation, CpreparationBase } from '../../../../../app/interfaces/pr
 import { CalculService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { MenuCalculPlatsServiceService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.plats/menu.calcul.plats.service.service';
 import { CalculPrepaService } from '../../../../../app/services/menus/menu.calcul/menu.calcul.preparation/calcul.prepa.service';
-import { PlatsInteractionService } from '../../../../../app/services/menus/plats-interaction.service';
 import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-add.plats',
@@ -63,8 +64,8 @@ export class AddPlatsComponent implements OnInit {
   public boisson:boolean;
 
   private categorie:string = "";
-  constructor(public dialogRef: MatDialogRef<AddPlatsComponent>, public plat_interaction:PlatsInteractionService,
-    public prepa_interaction:CalculPrepaService, private formBuilder: FormBuilder, @Inject(MAT_DIALOG_DATA) public data:{
+  constructor(public dialogRef: MatDialogRef<AddPlatsComponent>, private formBuilder: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data:{
     prop:string,
     restaurant:string,
     ingredients: Array<CIngredient>,
@@ -73,7 +74,7 @@ export class AddPlatsComponent implements OnInit {
     plat: Cplat | null,
     modification:boolean
     }, private _snackBar: MatSnackBar, private plat_service:MenuCalculPlatsServiceService,
-    private calcul_service:CalculService, private calcul_service_prepa:CalculPrepaService) {
+    private calcul_service:CalculService, private calcul_service_prepa:CalculPrepaService, private firestore:FirebaseService) {
     this.unity_conso = [];
     this.unity_ing = [];
     this.selected_ing = '';
@@ -173,6 +174,8 @@ export class AddPlatsComponent implements OnInit {
   
   changePlats():void{
     let plat:Cplat = new Cplat();
+    plat.proprietary_id = this.data.prop;
+    let path_to_plat = Cplat.getPathsToFirestore(this.data.prop);
     if(this.data.plat !== null){
       plat.id = this.data.plat.id;
       plat.material_cost = this.data.plat.material_cost;
@@ -308,19 +311,21 @@ export class AddPlatsComponent implements OnInit {
     const prime_cost_prom = this.plat_service.getPrimCost(this.data.prop, this.data.restaurant, plat, this.data.preparations, this.data.consommables, this.data.ingredients).then((prime_cost) => plat.prime_cost = prime_cost);
     prime_cost_prom.then((prime_cost) => {
       if(this.data.modification){
-        this.plat_interaction.updatePlat(this.data.prop, plat).finally(() => {
-          this._snackBar.open(`le plat ${plat.name} vient d'être modifié`, "fermer")
+        this.firestore.updateFirestoreData(plat.id, plat, path_to_plat, Cplat).finally(() => {
+          this._snackBar.open(`le plat ${plat.name} vient d'être modifié`, "fermer");
         }).catch((e) => {
-          console.log(e);
-          this._snackBar.open(`le plat ${plat.name} n'a pas pu être modifié`, "fermer")
+          this._snackBar.open(`le plat ${plat.name} n'a pas pu être modifié`, "fermer");
+          const err =  new Error(e);
+          return throwError(() => err).subscribe((e) => console.log(e));
         });
       }
       else{
-        this.plat_interaction.setPlat(this.data.prop,  plat).finally(() => {
+        this.firestore.setFirestoreData(plat, path_to_plat, Cplat).finally(() => {
           this._snackBar.open(`le plat ${plat.name} vient d'être ajouté`, "fermer")
         }).catch((e) => {
-          console.log(e);
-          this._snackBar.open(`le plat ${plat.name} n'a pas pu être ajouté`, "fermer")
+          this._snackBar.open(`le plat ${plat.name} n'a pas pu être ajouté`, "fermer");
+          const err =  new Error(e);
+          return throwError(() => err).subscribe((e) => console.log(e));
         });
       }
     });

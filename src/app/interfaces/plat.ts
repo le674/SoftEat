@@ -200,6 +200,9 @@ export class Cplat implements InteractionBddFirestore{
    getInstance(): InteractionBddFirestore {
       return new Cplat();
    }
+   public static getPathsToFirestore(proprietary_id:string){
+      return ["proprietaires", proprietary_id, "plats"]
+   }
 }
 export class CbasePlat{
    "name":string;

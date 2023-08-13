@@ -3,7 +3,7 @@ import { FirebaseApp, initializeApp } from '@angular/fire/app';
 import { getDatabase, ref, onValue, get, DatabaseReference } from 'firebase/database';
 import { Statut } from '../interfaces/statut';
 import { Unsubscribe } from 'firebase/auth';
-import { CollectionReference, DocumentData, DocumentReference, DocumentSnapshot, Firestore, SnapshotOptions, collection, updateDoc, deleteDoc, doc, getFirestore, onSnapshot, setDoc } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, DocumentReference, DocumentSnapshot, Firestore, SnapshotOptions, collection, updateDoc, deleteDoc, doc, getFirestore, onSnapshot, setDoc, getDocs } from '@angular/fire/firestore';
 import { CalculService } from './menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { InteractionBddFirestore } from '../interfaces/interaction_bdd';
 import { Subject } from 'rxjs';
@@ -63,6 +63,39 @@ export class FirebaseService {
             this.interaction_data.next(this.data_array)
         })
         return this.sub_function;
+    }
+    /**
+     * Cette fonction permet de récupérer l'ensemble des données situé vers le paths, avec une promesse
+     * @param paths chemin vers l'ensemble des ingrédients dans la base de donnée
+     * @param class_instance Class des donnée récupérer dans la base de donnée 
+     */
+    public async getFromFirestoreProm(paths:Array<string>, class_instance: Class<InteractionBddFirestore>){
+        let datas:Array<InteractionBddFirestore> = [];
+        this.interaction_data = new Subject<Array<InteractionBddFirestore>>();
+        let _paths: Array<string> = this.getPath(paths);
+        let converter_firestore: any = {
+            toFirestore: (ingredient: InteractionBddFirestore) => {
+                return ingredient;
+            },
+            fromFirestore: (snapshot: DocumentSnapshot<InteractionBddFirestore>, options: SnapshotOptions) => {
+                const data = snapshot.data(options);
+                if (data !== undefined) {
+                    let instance: InteractionBddFirestore;
+                    instance = this.constructInstance(class_instance).getInstance();
+                    instance.setData(data);
+                    return instance;
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+        let ref = this.concatPathCollection(_paths, converter_firestore);
+        const documents_data = await getDocs(ref);
+        documents_data.forEach((doc) => {
+            datas.push(doc.data() as InteractionBddFirestore);
+        })
+        return datas;
     }
     /**
      * Suppréssion de l'ingrédient ddans la base de donnée 

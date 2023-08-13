@@ -5,7 +5,6 @@ import { addDoc, collection, doc, DocumentSnapshot, Firestore, onSnapshot, query
 import { CommonService } from '../common/common.service';
 import { Subject } from 'rxjs/internal/Subject';
 import { User } from 'src/app/interfaces/user';
-import { Address } from 'src/app/interfaces/address';
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +53,7 @@ export class RestaurantService {
         const data = snapshot.data(options);
         if(data !== undefined){
           let restaurant = new Restaurant(null);
-          restaurant.setRestaurant(data);
+          restaurant.setData(data);
           return restaurant;
         }
         else{
