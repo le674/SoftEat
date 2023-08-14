@@ -5,15 +5,13 @@ import { Router, UrlTree } from '@angular/router';
 import {CIngredient, TIngredientBase } from '../../../../app/interfaces/ingredient';
 import { Cplat } from '../../../../app/interfaces/plat';
 import { Cpreparation, CpreparationBase } from '../../../../app/interfaces/preparation';
-import { ConsommableInteractionService } from '../../../../app/services/menus/consommable-interaction.service';
-import { IngredientsInteractionService } from '../../../../app/services/menus/ingredients-interaction.service';
-import { PlatsInteractionService } from '../../../../app/services/menus/plats-interaction.service';
-import { PreparationInteractionService } from '../../../../app/services/menus/preparation-interaction.service';
 import { AddPlatsComponent } from './add.plats/add.plats.component';
 import { DisplayPlatsComponent } from './display.plats/display.plats.component';
 import { Cconsommable, TConsoBase } from 'src/app/interfaces/consommable';
 import { Unsubscribe } from 'firebase/firestore';
-import { Subscription } from 'rxjs';
+import { Subscription, throwError } from 'rxjs';
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { InteractionBddFirestore } from 'src/app/interfaces/interaction_bdd';
 
 @Component({
   selector: 'app-plats',
@@ -37,6 +35,10 @@ export class AppPlatsComponent implements OnInit, OnDestroy {
   private preparations_sub!:Subscription;
   private consommables_sub!:Subscription;
   private plats_sub!:Subscription;
+  private path_to_prepa:Array<string>;
+  private path_to_plat:Array<string>;
+  private path_to_conso:Array<string>;
+  private path_to_ing:Array<string>;
   private url: UrlTree;
   private router: Router;
   public plats: Array<Cplat>;
@@ -46,8 +48,7 @@ export class AppPlatsComponent implements OnInit, OnDestroy {
   private prop:string;
   private restaurant:string;
 
-  constructor(public dialog: MatDialog, private ingredient_service: IngredientsInteractionService,private conso_service:ConsommableInteractionService,
-    router: Router, private _snackBar: MatSnackBar, private plat_service: PlatsInteractionService, private prepa_service: PreparationInteractionService) { 
+  constructor(public dialog: MatDialog, router: Router, private _snackBar: MatSnackBar,private firestore:FirebaseService) { 
     this.plats = [];
     this.router = router;
     this.prop = "";
@@ -60,6 +61,10 @@ export class AppPlatsComponent implements OnInit, OnDestroy {
     this.consommables = [];
     this.ingredients = [];
     this.carte = [];
+    this.path_to_ing = [];
+    this.path_to_conso = [];
+    this.path_to_prepa = [];
+    this.path_to_plat = [];
     this.recette = null;
     this.write = false;
   }
@@ -80,24 +85,28 @@ export class AppPlatsComponent implements OnInit, OnDestroy {
         let user_info = this.url.queryParams;
         this.prop = user_info["prop"];
         this.restaurant = user_info["restaurant"];
-        this.req_plats = this.plat_service.getPlatFromRestaurantBDD(this.prop);
-        this.req_ingredients = this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
-        this.req_consommables = this.conso_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
-        this.req_preparations = this.ingredient_service.getPreparationsFromRestaurantsBDD(this.prop, this.restaurant);
-        this.plats_sub = this.plat_service.getPlatFromRestaurant().subscribe((plats:Cplat[]) => {
-          this.plats = plats;
+        this.path_to_ing = CIngredient.getPathsToFirestore(this.prop, this.restaurant);
+        this.path_to_conso = Cconsommable.getPathsToFirestore(this.prop, this.restaurant);
+        this.path_to_prepa = Cpreparation.getPathsToFirestore(this.prop, this.restaurant);
+        this.path_to_plat = Cplat.getPathsToFirestore(this.prop);
+        this.req_plats = this.firestore.getFromFirestoreBDD(this.path_to_plat, Cplat);
+        this.plats_sub = this.firestore.getFromFirestore().subscribe((plats:Array<InteractionBddFirestore>) => {
+          this.plats = plats as Array<Cplat>;
           if(this.plats !== undefined && this.plats !== null){
             for (let category of this.categorie) {
               this.carte.push(this.plats.filter((plat) => plat.type === category));
             }
           }
-          this.categorie.map((categorie) => this.carte.push(plats.filter((plat) => plat.type === categorie)));
-          this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:CIngredient[]) => {
-            this.ingredients = ingredients;
-            this.consommables_sub = this.conso_service.getConsommablesFromRestaurants().subscribe((consommables:Cconsommable[]) => {
-              this.consommables = consommables;
-              this.preparations_sub = this.ingredient_service.getPrepraparationsFromRestaurants().subscribe((preparations:Cpreparation[]) => {
-               this.preparations = preparations;
+          this.categorie.map((categorie) => this.carte.push(this.plats.filter((plat) => plat.type === categorie)));
+          this.req_ingredients = this.firestore.getFromFirestoreBDD(this.path_to_ing, CIngredient);
+          this.ingredients_sub = this.firestore.getFromFirestore().subscribe((ingredients:Array<InteractionBddFirestore>) => {
+            this.ingredients = ingredients as Array<CIngredient>;
+            this.req_consommables = this.firestore.getFromFirestoreBDD(this.path_to_conso, Cconsommable);
+            this.consommables_sub = this.firestore.getFromFirestore().subscribe((consommables:Array<InteractionBddFirestore>) => {
+              this.consommables = consommables as Array<Cconsommable>;
+              this.req_preparations = this.firestore.getFromFirestoreBDD(this.path_to_prepa, Cpreparation);
+              this.preparations_sub = this.firestore.getFromFirestore().subscribe((preparations:Array<InteractionBddFirestore>) => {
+               this.preparations = preparations as Array<Cpreparation>;
               })
             })
           })
@@ -124,9 +133,12 @@ export class AppPlatsComponent implements OnInit, OnDestroy {
   }
   suppressPlat(plat:Cplat){
     if(plat.name !== null){
-      this.plat_service.removePlatInBdd(this.prop, plat).catch((e) => {
-        console.log(e);
+      this.firestore.removeFirestoreBDD(plat.id, this.path_to_plat).catch((e) => {
         this._snackBar.open(`nous ne somme pas parvenu à supprimer le ${plat.name}`)
+        const err = new Error(e);
+        return throwError(() => err).subscribe((error) => {
+            console.log(error);
+          });
       }).finally(() => {
         this._snackBar.open(`la préparation ${plat.name} vient d'être suprrimé de la base de donnée`, "fermer")
       });

@@ -5,15 +5,13 @@ import { Router, UrlTree } from '@angular/router';
 import { CIngredient } from '../../../../app/interfaces/ingredient';
 import { Cmenu } from '../../../../app/interfaces/menu';
 import { Cplat } from '../../../../app/interfaces/plat';
-import { ConsommableInteractionService } from '../../../../app/services/menus/consommable-interaction.service';
-import { IngredientsInteractionService } from '../../../../app/services/menus/ingredients-interaction.service';
-import { MenuInteractionService } from '../../../../app/services/menus/menu-interaction.service';
-import { PlatsInteractionService } from '../../../../app/services/menus/plats-interaction.service';
 import { AddMenuComponent } from './add.menu/add.menu.component';
 import { DisplayMenuComponent } from './display.menu/display.menu.component';
 import { Cconsommable } from 'src/app/interfaces/consommable';
 import { Unsubscribe } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { InteractionBddFirestore } from 'src/app/interfaces/interaction_bdd';
 
 @Component({
   selector: 'app-menu',
@@ -30,6 +28,10 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   private ingredients: Array<CIngredient>
   private consommables: Array<Cconsommable>
   private plats: Array<Cplat>;
+  private path_to_ing:Array<string>;
+  private path_to_conso:Array<string>;
+  private path_to_plat:Array<string>;
+  private path_to_menu:Array<string>;
   private req_ingredients!:Unsubscribe;
   private req_consommables!:Unsubscribe;
   private req_plats!:Unsubscribe;
@@ -39,13 +41,15 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   private plats_sub!:Subscription;
   private menus_sub!:Subscription;
   public write:boolean;
-  constructor(private menu_service: MenuInteractionService,
-    router: Router, public dialog: MatDialog, private ingredient_service: IngredientsInteractionService,
-    private conso_service: ConsommableInteractionService, private plat_service: PlatsInteractionService, private _snackBar: MatSnackBar) {
+  constructor(router: Router, public dialog: MatDialog, private firestore: FirebaseService, private _snackBar: MatSnackBar) {
     this.menus = [];
     this.ingredients = [];
     this.consommables = [];
     this.plats = [];
+    this.path_to_ing = [];
+    this.path_to_conso = [];
+    this.path_to_plat = [];
+    this.path_to_menu = [];
     this.prop = "";
     this.restaurant = "";
     this.router = router;
@@ -71,18 +75,22 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
         let user_info = this.url.queryParams;
         this.prop = user_info["prop"];
         this.restaurant = user_info["restaurant"];
-        this.req_ingredients =  this.ingredient_service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
-        this.req_consommables =  this.conso_service.getConsommablesFromRestaurantsBDD(this.prop, this.restaurant);
-        this.req_plats = this.plat_service.getPlatFromRestaurantBDD(this.prop);
-        this.req_menus = this.menu_service.getMenuFromRestaurantBDD(this.prop);
-        this.ingredients_sub = this.ingredient_service.getIngredientsFromRestaurants().subscribe((ingredients:Array<CIngredient>) => {
-          this.ingredients = ingredients;
-          this.consommables_sub = this.conso_service.getConsommablesFromRestaurants().subscribe((consommables:Array<Cconsommable>) => {
-            this.consommables = consommables;
-            this.plats_sub = this.plat_service.getPlatFromRestaurant().subscribe((plats: Array<Cplat>) => {
-              this.plats = plats;
-              this.menus_sub = this.menu_service.getMenuFromRestaurant().subscribe((menus: Array<Cmenu>) => {
-                this.menus = menus;
+        this.path_to_ing = CIngredient.getPathsToFirestore(this.prop, this.restaurant);
+        this.path_to_conso = Cconsommable.getPathsToFirestore(this.prop, this.restaurant);
+        this.path_to_plat = Cplat.getPathsToFirestore(this.prop);
+        this.path_to_menu = Cmenu.getPathsToFirestore(this.prop);
+        this.req_ingredients =  this.firestore.getFromFirestoreBDD(this.path_to_ing, CIngredient);
+        this.ingredients_sub = this.firestore.getFromFirestore().subscribe((ingredients:Array<InteractionBddFirestore>) => {
+          this.ingredients = ingredients as Array<CIngredient>;
+          this.req_consommables =  this.firestore.getFromFirestoreBDD(this.path_to_conso, Cconsommable);
+          this.consommables_sub = this.firestore.getFromFirestore().subscribe((consommables:Array<InteractionBddFirestore>) => {
+            this.consommables = consommables as Array<Cconsommable>;
+            this.req_plats = this.firestore.getFromFirestoreBDD(this.path_to_plat, Cplat);
+            this.plats_sub = this.firestore.getFromFirestore().subscribe((plats: Array<InteractionBddFirestore>) => {
+              this.plats = plats as Array<Cplat>;
+              this.req_menus = this.firestore.getFromFirestoreBDD(this.path_to_menu,Cmenu);
+              this.menus_sub = this.firestore.getFromFirestore().subscribe((menus: Array<InteractionBddFirestore>) => {
+                this.menus = menus as Array<Cmenu>;
               })
             })
           })
@@ -93,7 +101,6 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
 
   }
-
   addMenu(): void {
 
     const dialogRef = this.dialog.open(AddMenuComponent, {

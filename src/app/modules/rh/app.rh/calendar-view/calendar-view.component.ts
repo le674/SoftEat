@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, Input, OnDestroy } from '@angular/core';
-/* import {
+import {
   DayPilot,
   DayPilotCalendarComponent,
   DayPilotMonthComponent,
-} from 'daypilot-pro-angular'; */
+} from 'daypilot-pro-angular'; 
 import { CalendarService } from './calendar-data.service';
 import { from, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -15,9 +15,9 @@ import { EventFormComponent } from '../event-form/event-form.component';
   styleUrls: ['./calendar-view.component.css'],
 })
 export class CalendarViewComponent implements OnInit, OnDestroy {
- /*  @ViewChild('day') day!: DayPilotCalendarComponent;
+  @ViewChild('day') day!: DayPilotCalendarComponent;
   @ViewChild('week') week!: DayPilotCalendarComponent;
-  @ViewChild('month') month!: DayPilotMonthComponent; */
+  @ViewChild('month') month!: DayPilotMonthComponent; 
   users!: string;
   @Input() userRole!: string;
   status = '';
@@ -32,12 +32,12 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {
-/*     this.viewWeek(); //Configuration de calendrier par semaine à l'initialisation
- */  }
+    this.viewWeek(); //Configuration de calendrier par semaine à l'initialisation
+   }
 
   //Charge les événements de l'utilisateur actuel à l'initialisation
   ngOnInit(): void {
-/*     this.ds.currentData.subscribe((data) => {
+   this.ds.currentData.subscribe((data) => {
       this.users = data;
        this.loadEvents(this.users);
        this.statusSubscription = this.ds.statusService.subscribe((status) => {
@@ -48,7 +48,7 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
           this.snackBar.dismiss();
         }
       });
-    }); */
+    }); 
   }
 
   moisEnTouteLettre = [
@@ -66,8 +66,8 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
     'Décembre',
   ];
 
-/*   events: DayPilot.EventData[] = [];
-  date = DayPilot.Date.today(); */
+  events: DayPilot.EventData[] = [];
+  date = DayPilot.Date.today(); 
 
   // Renvoie le bon nom en fonction de l'email
   trouverNomParEmail(
@@ -83,7 +83,7 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
   }
 
   //Mise en forme de la bulle d'information des événements
-  /* bubble = new DayPilot.Bubble({
+  bubble = new DayPilot.Bubble({
     zIndex: 500,
     onLoad: (args) => {
       // Trouver l'index de la première virgule
@@ -247,9 +247,9 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
       this.changeDate(this.date);
     }
   }
- */
+ 
   //Passer au jour/semaine/mois suivant
- /*  next() {
+   next() {
     if (this.configNavigator.selectMode == 'Day') {
       this.date = this.date.addDays(1);
       this.changeDate(this.date);
@@ -510,7 +510,7 @@ export class CalendarViewComponent implements OnInit, OnDestroy {
   onDialogClosed(): void {
     this.loadEvents(this.users);
   }
-  */
+  
   ngOnDestroy() {
     this.statusSubscription.unsubscribe();
   } 

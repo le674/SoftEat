@@ -2,8 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Cplat, Mplat } from '../../../../../../../../app/interfaces/plat';
-import { PlatsInteractionService } from '../../../../../../../../app/services/menus/plats-interaction.service';
 import { ClientsService } from '../../../../../../../../app/services/clients/clients.service';
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { InteractionBddFirestore } from 'src/app/interfaces/interaction_bdd';
 
 @Component({
   selector: 'app-modal.gasp',
@@ -20,19 +21,22 @@ export class ModalGaspComponent implements OnInit {
       price: FormControl<number | null>
     }>>([])
   });
-  constructor(private plat_service:PlatsInteractionService,private client_service:ClientsService ,
+  private path_to_plat:Array<string>;
+  constructor(private firestore:FirebaseService,private client_service:ClientsService ,
     @Inject(MAT_DIALOG_DATA) public data:{
     prop:string,
     restaurant:string
     }) {
       this.plats = [];
       this.plat_names = [];
+      this.path_to_plat = [];
     }
 
   ngOnInit(): void {
-    this.plat_service.getPlatFromRestaurantBDD(this.data.prop);
-    this.plat_service.getPlatFromRestaurant().subscribe((plats) => {
-      this.plats = plats;
+    this.path_to_plat = Cplat.getPathsToFirestore(this.data.prop);
+    this.firestore.getFromFirestoreBDD(this.path_to_plat,Cplat);
+    this.firestore.getFromFirestore().subscribe((plats:Array<InteractionBddFirestore>) => {
+      this.plats = plats as Array<Cplat>;
       this.plat_names = this.plats.map((plat) => plat.name.split("_").join(" "));
       const first_form = new FormGroup({
         name: new FormControl(this.plat_names[0], Validators.required),

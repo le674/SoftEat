@@ -6,6 +6,7 @@ import { Client, DisplayedClient } from '../../../../../../../../app/interfaces/
 import { ClientsService } from '../../../../../../../../app/services/clients/clients.service';
 import { Address } from 'src/app/interfaces/address';
 import { throwError } from 'rxjs';
+import { FirebaseService } from 'src/app/services/firebase.service';
 
 @Component({
   selector: 'app-modal.modif',
@@ -31,7 +32,7 @@ export class ModalModifComponent implements OnInit {
     prop: string,
     client:DisplayedClient, 
     clients: Array<Client>
-  },private client_service:ClientsService,
+  },private service:FirebaseService,
   private _snackBar: MatSnackBar, public dialogRef: MatDialogRef<ModalModifComponent>) { 
 
   }
@@ -76,6 +77,7 @@ export class ModalModifComponent implements OnInit {
     this.dialogRef.close();
   }
   changeClient(){
+    let path_to_client = Client.getPathsToFirestore(this.data.prop, this.data.restaurant);
     if(this.data.client.number !== undefined){
       const client = this.data.clients.find((client) => this.data.client.number === client.number);
       if(client !== undefined){
@@ -133,10 +135,8 @@ export class ModalModifComponent implements OnInit {
           else{
             client.waste_alert = false;
           }
-        }        
-        this.client_service.setClient(this.data.prop, this.data.restaurant, client).then(() => {
-
-        }).catch((e) => {
+        }
+        this.service.updateFirestoreData(client.id, client, path_to_client, Client).catch((e) => {
           this._snackBar.open("le client n'a pas pu être modifié","fermer")
           const err = new Error(e);
           return throwError(() => err).subscribe((error) => {

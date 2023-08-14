@@ -7,11 +7,11 @@ import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/auth';
 import {Subscription } from 'rxjs';
 import { CIngredient } from '../../../../app/interfaces/ingredient';
-import { IngredientsInteractionService } from '../../../../app/services/menus/ingredients-interaction.service';
 import { CalculService } from '../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.component';
 import { CommonService } from '../../../../app/services/common/common.service';
 import { RowIngredient } from 'src/app/interfaces/inventaire';
+import { FirebaseService } from 'src/app/services/firebase.service';
 
 @Component({
   selector: 'app-stock',
@@ -26,9 +26,8 @@ export class AppStockComponent implements OnInit, OnDestroy{
     'unity', 'cost', 'cost_ttc', 'date_reception', 'dlc', 'actions'];
   public size:string;
   public dataSource: MatTableDataSource<RowIngredient>;
-
   public ingredients_displayed_br: Array<RowIngredient>;
-
+  private path_to_ingredients:Array<string>;
   private page_number: number;
   private router: Router;
   private ingredient_table: Array<CIngredient>;
@@ -43,11 +42,13 @@ export class AppStockComponent implements OnInit, OnDestroy{
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
-  constructor(private service: IngredientsInteractionService, private calc_service: CalculService,
-    router: Router, public dialog: MatDialog, private _snackBar: MatSnackBar, public mobile_service:CommonService) {
+  constructor(private calc_service: CalculService,
+    router: Router, public dialog: MatDialog, private _snackBar: MatSnackBar, public mobile_service:CommonService,
+    private firebase_service:FirebaseService) {
     this.page_number = 1;
     this.prop = "";
     this.restaurant = "";
+    this.path_to_ingredients = [];
     this.router = router;
     this.ingredient_table = [];
     this.ingredients_displayed_br = [];
@@ -72,13 +73,14 @@ export class AppStockComponent implements OnInit, OnDestroy{
         let user_info:any = this.url.queryParams;
         this.prop = user_info.prop;
         this.restaurant = user_info.restaurant;
-        this.req_ingredients_brt = this.service.getIngredientsFromRestaurantsBDD(this.prop, this.restaurant);
-        const obs_ing = this.service.getIngredientsFromRestaurants()
+        this.path_to_ingredients = CIngredient.getPathsToFirestore(this.prop, this.restaurant);
+        this.req_ingredients_brt = this.firebase_service.getFromFirestoreBDD(this.path_to_ingredients, CIngredient);
+        const obs_ing = this.firebase_service.getFromFirestore()
         this.req_merge_obs = obs_ing.subscribe((ingredients) => {
           this.ingredients_displayed_br = [];
           this.dataSource = new MatTableDataSource(this.ingredients_displayed_br);
-          this.ingredient_table = ingredients;
-          for (let ingredient of ingredients) {
+          this.ingredient_table = ingredients as Array<CIngredient>;
+          for (let ingredient of this.ingredient_table) {
             // on vérifie si le nombre d'ingrédient présent est inférieur à la marge si c'est le cas on lève une alerte
             if((ingredient.taux_tva === 0) || (ingredient.taux_tva === null)){
               ingredient.getCostTtcFromCat();
@@ -211,7 +213,7 @@ export class AppStockComponent implements OnInit, OnDestroy{
   }
 
   suppIng(ele: RowIngredient) {
-    this.service.removeIngInBdd(ele, this.prop, this.restaurant).then(() => {
+    this.firebase_service.removeFirestoreBDD(ele.id, this.path_to_ingredients).then(() => {
       this._snackBar.open("l'ingrédient vient d'être supprimé de la base de donnée du restaurant", "fermer")
     }).catch(() => {
       this._snackBar.open("l'ingrédient n'a pas pu être supprimé de la base de donnée du restaurant", "fermer")

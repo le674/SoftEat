@@ -3,8 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CIngredient } from '../../../../../../app/interfaces/ingredient';
-import { IngredientsInteractionService } from '../../../../../../app/services/menus/ingredients-interaction.service';
 import { CalculService } from '../../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { FirebaseApp } from '@angular/fire/app';
 
 @Component({
   selector: 'app-modif.ing',
@@ -51,7 +51,7 @@ export class ModifIngComponent implements OnInit {
         marge: number,
         vrac: string
       }
-    }, private service: IngredientsInteractionService,
+    },
     private changeDetector: ChangeDetectorRef, private _snackBar: MatSnackBar) {
     this._mat_dialog_ref = dialogRef;
    /*  this.is_prep = false; */
@@ -73,7 +73,6 @@ export class ModifIngComponent implements OnInit {
     }
   }
   ngAfterContentInit(): void {
-
     //après initialisatin du contenu ont ajoute les éléments dans le formulaire
     const unity = this.calcul_service.convertUnity(this.data.ingredient.unity, true);
     this.add_ing_section.get("name")?.setValue(this.data.ingredient.nom);

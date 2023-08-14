@@ -1,38 +1,10 @@
-import { CalculService } from "../services/menus/menu.calcul/menu.calcul.ingredients/calcul.service";
 import {TConsoBase} from "./consommable";
 import {Cetape, Etape} from "./etape";
 import {TIngredientBase} from "./ingredient";
-import {Cpreparation, CpreparationBase} from "./preparation";
+import { InteractionBddFirestore } from "./interaction_bdd";
+import {CpreparationBase} from "./preparation";
 
-export interface Plat{
-    "unity":string;
-    /* dessert, entrée, plat */
-    "type":string
-    /* categorie associé à la tva
-     5.5% Pain/ viennoiseries et pâtisseries,   Glaces conditionnées , Boissons non alcooliques vendues permettant leur conservation,  fruits de mers coquillage fermé
-     10% Glaces non conditionnées, Sandwiches / salades couverts, fruits de mers coquillage ouvert, boissons non alcoolisées, plat/menu
-     20% boissons alhcolisées
-    */
-    "category":string
-    "name":string;
-    "portions":number;
-    "ingredients":Array<TIngredientBase>;
-    "consommables":Array<TConsoBase> | null;
-    "etapes":Array<Etape> | null;
-    "preparations":Array<CpreparationBase> | null;
-    "cost":number;
-    /* dépend de la catégorie appliquée*/
-    "taux_tva":number | null;
-    "prime_cost":number | null;
-    "material_cost":number | null;
-    "portion_cost":number | null;
-    "material_ratio":number | null;
-    "time":number | null;
-    setData(data: Cplat):void;
-    getData(id:string | null, prop:string):Object;
-}
-
-export class Cplat implements Plat{
+export class Cplat implements InteractionBddFirestore{
     "unity": string;
     "type": string;
     "category": string;
@@ -179,7 +151,7 @@ export class Cplat implements Plat{
      * @param prop id de l'enseigne
      * @returns {Object} objet qui représente le plat
     */
-    public getData(id:string | null, prop:string): Object {
+    public getData(id:string | null): Object {
         let preparations:null | Array<Object> = null;
         let ingredients:null | Array<Object> = null;
         let consommables:null | Array<Object> = null;
@@ -195,9 +167,6 @@ export class Cplat implements Plat{
         }
         if((this.preparations !== null) && (this.preparations !== undefined)){
          preparations = this.preparations.map((preparation) => preparation.getData());
-        }
-        if ((this.proprietary_id === null) || this.proprietary_id === undefined) {
-            this.proprietary_id = prop;
         }
         if (id !== null) {
             this.id = id;
@@ -224,6 +193,16 @@ export class Cplat implements Plat{
             id: this.id
         }
     }
+   /**
+    * permet de générer une autre instance de l'objet plat
+    * @returns une instance de plat
+    */
+   getInstance(): InteractionBddFirestore {
+      return new Cplat();
+   }
+   public static getPathsToFirestore(proprietary_id:string){
+      return ["proprietaires", proprietary_id, "plats"]
+   }
 }
 export class CbasePlat{
    "name":string;

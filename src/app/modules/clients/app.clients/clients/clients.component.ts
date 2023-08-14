@@ -13,6 +13,9 @@ import { ModalMsgComponent } from './app.clients.modals/app.client.modal.msg/mod
 import { ModalGaspComponent } from './app.clients.modals/app.client.modal.gasp/modal.gasp/modal.gasp.component';
 import { Unsubscribe } from 'firebase/firestore';
 import { Subscription, throwError } from 'rxjs';
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { Restaurant } from 'src/app/interfaces/restaurant';
+import { InteractionBddFirestore } from 'src/app/interfaces/interaction_bdd';
 
 @Component({
   selector: 'app-clients',
@@ -34,23 +37,25 @@ export class ClientsComponent implements OnInit, OnDestroy {
   private router: Router;
   private prop: string;
   private restaurant: string;
-  public visibles: Array<boolean>;
   private req_clients!:Unsubscribe;
   private clients_sub!:Subscription;
+  private path_to_client: Array<string>;
+  public visibles: Array<boolean>;
 
   constructor(public mobile_service: CommonService, router: Router,
-    private client_service: ClientsService, private client_calcul_service: ClientCalculService,
+    private client_calcul_service: ClientCalculService,
     public dialog: MatDialog,
-    private _snackBar: MatSnackBar) {
+    private _snackBar: MatSnackBar, private firestore:FirebaseService) {
+    this.displayed_client = [];
+    this._clients = [];
+    this.path_to_client = [];
+    this.visibles = [];
     this.page_number = 1;
     this.router = router;
     this.prop = "";
     this.restaurant = "";
     this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("user");
-    this.visibles = [];
     this.size = "";
-    this._clients = [];
-    this.displayed_client = [];
     this.dataSource = new MatTableDataSource(this.displayed_client);
     this.prop = "";
     this.restaurant = "";
@@ -70,11 +75,11 @@ export class ClientsComponent implements OnInit, OnDestroy {
         let user_info = this.url.queryParams;
         this.prop = user_info["prop"];
         this.restaurant = user_info["restaurant"];
-    
-        this.req_clients = this.client_service.getClientsBDD(this.prop, this.restaurant);
-         this.clients_sub = this.client_service.getClients().subscribe((clients) => {
-          this._clients = clients;
-          this.displayed_client = this.client_calcul_service.clientToDisClient(clients);
+        this.path_to_client = Client.getPathsToFirestore(this.prop, this.restaurant);
+        this.req_clients = this.firestore.getFromFirestoreBDD(this.path_to_client, Restaurant);
+         this.clients_sub = this.firestore.getFromFirestore().subscribe((clients:Array<InteractionBddFirestore>) => {
+          this._clients = clients as Array<Client>;
+          this.displayed_client = this.client_calcul_service.clientToDisClient(this._clients);
           const first_event = new PageEvent();
           first_event.length = this._clients.length;
           first_event.pageSize = 6;
@@ -127,7 +132,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
   suppUser(dis_client: DisplayedClient) {
     const client = this._clients.find((client) => client.number === dis_client.number);
     if (client !== undefined) {
-      this.client_service.suppClient(this.prop, this.restaurant, client.id).then(() => {
+      this.firestore.removeFirestoreBDD(client.id, this.path_to_client).then(() => {
         this._snackBar.open("le client vient d'être supprimé", "fermer");
       }).catch((e) => {
         this._snackBar.open("nous n'avons pas réussit à supprimer le client", "fermer");
