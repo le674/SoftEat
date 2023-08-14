@@ -1,5 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import {initializeApp } from 'firebase/app';
+import { Router, UrlTree } from '@angular/router';
+import { initializeApp } from 'firebase/app';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { Unsubscribe } from 'firebase/database';
 import { first, Subscription } from 'rxjs';
 import { AlertesService } from '../../../../../app/services/alertes/alertes.service';
@@ -18,6 +20,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 let email: string | null = null;
 let displayName: string | null = null;
 @Component({
@@ -30,18 +33,46 @@ let displayName: string | null = null;
 
 export class AppMainDashboardComponent implements OnInit, OnDestroy {
   @Output() public numP = new EventEmitter();
-  public user:any;
+  user = auth.currentUser;
   public hidden = true;
   public alert_num = 0;
+  private url: UrlTree;
+  private router: Router;
   private prop:string;
   private restaurant:string;
+  private num:number;
   private alerte_subscription: Subscription; 
   private stock_unsubscribe!: Unsubscribe;
   private conso_unsubscribe!: Unsubscribe;
   
-  constructor(public authService: AuthentificationService,
-    public alerte_service: AlertesService){
+  constructor(public authService: AuthentificationService, public alerte_service: AlertesService, router: Router,){
+
+    this.num = 0;
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+   // The user object has basic properties such as display name, email, etc.
+   displayName = user.displayName;
+   email = user.email;
+   const photoURL = user.photoURL;
+   const emailVerified = user.emailVerified;
+ 
+   // The user's ID, unique to the Firebase project. Do NOT use
+   // this value to authenticate with your backend server, if
+   // you have one. Use User.getToken() instead.
+   const uid = user.uid;
+        // ...
+      } else {
+        // User is signed out
+        // ...
+      }
+    });
+
     // on récupère dans le constructeur le paquet d'alertes 
+    this.router = router;
+    this.url = this.router.parseUrl(this.router.url);
     this.prop = "";
     this.restaurant = "";
     this.alerte_subscription = new Subscription();
@@ -55,7 +86,11 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
 
  
   ngOnInit(): void {
+  let user_info = this.url.queryParams;
+  this.prop = user_info["prop"];
+  this.restaurant = user_info["restaurant"];
   const listItems = document.querySelectorAll(".sidebar-list li");
+
   listItems.forEach((item) => {
     item.addEventListener("click", () => {
       let isActive = item.classList.contains("active");
@@ -77,11 +112,13 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
     if(sidebar!=null) sidebar.classList.toggle("close");
   } */
   
-    this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "stock").then((num) => {   
+    this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "stock").then((num) => {
+      
       this.stock_unsubscribe = this.alerte_service.getLastPAlertesBDD(this.prop, this.restaurant, num, "stock");
     })
 
     this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "conso").then((num) =>{
+
       this.conso_unsubscribe = this.alerte_service.getLastPAlertesBDD(this.prop, this.restaurant, num, "conso");
     })
 
