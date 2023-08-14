@@ -4,6 +4,7 @@ import { AppAlertesModule } from '../alertes/app.module';
 import { AppBudgetModule } from '../budget/app.module';
 import { AppAuthenModule } from '../authen/app.module';
 import { AppStockModule } from '../stock/app.module';
+import { CaisseModule } from '../caisse/caisse.module';
 import { AppFacturesModule } from '../factures/app.module';
 import { RhModule } from '../rh/rh.module';
 import { AppRoutingModule } from './app-routing.module';
@@ -34,6 +35,7 @@ import { AppMessagerieModule } from '../messagerie/app.module';
     AppAlertesModule,
     AppBudgetModule,
     AppStockModule,
+    CaisseModule,
     AppFacturesModule,
     RhModule,
     AppAuthenModule,
