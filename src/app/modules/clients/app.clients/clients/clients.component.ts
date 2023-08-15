@@ -76,7 +76,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
         this.prop = user_info["prop"];
         this.restaurant = user_info["restaurant"];
         this.path_to_client = Client.getPathsToFirestore(this.prop, this.restaurant);
-        this.req_clients = this.firestore.getFromFirestoreBDD(this.path_to_client, Restaurant);
+        this.req_clients = this.firestore.getFromFirestoreBDD(this.path_to_client, Restaurant, null);
          this.clients_sub = this.firestore.getFromFirestore().subscribe((clients:Array<InteractionBddFirestore>) => {
           this._clients = clients as Array<Client>;
           this.displayed_client = this.client_calcul_service.clientToDisClient(this._clients);

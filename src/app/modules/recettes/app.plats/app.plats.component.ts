@@ -89,7 +89,7 @@ export class AppPlatsComponent implements OnInit, OnDestroy {
         this.path_to_conso = Cconsommable.getPathsToFirestore(this.prop, this.restaurant);
         this.path_to_prepa = Cpreparation.getPathsToFirestore(this.prop, this.restaurant);
         this.path_to_plat = Cplat.getPathsToFirestore(this.prop);
-        this.req_plats = this.firestore.getFromFirestoreBDD(this.path_to_plat, Cplat);
+        this.req_plats = this.firestore.getFromFirestoreBDD(this.path_to_plat, Cplat, null);
         this.plats_sub = this.firestore.getFromFirestore().subscribe((plats:Array<InteractionBddFirestore>) => {
           this.plats = plats as Array<Cplat>;
           if(this.plats !== undefined && this.plats !== null){
@@ -98,13 +98,13 @@ export class AppPlatsComponent implements OnInit, OnDestroy {
             }
           }
           this.categorie.map((categorie) => this.carte.push(this.plats.filter((plat) => plat.type === categorie)));
-          this.req_ingredients = this.firestore.getFromFirestoreBDD(this.path_to_ing, CIngredient);
+          this.req_ingredients = this.firestore.getFromFirestoreBDD(this.path_to_ing, CIngredient,null);
           this.ingredients_sub = this.firestore.getFromFirestore().subscribe((ingredients:Array<InteractionBddFirestore>) => {
             this.ingredients = ingredients as Array<CIngredient>;
-            this.req_consommables = this.firestore.getFromFirestoreBDD(this.path_to_conso, Cconsommable);
+            this.req_consommables = this.firestore.getFromFirestoreBDD(this.path_to_conso, Cconsommable, null);
             this.consommables_sub = this.firestore.getFromFirestore().subscribe((consommables:Array<InteractionBddFirestore>) => {
               this.consommables = consommables as Array<Cconsommable>;
-              this.req_preparations = this.firestore.getFromFirestoreBDD(this.path_to_prepa, Cpreparation);
+              this.req_preparations = this.firestore.getFromFirestoreBDD(this.path_to_prepa, Cpreparation, null);
               this.preparations_sub = this.firestore.getFromFirestore().subscribe((preparations:Array<InteractionBddFirestore>) => {
                this.preparations = preparations as Array<Cpreparation>;
               })

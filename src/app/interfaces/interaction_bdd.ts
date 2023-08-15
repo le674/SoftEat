@@ -1,3 +1,5 @@
+import { WhereFilterOp } from "@angular/fire/firestore";
+
 /**
  * Cette classe permet les interaction avec la base de donnée. Toute classe qui intéragie avec Firestore doit hériter de cette classe
  */
@@ -17,4 +19,10 @@ export interface InteractionBddFirestore {
      * Permet de récupérer une instance de l'interface
      */
     getInstance():InteractionBddFirestore;
+}
+
+export type Condition = {
+    attribut:string,
+    condition:WhereFilterOp,
+    value:any
 }

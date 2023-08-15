@@ -71,12 +71,12 @@ export class AppPreparationsComponent implements OnInit, OnDestroy{
         this.path_to_ingredients = CIngredient.getPathsToFirestore(this.prop, this.restaurant);
         this.path_to_preparation = Cpreparation.getPathsToFirestore(this.prop, this.restaurant);
         this.path_to_consommable = Cconsommable.getPathsToFirestore(this.prop, this.restaurant);
-        this.req_ingredients = this.firestore.getFromFirestoreBDD(this.path_to_ingredients,CIngredient);
+        this.req_ingredients = this.firestore.getFromFirestoreBDD(this.path_to_ingredients,CIngredient, null);
         this.ingredients_sub = this.firestore.getFromFirestore().subscribe((ingredients:Array<InteractionBddFirestore>) => {
-          this.req_preparations = this.firestore.getFromFirestoreBDD(this.path_to_preparation, Cpreparation);
+          this.req_preparations = this.firestore.getFromFirestoreBDD(this.path_to_preparation, Cpreparation, null);
           this.ingredients = ingredients as Array<CIngredient>;
           this.preparations_sub = this.firestore.getFromFirestore().subscribe((preparations:Array<InteractionBddFirestore>) => {
-            this.req_consommables = this.firestore.getFromFirestoreBDD(this.path_to_consommable,Cconsommable);
+            this.req_consommables = this.firestore.getFromFirestoreBDD(this.path_to_consommable,Cconsommable, null);
             this.preparations = preparations as Array<Cpreparation>;
             this.consommables_sub = this.firestore.getFromFirestore().subscribe((consommables:Array<InteractionBddFirestore>) => {
               this.consommables = consommables as Array<Cconsommable>;;

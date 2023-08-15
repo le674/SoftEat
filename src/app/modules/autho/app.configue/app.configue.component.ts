@@ -209,7 +209,7 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
                     this.is_prop = true;
                   }
                 }
-                this.firestore.getFromFirestoreBDD(this.path_to_restaurant, Restaurant);
+                this.firestore.getFromFirestoreBDD(this.path_to_restaurant, Restaurant, null);
                 this.firestore.getFromFirestore().subscribe((restaurants:Array<InteractionBddFirestore>)  => {
                   this.users = [];
                   this.prop_user = [];

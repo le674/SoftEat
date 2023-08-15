@@ -78,7 +78,7 @@ export class AppPreparationComponent implements OnInit, OnDestroy, AfterViewInit
         this.prop = user_info["prop"];
         this.restaurant = user_info["restaurant"];
         this.firestore_path = Cpreparation.getPathsToFirestore(this.prop, this.restaurant);
-        this.req_ingredients_prep = this.firestore_service.getFromFirestoreBDD(this.firestore_path, Cpreparation);
+        this.req_ingredients_prep = this.firestore_service.getFromFirestoreBDD(this.firestore_path, Cpreparation, null);
         this.req_merge_obs = this.firestore_service.getFromFirestore().subscribe((preparations) => {
           this.preparation_table = preparations as Array<Cpreparation>;
           this.displayed_prep = [];

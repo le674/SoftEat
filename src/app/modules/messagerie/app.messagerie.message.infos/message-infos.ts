@@ -1,11 +1,12 @@
+import { Conversation } from 'src/app/interfaces/conversation';
 import { MessageModel } from '../messages_models/model';
 
 export class MessageInfos {
-  message!: MessageModel;
+  message!: Conversation;
   authorIsMe!: boolean;
   isBot!: boolean;
 
   constructor() {
-    this.message = new MessageModel();
+    this.message = new Conversation();
   }
 }

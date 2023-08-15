@@ -284,7 +284,7 @@ export class FactureSharedService {
   async convertParsedLstToIngs(parsed_pdf: FacturePrintedResult[] | null, prop: string, restaurant: string): Promise<Array<CIngredient>> {
     let _ingredients: Array<CIngredient> = [];
     let path_ingredient = CIngredient.getPathsToFirestore(prop, restaurant);
-    let ingredients = (await this.services.getFromFirestoreProm(path_ingredient, CIngredient)) as Array<CIngredient>;
+    let ingredients = (await this.services.getFromFirestoreProm(path_ingredient, CIngredient, null)) as Array<CIngredient>;
     if (parsed_pdf !== null) {
       for (let _ingredient of parsed_pdf) {
         // Nous ne prennons pas en considération les aliments qui n'ont pas de nom

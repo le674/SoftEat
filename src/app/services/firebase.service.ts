@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { FirebaseApp, initializeApp } from '@angular/fire/app';
-import { getDatabase, ref, onValue, get, DatabaseReference } from 'firebase/database';
+import { FirebaseApp } from '@angular/fire/app';
+import {ref, onValue, get } from 'firebase/database';
 import { Statut } from '../interfaces/statut';
 import { Unsubscribe } from 'firebase/auth';
 import { CollectionReference, DocumentData, DocumentReference, DocumentSnapshot, Firestore, SnapshotOptions, collection, updateDoc, deleteDoc, doc, getFirestore, onSnapshot, setDoc, getDocs } from '@angular/fire/firestore';
 import { CalculService } from './menus/menu.calcul/menu.calcul.ingredients/calcul.service';
-import { InteractionBddFirestore } from '../interfaces/interaction_bdd';
+import { Condition, InteractionBddFirestore } from '../interfaces/interaction_bdd';
 import { Subject } from 'rxjs';
+import { Conversation } from '../interfaces/conversation';
+import { Query, query, where } from 'firebase/firestore';
 
 type Class<T> = new (...args: any[]) => T;
 
@@ -18,6 +20,7 @@ export class FirebaseService {
     private firestore: Firestore;
     private db: any;
     private interaction_data = new Subject<Array<InteractionBddFirestore>>();
+    private changed_interaction_data = new Subject<InteractionBddFirestore>();
     statut!: Statut;
     private sub_function!: Unsubscribe;
     private data_array: Array<InteractionBddFirestore>;
@@ -30,9 +33,50 @@ export class FirebaseService {
      * @param paths chemins qui permettent d'accéder au noeud de la base de donnée pour récupérer l'information 
      * sous la forme d'une liste [proprietaire, prop_id, restaurants, ...], ou d'un chemin proprietaire/WXPIOOJJ89/restaurants
      * @param class_instance instance de la classe de l'objet à récupérer dans la base de donnée
-     * @returns 
+     * @param conditions filtre sur les données récupérés depuis firestore
+    * @returns 
     */
-    public getFromFirestoreBDD(paths: Array<string> | string, class_instance: Class<InteractionBddFirestore>) {
+    public getFromFirestoreBDD(paths: Array<string> | string, class_instance: Class<InteractionBddFirestore>, conditions:Array<Condition> | null) {
+        this.interaction_data = new Subject<Array<InteractionBddFirestore>>();
+        let _paths: Array<string> = this.getPath(paths);
+        let converter_firestore: any = {
+            toFirestore: (ingredient: InteractionBddFirestore) => {
+                return ingredient;
+            },
+            fromFirestore: (snapshot: DocumentSnapshot<InteractionBddFirestore>, options: SnapshotOptions) => {
+                const data = snapshot.data(options);
+                if (data !== undefined) {
+                    
+                    let instance: InteractionBddFirestore;
+                    instance = this.constructInstance(class_instance).getInstance();
+                    instance.setData(data);
+                    return instance;
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+        let ref = this.concatPathCollectionWithWhere(_paths, converter_firestore, conditions);
+        this.sub_function = onSnapshot(ref, (firestore_datas) => {
+            this.data_array = [];
+            firestore_datas.forEach((_data) => {
+                if (_data.exists()) {
+                    this.data_array.push(_data.data() as InteractionBddFirestore);
+                }
+            });
+            this.interaction_data.next(this.data_array)
+        })
+        return this.sub_function;
+    }
+    /**
+     * Permet d'écouter uniquement les données chager dans firestore pour un chemin 
+     * @param paths chemins qui permettent d'accéder au noeud de la base de donnée pour récupérer l'information 
+     * sous la forme d'une liste [proprietaire, prop_id, restaurants, ...], ou d'un chemin proprietaire/WXPIOOJJ89/restaurants
+     * @param class_instance instance de la classe de l'objet à récupérer dans la base de donnée
+     * @param conditions filtre sur les données récupérés depuis firestore
+     */
+    getFromFirestoreChangeDataBDD(paths: Array<string> | string, class_instance: Class<InteractionBddFirestore>, conditions:Array<Condition> | null){
         this.interaction_data = new Subject<Array<InteractionBddFirestore>>();
         let _paths: Array<string> = this.getPath(paths);
         let converter_firestore: any = {
@@ -52,24 +96,23 @@ export class FirebaseService {
                 }
             }
         }
-        let ref = this.concatPathCollection(_paths, converter_firestore);
+        let ref = this.concatPathCollectionWithWhere(_paths, converter_firestore, conditions);
         this.sub_function = onSnapshot(ref, (firestore_datas) => {
             this.data_array = [];
-            firestore_datas.forEach((_data) => {
-                if (_data.exists()) {
-                    this.data_array.push(_data.data() as InteractionBddFirestore);
+            firestore_datas.docChanges().forEach((data) => {
+                if(data.type === "added" || data.type === "modified"){
+                    this.changed_interaction_data.next(data.doc.data() as InteractionBddFirestore);
                 }
-            });
-            this.interaction_data.next(this.data_array)
+            })
         })
-        return this.sub_function;
+        return this.sub_function
     }
     /**
      * Cette fonction permet de récupérer l'ensemble des données situé vers le paths, avec une promesse
      * @param paths chemin vers l'ensemble des ingrédients dans la base de donnée
      * @param class_instance Class des donnée récupérer dans la base de donnée 
      */
-    public async getFromFirestoreProm(paths:Array<string>, class_instance: Class<InteractionBddFirestore>){
+    public async getFromFirestoreProm(paths:Array<string>, class_instance: Class<InteractionBddFirestore>, conditions:Array<Condition> | null){
         let datas:Array<InteractionBddFirestore> = [];
         this.interaction_data = new Subject<Array<InteractionBddFirestore>>();
         let _paths: Array<string> = this.getPath(paths);
@@ -90,7 +133,7 @@ export class FirebaseService {
                 }
             }
         }
-        let ref = this.concatPathCollection(_paths, converter_firestore);
+        let ref = this.concatPathCollectionWithWhere(_paths, converter_firestore, conditions);
         const documents_data = await getDocs(ref);
         documents_data.forEach((doc) => {
             datas.push(doc.data() as InteractionBddFirestore);
@@ -199,27 +242,6 @@ export class FirebaseService {
         });
     }
     /**
-     * Permet de récupérer la référence de l'utilisateur dans la base de donnée
-     * @param user_email email de l'utilisateur
-     * @returns reférence de la position de l'user si celui dans la base de donnée et le même que celui passé en paramètre
-     */
-    public async getUserDataReference(user_email: string): Promise<DatabaseReference> { // | null
-        const usersRef = ref(this.db, 'users/foodandboost_prop');
-        const usersSnapShot = await get(usersRef); // Ici : Erreur permission dinied
-
-        return new Promise<DatabaseReference>((resolve) => { // | null
-            if (usersSnapShot.exists()) {
-                usersSnapShot.forEach((userSnapShot) => {
-                    const user = userSnapShot.val();
-                    if (user.email == user_email) {
-                        resolve(userSnapShot.ref);
-                    }
-                });
-            }
-            // resolve(null); // Si aucun utilisateur ne correspond à l'email fourni
-        });
-    }
-    /**
      * Récupération depuis la base de donnée d'une liste d'utilisateurs
      * @returns la liste d'utilisateurs dans le noeud users/foodandboost_prop
      */
@@ -248,9 +270,6 @@ export class FirebaseService {
                 resolve(convListUsers);
             }
         });
-    }
-    public getFromFirestore() {
-        return this.interaction_data.asObservable();
     }
     /**
      * permet de construire une instance en fonction du constructeur de la class,
@@ -283,9 +302,32 @@ export class FirebaseService {
      * Cette fonction permet de construire la référence vers la collection firestore auquel nous souhaitons accéder afin de récupérer ou écrire des données
      * @param _paths chemin d'accès au noeud
      * @param converter objet qui permet la convertion du JSON en un objet de class, null si aucune conversion
+     * @param filtres  liste des filtres que nous souhaitons appliquer pour la récupération des éléments
      * @returns {CollectionReference<DocumentData>} référence vers la collection dont nous souhaitons l'accès
      */
-    private concatPathCollection(_paths: Array<string>, converter: any | null): CollectionReference<DocumentData> {
+    private concatPathCollectionWithWhere(_paths: Array<string>, converter: any | null, conditions:Array<Condition> | null):Query<DocumentData>{
+        let ref = collection(this.firestore, _paths[0]);
+        _paths.forEach((path, index) => {
+            if ((index < _paths.length - 1) && ((index % 2) === 0)) {
+                ref = collection(doc(ref, _paths[index + 1]), _paths[index + 2]);
+            }
+        });
+        if(conditions !== null){
+            const condition_lst = conditions.map((condition) => where(condition.attribut, condition.condition, condition.value))
+            const reference = query(ref, ...condition_lst).withConverter(converter);
+            return reference;
+        }
+        
+        if (converter !== null) ref = ref.withConverter(converter);
+        return ref;
+    }
+       /**
+     * Cette fonction permet de construire la référence vers la collection firestore auquel nous souhaitons accéder afin de récupérer ou écrire des données
+     * @param _paths chemin d'accès au noeud
+     * @param converter objet qui permet la convertion du JSON en un objet de class, null si aucune conversion
+     * @returns {CollectionReference<DocumentData>} référence vers la collection dont nous souhaitons l'accès
+     */
+       private concatPathCollection(_paths: Array<string>, converter: any | null): CollectionReference<DocumentData>{
         let ref = collection(this.firestore, _paths[0]);
         _paths.forEach((path, index) => {
             if ((index < _paths.length - 1) && ((index % 2) === 0)) {
@@ -312,6 +354,12 @@ export class FirebaseService {
         let doc_ref = doc(ref, doc_id);
         if (converter !== null) doc_ref = doc_ref.withConverter(converter);
         return doc_ref;
+    }
+    public getFromFirestore() {
+        return this.interaction_data.asObservable();
+    }
+    public getFromFirestoreChangeData() {
+        return this.changed_interaction_data.asObservable();
     }
 }
 
