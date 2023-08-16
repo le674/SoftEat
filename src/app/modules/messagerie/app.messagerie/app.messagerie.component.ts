@@ -114,6 +114,7 @@ export class AppMessagerieComponent implements OnInit, OnDestroy ,AfterViewCheck
    *
    */
   showconv() {
+    
     if (
       this.statut.stock === 'wr' ||
       this.statut.stock === 'rw' ||
@@ -155,10 +156,11 @@ export class AppMessagerieComponent implements OnInit, OnDestroy ,AfterViewCheck
       plan: false,
       rh: false,
     };
-    console.log("test");
+    
     this.email = this.firebaseService.getEmailLocalStorage();
     this.req_employee_unsub = this.firebaseService.getFromFirestoreBDD(this.path_to_employee, Employee, null);
     this.req_employee = this.firebaseService.getFromFirestore().subscribe((_employees:Array<InteractionBddFirestore>) => {
+      
       let employees = _employees as Array<Employee>;
       employees = employees.filter((employee) => employee.convPrivee !== null)
       this.convListUsers = this.conv_service.fetchConvListUsers(employees);
@@ -297,7 +299,6 @@ export class AppMessagerieComponent implements OnInit, OnDestroy ,AfterViewCheck
     this.req_conversations_unsub = this.firebaseService.getFromFirestoreChangeDataBDD(this.path_to_conv, Conversation, conditions);
     this.req_conversations = this.firebaseService.getFromFirestoreChangeData().subscribe((data) => {
       const conversation = data as Conversation;
-      console.log(conversation);
       const existingMessageIndex = this.messagerie.findIndex(
         (messageInfos) => messageInfos.message.timestamp === conversation.timestamp
       );
@@ -327,8 +328,8 @@ export class AppMessagerieComponent implements OnInit, OnDestroy ,AfterViewCheck
               } else {
                 donneesMessage.message.newDay = true;
               }
-              donneesMessage.message.nom = conversation.nom;
-              donneesMessage.message.prenom = conversation.prenom;
+              donneesMessage.message.name = conversation.name;
+              donneesMessage.message.surname = conversation.surname;
       
               //On regarde si on met le message à gauche ou à droite de la messagerie selon l'auteur
               if (conversation.author === this.email) {

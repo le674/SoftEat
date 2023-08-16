@@ -51,7 +51,7 @@ import * as fr from '@angular/common/locales/fr';
         localCache: persistentLocalCache({
             tabManager: persistentMultipleTabManager()
         })
-      })
+      }) 
       return getFirestore();
     }),
     provideAuth(() => getAuth()),

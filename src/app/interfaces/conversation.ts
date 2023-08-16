@@ -8,8 +8,6 @@ export class Conversation implements InteractionBddFirestore{
     surname:string | null;
     timestamp:number;
     newDay?: boolean;
-    nom!: string;
-    prenom!: string;
     constructor(){
         this.author = null;
         this.container = null;

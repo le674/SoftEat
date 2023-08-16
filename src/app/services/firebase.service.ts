@@ -9,6 +9,8 @@ import { Condition, InteractionBddFirestore } from '../interfaces/interaction_bd
 import { Subject } from 'rxjs';
 import { Conversation } from '../interfaces/conversation';
 import { Query, query, where } from 'firebase/firestore';
+import { Employee } from '../interfaces/employee';
+import { CommonService } from './common/common.service';
 
 type Class<T> = new (...args: any[]) => T;
 
@@ -24,7 +26,7 @@ export class FirebaseService {
     statut!: Statut;
     private sub_function!: Unsubscribe;
     private data_array: Array<InteractionBddFirestore>;
-    constructor(private ofApp: FirebaseApp, private service: CalculService) {
+    constructor(private ofApp: FirebaseApp, private service: CalculService, private common_service:CommonService) {
         this.firestore = getFirestore(ofApp);
         this.data_array = [];
     }
@@ -37,6 +39,7 @@ export class FirebaseService {
     * @returns 
     */
     public getFromFirestoreBDD(paths: Array<string> | string, class_instance: Class<InteractionBddFirestore>, conditions:Array<Condition> | null) {
+        
         this.interaction_data = new Subject<Array<InteractionBddFirestore>>();
         let _paths: Array<string> = this.getPath(paths);
         let converter_firestore: any = {
@@ -46,7 +49,6 @@ export class FirebaseService {
             fromFirestore: (snapshot: DocumentSnapshot<InteractionBddFirestore>, options: SnapshotOptions) => {
                 const data = snapshot.data(options);
                 if (data !== undefined) {
-                    
                     let instance: InteractionBddFirestore;
                     instance = this.constructInstance(class_instance).getInstance();
                     instance.setData(data);
@@ -59,8 +61,10 @@ export class FirebaseService {
         }
         let ref = this.concatPathCollectionWithWhere(_paths, converter_firestore, conditions);
         this.sub_function = onSnapshot(ref, (firestore_datas) => {
+
             this.data_array = [];
             firestore_datas.forEach((_data) => {
+
                 if (_data.exists()) {
                     this.data_array.push(_data.data() as InteractionBddFirestore);
                 }
@@ -286,10 +290,15 @@ export class FirebaseService {
         if (Class.name === "Cconsommable") {
             return new Class(this.service);
         }
+        if(Class.name === "Employee"){
+            const statut = new Statut(this.common_service);
+            return new Class("", statut, "", this.common_service);
+        }
         return new Class();
     }
     private getPath(paths: string | Array<string>): Array<string> {
-        let _paths: Array<string> = [];
+
+        let _paths: Array<string> =     [];
         if (typeof paths === "string") {
             _paths = paths.split("/");
         }
@@ -318,7 +327,7 @@ export class FirebaseService {
             return reference;
         }
         
-        if (converter !== null) ref = ref.withConverter(converter);
+        //if (converter !== null) ref = ref.withConverter(converter);
         return ref;
     }
        /**
