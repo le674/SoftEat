@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { Firestore, connectFirestoreEmulator} from '@angular/fire/firestore';
+import { Firestore} from '@angular/fire/firestore';
 import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
 
 @Injectable({
@@ -83,16 +83,5 @@ export class CommonService {
   }
   getCounter():number{
     return this.read_count;
-  }
-  initializeBdd(app:FirebaseApp, firestore:Firestore):Firestore{
-    if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-      try {
-          connectFirestoreEmulator(firestore, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
-      } catch (error) {
-          console.log(error);
-          
-      }  
-    } 
-    return firestore;
   }
 }

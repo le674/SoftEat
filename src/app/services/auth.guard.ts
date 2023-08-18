@@ -1,18 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { Observable } from 'rxjs';
-import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from '../../environments/variables';
 import { AuthentificationService } from './authentification.service';
-const auth = getAuth();
-if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-  try {
-   // Point to the RTDB emulator running on localhost.
-   connectAuthEmulator(auth, FIREBASE_AUTH_EMULATOR_HOST); 
-  } catch (error) {
-    console.log(error);
-  }
-} 
+import { Auth } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +12,12 @@ export class AuthGuard implements CanActivate {
   
   constructor(
     public authService: AuthentificationService,
-    public router: Router
+    public router: Router,
+    private auth:Auth
   ){ 
     
   }
-  user = auth.currentUser;
+  user = this.auth.currentUser;
 
   getConnexion():boolean{
     if(this.user == null){

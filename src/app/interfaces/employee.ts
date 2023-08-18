@@ -164,7 +164,7 @@ export class Employee implements InteractionBddFirestore {
       * @param employee employée à copier dans une instance de la classe
     */
     public setData(employee: Employee) {
-      
+        
         let statut = new Statut(this.common_service);
         statut.setData(employee.statut);
         let address = null;

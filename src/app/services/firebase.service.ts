@@ -3,7 +3,7 @@ import { FirebaseApp } from '@angular/fire/app';
 import {ref, onValue, get } from 'firebase/database';
 import { Statut } from '../interfaces/statut';
 import { Unsubscribe } from 'firebase/auth';
-import { CollectionReference, DocumentData, DocumentReference, DocumentSnapshot, Firestore, SnapshotOptions, collection, updateDoc, deleteDoc, doc, getFirestore, onSnapshot, setDoc, getDocs } from '@angular/fire/firestore';
+import { CollectionReference, DocumentData, DocumentReference, DocumentSnapshot, Firestore, SnapshotOptions, collection, updateDoc, deleteDoc, doc, onSnapshot, setDoc, getDocs } from '@angular/fire/firestore';
 import { CalculService } from './menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { Condition, InteractionBddFirestore } from '../interfaces/interaction_bdd';
 import { Subject } from 'rxjs';
@@ -19,15 +19,13 @@ type Class<T> = new (...args: any[]) => T;
 })
 export class FirebaseService {
     private firebaseApp!: FirebaseApp;
-    private firestore: Firestore;
     private db: any;
     private interaction_data = new Subject<Array<InteractionBddFirestore>>();
     private changed_interaction_data = new Subject<InteractionBddFirestore>();
     statut!: Statut;
     private sub_function!: Unsubscribe;
     private data_array: Array<InteractionBddFirestore>;
-    constructor(private ofApp: FirebaseApp, private service: CalculService, private common_service:CommonService) {
-        this.firestore = getFirestore(ofApp);
+    constructor(private ofApp: FirebaseApp, private firestore:Firestore,private service: CalculService, private common_service:CommonService) {
         this.data_array = [];
     }
     /**
@@ -325,10 +323,8 @@ export class FirebaseService {
             const condition_lst = conditions.map((condition) => where(condition.attribut, condition.condition, condition.value))
             const reference = query(ref, ...condition_lst).withConverter(converter);
             return reference;
-        }
-        
-        //if (converter !== null) ref = ref.withConverter(converter);
-        return ref;
+        }        
+        return ref.withConverter(converter);
     }
        /**
      * Cette fonction permet de construire la référence vers la collection firestore auquel nous souhaitons accéder afin de récupérer ou écrire des données

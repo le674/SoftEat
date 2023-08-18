@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { DayPilot } from 'daypilot-pro-angular';
 import { HttpClient } from '@angular/common/http';
 import { Unsubscribe } from 'firebase/auth';
-import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_FIRESTORE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
-import { child, connectDatabaseEmulator, Database, get, getDatabase, ref } from 'firebase/database';
-import { connectFirestoreEmulator, Firestore, getFirestore } from "firebase/firestore";
+import { child, Database, get, getDatabase, ref } from 'firebase/database';
+import {Firestore } from "firebase/firestore";
 import { FirebaseApp} from "@angular/fire/app";
 import { FirebaseService } from '../firebase.service'
 
@@ -19,25 +18,11 @@ interface Event {
 @Injectable()
 export class CalendarService {
   private db: Database;
-  private firestore: Firestore;
   events: Event[] = [];
   private sub_event!: Unsubscribe;
 
-  constructor(private http: HttpClient, private firebaseService: FirebaseService, private ofApp: FirebaseApp) {
+  constructor(private http: HttpClient, private firestore:Firestore ,private firebaseService: FirebaseService, private ofApp: FirebaseApp) {
     this.db = getDatabase(ofApp);
-    this.firestore = getFirestore(ofApp);
-    if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-      try {
-        connectDatabaseEmulator(this.db, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
-      } catch (error) {
-        console.log("Error connectDatabaseEmulator() : ", error);
-      }
-      try {
-        connectFirestoreEmulator(this.firestore, FIREBASE_FIRESTORE_EMULATOR_HOST.host, FIREBASE_FIRESTORE_EMULATOR_HOST.port);
-      } catch (error) {
-        console.log("Error connectFirestoreEmulator() : ", error);
-      }
-    }
   }
 
 

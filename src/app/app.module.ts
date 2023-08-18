@@ -11,18 +11,19 @@ import { AppStockModule } from './modules/stock/app.module';
 import { AppAcceuilModule } from './modules/acceuil/app.module';
 import { AppDashboardModule } from './modules/dashboard/app.module';
 import {getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getFirestore, provideFirestore ,persistentLocalCache, persistentMultipleTabManager, initializeFirestore } from '@angular/fire/firestore';
+import { getFirestore, provideFirestore ,persistentLocalCache, persistentMultipleTabManager, initializeFirestore, connectFirestoreEmulator } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { AuthentificationService } from './services/authentification.service';
 import { HttpClientModule } from '@angular/common/http';
 import { getAuth } from 'firebase/auth';
-import { provideAuth } from '@angular/fire/auth';
+import { connectAuthEmulator, provideAuth } from '@angular/fire/auth';
 import { RecettesModule } from './modules/recettes/recettes.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { AppMessagerieModule } from './modules/messagerie/app.module';
 import {registerLocaleData} from '@angular/common';
 import * as fr from '@angular/common/locales/fr';
+import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_FIRESTORE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
 @NgModule({
   declarations: [
     AppComponent
@@ -52,9 +53,19 @@ import * as fr from '@angular/common/locales/fr';
             tabManager: persistentMultipleTabManager()
         })
       }) 
-      return getFirestore();
+      const db = getFirestore();
+      if(!FIREBASE_PROD){
+        connectFirestoreEmulator(db,FIREBASE_FIRESTORE_EMULATOR_HOST.host,FIREBASE_FIRESTORE_EMULATOR_HOST.port);
+      }
+      return db;
     }),
-    provideAuth(() => getAuth()),
+    provideAuth(() => {
+      const auth = getAuth()
+      if(!FIREBASE_PROD){
+        connectAuthEmulator(auth, FIREBASE_AUTH_EMULATOR_HOST);
+      }
+      return auth
+    }),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable

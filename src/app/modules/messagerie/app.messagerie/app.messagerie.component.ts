@@ -156,7 +156,6 @@ export class AppMessagerieComponent implements OnInit, OnDestroy ,AfterViewCheck
       plan: false,
       rh: false,
     };
-    
     this.email = this.firebaseService.getEmailLocalStorage();
     this.req_employee_unsub = this.firebaseService.getFromFirestoreBDD(this.path_to_employee, Employee, null);
     this.req_employee = this.firebaseService.getFromFirestore().subscribe((_employees:Array<InteractionBddFirestore>) => {
@@ -257,7 +256,6 @@ export class AppMessagerieComponent implements OnInit, OnDestroy ,AfterViewCheck
   async sendMessage(): Promise<void> {
     if (this.inputText != '') {
       const db = getDatabase(this.firebaseApp);
-
       //Création du nouveau message
       let new_message = new Conversation();
       new_message.author = this.email;

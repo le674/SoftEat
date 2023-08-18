@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../interfaces/user';
 import { FirebaseApp } from "@angular/fire/app";
 import { Proprietaire } from '../interfaces/proprietaire';
-import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from '../../environments/variables';
-import { writeBatch, Firestore, DocumentSnapshot, SnapshotOptions, Unsubscribe, addDoc, collection, connectFirestoreEmulator, onSnapshot, query, where, doc, collectionGroup, endAt } from '@angular/fire/firestore';
+import { writeBatch, Firestore, DocumentSnapshot, SnapshotOptions, Unsubscribe, addDoc, collection, onSnapshot, query, where, doc, collectionGroup } from '@angular/fire/firestore';
 import { Subject } from 'rxjs';
 import { CommonService } from './common/common.service';
 import { Employee, EmployeeFull } from '../interfaces/employee';
@@ -67,17 +66,7 @@ export class UserInteractionService {
           return null;
         }
       }
-    }
-    if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-      try {
-        // Point to the RTDB emulator running on localhost.
-        connectFirestoreEmulator(firestore, FIREBASE_DATABASE_EMULATOR_HOST.host, FIREBASE_DATABASE_EMULATOR_HOST.port);
-      } catch (error) {
-        console.log(error);
-
-      }
-    }
-    this.firestore = common_service.initializeBdd(ofApp, firestore);
+    };
     this.count = 0;
     this.proprietary = "";
     this.uid = "";
