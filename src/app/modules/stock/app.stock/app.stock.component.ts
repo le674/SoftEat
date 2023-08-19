@@ -70,7 +70,6 @@ export class AppStockComponent implements OnInit, OnDestroy{
     if(this.stock !== null){
       if(this.stock.includes("w")) this.write = true;
       if(this.stock.includes("r")){
-        
         let user_info:any = this.url.queryParams;
         this.prop = user_info.prop;
         this.restaurant = user_info.restaurant;
