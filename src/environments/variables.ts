@@ -3,4 +3,4 @@ export const FIREBASE_STORAGE_EMULATOR_HOST="http://127.0.0.1:9199";
 export const FIREBASE_FUNCTIONS_EMULATOR_HOST="http://127.0.0.1:5001";
 export const FIREBASE_FIRESTORE_EMULATOR_HOST={host:"127.0.0.1", port:8080};
 export const FIREBASE_DATABASE_EMULATOR_HOST= {host:"127.0.0.1", port:9000};
-export const FIREBASE_PROD = true;
+export const FIREBASE_PROD = false;
