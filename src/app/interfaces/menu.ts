@@ -127,7 +127,7 @@ export class Cmenu implements InteractionBddFirestore{
      * @param prop enseigne pour laquel nous souhaitons récupérer le menu
      */
     public static getPathsToFirestore(proprietary_id: string):string[] {
-        return ["proprietaires", proprietary_id, "menus"]
+        return ["proprietaires", proprietary_id, "restaurants"];
     }
     /**
      * permet de construire une instance de la class menu
