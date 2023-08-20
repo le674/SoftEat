@@ -79,16 +79,16 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
         this.path_to_conso = Cconsommable.getPathsToFirestore(this.prop, this.restaurant);
         this.path_to_plat = Cplat.getPathsToFirestore(this.prop);
         this.path_to_menu = Cmenu.getPathsToFirestore(this.prop);
-        this.req_ingredients =  this.firestore.getFromFirestoreBDD(this.path_to_ing, CIngredient);
+        this.req_ingredients =  this.firestore.getFromFirestoreBDD(this.path_to_ing, CIngredient, null);
         this.ingredients_sub = this.firestore.getFromFirestore().subscribe((ingredients:Array<InteractionBddFirestore>) => {
           this.ingredients = ingredients as Array<CIngredient>;
-          this.req_consommables =  this.firestore.getFromFirestoreBDD(this.path_to_conso, Cconsommable);
+          this.req_consommables =  this.firestore.getFromFirestoreBDD(this.path_to_conso, Cconsommable, null);
           this.consommables_sub = this.firestore.getFromFirestore().subscribe((consommables:Array<InteractionBddFirestore>) => {
             this.consommables = consommables as Array<Cconsommable>;
-            this.req_plats = this.firestore.getFromFirestoreBDD(this.path_to_plat, Cplat);
+            this.req_plats = this.firestore.getFromFirestoreBDD(this.path_to_plat, Cplat, null);
             this.plats_sub = this.firestore.getFromFirestore().subscribe((plats: Array<InteractionBddFirestore>) => {
               this.plats = plats as Array<Cplat>;
-              this.req_menus = this.firestore.getFromFirestoreBDD(this.path_to_menu,Cmenu);
+              this.req_menus = this.firestore.getFromFirestoreBDD(this.path_to_menu,Cmenu, null);
               this.menus_sub = this.firestore.getFromFirestore().subscribe((menus: Array<InteractionBddFirestore>) => {
                 this.menus = menus as Array<Cmenu>;
               })

@@ -69,7 +69,7 @@ export class AppConsoComponent implements OnInit, OnDestroy {
         this.prop = user_info["prop"];
         this.restaurant = user_info["restaurant"];
         this.firestore_path = Cconsommable.getPathsToFirestore(this.prop, this.restaurant);
-        this.req_consommables = this.firestore.getFromFirestoreBDD(this.firestore_path, Cconsommable);
+        this.req_consommables = this.firestore.getFromFirestoreBDD(this.firestore_path, Cconsommable, null);
         this.consommables_sub = this.firestore.getFromFirestore().subscribe((consommables:Array<InteractionBddFirestore>) => {
           let _consommables = consommables as Array<Cconsommable>
           for (let consommable of _consommables) {

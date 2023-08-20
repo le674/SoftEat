@@ -34,7 +34,7 @@ export class ModalGaspComponent implements OnInit {
 
   ngOnInit(): void {
     this.path_to_plat = Cplat.getPathsToFirestore(this.data.prop);
-    this.firestore.getFromFirestoreBDD(this.path_to_plat,Cplat);
+    this.firestore.getFromFirestoreBDD(this.path_to_plat,Cplat, null);
     this.firestore.getFromFirestore().subscribe((plats:Array<InteractionBddFirestore>) => {
       this.plats = plats as Array<Cplat>;
       this.plat_names = this.plats.map((plat) => plat.name.split("_").join(" "));

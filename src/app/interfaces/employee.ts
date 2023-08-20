@@ -25,6 +25,7 @@ export class Employee implements InteractionBddFirestore {
     };
     time_work:string | null;
     notifConversations!: { [conv: string]: number};
+    convPrivee:string | null;
     [index:string]:any;
     constructor(email:string, statut:Statut, uid:string, private common_service: CommonService){
         this.user_id = "";
@@ -40,6 +41,7 @@ export class Employee implements InteractionBddFirestore {
         this.name = null;
         this.id = "";
         this.time_work = "";
+        this.convPrivee = null;
         this.address = null;
         this.current_restaurant = null;
         this.calendar = Object.assign({"id": ""},{"api_key": ""})
@@ -50,7 +52,7 @@ export class Employee implements InteractionBddFirestore {
      * @param right droit qui peut être w (écriture) ou r(lecture) pour lequel nous voulons récupérer les statuts
      * @returns liste de statuts 
     */
-    getStatus(right:string):string[]{
+    public getStatus(right:string):string[]{
         let status = []
         for(let key in this.statut){
           const role = this.statut[key as keyof typeof this.statut] as string
@@ -65,7 +67,7 @@ export class Employee implements InteractionBddFirestore {
      * @param status liste des statut auxquels nous souhaitons attribuer un droit
      * @param right droit à attribuer pour cette ensemble de statut
      */
-    setStatus(status:string[], right:string){
+    public setStatus(status:string[], right:string){
         let roles = this.common_service.getStatut();
         roles.forEach((role) => {
           if(role === 'propriétaire'){
@@ -108,7 +110,7 @@ export class Employee implements InteractionBddFirestore {
      * permet de récupérer les status d'un employée et de les ajouter à cette instance d'employee
      * @param user employee d'un restaurant
      */
-    setStatusFromUser(user:Employee){
+    public setStatusFromUser(user:Employee){
         this.statut = Object.assign({}, user.statut)
     }
     
@@ -116,14 +118,14 @@ export class Employee implements InteractionBddFirestore {
      * permet de retourner l'objet calandrier
      * @returns calendrier contenant la clef de l'apiainsi que l'identifiant du calendrier 
      */
-    getCalendar(): { id?: string; api_key?: string } {
+    public getCalendar(): { id?: string; api_key?: string } {
       return this.calendar;
     }
 
     /**
      * Supprime les status null et les remplaces par une chaine de caractère vide
      */
-    remove_null(){
+    public remove_null(){
         for(let status of this.common_service.getStatut()){
           this.statut[status] = "";
         }
@@ -132,7 +134,7 @@ export class Employee implements InteractionBddFirestore {
      * Permet de récupérer une instance d'employé sous la forme d'un JSON
      * @returns un JSON qui représente l'employée
      */
-    getData(): any {
+    public getData(): any {
 
        let address = null;
        if(this.address !== null){
@@ -152,14 +154,17 @@ export class Employee implements InteractionBddFirestore {
           service: this.service,
           surname: this.surname,
           uid: this.uid,
-          user_id: this.user_id
+          user_id: this.user_id,
+          convPrivee: this.convPrivee,
+          notifConversations: this.notifConversations
          }
     }
     /**
       * permet de copier un JSON employee dans une instance de la classe employée
       * @param employee employée à copier dans une instance de la classe
     */
-    setData(employee: Employee) {
+    public setData(employee: Employee) {
+        
         let statut = new Statut(this.common_service);
         statut.setData(employee.statut);
         let address = null;
@@ -180,6 +185,8 @@ export class Employee implements InteractionBddFirestore {
         this.surname = employee.surname;
         this.uid = employee.uid;
         this.user_id = employee.user_id;
+        this.notifConversations = employee.notifConversations;
+        this.convPrivee = employee.convPrivee;
         this.address = address;  
         this.statut = statut
     }
@@ -187,7 +194,7 @@ export class Employee implements InteractionBddFirestore {
       * Permet de retourner une nouvelle instance de employee depuis la base de donnée
       * @returns {Employee} un employee depuis la base de donnée
    */
-    getInstance(): InteractionBddFirestore {
+    public getInstance(): InteractionBddFirestore {
       return new Employee(this.email, this.statut, this.uid, this.common_service);
     }
    /**
@@ -197,7 +204,7 @@ export class Employee implements InteractionBddFirestore {
     public static getPathsToFirestore(proprietary_id: string): string[] {
       return ["proprietaires", proprietary_id, "employees"]
     }
-    to_roles() {
+    public to_roles() {
       let statut = new Statut(this.common_service);
       statut.setData(this.statut);
       if(this.roles !== null && this.roles !== undefined){
@@ -218,7 +225,7 @@ export class EmployeeFull extends Employee{
    * @param user eployée ou client de l'enseigne
    * @param restaurants etout les restaurants de l'enseigne
    */
-  getAllRestaurant(user:User, restaurants:Array<Restaurant>){
+  public getAllRestaurant(user:User, restaurants:Array<Restaurant>){
     this.restaurants = [];
     if(user.related_restaurants !== null){
      const restaurants_ids =  user.related_restaurants.map((restaurant) => restaurant.restaurant_id);
@@ -229,7 +236,7 @@ export class EmployeeFull extends Employee{
    * permet d'initialiser la classe employée dont hérite la classe employee full
    * @param employee employé du restaurant
    */
-  setEmployee(employee:Employee){
+  public setEmployee(employee:Employee){
     super.address = employee.address;
     super.current_restaurant = employee.current_restaurant;
     super.id = employee.id;
@@ -245,14 +252,14 @@ export class EmployeeFull extends Employee{
    * permet de récupérer l'ensemble des identifiants des restaurants auxquel appartient l'employé 
    * @returns {Array<Restaurant>} liste de restaurants
    */
-  getRestaurantsIds(){
+  public getRestaurantsIds(){
     return this.restaurants.map((restaurant) => restaurant.id);
   }
   /**
    * permet de récupérer une liste d'objets contenant l'identifiant du propriétaire et du restaurant
    * @returns {Array<{proprietaire_id:string, restaurant_id:string}>} liste d'objets
    */
-  getRestaurantsProp(){
+  public getRestaurantsProp(){
     return this.restaurants.map((restaurant) => {
       return {
         proprietaire_id: this.proprietaire,

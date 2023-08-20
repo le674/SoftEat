@@ -1,42 +1,16 @@
 
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import {connectAuthEmulator, createUserWithEmailAndPassword , getAuth, onAuthStateChanged, signInWithEmailAndPassword} from 'firebase/auth';
-import {initializeApp } from 'firebase/app';
-import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from '../../environments/variables';
-
-
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo",
-  authDomain: "psofteat-65478545498421319564.firebaseapp.com",
-  databaseURL: "https://psofteat-65478545498421319564-default-rtdb.firebaseio.com",
-  projectId: "psofteat-65478545498421319564",
-  storageBucket: "psofteat-65478545498421319564.appspot.com",
-  messagingSenderId: "135059251548",
-  appId: "1:135059251548:web:fb05e45e1d1631953f6199",
-  measurementId: "G-5FBJE9WH0X"
-};
-const app = initializeApp(firebaseConfig);
+import {createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword} from 'firebase/auth';
+import { Auth } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthentificationService {
-  auth = getAuth(app);
   public userData: any; // Save logged in user data
   private connecter:boolean;
-  constructor(public router: Router){
-    if((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-      try {
-         // Point to the RTDB emulator running on localhost.
-         connectAuthEmulator(this.auth, FIREBASE_AUTH_EMULATOR_HOST);
-      } catch (error) {
-        console.log(error);
-        
-      }
-    } 
-  
+  constructor(public router: Router,private auth:Auth){
     this.connecter=false;
     onAuthStateChanged(this.auth, (user) => {
       if (user) {

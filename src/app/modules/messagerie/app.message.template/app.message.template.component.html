@@ -8,14 +8,14 @@
       }" class="message_bubble" dir="auto">
         <div class="message_infos">
           <div class="name">
-            <p>{{ listeMessages.prenom }} {{ listeMessages.nom }}</p>
+            <p>{{ listeMessages.name }} {{ listeMessages.surname}}</p>
           </div>
           <div class="time_sent">
-            <p> {{ listeMessages.horodatage | date: 'HH:mm'}} </p>
+            <p> {{ listeMessages.timestamp | date: 'HH:mm'}} </p>
           </div>
         </div>
         <div class="message_content">
-          <p>{{ listeMessages.contenu }}</p>
+          <p>{{ listeMessages.content }}</p>
         </div>
       </div>
       <div class="message_spacer"></div>

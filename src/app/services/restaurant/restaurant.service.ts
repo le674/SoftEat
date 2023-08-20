@@ -61,7 +61,7 @@ export class RestaurantService {
         }
        }
     }
-    this.db = common.initializeBdd(ofApp, firestore);
+    this.db = this.firestore;
   }
 /**
  * @description permet de récupérer tout les restaurants depuis la base de donnée pour une enseigne et pour un utilisateur
