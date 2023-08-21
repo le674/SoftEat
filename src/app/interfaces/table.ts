@@ -40,8 +40,10 @@ export class Ctable implements InteractionBddFirestore{
 
     }
     getInstance(): InteractionBddFirestore {
-        throw new Error("Method not implemented.");
+        return new Ctable();
     }
+
+
 
     public static getPathsToFirestore(proprietary_id: string, restaurant_id: string):string[] {
         return ["proprietaires", proprietary_id, "restaurants", restaurant_id, "tables"]
