@@ -4,7 +4,6 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "emule":"firebase emulators:start --import=emulatorFirebase/data --export-on-exit;",
     "launch": "http-server dist/",
     "build": "ng build  --aot --output-hashing=all",
     "watch": "ng build --watch --configuration development",

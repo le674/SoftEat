@@ -31,17 +31,20 @@
       "enabled": true,
       "port": 4000
     },
-    "singleProjectMode": true
+    "singleProjectMode": true,
+    "hosting": {
+      "port": 5000
+    }
   },
   "database": {
-    "rules": "emulatorFirebase/database.rules.json"
+    "rules": "database.rules.json"
   },
   "firestore": {
-    "rules": "emulatorFirebase/firestore.rules",
-    "indexes": "emulatorFirebase/firestore.indexes.json"
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
   },
   "storage": {
-    "rules": "emulatorFirebase/storage.rules"
+    "rules": "storage.rules"
   },
   "hosting": {
     "public": "dist/",
