@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { Auth, getAuth, onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { Router } from '@angular/router';
 import { ShortUser, User } from '../../../../app/interfaces/user';
@@ -14,7 +14,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { CommonService } from '../../../../app/services/common/common.service';
 import { CommonCacheServices } from 'src/app/services/common/common.cache.services.service';
-import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
 import { Unsubscribe } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { EmployeeFull } from 'src/app/interfaces/employee';
@@ -24,6 +23,7 @@ import { AddConfigueSalaryComponent } from './add.configue.salary/add.configue.s
 import { MobileUserDataComponent } from './mobile.user.data/mobile.user.data/mobile.user.data.component';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { InteractionBddFirestore } from 'src/app/interfaces/interaction_bdd';
+import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-app.configue',
@@ -89,7 +89,6 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
 
   private roles: string[];
   private length_statut:number;
-  private auth: Auth;
   public statuts: string[];
 
   public visibles: Visibles = {
@@ -121,7 +120,8 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
   constructor(public dialog: MatDialog, private user_services: UserInteractionService,
     private ofApp: FirebaseApp, private router: Router, private _snackBar: MatSnackBar,
     private _bottomSheet: MatBottomSheet, private common_service: CommonService,
-    private cache_service: CommonCacheServices, private firestore:FirebaseService) {
+    private cache_service: CommonCacheServices, private firestore:FirebaseService,
+    private auth:Auth) {
     this.prop_user = [];
     this.users = [];
     this.path_to_restaurant = []
@@ -171,7 +171,6 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
     this.curr_categorie = 0;
     this.is_prop = false;
     this.windows_screen_mobile = this.common_service.getMobileBreakpoint("user");
-    this.auth = getAuth(this.ofApp);
     this.user = new User();
   }
   ngOnDestroy(): void {
@@ -187,7 +186,7 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
     }
   }
   ngOnInit(): void {
-    const auth = getAuth(this.ofApp);
+    const auth = this.auth;
     onAuthStateChanged(auth, (user) => {
       if (user) {
         this.uid = user.uid;
@@ -499,8 +498,7 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
 
   //Déconnexion de l'utilisateur à l'application 
   clicdeConnexion() {
-    const auth = getAuth(this.ofApp);
-    auth.signOut();
+    this.auth.signOut();
     window.location.reload();
   }
 

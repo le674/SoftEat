@@ -172,7 +172,7 @@ export class HbarComponent implements OnInit {
 
   //recuperation heure du serveur
   fetchTimeServer(): number {
-    const db = getDatabase();
+    const db = getDatabase(this.firebaseApp);
     onValue(ref(db, '.info/serverTimeOffset'), (snapshot) => {
       const offset: number = snapshot.val() || 0;
       this.date = Date.now() + offset;

@@ -5,8 +5,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
-import { connectAuthEmulator, getAuth } from 'firebase/auth';
-import { User } from '../../../../../app/interfaces/user';
+import { connectAuthEmulator} from 'firebase/auth';
 import { MailServicesService } from '../../../../../app/services/mail-services.service';
 import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from '../../../../../environments/variables';
 import { InfoAppliComponent } from './info-appli/info-appli.component';
@@ -21,7 +20,6 @@ export class FooterComponent implements OnInit {
 
   private router: Router;
   private url: UrlTree;
-  private auth : Auth;
   public enseigne:string;
   public restaurants: string;
   public not_mobile: boolean;
@@ -30,13 +28,12 @@ export class FooterComponent implements OnInit {
     message: new FormControl('', Validators.required)
   })
 
-  constructor(private ofApp: FirebaseApp, private _snackBar: MatSnackBar, router: Router,
+  constructor(private auth: Auth, private _snackBar: MatSnackBar, router: Router,
     private mail_service:MailServicesService, public dialog: MatDialog, public mobile_service:CommonService) {
     this.router = router;
     this.enseigne = "";
     this.restaurants = "";
     this.not_mobile = false;
-    this.auth = getAuth(this.ofApp);
     if ((location.hostname === "localhost") && (!FIREBASE_PROD)) {
       try {
          // Point to the RTDB emulator running on localhost.

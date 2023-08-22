@@ -5,13 +5,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/auth';
-import {Subscription } from 'rxjs';
+import {Subscription, throwError } from 'rxjs';
 import { CIngredient } from '../../../../app/interfaces/ingredient';
 import { CalculService } from '../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.component';
 import { CommonService } from '../../../../app/services/common/common.service';
 import { RowIngredient } from 'src/app/interfaces/inventaire';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { InteractionBddFirestore } from 'src/app/interfaces/interaction_bdd';
 
 @Component({
   selector: 'app-stock',
@@ -74,6 +75,16 @@ export class AppStockComponent implements OnInit, OnDestroy{
         this.prop = user_info.prop;
         this.restaurant = user_info.restaurant;
         this.path_to_ingredients = CIngredient.getPathsToFirestore(this.prop, this.restaurant);
+        this.firebase_service.getFromFirestoreProm(this.path_to_ingredients, CIngredient, null).then((ingredients:InteractionBddFirestore[]) => {
+          console.log("ingredients");
+          console.log(ingredients);
+        }).catch((e) => {
+          const err = new Error(e);
+          return throwError(() => {
+            console.log("error x");
+            console.log(err);
+          })
+        })
         this.req_ingredients_brt = this.firebase_service.getFromFirestoreBDD(this.path_to_ingredients, CIngredient, null);
         const obs_ing = this.firebase_service.getFromFirestore()
         this.req_merge_obs = obs_ing.subscribe((ingredients) => {

@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { FirebaseApp } from '@angular/fire/app';
 import { MatDialog} from '@angular/material/dialog';
 import {Router, UrlSerializer} from '@angular/router';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import {onAuthStateChanged } from 'firebase/auth';
 import {UserInteractionService} from '../../../../app/services/user-interaction.service'
 import { Restaurant} from '../../../../app/interfaces/restaurant';
 import { AppModalComponent } from '../app.modals/app.modal/app.modal/app.modal.component';
@@ -13,6 +12,7 @@ import { User } from 'src/app/interfaces/user';
 import { Employee } from 'src/app/interfaces/employee';
 import { CommonCacheServices } from 'src/app/services/common/common.cache.services.service';
 import { Subscription } from 'rxjs';
+import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-app.autho',
@@ -34,7 +34,7 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
   private user_unsubscribe!: Unsubscribe;
   private _user_subscription!:Subscription;
 
-  constructor(private user_services : UserInteractionService, private ofApp: FirebaseApp,
+  constructor(private user_services : UserInteractionService, private auth: Auth,
      private router: Router, public dialog: MatDialog, private tst_dialog:MatDialog, private serealizer: UrlSerializer,
      private restaurant_service:RestaurantService, public cache_service:CommonCacheServices){   
       this.uid = "";
@@ -52,8 +52,7 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
     this._employee_subscription.unsubscribe();
   }
   ngOnInit(): void {
-    const auth = getAuth(this.ofApp);
-      onAuthStateChanged(auth, (user) => {
+      onAuthStateChanged(this.auth, (user) => {
         if(user){
           this.uid = user.uid;
           this.user_unsubscribe = this.user_services.getUserFromUidBDD(this.uid);
@@ -84,8 +83,7 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
       })
   }
   clicdeConnexion(){
-    const auth = getAuth(this.ofApp);
-    auth.signOut(); 
+    this.auth.signOut(); 
     window.location.reload();
   }
   clicAcceuil(){

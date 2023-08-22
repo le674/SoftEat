@@ -5,7 +5,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, UrlTree } from '@angular/router';
-import { connectAuthEmulator, getAuth, onAuthStateChanged, updateCurrentUser } from 'firebase/auth';
+import { connectAuthEmulator, onAuthStateChanged, updateCurrentUser } from 'firebase/auth';
 import { User } from '../../../../app/interfaces/user';
 import { MailServicesService } from '../../../../app/services/mail-services.service';
 import { UserInteractionService } from '../../../../app/services/user-interaction.service';
@@ -27,7 +27,6 @@ export class ProfilComponent implements OnInit {
 
   private router: Router;
   private url: UrlTree;
-  private auth : Auth;
   public user_db: Employee;
   public enseigne:string;
   public restaurants: string;
@@ -39,14 +38,14 @@ export class ProfilComponent implements OnInit {
 
   constructor(private ofApp: FirebaseApp, router: Router, private service:UserInteractionService,
      private mail_service:MailServicesService,public dialog: MatDialog,
-     private _snackBar: MatSnackBar, public mobile_service:CommonService) { 
+     private _snackBar: MatSnackBar, public mobile_service:CommonService,
+     private auth:Auth) { 
     this.user_db = new Employee("", new Statut(this.mobile_service), "", this.mobile_service);
     this.router = router;
   /*   this.user_db = new User() */
     this.enseigne = "";
     this.restaurants = "";
     this.not_mobile = false;
-    this.auth = getAuth(this.ofApp); 
     // Attention l'url doit contenir l'information concernant le restaurant et le proprietaire
     this.url = this.router.parseUrl(this.router.url)
   }
@@ -196,9 +195,8 @@ export class ProfilComponent implements OnInit {
   }
 
   clicdeConnexion(){
-    const auth = getAuth(this.ofApp);
-    auth.signOut();
-    updateCurrentUser(auth, null);
+    this.auth.signOut();
+    updateCurrentUser(this.auth, null);
     window.location.href = ""
   }
   redirectAcceuil(){

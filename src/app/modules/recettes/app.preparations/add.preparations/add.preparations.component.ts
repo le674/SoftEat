@@ -146,20 +146,18 @@ export class AddPreparationsComponent implements OnInit{
         this.getBaseConso().push(new_conso);
       }
     }
-    if(this.data.preparation !== null){
-      if((this.data.preparation.etapes !== null) && (this.data.preparation.etapes !== undefined)){
-        const current_inputs_etapes = this.data.preparation.etapes.length;
-        for (let index = 0; index < current_inputs_etapes; index++) {
-          const times = this.prepa_service.SecToArray(this.data.preparation.etapes[index].time);
-          const new_etape = this.formBuilder.group({
-            name: new FormControl(this.data.preparation.etapes[index].name),
-            comm: new FormControl(this.data.preparation.etapes[index].commentary),
-            heure: new FormControl(times[0]),
-            minute: new FormControl(times[1]),
-            seconde: new FormControl(times[2])
-          })
-          this.getEtapes().push(new_etape);
-        }
+    if((this.data.preparation?.etapes !== null) && (this.data.preparation?.etapes !== undefined)){
+      const current_inputs_etapes = this.data.preparation.etapes.length;
+      for (let index = 0; index < current_inputs_etapes; index++) {
+        const times = this.prepa_service.SecToArray(this.data.preparation.etapes[index].time);
+        const new_etape = this.formBuilder.group({
+          name: new FormControl(this.data.preparation.etapes[index].name),
+          comm: new FormControl(this.data.preparation.etapes[index].commentary),
+          heure: new FormControl(times[0]),
+          minute: new FormControl(times[1]),
+          seconde: new FormControl(times[2])
+        });
+        this.getEtapes().push(new_etape);
       }
     }
   }
@@ -441,15 +439,15 @@ export class AddPreparationsComponent implements OnInit{
           }
         } 
       }
-      const new_etape = this.formBuilder.group({
-        name: new FormControl(name),
-        comm: new FormControl(comm),
-        heure: new FormControl(heure),
-        minute: new FormControl(minute),
-        seconde: new FormControl(seconde),
-      });
-      this.getEtapes().push(new_etape);
     }
+    const new_etape = this.formBuilder.group({
+      name: new FormControl(name),
+      comm: new FormControl(comm),
+      heure: new FormControl(heure),
+      minute: new FormControl(minute),
+      seconde: new FormControl(seconde),
+    });
+    this.getEtapes().push(new_etape);
   }
 
   suppInputIng(index:number){

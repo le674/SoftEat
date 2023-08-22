@@ -33,9 +33,7 @@ interface Event {
 @Injectable()
 export class CalendarService {
   events: DayPilot.EventData[] = [];
-  private firebaseConfig = environment.firebase;
-  private firebaseApp = initializeApp(this.firebaseConfig);
-  private db = getDatabase(this.firebaseApp);
+  private db;
   private currentUser = localStorage.getItem("user_email") as string;
   private users = new BehaviorSubject<string>(this.currentUser);
   currentData = this.users.asObservable();
@@ -43,15 +41,7 @@ export class CalendarService {
   statusService = this.statusSubject.asObservable();
 
   constructor(private ofApp: FirebaseApp) {
-    if (location.hostname === 'localhost' && !FIREBASE_PROD) {
-      try {
-        connectDatabaseEmulator(
-          this.db,
-          FIREBASE_DATABASE_EMULATOR_HOST.host,
-          FIREBASE_DATABASE_EMULATOR_HOST.port
-        );
-      } catch (error) {console.log("Error in constructor calendar-data.service.ts :", error)}
-    }
+    this.db = getDatabase(this.ofApp);
   }
 
   async getEventsFromAllUsers(

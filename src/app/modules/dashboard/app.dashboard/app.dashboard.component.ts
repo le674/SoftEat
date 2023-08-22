@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import { FirebaseApp } from '@angular/fire/app';
-import { Auth, getAuth, onAuthStateChanged } from '@angular/fire/auth';
+import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
@@ -21,7 +20,6 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
   private restaurant:string;
   private user_subscription: Subscription; 
   private url: UrlTree;
-  private auth:Auth;
   public numP = 1;
   public status:Statut;
   private router: Router;
@@ -30,15 +28,14 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
 
   constructor(public common_service:CommonService,
     router: Router,
-    private app:FirebaseApp,
-    private employee_service:UserInteractionService) {
+    private employee_service:UserInteractionService,
+    private auth:Auth) {
     this.router = router;
     this.prop = "";
     this.restaurant = "";
     this.user_subscription = new Subscription();
     this.status = new Statut(this.common_service);
     this.url = this.router.parseUrl(this.router.url);
-    this.auth = getAuth(app);
   }
   ngOnDestroy(): void {
    this.user_unsubscribe();

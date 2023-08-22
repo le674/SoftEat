@@ -9,19 +9,11 @@ import {
 } from '@angular/core';
 import { FirebaseService } from '../../../services/firebase.service';
 import { Statut } from '../../../interfaces/statut';
-import { User } from '../../../interfaces/user';
 import {
   getDatabase,
   ref,
-  push,
-  update,
-  get,
-  onChildAdded,
-  off,
   onValue,
-  DatabaseReference,
 } from 'firebase/database';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { Subscription, interval, take } from 'rxjs';
 import { MessageInfos } from '../app.messagerie.message.infos/message-infos';
@@ -31,6 +23,7 @@ import { Condition, InteractionBddFirestore } from 'src/app/interfaces/interacti
 import { ConversationCalculService } from 'src/app/services/conversations/conversation-calcul.service';
 import { Unsubscribe } from '@angular/fire/firestore';
 import { Conversation } from 'src/app/interfaces/conversation';
+import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-messagerie',
@@ -66,7 +59,6 @@ export class AppMessagerieComponent implements OnInit, OnDestroy ,AfterViewCheck
   stockConv!: boolean;
   currentUserConv!: string;
   inputText!: string;
-  firebaseApp: FirebaseApp | undefined;
   shouldScroll = false;
   maxScroll = 0;
   messagerie!: MessageInfos[];
@@ -83,9 +75,10 @@ export class AppMessagerieComponent implements OnInit, OnDestroy ,AfterViewCheck
 
   constructor(
     private router: Router,
-    firebaseApp: FirebaseApp,
+    private firebaseApp: FirebaseApp,
     private firebaseService: FirebaseService,
-    private conv_service:ConversationCalculService
+    private conv_service:ConversationCalculService,
+    private auth:Auth
   ) {
     this.firebaseApp = firebaseApp;
     this.fetchData();
@@ -159,7 +152,6 @@ export class AppMessagerieComponent implements OnInit, OnDestroy ,AfterViewCheck
     this.email = this.firebaseService.getEmailLocalStorage();
     this.req_employee_unsub = this.firebaseService.getFromFirestoreBDD(this.path_to_employee, Employee, null);
     this.req_employee = this.firebaseService.getFromFirestore().subscribe((_employees:Array<InteractionBddFirestore>) => {
-      
       let employees = _employees as Array<Employee>;
       employees = employees.filter((employee) => employee.convPrivee !== null)
       this.convListUsers = this.conv_service.fetchConvListUsers(employees);
@@ -213,7 +205,7 @@ export class AppMessagerieComponent implements OnInit, OnDestroy ,AfterViewCheck
    * @returns timestamp (heure française) à l'instant T
    */
   fetchTimeServer(): number {
-    const db = getDatabase();
+    const db = getDatabase(this.firebaseApp);
     onValue(ref(db, '.info/serverTimeOffset'), (snapshot) => {
       const offset: number = snapshot.val() || 0;
       this.date = Date.now() + offset;

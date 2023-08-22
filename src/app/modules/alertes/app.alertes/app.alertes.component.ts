@@ -10,8 +10,8 @@ import { AlertesService } from '../../../../app/services/alertes/alertes.service
   templateUrl: './app.alertes.component.html',
   styleUrls: ['./app.alertes.component.css']
 })
-export class AppAlertesComponent implements OnInit, OnDestroy{
-  public toasts_stock:Array<CAlerte>;
+export class AppAlertesComponent{
+ /*  public toasts_stock:Array<CAlerte>;
   public toast_num:number;
   public date_time:string;
   private router: Router;
@@ -87,5 +87,5 @@ export class AppAlertesComponent implements OnInit, OnDestroy{
       return 220;
     }
     return window.innerWidth - 100;
-  }
+  } */
 }

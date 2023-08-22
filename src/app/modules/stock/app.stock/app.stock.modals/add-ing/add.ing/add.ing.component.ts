@@ -225,7 +225,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
           // alors on affiche une alerte
           const nom = (new_ing.name === null) ? "" : new_ing.name;
           const msg = "l'ingredient : ".concat(nom).concat(" arrive en rupture de stock.");
-          this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "SoftEat", "", "stock");
+          //this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "SoftEat", "", "stock");
         }
       }
     }
@@ -235,8 +235,8 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
           //alors on affiche une alerte 
           const nom = (new_ing.name === null) ? "" : new_ing.name;
           const msg = "l'ingredient ".concat(nom).concat(" arrive en rupture de stock.");
-          this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "stock");
-        }
+          /*this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "stock");*/        
+}
       }
     }
     if (this.add_ing_section.valid) {

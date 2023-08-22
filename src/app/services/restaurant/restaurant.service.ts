@@ -69,6 +69,7 @@ export class RestaurantService {
  * @returns {Unsubscribe}
  */
 getAllRestaurantsBDD(user:User){
+  console.log(user);
   if(user.related_restaurants !== null){
     const prop = user.related_restaurants[0].proprietaire_id;
     const restaurants = user.related_restaurants.filter((prop_rest) => prop_rest.proprietaire_id === prop)
@@ -78,6 +79,7 @@ getAllRestaurantsBDD(user:User){
     this.sub_all_restaurants = onSnapshot(docRef, (restaurants) => {
       this._restaurants = [];
       restaurants.forEach((restaurant) => {
+        
         if(restaurant.exists()){
           this._restaurants.push(restaurant.data() as Restaurant);
           this.restaurants.next(this._restaurants);

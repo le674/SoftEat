@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import { Firestore } from '@angular/fire/firestore';
-import { DocumentSnapshot, SnapshotOptions, Unsubscribe, collection, doc, getFirestore, onSnapshot, query, setDoc, where } from 'firebase/firestore';
+import { DocumentSnapshot, SnapshotOptions, Unsubscribe, collection, doc, onSnapshot, query, setDoc, where } from 'firebase/firestore';
 import { FirebaseStorage, getDownloadURL, getStorage, ref, uploadBytes, uploadBytesResumable} from "firebase/storage";
 import { Subject } from 'rxjs';
 import { Facture } from 'src/app/interfaces/facture';
@@ -11,14 +11,12 @@ import { Facture } from 'src/app/interfaces/facture';
   providedIn: 'root'
 })
 export class FactureInteractionService {
-  private firestore: Firestore;
   private storage:FirebaseStorage;
   private facture_converter:any;
   private factures =  new Subject<Array<Facture>>();
   private _factures:Array<Facture>;
   private sub_factures!: Unsubscribe;
-  constructor(private ofApp: FirebaseApp) { 
-    this.firestore = getFirestore(ofApp);
+  constructor(private ofApp: FirebaseApp, private firestore:Firestore) { 
     this.storage = getStorage(ofApp);
     this.facture_converter = {
       toFirestore: (facture:Facture) => {
