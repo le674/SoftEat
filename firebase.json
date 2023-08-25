@@ -2,7 +2,7 @@
   "functions": [
     {
       "source": "softeat_backend",
-      "codebase": "softeat_backend",
+      "codebase": "softeat_backend_appli",
       "ignore": [
         "node_modules",
         ".git",

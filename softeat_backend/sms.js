@@ -1,3 +1,4 @@
+const FIREBASE_PROD = false; 
 //Import du paquet pour la création de fonctions https
 const functions = require("firebase-functions");
 //Import des librairies cors/express pour les requêtes Cross Origine
@@ -25,18 +26,23 @@ const snsClient = new SNSClient({
     credentials: credentials,
 }); 
 // Configuration des middleware CORS avec les URL autorisées
-const corsOptionsCreateTopics = {
-  origin: [ "http://localhost:4200"]
-};
-const corsOptions = {
-  origin: ["https://www.softeat.fr", "https://psofteat-65478545498421319564.web.app"]
-};
+let corsOptions;
+if(FIREBASE_PROD){
+  corsOptions = {
+        origin: ["https://www.softeat.fr", "https://psofteat-65478545498421319564.web.app"]
+    };
+}
+else{
+    corsOptions = {
+        origin: [ "http://localhost:4200"]
+    };
+}
 //construction des différentes applications express
 const AppcreateTopic = express();
 const AppSubscribeClient = express();
 const AppSendMessage = express();
 //configuration des différentes applications express
-AppcreateTopic.use(cors(corsOptionsCreateTopics));
+AppcreateTopic.use(cors(corsOptions));
 AppSubscribeClient.use(cors(corsOptions));
 AppSendMessage.use(cors(corsOptions));
 

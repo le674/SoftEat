@@ -1,3 +1,4 @@
+const FIREBASE_PROD = false; 
 //FIREBASE_DATABASE_EMULATOR_HOST_1 = 'http://softeat-serveur:9000/?ns=psofteat-65478545498421319564'
 //NODE_ENV = "development"
 //Import du paquet pour la création de fonctions https
@@ -17,9 +18,17 @@ const nodemailer = require("nodemailer");
 //import du paquet cors pour les problème connections cross origines
 const cors = require("cors");
 const express = require('express');
-const corsOptions = {
-    origin: ["https://www.softeat.fr", "https://psofteat-65478545498421319564.web.app"]
-};
+let corsOptions;
+if(FIREBASE_PROD){
+  corsOptions = {
+        origin: ["https://www.softeat.fr", "https://psofteat-65478545498421319564.web.app"]
+    };
+}
+else{
+    corsOptions = {
+        origin: [ "http://localhost:4200"]
+    };
+}
 //construction et configuration de l'application express
 const AppSendMail = express();
 AppSendMail.use(cors(corsOptions));
