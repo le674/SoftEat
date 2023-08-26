@@ -54,6 +54,7 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
         this.sub_user = this.employee_service.getEmployee().subscribe((employee:Employee) => {
           this.status = employee.statut;
         })
+        
       }
     });
   }

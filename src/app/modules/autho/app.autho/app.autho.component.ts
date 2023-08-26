@@ -53,11 +53,11 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
   }
   ngOnInit(): void {
       onAuthStateChanged(this.auth, (user) => {
+        console.log(user);
         if(user){
           this.uid = user.uid;
           this.user_unsubscribe = this.user_services.getUserFromUidBDD(this.uid);
           this._user_subscription = this.user_services.getUserFromUid().subscribe((user:User) => {
-            console.log("1");
             this.user = user;
             if(this.user !== null){
               this.cache_service.setUser(user);
@@ -69,7 +69,6 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
               })
               this.restaurant_unsubscribe = this.restaurant_service.getAllRestaurantsBDD(this.user);
               this._restaurant_subscription = this.restaurant_service.getAllRestaurants().subscribe((restaurants:Array<Restaurant>) => {
-                console.log("3");
                 this.cache_service.setRestaurants(restaurants);
               })
             }
@@ -79,7 +78,7 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
           console.log("pas d'autentification");
            //renvoyer la personne vers la page d'authentification
           this.router.navigate(["./accueil"])
-        }   
+        } 
       })
   }
   clicdeConnexion(){

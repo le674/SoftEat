@@ -6,7 +6,7 @@ import { Unsubscribe } from 'firebase/auth';
 import { CollectionReference, DocumentData, DocumentReference, DocumentSnapshot, Firestore, SnapshotOptions, collection, updateDoc, deleteDoc, doc, onSnapshot, setDoc, getDocs } from '@angular/fire/firestore';
 import { CalculService } from './menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { Condition, InteractionBddFirestore } from '../interfaces/interaction_bdd';
-import { Subject } from 'rxjs';
+import { Subject, throwError } from 'rxjs';
 import { Conversation } from '../interfaces/conversation';
 import { Query, query, where } from 'firebase/firestore';
 import { Employee } from '../interfaces/employee';
@@ -178,7 +178,7 @@ export class FirebaseService {
             }
         }
         let ref = doc(this.concatPathCollection(_paths, converter_firestore));
-        await setDoc(ref, data_to_set.getData(ref.id))
+        return await setDoc(ref, data_to_set.getData(ref.id)).then(async () => ref.id);
     }
     /**
      * Cette fonction permet de modifier dans firestore des données 
