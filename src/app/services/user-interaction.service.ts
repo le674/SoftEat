@@ -267,6 +267,7 @@ export class UserInteractionService {
    * @returns {void}
    */
   async setEmployeeBDD(employee: EmployeeFull) {
+    
     const batch = writeBatch(this.firestore);
     const user = new User();
     const restaurants_ids = employee.getRestaurantsIds();

@@ -41,7 +41,7 @@ export class Employee implements InteractionBddFirestore {
         };
         this.auth_rh = [];  
         this.number = null;
-        this.roles = null;
+        this.roles = [];
         this.name = null;
         this.id = "";
         this.time_work = "";

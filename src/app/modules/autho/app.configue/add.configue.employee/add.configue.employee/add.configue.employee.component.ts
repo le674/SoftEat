@@ -22,6 +22,7 @@ export class AddConfigueEmployeeComponent implements OnInit {
   private path_to_user;
   public add_employee = new FormGroup({
     name: new FormControl('', Validators.required),
+    surname:new FormControl('', Validators.required),
     mail: new FormControl('', [Validators.required, Validators.email]),
     mdp: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
@@ -50,16 +51,21 @@ export class AddConfigueEmployeeComponent implements OnInit {
              updateCurrentUser(this.data.auth, user).then(() => {
               let name = "";
               let email = "";
+              let surname = "";
               const uid = user_cred.user.uid;
-              if (this.add_employee.controls.name.value !== null) {
+              if (this.add_employee.controls.name.value !== null){
                 name = this.add_employee.controls.name.value;
               }
               if (this.add_employee.controls.mail.value !== null) {
                 email = this.add_employee.controls.mail.value as string;
               }
+              if(this.add_employee.controls.surname.value !== null){
+                surname = this.add_employee.controls.surname.value as string;
+              }
               const status = new Statut(this.common_service);
               let employee = new Employee(email, status, uid, this.common_service);
               employee.name = name;
+              employee.surname = surname;
               employee.auth_rh = [uid];
               employee.proprietary_id = this.data.prop;
               employee.statut = status;
@@ -70,9 +76,12 @@ export class AddConfigueEmployeeComponent implements OnInit {
                 _user.proprietary_id = this.data.prop;
                 _user.related_restaurants = [];
                 _user.uid = uid;
-                this.service.setFirestoreData(_user, this.path_to_user, User).then(() => {
+                this.service.setFirestoreData(_user, this.path_to_user, User).then((_id) => {
+                  employee.user_id = _id;
+                  this.service.updateFirestoreData(id, employee, this.path_to_employee, Employee).then(() => {
+                    this._snackBar.open(`l'utilisateur ${user.email} vient d'être ajouté dans la base de donnée`);
+                  }).catch((err) => throwError(() => console.log(err)));
                 }).catch((err) => throwError(() => console.log(err)));
-                this._snackBar.open(`l'utilisateur ${user.email} vient d'être ajouté dans la base de donnée`);
               }).catch((err) => throwError(() => console.log(err)));
             });
           });

@@ -19,6 +19,13 @@
                 veuillez entrer un prénom valide
             </mat-error>
         </mat-form-field>
+        <mat-form-field class="example-full-width">
+            <mat-label>prénom</mat-label>
+            <input formControlName="surname" matInput placeholder="Ex. akkouche">
+            <mat-error *ngIf="add_employee.controls.surname.hasError('surname')">
+                veuillez entrer un nom valide
+            </mat-error>
+        </mat-form-field>
         <p>email du nouveau employé</p>
         <mat-form-field class="example-full-width">
             <mat-label>email</mat-label>
