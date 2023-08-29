@@ -112,6 +112,7 @@ export class UserInteractionService {
           where("auth_rh", "array-contains", uid)).withConverter(this.employee_converter);
 
         this.sub_employee = onSnapshot(employee_ref, (employees) => {
+          
           employees.forEach((employee) => {
             this.employee.next(employee.data() as Employee)
           })
@@ -266,6 +267,7 @@ export class UserInteractionService {
    * @returns {void}
    */
   async setEmployeeBDD(employee: EmployeeFull) {
+    
     const batch = writeBatch(this.firestore);
     const user = new User();
     const restaurants_ids = employee.getRestaurantsIds();
@@ -307,7 +309,7 @@ export class UserInteractionService {
       ), "employees"
     ),employee.id).withConverter(this.employee_converter);
     employee[attribut] = valeur;
-    await updateDoc(user_ref, employee.getData())
+    await updateDoc(user_ref, employee.getData(null))
   }
 
   /**

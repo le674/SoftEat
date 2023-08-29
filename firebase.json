@@ -2,7 +2,7 @@
   "functions": [
     {
       "source": "softeat_backend",
-      "codebase": "softeat_backend",
+      "codebase": "softeat_backend_appli",
       "ignore": [
         "node_modules",
         ".git",
@@ -15,12 +15,6 @@
     "auth": {
       "port": 9099
     },
-    "functions": {
-      "port": 5001
-    },
-    "firestore": {
-      "port": 8080
-    },
     "database": {
       "port": 9000
     },
@@ -31,10 +25,13 @@
       "enabled": true,
       "port": 4000
     },
-    "singleProjectMode": true,
-    "hosting": {
-      "port": 5000
-    }
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "singleProjectMode": true
   },
   "database": {
     "rules": "database.rules.json"

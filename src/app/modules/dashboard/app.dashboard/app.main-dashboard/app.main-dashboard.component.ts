@@ -77,7 +77,7 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
     if(sidebar!=null) sidebar.classList.toggle("close");
   } */
   
-    this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "stock").then((num) => {   
+/*     this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "stock").then((num) => {   
       this.stock_unsubscribe = this.alerte_service.getLastPAlertesBDD(this.prop, this.restaurant, num, "stock");
     })
 
@@ -95,7 +95,7 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
       if(this.alert_num !== 0){
         this.hidden = false; 
       }
-    })
+    }) */
   }
   getNom():string{
     if(email!=null){

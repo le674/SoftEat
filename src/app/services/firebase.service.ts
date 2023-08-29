@@ -6,7 +6,7 @@ import { Unsubscribe } from 'firebase/auth';
 import { CollectionReference, DocumentData, DocumentReference, DocumentSnapshot, Firestore, SnapshotOptions, collection, updateDoc, deleteDoc, doc, onSnapshot, setDoc, getDocs } from '@angular/fire/firestore';
 import { CalculService } from './menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { Condition, InteractionBddFirestore } from '../interfaces/interaction_bdd';
-import { Subject } from 'rxjs';
+import { Subject, throwError } from 'rxjs';
 import { Conversation } from '../interfaces/conversation';
 import { Query, query, where } from 'firebase/firestore';
 import { Employee } from '../interfaces/employee';
@@ -22,6 +22,7 @@ export class FirebaseService {
     private db: any;
     private interaction_data = new Subject<Array<InteractionBddFirestore>>();
     private changed_interaction_data = new Subject<InteractionBddFirestore>();
+    private ref!:Query<DocumentData>;
     statut!: Statut;
     private sub_function!: Unsubscribe;
     private data_array: Array<InteractionBddFirestore>;
@@ -37,7 +38,6 @@ export class FirebaseService {
     * @returns 
     */
     public getFromFirestoreBDD(paths: Array<string> | string, class_instance: Class<InteractionBddFirestore>, conditions:Array<Condition> | null) {
-        
         this.interaction_data = new Subject<Array<InteractionBddFirestore>>();
         let _paths: Array<string> = this.getPath(paths);
         let converter_firestore: any = {
@@ -57,9 +57,8 @@ export class FirebaseService {
                 }
             }
         }
-        let ref = this.concatPathCollectionWithWhere(_paths, converter_firestore, conditions);
-        this.sub_function = onSnapshot(ref, (firestore_datas) => {
-
+        this.ref = this.concatPathCollectionWithWhere(_paths, converter_firestore, conditions);
+        this.sub_function = onSnapshot(this.ref, (firestore_datas) => {
             this.data_array = [];
             firestore_datas.forEach((_data) => {
 
@@ -98,8 +97,8 @@ export class FirebaseService {
                 }
             }
         }
-        let ref = this.concatPathCollectionWithWhere(_paths, converter_firestore, conditions);
-        this.sub_function = onSnapshot(ref, (firestore_datas) => {
+        this.ref = this.concatPathCollectionWithWhere(_paths, converter_firestore, conditions);
+        this.sub_function = onSnapshot(this.ref, (firestore_datas) => {
             this.data_array = [];
             firestore_datas.docChanges().forEach((data) => {
                 if(data.type === "added" || data.type === "modified"){
@@ -179,7 +178,7 @@ export class FirebaseService {
             }
         }
         let ref = doc(this.concatPathCollection(_paths, converter_firestore));
-        await setDoc(ref, data_to_set.getData(ref.id))
+        return await setDoc(ref, data_to_set.getData(ref.id)).then(async () => ref.id);
     }
     /**
      * Cette fonction permet de modifier dans firestore des données 

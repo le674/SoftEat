@@ -7,6 +7,7 @@ import { User } from "./user";
 export class Employee implements InteractionBddFirestore {
     address:Address | null;
     current_restaurant:string | null;
+    auth_rh:Array<string>;
     email:string;
     id:string;
     name:string | null;
@@ -18,6 +19,7 @@ export class Employee implements InteractionBddFirestore {
     statut:Statut;
     surname:string | null;
     uid:string;
+    proprietary_id:string;
     user_id:string;
     public "calendar": {
       id?:string;
@@ -29,6 +31,7 @@ export class Employee implements InteractionBddFirestore {
     [index:string]:any;
     constructor(email:string, statut:Statut, uid:string, private common_service: CommonService){
         this.user_id = "";
+        this.proprietary_id = "";
         this.email = email;
         this.statut = statut;
         this.uid = uid;
@@ -36,8 +39,9 @@ export class Employee implements InteractionBddFirestore {
         this.service = {
             prise_service: null
         };
+        this.auth_rh = [];  
         this.number = null;
-        this.roles = null;
+        this.roles = [];
         this.name = null;
         this.id = "";
         this.time_work = "";
@@ -131,11 +135,14 @@ export class Employee implements InteractionBddFirestore {
         }
     }
     /**
-     * Permet de récupérer une instance d'employé sous la forme d'un JSON
+     * Permet d'envoyer dans la bdd une instance d'employé sous la forme d'un JSON
      * @returns un JSON qui représente l'employée
      */
-    public getData(): any {
-
+    public getData(id:string | null): any {
+      const convPrivee = this.email.split("@")[0] + "_" + this.surname + "_" + this.name;
+       if(id !== null){
+        this.id = id;
+       }
        let address = null;
        if(this.address !== null){
         address = {
@@ -146,17 +153,24 @@ export class Employee implements InteractionBddFirestore {
         }
        }
        return {
+          id: this.id,
+          time_work:this.time_work,
+          address: this.address,
+          proprietary_id: this.proprietary_id,
+          service:this.service,
+          auth_rh:this.auth_rh,
           current_restaurant: this.current_restaurant,
           email: this.email,
           name: this.name,
           number: this.number,
           roles: this.roles,
-          service: this.service,
           surname: this.surname,
           uid: this.uid,
           user_id: this.user_id,
-          convPrivee: this.convPrivee,
-          notifConversations: this.notifConversations
+          convPrivee: convPrivee,
+          calendar:this.calendar,
+          notifConversations: this.notifConversations,
+          statut: this.statut.getData()
          }
     }
     /**
@@ -168,7 +182,6 @@ export class Employee implements InteractionBddFirestore {
         let statut = new Statut(this.common_service);
         statut.setData(employee.statut);
         let address = null;
-        new Statut(this.common_service);
         if(employee.address !== null){
           address =  new Address(
             employee.address.postal_code,
@@ -188,7 +201,12 @@ export class Employee implements InteractionBddFirestore {
         this.notifConversations = employee.notifConversations;
         this.convPrivee = employee.convPrivee;
         this.address = address;  
-        this.statut = statut
+        this.statut = statut;
+        this.time_work = employee.time_work;
+        this.calendar = employee.calendar;
+        this.proprietary_id = employee.proprietary_id;
+        this.auth_rh = employee.auth_rh;
+        this.service = employee.service;
     }
    /**
       * Permet de retourner une nouvelle instance de employee depuis la base de donnée

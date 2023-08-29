@@ -5,13 +5,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/auth';
-import {Subscription } from 'rxjs';
+import {Subscription, throwError } from 'rxjs';
 import { CIngredient } from '../../../../app/interfaces/ingredient';
 import { CalculService } from '../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.component';
 import { CommonService } from '../../../../app/services/common/common.service';
 import { RowIngredient } from 'src/app/interfaces/inventaire';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { InteractionBddFirestore } from 'src/app/interfaces/interaction_bdd';
 
 @Component({
   selector: 'app-stock',

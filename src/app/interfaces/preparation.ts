@@ -369,5 +369,9 @@ export class CpreparationBase {
             this.portions = null;
         }
     }
-    constructor() {}
+    constructor() {
+        this.name = null;
+        this.id = [];
+        this.portions = null;
+    }
 } 

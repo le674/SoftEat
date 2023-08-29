@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
-import { FirebaseApp } from '@angular/fire/app';
-import { child, Database, get, getDatabase, onValue, ref, update } from 'firebase/database';
-import { CAlerte } from '../../../app/interfaces/alerte';
-import { Subject } from 'rxjs';
-import { Unsubscribe } from 'firebase/auth';
-
 @Injectable({
   providedIn: 'root'
 })
 export class AlertesService {
-  private db: Database;
+/*   private db: Database;
   private alertes: Array<CAlerte>;
   private num_package: number;
   private size_package:number;
@@ -163,5 +157,5 @@ getLastPAlertesBDD(prop: string, restaurant: string, num_package:number, categor
         categorie: toast.categorie,
       }
     })
-  }
+  } */
 }

@@ -143,7 +143,7 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
     if(new_conso.quantity < new_conso.marge){
       //alors on affiche une alerte 
       const msg = "le consommable ".concat(new_conso.name).concat(" arrive en rupture de stock.");
-      this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "conso");
+     // this.service_alertes.setAlertes(msg, this.data.restaurant, this.data.prop, "softeat", "", "conso");
     }
     if(this.add_cons_section.valid){
       if(this.is_modif){

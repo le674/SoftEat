@@ -211,6 +211,7 @@ export class AddPlatsComponent implements OnInit {
         if((ingredient.name !== null) && (ingredient.name !== undefined)){
           if((ingredient.quantity !== null) && (ingredient.quantity !== undefined)){
             if((ingredient.unity !== null) && (ingredient.unity !== undefined)){
+
               let _ingredient = new TIngredientBase(ingredient.name, ingredient.quantity, ingredient.unity);
               if(tmp_ingredient !== undefined){
                 _ingredient.id.push(tmp_ingredient.id);
@@ -232,6 +233,7 @@ export class AddPlatsComponent implements OnInit {
     if(this.add_plats_section.controls.base_conso.value !== null){
       let base_conso = this.add_plats_section.controls.base_conso.value;
       plat.consommables = base_conso.flatMap((consommable) => {
+
         let tmp_consommable = this.data.consommables.find((_consommable) => _consommable.name === consommable.name);
         if(consommable.name !== null && consommable.name !== undefined){
           if((consommable.quantity !== null) && (consommable.quantity !== undefined)){
@@ -246,7 +248,6 @@ export class AddPlatsComponent implements OnInit {
         }
         return [];
       })
-      console.log(plat.consommables);
     }
     if(this.add_plats_section.controls.etapes.value !== null){
       let base_etapes = this.add_plats_section.controls.etapes.value;
@@ -280,6 +281,7 @@ export class AddPlatsComponent implements OnInit {
       plat.preparations = this.data.preparations.filter((preparation) => base_prepa.map((prepa) => prepa.name).includes(preparation.name))
                           .map((preparation) =>
                           { 
+                            
                               let _preparation = new CpreparationBase();
                               const first_prepa = base_prepa.find((prepa) => preparation.name === prepa.name);
                               if((first_prepa?.portions !== null) && (first_prepa?.portions !== undefined)){

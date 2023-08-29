@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import { Client } from '../../../app/interfaces/client';
 import { Mplat } from 'src/app/interfaces/plat';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Subject, catchError, throwError } from 'rxjs';
-import { DocumentSnapshot, Firestore, SnapshotOptions, Unsubscribe, collection, deleteDoc, doc, getFirestore, onSnapshot, updateDoc } from 'firebase/firestore';
+import {catchError, throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })

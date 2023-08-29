@@ -10,13 +10,12 @@ import { AppFacturesModule } from './modules/factures/app.module';
 import { AppStockModule } from './modules/stock/app.module';
 import { AppAcceuilModule } from './modules/acceuil/app.module';
 import { AppDashboardModule } from './modules/dashboard/app.module';
-import {getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getFirestore, provideFirestore ,persistentLocalCache, persistentMultipleTabManager, initializeFirestore, connectFirestoreEmulator } from '@angular/fire/firestore';
+import {initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { provideFirestore ,persistentLocalCache, persistentMultipleTabManager, initializeFirestore, connectFirestoreEmulator } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { AuthentificationService } from './services/authentification.service';
 import { HttpClientModule } from '@angular/common/http';
-import { getAuth } from 'firebase/auth';
-import { connectAuthEmulator, provideAuth } from '@angular/fire/auth';
+import { connectAuthEmulator, indexedDBLocalPersistence, initializeAuth, provideAuth } from '@angular/fire/auth';
 import { RecettesModule } from './modules/recettes/recettes.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -48,19 +47,23 @@ import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_FIRESTORE_EMULATOR_HOST, FIREBASE
     //le app.module les objet de classe FirebaseApp contiendrons alors la configuration pour l'api firebase présent dans l'environnement
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => {
-      initializeFirestore(getApp(), {
+      const app = initializeApp(environment.firebase);
+      const db = initializeFirestore(app, {
         localCache: persistentLocalCache({
             tabManager: persistentMultipleTabManager()
         })
       }) 
-      const db = getFirestore();
       if(!FIREBASE_PROD){
         connectFirestoreEmulator(db,FIREBASE_FIRESTORE_EMULATOR_HOST.host,FIREBASE_FIRESTORE_EMULATOR_HOST.port);
       }
       return db;
     }),
     provideAuth(() => {
-      const auth = getAuth()
+      const app = initializeApp(environment.firebase);
+      const auth = initializeAuth(app,  {
+        persistence: indexedDBLocalPersistence,
+        popupRedirectResolver: undefined,
+      });
       if(!FIREBASE_PROD){
         connectAuthEmulator(auth, FIREBASE_AUTH_EMULATOR_HOST);
       }

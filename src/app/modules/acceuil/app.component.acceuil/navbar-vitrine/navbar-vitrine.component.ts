@@ -1,40 +1,12 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AuthentificationService } from '../../../../../app/services/authentification.service';
-import { connectAuthEmulator, getAuth, onAuthStateChanged, User } from 'firebase/auth';
+import { connectAuthEmulator, onAuthStateChanged } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { Router } from '@angular/router';
 import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_PROD } from '../../../../../environments/variables';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactComponent } from '../contact/contact.component';
-const firebaseConfig = {
-  apiKey: "AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo",
-  authDomain: "psofteat-65478545498421319564.firebaseapp.com",
-  databaseURL: "https://psofteat-65478545498421319564-default-rtdb.firebaseio.com",
-  projectId: "psofteat-65478545498421319564",
-  storageBucket: "psofteat-65478545498421319564.appspot.com",
-  messagingSenderId: "135059251548",
-  appId: "1:135059251548:web:fb05e45e1d1631953f6199",
-  measurementId: "G-5FBJE9WH0X"
-};
-  
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  if((location.hostname === "localhost") && (!FIREBASE_PROD)) {
-    try {
-        // Point to the RTDB emulator running on localhost.
-        connectAuthEmulator(auth, FIREBASE_AUTH_EMULATOR_HOST);  
-    } catch (error) {
-      console.log(error);
-      
-    }
-  } 
-
-
-let user = auth.currentUser;
-let email: string | null = null;
-let displayName: string | null = null;
+import { Auth } from '@angular/fire/auth';
 @Component({
   selector: 'app-navbar-vitrine',
   templateUrl: './navbar-vitrine.component.html',
@@ -42,11 +14,15 @@ let displayName: string | null = null;
 })
 
 export class NavbarVitrineComponent implements OnInit {
+  private user;
+  private email: string | null = null;
+  private displayName: string | null = null;
   @Output() public numPanel = new EventEmitter(); 
    boutonConnexion= 0;
   
-  constructor(public authService: AuthentificationService, public router: Router, public dialog: MatDialog){
-      auth.updateCurrentUser;
+  constructor(public authService: AuthentificationService, public router: Router, public dialog: MatDialog, private auth:Auth){
+    this.user = this.auth.currentUser;
+    auth.updateCurrentUser;
     onAuthStateChanged(auth, (user) => {
       if (user) {
         user.reload();
@@ -54,8 +30,8 @@ export class NavbarVitrineComponent implements OnInit {
         // https://firebase.google.com/docs/reference/js/firebase.User
    // The user object has basic properties such as display name, email, etc.
         localStorage.setItem("user_email", user.email as string);
-   displayName = user.displayName;
-   email = user.email;
+   this.displayName = user.displayName;
+   this.email = user.email;
    const photoURL = user.photoURL;
    const emailVerified = user.emailVerified;
    this.boutonConnexion=1;
@@ -73,8 +49,8 @@ export class NavbarVitrineComponent implements OnInit {
 
 }
   getNom():string{
-    if(email!=null){
-    return email;
+    if(this.email!=null){
+    return this.email;
     }else{
       return "Se connecter"
     }
@@ -102,7 +78,7 @@ export class NavbarVitrineComponent implements OnInit {
     this.router.navigate(['autho']);
   }
   clicdeConnexion(){
-    auth.signOut();
+    this.auth.signOut();
     
     window.location.reload();
   }

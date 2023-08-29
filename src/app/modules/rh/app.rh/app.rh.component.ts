@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { initializeApp } from '@angular/fire/app';
+import { FirebaseApp, initializeApp } from '@angular/fire/app';
 import { getDatabase, ref, onValue } from 'firebase/database';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import {onAuthStateChanged } from 'firebase/auth';
+import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-rh',
@@ -16,32 +17,16 @@ export class AppRhComponent implements OnInit {
   currentUserConges!: string;
   currentUserNomComplet!: string;
 
-  constructor() {}
+  constructor(private auth:Auth, private firebaseApp:FirebaseApp) {}
 
   ngOnInit(): void {
-    // Configuration de la base de données
-    const firebaseConfig = {
-      apiKey: 'AIzaSyDPJyOCyUMDl70InJyJLwNLAwfiYnrtsDo',
-      authDomain: 'psofteat-65478545498421319564.firebaseapp.com',
-      databaseURL:
-        'https://psofteat-65478545498421319564-default-rtdb.firebaseio.com',
-      projectId: 'psofteat-65478545498421319564',
-      storageBucket: 'psofteat-65478545498421319564.appspot.com',
-      messagingSenderId: '135059251548',
-      appId: '1:135059251548:web:fb05e45e1d1631953f6199',
-      measurementId: 'G-5FBJE9WH0X',
-    };
     // Récupérer base de données
-    const firebaseApp = initializeApp(firebaseConfig);
-    const db = getDatabase(firebaseApp);
+    const db = getDatabase(this.firebaseApp);
 
     const userPath = '/users/foodandboost_prop/';
 
-    // Current user
-    const auth = getAuth(firebaseApp);
-
     // Récupérer les infos de l'utilisateur connecté
-    onAuthStateChanged(auth, (currentUser) => {
+    onAuthStateChanged(this.auth, (currentUser) => {
       const user = currentUser;
       const userdat = user?.uid;
       const role = ref(db, `${userPath}/${userdat}/role`);

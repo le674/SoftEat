@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { Auth, getAuth, onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { FirebaseApp } from '@angular/fire/app';
 import { Router } from '@angular/router';
 import { ShortUser, User } from '../../../../app/interfaces/user';
@@ -14,16 +14,16 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { CommonService } from '../../../../app/services/common/common.service';
 import { CommonCacheServices } from 'src/app/services/common/common.cache.services.service';
-import { RestaurantService } from 'src/app/services/restaurant/restaurant.service';
 import { Unsubscribe } from 'firebase/firestore';
-import { Subscription } from 'rxjs';
-import { EmployeeFull } from 'src/app/interfaces/employee';
+import { Subscription, throwError } from 'rxjs';
+import { Employee, EmployeeFull } from 'src/app/interfaces/employee';
 import { MatSelectChange } from '@angular/material/select';
 import { AddConfigueEmployeeComponent } from './add.configue.employee/add.configue.employee/add.configue.employee.component';
 import { AddConfigueSalaryComponent } from './add.configue.salary/add.configue.salary.component';
 import { MobileUserDataComponent } from './mobile.user.data/mobile.user.data/mobile.user.data.component';
 import { FirebaseService } from 'src/app/services/firebase.service';
-import { InteractionBddFirestore } from 'src/app/interfaces/interaction_bdd';
+import { Condition, InteractionBddFirestore } from 'src/app/interfaces/interaction_bdd';
+import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-app.configue',
@@ -36,6 +36,8 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
   private user: User;
   private users: Array<EmployeeFull>;
   private path_to_restaurant:Array<string>;
+  private path_to_employees:Array<string>;
+  private path_to_users:Array<string> = User.getPathsToFirestore();
   private rest_max_length: number;
   public restau_list: Array<Restaurant>;
 
@@ -89,7 +91,6 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
 
   private roles: string[];
   private length_statut:number;
-  private auth: Auth;
   public statuts: string[];
 
   public visibles: Visibles = {
@@ -121,10 +122,12 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
   constructor(public dialog: MatDialog, private user_services: UserInteractionService,
     private ofApp: FirebaseApp, private router: Router, private _snackBar: MatSnackBar,
     private _bottomSheet: MatBottomSheet, private common_service: CommonService,
-    private cache_service: CommonCacheServices, private firestore:FirebaseService) {
+    private cache_service: CommonCacheServices, private firestore:FirebaseService,
+    private auth:Auth) {
     this.prop_user = [];
     this.users = [];
-    this.path_to_restaurant = []
+    this.path_to_restaurant = [];
+    this.path_to_employees = [];
     this.display_columns = this.common_service.getColumnAdminTab();
     this.roles = this.common_service.getStatut();
     this.length_statut = this.common_service.getStatut().length;
@@ -171,7 +174,6 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
     this.curr_categorie = 0;
     this.is_prop = false;
     this.windows_screen_mobile = this.common_service.getMobileBreakpoint("user");
-    this.auth = getAuth(this.ofApp);
     this.user = new User();
   }
   ngOnDestroy(): void {
@@ -187,58 +189,66 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
     }
   }
   ngOnInit(): void {
-    const auth = getAuth(this.ofApp);
+    const auth = this.auth;
     onAuthStateChanged(auth, (user) => {
       if (user) {
         this.uid = user.uid;
-        this.user_unsubscribe = this.user_services.getUserFromUidBDD(this.uid); 
-        this.user_subscription = this.user_services.getUserFromUid().subscribe((user: User) => {
-        this.user = user;
-        if(user.proprietary_id !== null){
-          this.proprietaire = user.proprietary_id;
+        const condition:Condition = {
+          attribut:"uid",
+          condition:"==",
+          value:this.uid
+        }
+        this.user_unsubscribe = this.firestore.getFromFirestoreBDD(this.path_to_users, User, [condition]); 
+        this.user_subscription = this.firestore.getFromFirestore().subscribe((_user: Array<InteractionBddFirestore>) => {
+        const _users = _user as Array<User>;
+        if(_users.length > 1){
+          throw new Error("Plusieurs utilisateurs avec le même uid");
+        }
+        this.user = _users[0];
+        if(this.user.proprietary_id !== null){
+          this.proprietaire = this.user.proprietary_id;
+          this.path_to_employees = Employee.getPathsToFirestore(this.user.proprietary_id);
         }
         this.path_to_restaurant = Restaurant.getPathsToFirestore(this.proprietaire);
         if (this.user.related_restaurants !== null) {
-            this.all_user_unsubscribe = this.user_services.getAllUsersFromPropBDD(this.proprietaire, true);
-            this.all_user_subscription = this.user_services.getAllUsersFromProp().subscribe((users:Array<User>) => {
-              this.all_employee_unsubscribe = this.user_services.getAllEmployeeBDD(this.proprietaire , this.uid);
-              this.user_services.getAllEmployee().subscribe((employees) => {
-                const employee = employees.find((employee) => employee.uid === user.uid);
-                if(employee !== undefined){
-                  if(employee.roles?.includes("propriétaire")){
-                    this.is_prop = true;
-                  }
+            this.all_employee_unsubscribe = this.firestore.getFromFirestoreBDD(this.path_to_employees , Employee, null); 
+            this.firestore.getFromFirestore().subscribe((employees) => {
+              let _employees = employees as Array<Employee>;
+              const _employee = _employees.find((employee) => employee.uid === user.uid);
+              if(_employee !== undefined){
+                if(_employee.roles?.includes("propriétaire")){
+                  this.is_prop = true;
                 }
-                this.firestore.getFromFirestoreBDD(this.path_to_restaurant, Restaurant, null);
-                this.firestore.getFromFirestore().subscribe((restaurants:Array<InteractionBddFirestore>)  => {
-                  this.users = [];
-                  this.prop_user = [];
-                  for(let employee of employees){
-                    let row_user = new ShortUser();
-                    let _employee = new EmployeeFull(employee.email, employee.statut, employee.uid, this.common_service);
-                    _employee.setEmployee(employee);
-                    _employee.proprietaire = this.proprietaire;
-                    _employee.getAllRestaurant(user, restaurants as Array<Restaurant>);
-                    row_user.setRowUser(employee, this.common_service.getStatut(), restaurants as Array<Restaurant>);
-                    this.users.push(_employee);
-                    this.rest_max_length = restaurants.length;
-                    this.prop_user.push(row_user);
-                    const first_event = new PageEvent();
-                    first_event.length = this.prop_user.length
-                    first_event.pageSize = 6
-                    first_event.pageIndex = 0
-                    this.clearDataSource();
-                    this.pageChanged(first_event, 0);
-                    this.pageChanged(first_event, 1);
-                    this.pageChanged(first_event, 2);
-                    this.pageChanged(first_event, 3); 
-                    this.pageChanged(first_event, 4);
-                    this.pageChanged(first_event, 5);
-                    this.pageChanged(first_event, 6);
-                  }
-                })
-              })            
-            })
+              }
+              this.firestore.getFromFirestoreBDD(this.path_to_restaurant, Restaurant, null);
+              this.firestore.getFromFirestore().subscribe((restaurants:Array<InteractionBddFirestore>)  => {
+                this.users = [];
+                this.prop_user = [];
+                for(let employee of _employees){
+                  let row_user = new ShortUser();
+                  let _employee = new EmployeeFull(employee.email, employee.statut, employee.uid, this.common_service);
+                  _employee.setEmployee(employee);
+                  _employee.proprietaire = this.proprietaire;
+                  _employee.getAllRestaurant(this.user, restaurants as Array<Restaurant>);
+                  row_user.setRowUser(employee, this.common_service.getStatut(), restaurants as Array<Restaurant>);
+                  this.users.push(_employee);
+                  this.rest_max_length = restaurants.length;
+                  this.prop_user.push(row_user);
+                  const first_event = new PageEvent();
+                  first_event.length = this.prop_user.length
+                  first_event.pageSize = 6
+                  first_event.pageIndex = 0
+                  this.clearDataSource();
+                  this.pageChanged(first_event, 0);
+                  this.pageChanged(first_event, 1);
+                  this.pageChanged(first_event, 2);
+                  this.pageChanged(first_event, 3); 
+                  this.pageChanged(first_event, 4);
+                  this.pageChanged(first_event, 5);
+                  this.pageChanged(first_event, 6);
+                }
+              })
+            })  
           } 
         })
       }
@@ -499,8 +509,7 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
 
   //Déconnexion de l'utilisateur à l'application 
   clicdeConnexion() {
-    const auth = getAuth(this.ofApp);
-    auth.signOut();
+    this.auth.signOut();
     window.location.reload();
   }
 

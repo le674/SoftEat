@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { FirebaseApp } from '@angular/fire/app';
 import { MatDialog} from '@angular/material/dialog';
 import {Router, UrlSerializer} from '@angular/router';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import {onAuthStateChanged } from 'firebase/auth';
 import {UserInteractionService} from '../../../../app/services/user-interaction.service'
 import { Restaurant} from '../../../../app/interfaces/restaurant';
 import { AppModalComponent } from '../app.modals/app.modal/app.modal/app.modal.component';
@@ -13,6 +12,7 @@ import { User } from 'src/app/interfaces/user';
 import { Employee } from 'src/app/interfaces/employee';
 import { CommonCacheServices } from 'src/app/services/common/common.cache.services.service';
 import { Subscription } from 'rxjs';
+import { Auth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-app.autho',
@@ -34,7 +34,7 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
   private user_unsubscribe!: Unsubscribe;
   private _user_subscription!:Subscription;
 
-  constructor(private user_services : UserInteractionService, private ofApp: FirebaseApp,
+  constructor(private user_services : UserInteractionService, private auth: Auth,
      private router: Router, public dialog: MatDialog, private tst_dialog:MatDialog, private serealizer: UrlSerializer,
      private restaurant_service:RestaurantService, public cache_service:CommonCacheServices){   
       this.uid = "";
@@ -52,13 +52,12 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
     this._employee_subscription.unsubscribe();
   }
   ngOnInit(): void {
-    const auth = getAuth(this.ofApp);
-      onAuthStateChanged(auth, (user) => {
+      onAuthStateChanged(this.auth, (user) => {
+        console.log(user);
         if(user){
           this.uid = user.uid;
           this.user_unsubscribe = this.user_services.getUserFromUidBDD(this.uid);
           this._user_subscription = this.user_services.getUserFromUid().subscribe((user:User) => {
-            console.log("1");
             this.user = user;
             if(this.user !== null){
               this.cache_service.setUser(user);
@@ -70,7 +69,6 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
               })
               this.restaurant_unsubscribe = this.restaurant_service.getAllRestaurantsBDD(this.user);
               this._restaurant_subscription = this.restaurant_service.getAllRestaurants().subscribe((restaurants:Array<Restaurant>) => {
-                console.log("3");
                 this.cache_service.setRestaurants(restaurants);
               })
             }
@@ -80,12 +78,11 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
           console.log("pas d'autentification");
            //renvoyer la personne vers la page d'authentification
           this.router.navigate(["./accueil"])
-        }   
+        } 
       })
   }
   clicdeConnexion(){
-    const auth = getAuth(this.ofApp);
-    auth.signOut(); 
+    this.auth.signOut(); 
     window.location.reload();
   }
   clicAcceuil(){
