@@ -62,14 +62,14 @@ export class AppStockComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-    this.req_ingredients_brt();
+    this.req_ingredients_brt(); 
     this.req_merge_obs.unsubscribe();
   }
 
   ngOnInit(): void {
     if(this.stock !== null){
       if(this.stock.includes("w")) this.write = true;
-      if(this.stock.includes("r")){
+      if(this.stock.includes("r")){ 
         
         let user_info:any = this.url.queryParams;
         this.prop = user_info.prop;
