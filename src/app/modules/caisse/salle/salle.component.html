@@ -1,35 +1,8 @@
+<h1>Sélectionnez une table</h1>
 <div class="table-selection">
-  <h2>Sélectionnez une table :</h2>
   <div class="table-grid">
-    <div class="table-card">
-      <app-table [tableNumber]="'Table 1'" [seats]="4" [tableOccupied]="false"></app-table>
+    <div *ngFor="let table of tables">
+      <app-table [table]="table"></app-table>
     </div>
-    <div class="table-card">
-      <app-table [tableNumber]="'Table 2'" [seats]="2" [tableOccupied]="true"></app-table>
-    </div>
-    <div class="table-card">
-      <app-table [tableNumber]="'Table 3'" [seats]="2" [tableOccupied]="false"></app-table>
-    </div>
-    <div class="table-card">
-      <app-table [tableNumber]="'Table 4'" [seats]="4" [tableOccupied]="false"></app-table>
-    </div>
-    <div class="table-card">
-      <app-table [tableNumber]="'Table 5'" [seats]="2" [tableOccupied]="false"></app-table>
-    </div>
-    <div class="table-card">
-      <app-table [tableNumber]="'Table 6'" [seats]="2" [tableOccupied]="true"></app-table>
-    </div>
-    <div class="table-card">
-      <app-table [tableNumber]="'Table 7'" [seats]="6" [tableOccupied]="true"></app-table>
-    </div>
-    <div class="table-card">
-      <app-table [tableNumber]="'Table 8'" [seats]="6" [tableOccupied]="false"></app-table>
-    </div>
-    <div class="table-card">
-      <app-table [tableNumber]="'Table 9'" [seats]="2" [tableOccupied]="false"></app-table>
-    </div>
-    <!-- Ajoutez d'autres instances de <app-table> selon vos besoins -->
-
-    <!-- Ajoutez d'autres tables ici selon vos besoins -->
   </div>
 </div>

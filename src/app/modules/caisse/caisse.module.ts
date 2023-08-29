@@ -4,9 +4,6 @@ import { SalleComponent } from './salle/salle.component';
 import {MatInputModule} from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { TableComponent } from './table/table.component';
-
-
-
 @NgModule({
   declarations: [
     SalleComponent,

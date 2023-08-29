@@ -2,17 +2,18 @@ import { InteractionBddFirestore } from "./interaction_bdd";
 
 export class Ctable implements InteractionBddFirestore{
     "id":string;
-    "nbr_clients_max": number | null;
+    "seats": number | null;
+    "tableOccupied":boolean | null;
+    "tableNumber":string | null;
     /**
      * permet de transformer les donnée JSON récupérer depuis la bdd firestore en objet MENU
      * @param data donnée Json récupérer depuis la base ded onnée firestore
      */
     setData(data: Ctable) {
         this.id = data.id;
-        this.nbr_clients_max = data.nbr_clients_max;
-
-
-
+        this.seats = data.seats;
+        this.tableOccupied = data.tableOccupied;
+        this.tableNumber = data.tableNumber;
     }
 
     /**
@@ -26,18 +27,15 @@ export class Ctable implements InteractionBddFirestore{
         if(id !== null){
             this.id = id;
         }
-        if(this.nbr_clients_max !== null){
+        if(this.seats !== null){
            // this.nbr_clients_max = nbr_clients_max;
         }
         return {
             id: this.id,
-            nbr_clients_max: this.nbr_clients_max
-
+            seats: this.seats,
+            tableOccupied:this.tableOccupied,
+            tableNumber: this.tableNumber
         }
-        
-        
-
-
     }
     getInstance(): InteractionBddFirestore {
         return new Ctable();

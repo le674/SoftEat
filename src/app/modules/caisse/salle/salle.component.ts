@@ -1,4 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router, UrlTree } from '@angular/router';
+import { Unsubscribe } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
+import { Ctable } from 'src/app/interfaces/table';
+import { FirebaseService } from 'src/app/services/firebase.service';
 
 interface Table {
   number: number;
@@ -10,9 +15,34 @@ interface Table {
   templateUrl: './salle.component.html',
   styleUrls: ['./salle.component.css']
 })
-export class SalleComponent {
-  constructor() { }
-
+export class SalleComponent  implements OnInit,OnDestroy{
+  public tables:Array<Ctable>;
+  private path_to_tables: Array<string>;
+  private prop: string;
+  private restaurant: string;
+  private req_tables_brt!:Unsubscribe;
+  private ables_brt_sub!:Subscription;
+  private url: UrlTree;
+  constructor(private firestore: FirebaseService, private router: Router) {
+    this.prop = "";
+    this.restaurant = "";
+    this.path_to_tables = [];
+    this.tables = [];
+    this.url = this.router.parseUrl(this.router.url);
+  }
+  ngOnDestroy(): void {
+    this.req_tables_brt();
+    this.ables_brt_sub.unsubscribe();
+  }
+  ngOnInit(): void {
+    this.prop = this.url.queryParams["prop"];
+    this.restaurant = this.url.queryParams["restaurant"];
+    this.path_to_tables = Ctable.getPathsToFirestore(this.prop, this.restaurant);
+    this.req_tables_brt = this.firestore.getFromFirestoreBDD(this.path_to_tables, Ctable, null);
+    this.ables_brt_sub   = this.firestore.getFromFirestore().subscribe((tables) => { 
+      this.tables = tables as Array<Ctable>;
+    })
+  }
   tableOccupied(tableNumber: number): boolean {
     // Ajoutez ici la logique pour vérifier si la table est occupée ou non
     // Vous pouvez utiliser un service, une variable de statut, ou toute autre logique appropriée

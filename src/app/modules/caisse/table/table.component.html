@@ -1,10 +1,10 @@
-<div class="table" [ngClass]="{ 'occupied': tableOccupied, 'active': isActive }" (click)="toggleActive()">
-  <div class="table-number">{{ tableNumber }}</div>
-  <p>Statut : {{ tableOccupied ? 'Occupée' : 'Disponible' }}</p>
+<div class="table" [ngClass]="{'occupied': tableOccupied}" (click)="toggleActive()">
+  <div class="table-number">{{table?.tableNumber}}</div>
+  <p>Statut : {{tableOccupied ? "occupé" : "non occupé"}}</p>
 
-  <div class="table-info" [ngStyle]="{ 'display': isActive ? 'block' : 'none' }">
+  <div class="table-info" [ngStyle]="{'display': isActive ? 'block' : 'none'}">
     <!--<p>Numéro de table : {{ tableNumber }}</p>-->
-    <p>Nombre de places : {{ seats }}</p>
+    <p>Nombre de places : {{table?.seats}}</p>
     <div class="button-container">
       <button class="payment-button" (click)="paiement_button()">Paiement</button>
     </div>
