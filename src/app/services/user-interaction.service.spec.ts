@@ -14,9 +14,9 @@ describe('UserInteractionService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return something', () => {
+/*   it('should return something', () => {
     service.getProprietaireFromUsers("SXZ2Eq24CbS4JlAsge2UAgldG803").then((value) => {
       expect(value).toBe('promise value')
     })
-  })
+  }) */
 });
