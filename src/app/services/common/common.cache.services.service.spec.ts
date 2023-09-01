@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CommonCacheServicesService } from './common.cache.services.service';
+import { CommonCacheServices } from './common.cache.services.service';
 
 describe('CommonCacheServicesService', () => {
-  let service: CommonCacheServicesService;
+  let service: CommonCacheServices;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(CommonCacheServicesService);
+    service = TestBed.inject(CommonCacheServices);
   });
 
   it('should be created', () => {
