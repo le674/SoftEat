@@ -15,14 +15,19 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class FactureLoadComponent implements OnInit {
   private dataSubject = new BehaviorSubject<FacturePrintedResult[] | null>(null); // Initialisez avec une valeur par défaut
   public load: boolean;
+  public form:boolean;
   constructor(private service_facture_img:FactureImgService, private service_facture_pdf:FacturePdfService,@Inject(MAT_DIALOG_DATA) public data:{
     url: string;
     type: string;
     prop: string;
     facture: Facture,
     file: File
-}, private _mat_dialog_ref:MatDialogRef<FactureLoadComponent>, private _snackBar:MatSnackBar, public facture_service:FactureInteractionService) {
+}, private _mat_dialog_ref:MatDialogRef<FactureLoadComponent>, private _snackBar:MatSnackBar) {
   this.load = true;
+  this.form = false;
+  if(this.data.type === "archive-facture"){
+    this.form = true;
+  }
  }
 
   ngOnInit(): void {
@@ -63,29 +68,14 @@ export class FactureLoadComponent implements OnInit {
       }) 
     }
     if(this.data.type === "archive-facture"){
-      this.facture_service.setFactureFirestore(this.data.prop, this.data.facture).then((facture) => {
-        const result = facture.creatPath(this.data.prop);
-        if(!result){
-          this._snackBar.open("problème lors de l'archivage de la facture veuillez contacter softeat", "fermer");
-          throw "identifiant du propriétaire null ou identifiant de la facture non existant"
-        }
-        this.facture_service.setFactureStorage(this.data.file, facture).catch((error) => {
-          this._snackBar.open("problème lors de l'archivage de la facture veuillez contacter softeat", "fermer");
-          let err = new Error(error);
-          return throwError(() => err).subscribe((error) => {
-            console.log(error);
-          });
-        }).finally(() => {
-          this.load = false;
-          this.sleep(10).then(() => {
-            this._mat_dialog_ref.close(); // Fermez le dialog
-            this._snackBar.open("Téléchargement de la facture terminé", "fermer");
-          })
-        });
-      })
+      this.form = true;
     }
   }
-
+  endPopup(event:any){
+    this.form = false;
+    this.load = false;
+    this._mat_dialog_ref.close();
+  }
   getDataSubject() {
     return this.dataSubject.asObservable();
   }

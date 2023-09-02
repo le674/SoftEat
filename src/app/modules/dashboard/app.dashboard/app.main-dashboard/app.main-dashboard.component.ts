@@ -183,7 +183,7 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
   clickCenLigne(){
     this.numP.emit(22)
   }
-  clickHistCommandes(){
+  clickFec(){
     this.numP.emit(23)
   }
   clickToggle(){

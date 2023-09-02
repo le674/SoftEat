@@ -66,8 +66,14 @@ export class Facture{
     restaurant_id:string | null;
     path:string | null;
     name:string;
+    supplier:string | null;
+    ammount_total:number;
+    nature:string;
+    identifiant:string | null;
+    account_id:string | null;
 
     constructor(date_reception:string, is_read:boolean | null){
+        this.nature = Facture.getNatures()[1];
         if(is_read === null) is_read = false;
         if(date_reception === null){
             this.date_reception = new Date().toISOString();
@@ -85,12 +91,16 @@ export class Facture{
         this.id = null;
         this.path = null;
         this.name = "";
+        this.supplier = null;
+        this.identifiant = null;
+        this.account_id = null;
+        this.ammount_total = 0;
     }
     /**
      * Cette fonction permet de copier un objet facture dans une instance de facture
      * @param facture JSON facture obtenu depuis la base de donnée que l'on copie dans une instance de Facture
      */
-    setData(facture:Facture){
+    public setData(facture:Facture){
         this.date_reception = facture.date_reception;
         this.day = facture.day;
         this.month = facture.month;
@@ -101,12 +111,17 @@ export class Facture{
         this.restaurant_id = facture.restaurant_id;
         this.path = facture.path;
         this.name = facture.name;
+        this.supplier = facture.supplier;
+        this.ammount_total = facture.ammount_total;
+        this.identifiant = facture.identifiant;
+        this.account_id = facture.account_id;
+        this.nature = facture.nature;
     }
     /**
      * Cette fonction permet de récupérer l'objet facture sous forme d'un JSON 
      * @returns JSON constituant l'objet facture
      */
-    getData(){
+    public getData(){
         return {
             date_reception: this.date_reception,
             day: this.day,
@@ -117,7 +132,12 @@ export class Facture{
             id: this.id,
             restaurants_id: this.restaurant_id, 
             path: this.path,
-            name:this.name
+            name:this.name,
+            supplier:this.supplier,
+            ammount_total:this.ammount_total,
+            identifiant: this.identifiant,
+            account_id:this.account_id,
+            nature:this.nature
         }
     }
     /**
@@ -138,6 +158,13 @@ export class Facture{
     */
     public static getExtension():Array<string>{
         return ["pdf", "png", "jpeg", "jpg"];
+    }
+    /**
+     * Permet de récupérer la nature du document
+     * @returns chaine de caractère pour l'identification du document
+     */
+    public static getNatures():Array<string>{
+        return ["bon de commande", "facture"];
     }
     /**
      * permet de mapper les mois de l'année sous forme numérique avec des chaines de caractères 

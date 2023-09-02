@@ -4,10 +4,12 @@ import { SalleComponent } from './salle/salle.component';
 import {MatInputModule} from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { TableComponent } from './table/table.component';
+import { FecComponent } from './fec/fec.component';
 @NgModule({
   declarations: [
     SalleComponent,
-    TableComponent
+    TableComponent,
+    FecComponent
   ],
   imports: [
     CommonModule,
@@ -15,7 +17,8 @@ import { TableComponent } from './table/table.component';
     FormsModule
   ],
   exports: [
-    SalleComponent
+    SalleComponent,
+    FecComponent
   ],
 })
 export class CaisseModule { }
