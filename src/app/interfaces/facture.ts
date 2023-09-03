@@ -1,5 +1,6 @@
 import { TextItem } from "pdfjs-dist/types/src/display/api"
 import { TextShared } from "./text"
+import { Account } from "./account";
 
 export interface FactureColumns {
     name: Array<string>;
@@ -70,7 +71,7 @@ export class Facture{
     ammount_total:number;
     nature:string;
     identifiant:string | null;
-    account_id:string | null;
+    account_id:Array<string> | null;
 
     constructor(date_reception:string, is_read:boolean | null){
         this.nature = Facture.getNatures()[1];
@@ -122,6 +123,11 @@ export class Facture{
      * @returns JSON constituant l'objet facture
      */
     public getData(){
+
+        let accounts = null;
+        if(this.account_id){
+            accounts = this.account_id;
+        }
         return {
             date_reception: this.date_reception,
             day: this.day,
@@ -136,7 +142,7 @@ export class Facture{
             supplier:this.supplier,
             ammount_total:this.ammount_total,
             identifiant: this.identifiant,
-            account_id:this.account_id,
+            account_id:accounts,
             nature:this.nature
         }
     }

@@ -277,7 +277,7 @@ export class FirebaseService {
      * cette fonction est uniquement utilisé dans getFromFirestoreBDD
      * @param Class class dont nous voulons retourner une instance
      */
-    private constructInstance(Class: Class<InteractionBddFirestore>, ...args: any[]) {
+    public constructInstance(Class: Class<InteractionBddFirestore>, ...args: any[]) {
         if (Class.name === "CIngredient") {
             return new Class(this.service);
         }

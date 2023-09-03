@@ -1,5 +1,4 @@
 import { InteractionBddFirestore } from "./interaction_bdd";
-
 export class Ctable implements InteractionBddFirestore{
     "id":string;
     "seats": number | null;

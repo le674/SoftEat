@@ -17,9 +17,9 @@
         <p class="title">Quelle est la nature du document reçu</p>
         <mat-form-field appearance="fill">
             <mat-label>Quelle est la nature du document reçu</mat-label>
-            <mat-select formControlName="nature" >
+            <mat-select formControlName="nature">
                 <mat-option *ngFor="let doc of natures" [value]="doc">
-                {{doc}}
+                    {{doc}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -32,11 +32,20 @@
         </mat-form-field>
     </div>
     <div class="section">
-        <p class="title">Entrer le numéro de compte</p>
+        <p class="title">Choisir des comptes</p>
         <mat-form-field appearance="fill">
-            <mat-label>Entrer le numéro de compte</mat-label>
-            <input matInput formControlName="account_number" placeholder="Ex. pp128">
+            <mat-label>Entrer le compte</mat-label>
+            <mat-select formControlName="account_number" multiple>
+                <mat-option (onSelectionChange)="printValue($event)" *ngFor="let account of accounts" [value]="account.id">
+                    {{account.number}} ({{account.name}})
+                </mat-option>
+            </mat-select>
         </mat-form-field>
+        <p id="infoBox" *ngFor="let account of desc">
+            <ng-container *ngIf="account.desc">
+                <span class="info">information du compte {{account.number}}: </span> {{account.desc}}
+            </ng-container>
+        </p>
     </div>
     <button id="bottom-button" mat-stroked-button type="submit"> Modifier </button>
 </form>
