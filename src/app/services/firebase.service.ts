@@ -1,32 +1,30 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
-import {ref, onValue, get } from 'firebase/database';
+import { ref, onValue, get } from 'firebase/database';
 import { Statut } from '../interfaces/statut';
 import { Unsubscribe } from 'firebase/auth';
 import { CollectionReference, DocumentData, DocumentReference, DocumentSnapshot, Firestore, SnapshotOptions, collection, updateDoc, deleteDoc, doc, onSnapshot, setDoc, getDocs } from '@angular/fire/firestore';
 import { CalculService } from './menus/menu.calcul/menu.calcul.ingredients/calcul.service';
-import { Condition, InteractionBddFirestore } from '../interfaces/interaction_bdd';
+import { Class, Condition, InteractionBddFirestore, TransactionalConf } from '../interfaces/interaction_bdd';
 import { Subject, throwError } from 'rxjs';
 import { Conversation } from '../interfaces/conversation';
-import { Query, query, where } from 'firebase/firestore';
+import { Query, query, runTransaction, where } from 'firebase/firestore';
 import { Employee } from '../interfaces/employee';
 import { CommonService } from './common/common.service';
 
-type Class<T> = new (...args: any[]) => T;
 
 @Injectable({
     providedIn: 'root'
 })
 export class FirebaseService {
-    private firebaseApp!: FirebaseApp;
     private db: any;
     private interaction_data = new Subject<Array<InteractionBddFirestore>>();
     private changed_interaction_data = new Subject<InteractionBddFirestore>();
-    private ref!:Query<DocumentData>;
+    private ref!: Query<DocumentData>;
     statut!: Statut;
     private sub_function!: Unsubscribe;
     private data_array: Array<InteractionBddFirestore>;
-    constructor(private ofApp: FirebaseApp, private firestore:Firestore,private service: CalculService, private common_service:CommonService) {
+    constructor(private ofApp: FirebaseApp, private firestore: Firestore, private service: CalculService, private common_service: CommonService) {
         this.data_array = [];
     }
     /**
@@ -37,7 +35,7 @@ export class FirebaseService {
      * @param conditions filtre sur les données récupérés depuis firestore
     * @returns 
     */
-    public getFromFirestoreBDD(paths: Array<string> | string, class_instance: Class<InteractionBddFirestore>, conditions:Array<Condition> | null) {
+    public getFromFirestoreBDD(paths: Array<string> | string, class_instance: Class<InteractionBddFirestore>, conditions: Array<Condition> | null) {
         this.interaction_data = new Subject<Array<InteractionBddFirestore>>();
         let _paths: Array<string> = this.getPath(paths);
         let converter_firestore: any = {
@@ -77,7 +75,7 @@ export class FirebaseService {
      * @param class_instance instance de la classe de l'objet à récupérer dans la base de donnée
      * @param conditions filtre sur les données récupérés depuis firestore
      */
-    getFromFirestoreChangeDataBDD(paths: Array<string> | string, class_instance: Class<InteractionBddFirestore>, conditions:Array<Condition> | null){
+    getFromFirestoreChangeDataBDD(paths: Array<string> | string, class_instance: Class<InteractionBddFirestore>, conditions: Array<Condition> | null) {
         this.interaction_data = new Subject<Array<InteractionBddFirestore>>();
         let _paths: Array<string> = this.getPath(paths);
         let converter_firestore: any = {
@@ -101,7 +99,7 @@ export class FirebaseService {
         this.sub_function = onSnapshot(this.ref, (firestore_datas) => {
             this.data_array = [];
             firestore_datas.docChanges().forEach((data) => {
-                if(data.type === "added" || data.type === "modified"){
+                if (data.type === "added" || data.type === "modified") {
                     this.changed_interaction_data.next(data.doc.data() as InteractionBddFirestore);
                 }
             })
@@ -113,8 +111,8 @@ export class FirebaseService {
      * @param paths chemin vers l'ensemble des ingrédients dans la base de donnée
      * @param class_instance Class des donnée récupérer dans la base de donnée 
      */
-    public async getFromFirestoreProm(paths:Array<string>, class_instance: Class<InteractionBddFirestore>, conditions:Array<Condition> | null){
-        let datas:Array<InteractionBddFirestore> = [];
+    public async getFromFirestoreProm(paths: Array<string>, class_instance: Class<InteractionBddFirestore>, conditions: Array<Condition> | null) {
+        let datas: Array<InteractionBddFirestore> = [];
         this.interaction_data = new Subject<Array<InteractionBddFirestore>>();
         let _paths: Array<string> = this.getPath(paths);
         let converter_firestore: any = {
@@ -149,7 +147,7 @@ export class FirebaseService {
     */
     public async removeFirestoreBDD(removed_id: string, paths: Array<string> | string) {
         let _paths: Array<string> = this.getPath(paths);
-        let ref = this.concatPathDoc(removed_id,_paths, null);
+        let ref = this.concatPathDoc(removed_id, _paths, null);
         await deleteDoc(ref);
     }
     /**
@@ -158,7 +156,7 @@ export class FirebaseService {
      * @param prop enseigne pour lequel nous souhaitons ajouter les donnée
      * @param restaurant 
      */
-    public async setFirestoreData(data_to_set: InteractionBddFirestore, paths: Array<string> | string, class_instance: Class<InteractionBddFirestore>){
+    public async setFirestoreData(data_to_set: InteractionBddFirestore, paths: Array<string> | string, class_instance: Class<InteractionBddFirestore>) {
         let _paths: Array<string> = this.getPath(paths);
         let converter_firestore: any = {
             toFirestore: (ingredient: InteractionBddFirestore) => {
@@ -181,32 +179,117 @@ export class FirebaseService {
         return await setDoc(ref, data_to_set.getData(ref.id)).then(async () => ref.id);
     }
     /**
+     * Cette fonction permet d'ajouter dans firestore des données, nous récupérons plusieurs donnée
+     * puis nous écrivons une nouvelle donnée dans la base firestore
+     * @param confs configuration de la transaction
+     * @param operation opération à réaliser avant l'écriture dan la bdd
+     */
+    public async setFirestoreMultipleData(prev_data:InteractionBddFirestore,confs: Array<TransactionalConf>) {
+        let results: Array<any> = [];
+        await runTransaction(this.firestore, async (transaction) => {
+
+            for(let conf of confs) {
+                let converter_firestore = null;
+                const _class = conf.class;
+                if(_class){
+                    converter_firestore = {
+                        toFirestore: (object: InteractionBddFirestore) => {
+                            return object;
+                        },
+                        fromFirestore: (snapshot: DocumentSnapshot<InteractionBddFirestore>, options: SnapshotOptions) => {
+                            const data = snapshot.data(options);
+                            if (data !== undefined) {
+                                let instance: InteractionBddFirestore;
+                                instance = this.constructInstance(_class).getInstance();
+                                instance.setData(data);
+                                return instance;
+                            }
+                            else {
+                                return null;
+                            }
+                        }
+                    }
+                }
+                if(conf.transaction === "get") {
+                    if(conf.doc_id){
+                        let doc_ref = this.concatPathDoc(conf.doc_id, conf.path, converter_firestore);
+                        const new_doc = await transaction.get(doc_ref);
+                        results.push(new_doc.data() as InteractionBddFirestore);
+                    }
+                    else{
+                        const error = new Error("conf.doc_id not null for get methode")
+                        return throwError(() => {
+                            console.log(error);
+                        })
+                    }
+                }
+                if(conf.transaction === "update") {
+                    if(conf.doc_id){
+                        let to_update:InteractionBddFirestore | null = prev_data;
+                        let doc_ref = this.concatPathDoc(conf.doc_id, conf.path, converter_firestore);
+                        if (conf.operation) {
+                            to_update = conf.operation(results);
+                        }
+                        if(to_update){
+                            await transaction.update(doc_ref,to_update.getData(null));
+                        }
+                        else{
+                            console.log(`donnée null à modifier sur le chemin ${conf.path}`);
+                        }
+                    }
+                    else{
+                        const error = new Error("conf.doc_id not null for update methode")
+                        return throwError(() => {
+                            console.log(error);
+                        })
+                    }
+                }
+                if(conf.transaction === "set"){
+                    let to_set:InteractionBddFirestore | null =  prev_data;
+                    const collection_ref = this.concatPathCollection(conf.path, converter_firestore);
+                    let doc_ref = doc(collection_ref);
+                    if (conf.operation) {
+                        to_set = conf.operation(results, prev_data);
+                    }
+                    if(to_set){
+                        await transaction.set(doc_ref, to_set.getData(doc_ref.id));
+                    }
+                    else{
+                        console.log(`donnée null à ajouter sur le chemin ${conf.path}`);
+                    }
+                }
+
+            }
+           return console.log("transaction completed");
+        })
+    }
+    /**
      * Cette fonction permet de modifier dans firestore des données 
      * @param data_to_set donnée à ajouter à la base de donnée Firestore
      * @param prop enseigne pour lequel nous souhaitons ajouter les donnée
      * @param restaurant 
      */
-    public async updateFirestoreData(id:string,data_to_set: InteractionBddFirestore, paths: Array<string> | string, class_instance: Class<InteractionBddFirestore>){
-            let _paths: Array<string> = this.getPath(paths);
-            let converter_firestore: any = {
-                toFirestore: (ingredient: InteractionBddFirestore) => {
-                    return ingredient;
-                },
-                fromFirestore: (snapshot: DocumentSnapshot<InteractionBddFirestore>, options: SnapshotOptions) => {
-                    const data = snapshot.data(options);
-                    if (data !== undefined) {
-                        let instance: InteractionBddFirestore;
-                        instance = this.constructInstance(class_instance).getInstance();
-                        instance.setData(data);
-                        return instance;
-                    }
-                    else {
-                        return null;
-                    }
+    public async updateFirestoreData(id: string, data_to_set: InteractionBddFirestore, paths: Array<string> | string, class_instance: Class<InteractionBddFirestore>) {
+        let _paths: Array<string> = this.getPath(paths);
+        let converter_firestore: any = {
+            toFirestore: (ingredient: InteractionBddFirestore) => {
+                return ingredient;
+            },
+            fromFirestore: (snapshot: DocumentSnapshot<InteractionBddFirestore>, options: SnapshotOptions) => {
+                const data = snapshot.data(options);
+                if (data !== undefined) {
+                    let instance: InteractionBddFirestore;
+                    instance = this.constructInstance(class_instance).getInstance();
+                    instance.setData(data);
+                    return instance;
+                }
+                else {
+                    return null;
                 }
             }
-            let ref = this.concatPathDoc(id,_paths, converter_firestore);
-            await updateDoc(ref, data_to_set.getData(null));
+        }
+        let ref = this.concatPathDoc(id, _paths, converter_firestore);
+        await updateDoc(ref, data_to_set.getData(null));
     }
     /**
      * Cette fonction permet depuis le local storage de récupérer le mail d'un employée
@@ -287,7 +370,7 @@ export class FirebaseService {
         if (Class.name === "Cconsommable") {
             return new Class(this.service);
         }
-        if(Class.name === "Employee"){
+        if (Class.name === "Employee") {
             const statut = new Statut(this.common_service);
             return new Class("", statut, "", this.common_service);
         }
@@ -295,7 +378,7 @@ export class FirebaseService {
     }
     private getPath(paths: string | Array<string>): Array<string> {
 
-        let _paths: Array<string> =     [];
+        let _paths: Array<string> = [];
         if (typeof paths === "string") {
             _paths = paths.split("/");
         }
@@ -311,27 +394,27 @@ export class FirebaseService {
      * @param filtres  liste des filtres que nous souhaitons appliquer pour la récupération des éléments
      * @returns {CollectionReference<DocumentData>} référence vers la collection dont nous souhaitons l'accès
      */
-    private concatPathCollectionWithWhere(_paths: Array<string>, converter: any | null, conditions:Array<Condition> | null):Query<DocumentData>{
+    private concatPathCollectionWithWhere(_paths: Array<string>, converter: any | null, conditions: Array<Condition> | null): Query<DocumentData> {
         let ref = collection(this.firestore, _paths[0]);
         _paths.forEach((path, index) => {
             if ((index < _paths.length - 1) && ((index % 2) === 0)) {
                 ref = collection(doc(ref, _paths[index + 1]), _paths[index + 2]);
             }
         });
-        if(conditions !== null){
+        if (conditions !== null) {
             const condition_lst = conditions.map((condition) => where(condition.attribut, condition.condition, condition.value))
             const reference = query(ref, ...condition_lst).withConverter(converter);
             return reference;
-        }        
+        }
         return ref.withConverter(converter);
     }
-       /**
-     * Cette fonction permet de construire la référence vers la collection firestore auquel nous souhaitons accéder afin de récupérer ou écrire des données
-     * @param _paths chemin d'accès au noeud
-     * @param converter objet qui permet la convertion du JSON en un objet de class, null si aucune conversion
-     * @returns {CollectionReference<DocumentData>} référence vers la collection dont nous souhaitons l'accès
-     */
-       private concatPathCollection(_paths: Array<string>, converter: any | null): CollectionReference<DocumentData>{
+    /**
+  * Cette fonction permet de construire la référence vers la collection firestore auquel nous souhaitons accéder afin de récupérer ou écrire des données
+  * @param _paths chemin d'accès au noeud
+  * @param converter objet qui permet la convertion du JSON en un objet de class, null si aucune conversion
+  * @returns {CollectionReference<DocumentData>} référence vers la collection dont nous souhaitons l'accès
+  */
+    private concatPathCollection(_paths: Array<string>, converter: any | null): CollectionReference<DocumentData> {
         let ref = collection(this.firestore, _paths[0]);
         _paths.forEach((path, index) => {
             if ((index < _paths.length - 1) && ((index % 2) === 0)) {
@@ -348,7 +431,7 @@ export class FirebaseService {
      * @param converter objet qui permet la convertion du JSON en un objet de class, null si aucune conversion
      * @returns {CollectionReference<DocumentData>} référence vers la collection dont nous souhaitons l'accès
     */
-    private concatPathDoc(doc_id:string, _paths: Array<string>, converter: any | null):DocumentReference<DocumentData> {
+    private concatPathDoc(doc_id: string, _paths: Array<string>, converter: any | null): DocumentReference<DocumentData> {
         let ref = collection(this.firestore, _paths[0]);
         _paths.forEach((path, index) => {
             if ((index < _paths.length - 2) && ((index % 2) === 0)) {

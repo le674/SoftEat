@@ -58,3 +58,33 @@ input{
 .account-section{
     border:1px solid black;   
 }
+
+
+#button-section{
+    display: flex;
+    justify-content: space-between;
+}
+.plus-fab{
+    background-color: white;
+    color: rgb(125, 181, 46);
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+.plus-fab:hover{
+    background-color: rgb(125, 181, 46);
+    color: white;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+.close-fab{
+    background-color: white;
+    color: red;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+.close-fab:hover{
+    background-color: red;
+    color: white;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}

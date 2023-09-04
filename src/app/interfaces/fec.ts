@@ -1,4 +1,5 @@
 import { InteractionBddFirestore } from "./interaction_bdd";
+import { Proprietary } from "./proprietaire";
 
 /**
  * @class Record permet de conserver un enregistrement comptable
@@ -22,6 +23,7 @@ export class Record implements InteractionBddFirestore {
     devise:string | null;
     devise_ammount:number | null;
     lettrage:string | null;
+    lettrage_label:string | null;
     id:string;
     id_src:string;
     journal_name:string;
@@ -42,6 +44,7 @@ export class Record implements InteractionBddFirestore {
         this.devise = null;
         this.devise_ammount = null;
         this.lettrage = null;
+        this.lettrage_label = null;
         this.id = "";
         this.id_src = "";
         this.journal_name = "";
@@ -82,9 +85,11 @@ export class Record implements InteractionBddFirestore {
             devise:this.devise,
             devise_ammount: this.devise_ammount,
             lettrage: this.lettrage,
+            lettrage_label: this.lettrage_label,
             id:this.id,
             id_src:this.id_src,
             journal_name: this.journal_name,
+            journal_label:this.journal_label,
             name: this.name,
             nature:this.nature,
             number:this.number,
@@ -94,11 +99,75 @@ export class Record implements InteractionBddFirestore {
         };
     }
     /**
+     * Permet de retourner les informations sur le lettrage
+     */
+    public lettrageLabel(){
+        let prefix = ""
+        if(this.send_date){
+         prefix = prefix + "date, "
+        }
+        if(this.nature){
+            prefix = prefix + "nature, ";
+        }
+        if(this.id_src){
+           prefix = prefix + "identifiant";
+        }
+        if(this.account_ids_src){
+            prefix = prefix + "comptes";
+        }
+         return prefix + this.constructLettrage();
+    }
+    /**
+     * Permet de construiire un lettrage à partir des informations
+     * 1. date, 2. nature, 3. identifiant de la facture, 4. comptes
+     */
+    public constructLettrage(){
+        this.lettrage = ""
+        if(this.send_date){
+            this.lettrage = this.lettrage + `date=${this.send_date}`;
+        }
+        if(this.nature){
+            this.lettrage = this.lettrage + `&nature=${this.nature}`;
+        }
+        if(this.id_src){
+            this.lettrage = this.lettrage + `&identifiant=${this.nature}`;
+        }
+        if(this.account_ids_src){
+            for (let index = 0; index < this.account_ids_src.length; index++) {
+                const account = this.account_ids_src[index];
+                this.lettrage = this.lettrage + `&comptes_${index}=${account}`;   
+            }
+        }
+        return this.lettrage;   
+    }
+    /**
      * permet de générer une autre instance de l'objet record
      * @returns une instance de record
     */
     public getInstance(): InteractionBddFirestore {
         return new Record();
+    }
+
+    /**
+     * Permet d'incrémenté l'id du nouvelle enregistrement de 1 par rarpport au nombre actuel d'enregistrement existant
+     * @param bdd_data données récupérés avant l'ajout dans la base
+     * @param added_data nombre actuel d'enregistrement
+     * @returns un enregistrement avec l'argument record incrémenté de 1
+     */
+    public static incRecord(bdd_data:Array<InteractionBddFirestore> | null,added_data:InteractionBddFirestore):InteractionBddFirestore | null{
+        let _record = null;
+        let _bdd_data = bdd_data as Array<Proprietary>
+        if(bdd_data){
+            _record =  added_data as Record;
+            _record.number = _bdd_data[0].record;
+        }
+        return _record;
+    }
+    /**
+     * Permet de récupérer le chemin dans la base de donnée vers Firestore
+     */
+    public static getPathsToFirestore(prop_id:string){
+        return ["proprietaires", prop_id, "recording"];
     }
 }
 

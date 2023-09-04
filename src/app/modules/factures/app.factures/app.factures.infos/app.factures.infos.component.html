@@ -32,20 +32,45 @@
         </mat-form-field>
     </div>
     <div class="section">
-        <p class="title">Choisir des comptes</p>
-        <mat-form-field appearance="fill">
-            <mat-label>Entrer le compte</mat-label>
-            <mat-select formControlName="account_number" multiple>
-                <mat-option (onSelectionChange)="printValue($event)" *ngFor="let account of accounts" [value]="account.id">
-                    {{account.number}} ({{account.name}})
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-        <p id="infoBox" *ngFor="let account of desc">
-            <ng-container *ngIf="account.desc">
+        <p class="title">Choisir des comptes fournisseur associés à la facture</p>
+        <ng-container formArrayName="accounts_number">
+            <div *ngFor="let item of add_facture_infos.controls.accounts_number.controls;let i=index">
+                <ng-container [formGroupName]="i">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Entrer un compte</mat-label>
+                        <input matInput formControlName="account_number" placeholder="Ex. 012334">
+                        <!--             
+                            <mat-select formControlName="account_number" multiple>
+                                <mat-option (onSelectionChange)="printValue($event)" *ngFor="let account of accounts" [value]="account.id">
+                                    {{account.number}} ({{account.name}})
+                                </mat-option>
+                            </mat-select> 
+                        -->
+                    </mat-form-field>
+                </ng-container>
+            </div>
+        </ng-container>
+        <div id="button-section">
+            <div class="inputs-containers">
+                <button mat-mini-fab class="plus-fab" type="button" matTooltip="ajout d'un compte"
+                aria-label="ajout d'un compte" (click)="updateAccount(true)">
+                    <i class="fa-regular fa-plus"></i>
+                </button>
+            </div>
+            <div class="inputs-containers">
+                <button mat-mini-fab class="close-fab" type="button" matTooltip="supprimer d'un compte"
+                aria-label="supprimer un compte" (click)="updateAccount(false)">
+                    <i class="fa-regular fa-minus"></i>
+                </button>
+            </div>
+        </div>
+            <!--         
+            <p id="infoBox" *ngFor="let account of desc">
+                <ng-container *ngIf="account.desc">
                 <span class="info">information du compte {{account.number}}: </span> {{account.desc}}
-            </ng-container>
-        </p>
+                </ng-container>
+            </p> 
+            -->
     </div>
     <button id="bottom-button" mat-stroked-button type="submit"> Modifier </button>
 </form>

@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { Restaurant } from 'src/app/interfaces/restaurant';
 import { User } from 'src/app/interfaces/user';
 import { FirebaseService } from '../firebase.service';
-import { Condition, InteractionBddFirestore } from 'src/app/interfaces/interaction_bdd';
+import {Class, InteractionBddFirestore } from 'src/app/interfaces/interaction_bdd';
 import { Subject } from 'rxjs';
-type Class<T> = new (...args: any[]) => T;
 @Injectable({
   providedIn: 'root'
 })
@@ -42,7 +41,7 @@ export class CommonCacheServices {
  * @param key clef de l'objet dans le local storage
 * @returns 
 */
-public async getFromFirestoreLocalStorage(class_instance: Class<InteractionBddFirestore>,key: string) {
+public async getFromFirestoreLocalStorageObj(class_instance: Class<InteractionBddFirestore>,key: string) {
     let subject = new Subject<InteractionBddFirestore[]>();
     let array_object: Array<InteractionBddFirestore> = [];
     let object = null;
@@ -74,7 +73,7 @@ public async getFromFirestoreLocalStorage(class_instance: Class<InteractionBddFi
    * @param bdd_obj liste d'objet à ajouter au local storage
    * @param key clef de la liste d'objet ajouté dans le local storage
    */
-  public async setToLocalStorage(bdd_obj:Array<InteractionBddFirestore>, key:string){
+  public async setToLocalStorageObj(bdd_obj:Array<InteractionBddFirestore>, key:string){
     let all_objects:Array<any> = [];
     bdd_obj.forEach((obj) => {
       let _object = obj.getData(null);
