@@ -1,4 +1,3 @@
-import { OnDestroy } from "@angular/core";
 import { InteractionBddFirestore } from "./interaction_bdd";
 
 export class Ccommande implements InteractionBddFirestore{
@@ -6,7 +5,7 @@ export class Ccommande implements InteractionBddFirestore{
     "clients": Array<String> | null;
     "date":Date | null;
     "etat":number | null;
-    "commande": Map<string, string>| null;
+    "commande": Array<Map<string, Map<string, string>[]>> | null;
     /**
      * permet de transformer les donnée JSON récupérer depuis la bdd firestore en objet MENU
      * @param data donnée Json récupérer depuis la base ded onnée firestore
@@ -56,3 +55,45 @@ export class Ccommande implements InteractionBddFirestore{
         return ["proprietaires", proprietary_id, "restaurants", restaurant_id, "tables"]
     }
 }
+/*structure de commande */
+/**
+ * const myNestedDataArray: Array<Map<string, Map<string, string>[]>> = [];
+
+const myNestedData: Map<string, Map<string, string>[]> = new Map();
+// Remplir la première couche du Map
+const firstLayerKey1 = "entree";
+const firstLayerValue1: Map<string, string>[] = [
+  new Map([["nom", "fondant au chocolat"], ["quantite", "2"]]),
+  new Map([["nom", "tiramisu"], ["quantite", "1"]]),
+];
+
+const firstLayerKey2 = "plat";
+const firstLayerValue2: Map<string, string>[] = [
+  new Map([["nom", "boeuf bourgignon"], ["quantite", "1"]]),
+  new Map([["nom", "pâte aux 4 fromage"], ["quantite", "1"]]),
+];
+
+// Ajouter les valeurs à la première couche du Map
+myNestedData.set(firstLayerKey1, firstLayerValue1);
+myNestedData.set(firstLayerKey2, firstLayerValue2);
+
+// Ajouter myNestedData comme premier élément de myNestedDataArray
+myNestedDataArray.push(myNestedData);
+
+// Accéder aux données dans le tableau
+for (const outerMap of myNestedDataArray) {
+  for (const [outerKey, innerMapArray] of outerMap) {
+    console.log(`Clé externe : ${outerKey}`);
+    for (const innerMap of innerMapArray) {
+      for (const [key, value] of innerMap.entries()) {
+        console.log(`Clé interne : ${key}, Valeur : ${value}`);
+      }
+    }
+  }
+}
+
+
+console.log("2 --------------------------------------");
+console.log(myNestedDataArray[1]);
+ * 
+ */
