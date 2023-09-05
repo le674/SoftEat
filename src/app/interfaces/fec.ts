@@ -1,3 +1,4 @@
+import { Account } from "./account";
 import { InteractionBddFirestore } from "./interaction_bdd";
 import { Proprietary } from "./proprietaire";
 
@@ -11,8 +12,14 @@ import { Proprietary } from "./proprietaire";
  * @param devise devise de la transaction (ex. EUR)
  * @param id identifiant de l'enregistrement de la transaction
  * @param id_src identifiant de du justificatif de transaction (numéro de facture par exemple)
- * @param journal_name nom journal parmit 
- * 
+ * @param journal_name abréviation d'un nom de journal pour la fec
+ * @param journal_label nom journal fec
+ * @param name référence de la pièce justificatif
+ * @param nature nature de la pièce justificatif  
+ * @param number identifiant de la pièce justificatif dans le fichier expertise comptable
+ * @param reception_date date de reception de l'enregistrement comptable
+ * @param validation_date date de validation du fec
+ * @param send_date date d'envoie de la pièce justificatif
  */
 export class Record implements InteractionBddFirestore {
     account_ids:Array<string>;
@@ -209,5 +216,87 @@ export class Journal {
             {
                 name:"VE",label:"ventes", description:"ensemble des vente réalisés par l'entreprise"
             }];
+    }
+}
+
+export class RowFec{
+    code_journal:string;
+    journal_label:string;
+    number:number;
+    date_reception:string;
+    account_number:number;
+    account_label:string;
+    other_account_number:number | null;
+    other_account_label:string | null;
+    name:string;
+    send_date:string;
+    label_fec:string;
+    debit_ammount:number;
+    credit_ammount:number;
+    lettrage:string | null;
+    lettrage_date:string | null;
+    valid_date:string;
+    devise:number | null;
+    identifiant_devise:string | null;
+    [index:string]:any
+    constructor(){
+        this.code_journal = "";
+        this.journal_label = "";
+        this.number = 0;
+        this.date_reception = "";
+        this.account_number = 0;
+        this.account_label = "";
+        this.other_account_label = null;
+        this.other_account_number = null;
+        this.name = "";
+        this.send_date = "";
+        this.label_fec = "";
+        this.debit_ammount = 0;
+        this.credit_ammount = 0;
+        this.valid_date = "";
+        this.lettrage = null;
+        this.lettrage_date = null;
+        this.devise = null;
+        this.identifiant_devise = null;
+    }
+    /**
+     * Retourne une liste des attributs dans l'ordre de display columns pour l'affichage d'un enregistrement
+     * @returns liste de l'ensemble des clefs disponibles 
+     */
+    public static getKeys(){
+        return ['code_journal', 'journal_label', 'number', 'date_reception', 'account_number',
+         'account_label', 'other_account_label','other_account_number', 'name', 'send_date',
+         'label_fec', 'debit_ammount', 'credit_ammount', 'lettrage', 'lettrage_date',
+         'valid_date','devise','identifiant_devise'];
+    }
+
+    public setRecord(record:Record, accounts:Array<Account>){
+        let sec_account:Account | undefined | null = null;
+        let account:Account | undefined | null = null;
+        account = accounts.find((account) => account.id === record.account_ids[0]);
+        sec_account = accounts.find((account) => account.id === record.account_ids[1]);
+        this.code_journal = record.journal_name;
+        this.journal_label = record.journal_label;
+        this.number = record.number;
+        this.date_reception = new Date(record.reception_date).toLocaleString();
+        if(account){
+            this.account_number = account.number;
+            this.account_label = account.name;
+        }
+        if(sec_account){
+            this.other_account_number = sec_account.number;
+            this.other_account_label = sec_account.name;
+        }
+        this.name = record.name;
+        this.send_date = new Date(record.send_date).toLocaleString();
+        this.label_fec = record.journal_label;
+        this.debit_ammount = record.debit_ammount;
+        this.credit_ammount = record.credit_ammount;
+        this.lettrage = record.lettrage;
+        this.lettrage_date = record.reception_date;
+        this.valid_date = "";
+        this.devise = record.devise_ammount;
+        this.identifiant_devise = record.devise;
+        return this;
     }
 }

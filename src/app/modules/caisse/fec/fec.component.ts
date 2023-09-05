@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { Router, UrlTree } from '@angular/router';
 
 @Component({
   selector: 'app-fec',
@@ -7,10 +7,16 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./fec.component.css']
 })
 export class FecComponent implements OnInit {
+  private url: UrlTree;
+  public prop:string
  /*  public dataSource: MatTableDataSource<rowFec>; */
-  constructor() { }
+  constructor(private router: Router) { 
+    this.url = this.router.parseUrl(this.router.url);
+    this.prop = "";
+  }
 
   ngOnInit(): void {
-  
+    let user_info = this.url.queryParams;
+    this.prop = user_info["prop"];
   }
 }

@@ -45,95 +45,38 @@ i {
     height: 100%;
     width: 260px;
     background-color: white;
-
     border-right: 1px rgb(210, 210, 210) solid;
-    transition: all .5s ease;
     z-index: 100;
 
 }
-.sidebar.close{
+.sidebar{
     width: 78px;
 }
-
-/* --------- Logo ------------ */
-.logo-box{
-    height: 60px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    transition: all .5s ease;
-}
-.logo-box:hover{
-    color: rgb(148, 30, 148);
-}
-.logo-box i{
-    font-size: 30px;
-    height: 50px;
-    min-width: 78px;
-    text-align: center;
-    line-height: 50px;
-    transition: all .5s ease;
-}
-.sidebar.close .logo-box i{
-    transform: rotate(360deg);
-}
-
-.logo-name{
-    font-family: 'ABeeZee', sans-serif;
-    font-style: italic;
-    font-size: 32px;
-    padding-top: 11px;
-    padding-bottom: 11px;
-}
-
-.mat-badge-content {
-    background: rgb(148, 30, 148);
-    color: white
-}
-
 /* ---------- Sidebar List ---------- */
 ul{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
-
 .sidebar-list{
     height: 100%;
     padding: 30px 0 150px 0;
-    overflow: auto;
-}
-.sidebar-list::-webkit-scrollbar{
-    display: none;
-}
-.sidebar-list li{
-    transition: all .5s ease;
-}
-.sidebar-list li:hover{
-    background-color: white;
 }
 .sidebar-list li .title{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: all .5s ease;
-    cursor: pointer;
 }
 .sidebar-list li.active .title{
     background-color: rgb(125, 181, 46, 0.3);
 }
 .sidebar-list li.active .bxs-chevron-down{
-    transition: all .5s ease;
     transform: rotate(180deg);
 }
 .sidebar-list li .title .link{
     display: flex;
     align-items: center;
 }
-.link{
-    cursor: pointer;
-}
-
 .sidebar-list li .title i{
     height: 50px;
     min-width: 78px;
@@ -141,96 +84,56 @@ ul{
     line-height: 50px;
     color: rgb(125, 181, 46);
     font-size: 20px;
-}
-.sidebar-list li .title .name{
-    font-size: 18px;
     font-weight: 400;
-    color: rgb(125, 181, 46);
 }
-
 /* ---------------- Submenu ------------- */
-.sidebar-list li .submenu{
-    width: 0;
-    height: 0;
+.submenu{
     opacity: 0;
-    transition: all .5s ease;
-}
-.sidebar-list li.dropdown.active .submenu{
-    width: unset;
-    height: unset;
-    opacity: 1;
     display: flex;
     flex-direction: column;
-    padding: 6px 6px 14px 80px;
+    cursor: default;
+    pointer-events: none; 
     background-color: white;
 }
+.dropdown:hover .submenu{
+    opacity: 1;
+    pointer-events: initial;
+}
 .submenu .link{
-    color: rgb(125, 181, 46);
     font-size: 15px;
     padding: 5px 0;
-    transition: all .5s ease;
-}
-.submenu .link:hover{
-    color: rgb(148, 30, 148);
 }
 .submenu-title{
-    display: none;
-    font-size: larger !important;
-    font-weight: bold;
-    cursor: default;
-    pointer-events: none;
+    display: none; 
 }
-
-.multi-section{
-    cursor: default;
-    pointer-events: none;
+.link:hover{
+    color: rgb(148, 30, 148);
 }
-
+.link {
+    cursor: pointer;
+    margin-top: 10px;
+    color: rgb(125, 181, 46);
+}
 /* ---------------- Submenu Close ------------- */
-.sidebar.close .logo-name,
-.sidebar.close .title .name,
-.sidebar.close .title .bxs-chevron-down
-{
+.title{
     display: none;
 }
-
-.sidebar.close .sidebar-list{
-    overflow: visible;
-}
-.sidebar.close .sidebar-list li{
-    position: relative;
-}
-.sidebar.close .sidebar-list li .submenu{
+.sidebar-list .submenu{
     display: flex;
     flex-direction: column;
     position: absolute;
     left: 100%;
     top: -10px;
-    margin-top: 0;
-    padding: 10px 20px;
-    border-radius: 0 6px 6px 0;
-    height: max-content;
     width: max-content;
-    opacity: 0;
-    transition: all .5s ease;
-    pointer-events: none;
-}
-.sidebar.close .sidebar-list li:hover .submenu{
-    opacity: 1;
-    top: 0;
-    pointer-events: initial;
-    background-color: white;
+    padding-left: 10px;
 }
 .sidebar.close .submenu-title{
-    display: block;
     font-style: 18px;
     color: rgb(125, 181, 46);
 }
-
 /* =============== Home Section =============== */
 .home{
     position: relative;
-    /*background-color: var(--color_Light1);*/
     left: 260px;
     width: calc(100% - 260px);
     height: 100vh;
@@ -261,16 +164,11 @@ ul{
 
 /* ============ Responsive / Breakpoints ========== */
 @media (max-width: 1080px){
-    .html{
-        width: 80px;
-    }
-    body{
-        width: 80px;
-        height: auto;
-        margin: 0;
-    }
     .logo-box{
         pointer-events: none;
+    }
+    .submenu:hover{
+        opacity: 1;
     }
 }
 

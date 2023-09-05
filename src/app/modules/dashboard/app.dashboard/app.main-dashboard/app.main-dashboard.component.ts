@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {initializeApp } from 'firebase/app';
 import { Unsubscribe } from 'firebase/database';
 import { first, Subscription } from 'rxjs';
@@ -15,6 +15,8 @@ const firebaseConfig = {
   appId: "1:135059251548:web:fb05e45e1d1631953f6199",
   measurementId: "G-5FBJE9WH0X"
 };
+
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -38,7 +40,19 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
   private alerte_subscription: Subscription; 
   private stock_unsubscribe!: Unsubscribe;
   private conso_unsubscribe!: Unsubscribe;
-  
+  private caisse_bool:boolean = false;
+  private inv_bool:boolean = false;
+  private rec_bool:boolean = false;
+  private ana_bool:boolean = false;
+  private compt_bool:boolean = false;
+  private fact_bool:boolean = false;
+
+  @ViewChild('caisse') caisse!: ElementRef<HTMLDivElement>;
+  @ViewChild('inventory') inventory!: ElementRef<HTMLDivElement>;
+  @ViewChild('receip') receip!: ElementRef<HTMLDivElement>;
+  @ViewChild('analyse') analyse!:ElementRef<HTMLDivElement>;
+  @ViewChild('compta') compta!:ElementRef<HTMLDivElement>;
+  @ViewChild("facture") facture!:ElementRef<HTMLDivElement>;
   constructor(public authService: AuthentificationService,
     public alerte_service: AlertesService){
     // on récupère dans le constructeur le paquet d'alertes 
@@ -51,51 +65,39 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
     this.stock_unsubscribe();
     this.conso_unsubscribe();
   }
-      
-
- 
   ngOnInit(): void {
-  const listItems = document.querySelectorAll(".sidebar-list li");
-  listItems.forEach((item) => {
-    item.addEventListener("click", () => {
-      let isActive = item.classList.contains("active");
-
-      listItems.forEach((el) => {
-        el.classList.remove("active");
+    if ('ontouchstart' in window){
+      document.addEventListener('click', function(event){
+        const ids = ["inventory", "caisse", "receip", "analyse", "facture"];
+        for(let id of ids){
+          const div = this.getElementById(id + "-div");
+          const li  = this.getElementById(id + "-id");
+          if(event.target !== li){
+            if(div){
+              div.style.opacity = "0";
+              div.style.pointerEvents = "none";
+            }   
+          }
+          else{
+            if(div){
+              div.style.opacity = "1";
+              div.style.pointerEvents = "initial";
+            }  
+          }
+        } 
       });
-
-      if (isActive) item.classList.remove("active");
-      else item.classList.add("active");
+    }
+    const listItems = document.querySelectorAll(".sidebar-list li");
+    listItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        let isActive = item.classList.contains("active");
+        listItems.forEach((el) => {
+          el.classList.remove("active");
+        });
+        if(isActive) item.classList.remove("active");
+        else item.classList.add("active");
+      });
     });
-  });
-  const sidebar = document.querySelector(".sidebar");
-  if(sidebar!=null) sidebar.classList.toggle("close");
-  // on enlève le panel de gauche dans le cas d'un mobile si on à se comportement il aut s'assurer que 
-  //lorsque la navebar est toggle les component se mettent sur la gauche
-/*   if (window.screen.width < 1040) { // 768px portrait
-    const sidebar = document.querySelector(".sidebar");
-    if(sidebar!=null) sidebar.classList.toggle("close");
-  } */
-  
-/*     this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "stock").then((num) => {   
-      this.stock_unsubscribe = this.alerte_service.getLastPAlertesBDD(this.prop, this.restaurant, num, "stock");
-    })
-
-    this.alerte_service.getPPakageNumber(this.prop, this.restaurant, "conso").then((num) =>{
-      this.conso_unsubscribe = this.alerte_service.getLastPAlertesBDD(this.prop, this.restaurant, num, "conso");
-    })
-
-    // la récupération des stock est lancé deux fois car quand on s'abonne à getLastPAlertes() il faut donc utiliser 
-    // first pour s'abonner une fois   
-    this.alerte_subscription = this.alerte_service.getLastPAlertes().pipe(first()).subscribe((alertes) =>{
-      // on récupère le nombre d'alerte non lu et on envoie à la vue pour affichage d'une notifiation 
-      const is_read = alertes.map((alerte) => alerte.read);
-      const num_read = is_read.filter(is_true => !is_true).length;
-      this.alert_num = this.alert_num + num_read;
-      if(this.alert_num !== 0){
-        this.hidden = false; 
-      }
-    }) */
   }
   getNom():string{
     if(email!=null){
@@ -197,5 +199,4 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
     const logo = document.querySelector(".logo-box");
     if(sidebar!=null) sidebar.classList.toggle("close");
   }
- 
 }

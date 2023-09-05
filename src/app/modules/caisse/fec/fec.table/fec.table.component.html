@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <mat-accordion>
+        <mat-expansion-panel *ngFor="let record of row_fec">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{record.date_reception}}
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{record.name}}
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div *ngFor="let column of displayedColumns;let i = index">
+                <div class="section">
+                    <p class="col">
+                        {{column}}
+                    </p>
+                    <div class="sub-section">
+                        <p class="value">
+                            {{record[index_record[i]]}}
+                        </p>
+                        <i class="fa-regular fa-pen action_table" (click)="modifRecord(record.number)"></i>
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</html>

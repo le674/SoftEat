@@ -30,7 +30,7 @@ main{
   /*fin temporaire*/
   padding: 2em;
   padding-top: 4em;
-    transition: all .5s ease;
+  transition: all .5s ease;
 }
 
 .sidebar.close ~ main{
@@ -48,21 +48,17 @@ main{
       visibility: hidden;
     }
     #top-alerte{
-    padding: 15px;
+      padding: 15px;
     }
-  #top-buttons{
-    padding: 20px;
-   }
+    #top-buttons{
+      padding: 20px;
+    }
 }
 
 @media (max-width: 1080px){
   .home{
       display: none;
   }
-  .logo-box{
-      pointer-events: none;
-  }
-
   .app-main-dashboard{
     width: 60px;
   } 

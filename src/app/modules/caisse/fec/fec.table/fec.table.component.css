@@ -1,0 +1,28 @@
+.section{
+    display: flex;
+    flex-direction: column;
+}
+.sub-section{
+    display: flex;
+    justify-content: space-between;
+}
+.col{
+    color: rgb(125, 181, 46);
+    font-size: larger;
+    font-weight: lighter;
+    text-transform: uppercase;
+    text-align: center;
+
+}
+.fa-pen:hover{
+    color: white;
+    background-color: rgb(125, 181, 46);
+}
+.fa-pen{
+    margin-bottom: 10px;
+}
+.action_table{
+    border:1px solid;
+    padding: 5px;
+    cursor: pointer;
+}
