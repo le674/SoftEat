@@ -3,7 +3,7 @@ import { InteractionBddFirestore } from "./interaction_bdd";
 export class Ccommande implements InteractionBddFirestore{
     "id":string;
     "clients": Array<String> | null;
-    "date":Date | null;
+    "date":string | null;
     "etat":number | null;
     "commande": Array<Map<string, Map<string, string>[]>> | null;
     /**
@@ -51,8 +51,8 @@ export class Ccommande implements InteractionBddFirestore{
      * @param restaurant_id identifiant du restaurant contenant les tables
      * @returns {string[]} ensembe des tables de la base de donnée
      */
-    public static getPathsToFirestore(proprietary_id: string, restaurant_id: string):string[] {
-        return ["proprietaires", proprietary_id, "restaurants", restaurant_id, "tables"]
+    public static getPathsToFirestore(proprietary_id: string, restaurant_id: string, tables_id: string):string[] {
+        return ["proprietaires", proprietary_id, "restaurants", restaurant_id, "tables",tables_id,"commandes"]
     }
 }
 /*structure de commande */
