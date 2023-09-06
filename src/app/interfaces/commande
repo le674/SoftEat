@@ -14,6 +14,7 @@ export class Ccommande implements InteractionBddFirestore{
     setData(data: Ccommande) {
         this.id = data.id;
         this.clients = data.clients;
+        
         this.date = data.date;
         this.commande = data.commande;
         this.etat = data.etat;
