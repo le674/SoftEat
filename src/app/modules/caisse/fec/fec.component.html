@@ -1,1 +1,2 @@
-<app-fectable [prop_id]="prop"></app-fectable>
+<app-fectable *ngIf="!windows_screen_mobile" [accounts]="accounts"  [row_fec]="this.row_fec" [records]="this.records" [columns]="this.displayedColumns"></app-fectable>
+<app-fecmobile *ngIf="windows_screen_mobile" [accounts]="accounts" [row_fec]="this.row_fec" [records]="this.records" [columns]="this.displayedColumns"></app-fecmobile>

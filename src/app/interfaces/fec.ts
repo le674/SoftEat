@@ -220,6 +220,7 @@ export class Journal {
 }
 
 export class RowFec{
+    id:string;
     code_journal:string;
     journal_label:string;
     number:number;
@@ -251,6 +252,7 @@ export class RowFec{
         this.name = "";
         this.send_date = "";
         this.label_fec = "";
+        this.id=""; 
         this.debit_ammount = 0;
         this.credit_ammount = 0;
         this.valid_date = "";
@@ -297,6 +299,14 @@ export class RowFec{
         this.valid_date = "";
         this.devise = record.devise_ammount;
         this.identifiant_devise = record.devise;
+        this.id = record.id;
+        return this;
+    }
+    public suppNulls():RowFec {
+        this.other_account_label = this.other_account_label ?? "pas de données";
+        this.lettrage = this.lettrage ?? "pas de données";
+        this.lettrage_date = this.lettrage_date ?? "pas de données";
+        this.identifiant_devise = this.identifiant_devise ?? "pas de données";
         return this;
     }
 }

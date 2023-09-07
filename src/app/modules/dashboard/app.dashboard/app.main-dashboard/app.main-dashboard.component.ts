@@ -40,12 +40,6 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
   private alerte_subscription: Subscription; 
   private stock_unsubscribe!: Unsubscribe;
   private conso_unsubscribe!: Unsubscribe;
-  private caisse_bool:boolean = false;
-  private inv_bool:boolean = false;
-  private rec_bool:boolean = false;
-  private ana_bool:boolean = false;
-  private compt_bool:boolean = false;
-  private fact_bool:boolean = false;
 
   @ViewChild('caisse') caisse!: ElementRef<HTMLDivElement>;
   @ViewChild('inventory') inventory!: ElementRef<HTMLDivElement>;
@@ -76,12 +70,14 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
             if(div){
               div.style.opacity = "0";
               div.style.pointerEvents = "none";
+              div.style.transition = "all 0.7s ease";
             }   
           }
           else{
             if(div){
               div.style.opacity = "1";
               div.style.pointerEvents = "initial";
+              div.style.transition = "all 0.7s ease";
             }  
           }
         } 

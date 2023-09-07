@@ -1,0 +1,63 @@
+.accordion-item {
+    margin-top: 1%;
+ }
+.accordion-button{
+    color: rgb(125, 181, 46);
+    text-align: center;
+    display:block;
+ }
+
+.accordion-body{
+  display: flex;
+  justify-content: space-between;
+}
+.collapse-section{
+    display: flex;
+    justify-content: space-between;
+}
+.categorie{
+    font-size: medium;
+    font-weight: bolder;
+    color: rgb(125, 181, 46);
+}
+.date{
+    font-weight: lighter;
+    font-size: small;
+    color: darkgrey;
+}
+.title-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.lettrage{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.action_table{
+    border:1px solid;
+    padding: 5px;
+    cursor: pointer;
+}
+.action_table:hover{
+    background-color: rgb(125, 181, 46);
+    color: white;
+}
+#lettrage-button{
+    color: rgb(125, 181, 46);
+    background-color: white;
+}
+#lettrage-button:hover{
+    color: white;
+    background-color: rgb(125, 181, 46);  
+}
+#add-lettrage{
+    display: flex;
+    justify-content: flex-end;
+}
+#open-modif-form{
+    display: block;
+    text-align: center;
+    padding-bottom: 30px;
+    padding-top: 30px;
+}

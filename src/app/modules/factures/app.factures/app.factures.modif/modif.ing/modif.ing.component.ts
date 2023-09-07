@@ -4,7 +4,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CIngredient } from '../../../../../../app/interfaces/ingredient';
 import { CalculService } from '../../../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
-import { FirebaseApp } from '@angular/fire/app';
 
 @Component({
   selector: 'app-modif.ing',
@@ -24,7 +23,7 @@ export class ModifIngComponent implements OnInit {
     unitary_cost: new FormControl(0, Validators.required),
     marge: new FormControl(0, Validators.required),
     vrac: new FormControl('', Validators.required),
-  })
+  });
   @ViewChild('taux')
   taux!: ElementRef;
 

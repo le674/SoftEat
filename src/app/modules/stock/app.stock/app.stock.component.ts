@@ -31,7 +31,6 @@ export class AppStockComponent implements OnInit, OnDestroy{
   private page_number: number;
   private router: Router;
   private ingredient_table: Array<CIngredient>;
-/*   private ingredient_table_prep: Array<Cpreparation>; */
   private url: UrlTree;
   private prop: string;
   private restaurant: string;
@@ -87,7 +86,6 @@ export class AppStockComponent implements OnInit, OnDestroy{
               ingredient.getCostTtcFromCat();
             }
             else{
-              
               ingredient.getCostTtcFromTaux(); 
             }
             const name = ingredient.name.split(' ').join('<br>');
@@ -98,6 +96,7 @@ export class AppStockComponent implements OnInit, OnDestroy{
             const id = ingredient.id;
             let row_ingredient = new RowIngredient(name, cost, quantity, quantity_unity, unity, id);
             row_ingredient.setIngredient(ingredient);
+            row_ingredient.name = row_ingredient.name.split("<br>").join(" ");
             this.ingredients_displayed_br.push(row_ingredient);
             this.visibles.push(false);
             const first_event = new PageEvent();

@@ -4,7 +4,10 @@
 }
 .sub-section{
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 50px;
 }
 .col{
     color: rgb(125, 181, 46);
@@ -14,15 +17,27 @@
     text-align: center;
 
 }
-.fa-pen:hover{
+.action_table{
+    border:1px solid;
+    padding: 30px;
+    cursor: pointer;
+}
+#open-modif-form:hover{
     color: white;
     background-color: rgb(125, 181, 46);
 }
-.fa-pen{
+#open-modif-form{
     margin-bottom: 10px;
 }
-.action_table{
-    border:1px solid;
-    padding: 5px;
-    cursor: pointer;
+#open-modif-form{
+    display: block;
+    text-align: center;
+}
+#lettrage-button{
+    color: rgb(125, 181, 46);
+    background-color: white;   
+}
+#lettrage-button:hover{
+    color: white;
+    background-color: rgb(125, 181, 46);  
 }

@@ -1,18 +1,10 @@
-<form [formGroup]="add_facture_infos" (ngSubmit)="submitInfo()">
-    <div class="section">
-        <p class="title">Entrer le nom du fournisseur de la facture</p>
-        <mat-form-field appearance="fill">
-            <mat-label>Entrer le nom du fournisseur</mat-label>
-            <input matInput formControlName="name" placeholder="Ex. asperge">
-        </mat-form-field>
-    </div>
-    <div class="section">
-        <p class="title">Entrer le montant total crédité</p>
-        <mat-form-field appearance="fill">
-            <mat-label>Entrer le montant total crédité</mat-label>
-            <input matInput formControlName="cost" type="number" placeholder="Ex. asperge">
-        </mat-form-field>
-    </div>
+<div class="inputs-containers">
+    <button (click)="closePopup($event)" mat-mini-fab type="button" id="close_popup" color="white" matTooltip="fermer la fenêtre"
+    aria-label="close popup">
+    <i class="fa-regular fa-xmark"></i>
+    </button>
+</div>
+<form [formGroup]="add_lettrage" (ngSubmit)="submitInfo()">
     <div class="section">
         <p class="title">Quelle est la nature du document reçu</p>
         <mat-form-field appearance="fill">
@@ -32,9 +24,18 @@
         </mat-form-field>
     </div>
     <div class="section">
+        <p class="title">Modifier la date d'envoie du justificatif</p>
+        <mat-form-field>
+            <mat-label>Choisire une date</mat-label>
+            <input matInput [matDatepicker]="picker_sended" formControlName="send_date">
+            <mat-datepicker-toggle matIconSuffix [for]="picker_sended"></mat-datepicker-toggle>
+            <mat-datepicker #picker_sended></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <div class="section">
         <p class="title">Choisir des comptes fournisseur associés à la facture</p>
         <ng-container formArrayName="accounts_number">
-            <div *ngFor="let item of add_facture_infos.controls.accounts_number.controls;let i=index">
+            <div *ngFor="let item of add_lettrage.controls.accounts_number.controls;let i=index">
                 <ng-container [formGroupName]="i">
                     <mat-form-field appearance="fill">
                         <mat-label>Entrer un compte</mat-label>

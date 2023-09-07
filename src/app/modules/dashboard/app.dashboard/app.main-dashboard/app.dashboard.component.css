@@ -56,7 +56,7 @@ i {
 ul{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-between; 
 }
 .sidebar-list{
     height: 100%;
@@ -66,11 +66,14 @@ ul{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: all .5s ease;
 }
 .sidebar-list li.active .title{
     background-color: rgb(125, 181, 46, 0.3);
+    transition: all .5s ease;
 }
 .sidebar-list li.active .bxs-chevron-down{
+    transition: all .5s ease;
     transform: rotate(180deg);
 }
 .sidebar-list li .title .link{
@@ -96,6 +99,7 @@ ul{
     background-color: white;
 }
 .dropdown:hover .submenu{
+    transition: all 0.7s ease;
     opacity: 1;
     pointer-events: initial;
 }

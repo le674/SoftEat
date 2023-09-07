@@ -15,7 +15,7 @@
                     {{record.name}}
                 </mat-panel-description>
             </mat-expansion-panel-header>
-            <div *ngFor="let column of displayedColumns;let i = index">
+            <div *ngFor="let column of columns;let i = index">
                 <div class="section">
                     <p class="col">
                         {{column}}
@@ -24,10 +24,13 @@
                         <p class="value">
                             {{record[index_record[i]]}}
                         </p>
-                        <i class="fa-regular fa-pen action_table" (click)="modifRecord(record.number)"></i>
+                        <button mat-mini-fab (click)="openSenderInfo(record)" id="lettrage-button" matTooltip="changer le lettrage" *ngIf="column === 'Lettrage'">
+                            <i class="fa-regular fa-pen"></i>
+                        </button>
                     </div>
                 </div>
             </div>
+            <i id="open-modif-form" class="fa-regular fa-pen action_table fa-xl" (click)="modifRecord(record)"></i>
         </mat-expansion-panel>
     </mat-accordion>
 </html>
