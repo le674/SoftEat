@@ -1,7 +1,4 @@
 import { Injectable } from '@angular/core';
-import { FirebaseApp } from '@angular/fire/app';
-import { Firestore} from '@angular/fire/firestore';
-import { FIREBASE_DATABASE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
 
 @Injectable({
   providedIn: 'root'

@@ -17,6 +17,7 @@ export class FecMobileComponent implements OnInit {
   @Input() columns:Array<string>;
   @Input() stock:string | null;
   @Input() accounts:Array<Account>; 
+  @Input() prop:string;
   public index_record:Array<string>;
   public visibles: Array<boolean>;
   constructor(public mobile_service:CommonService, public dialog: MatDialog) { 
@@ -27,6 +28,7 @@ export class FecMobileComponent implements OnInit {
     this.accounts = [];
     this.index_record = RowFec.getKeys();
     this.stock = null;
+    this.prop = "";
   }
 
   ngOnInit(): void {
@@ -41,7 +43,8 @@ export class FecMobileComponent implements OnInit {
         width: "600px",
         data:{
           record:rec_num,
-          accounts:this.accounts
+          accounts:this.accounts,
+          prop:this.prop
         }
       }); 
     }
@@ -53,7 +56,8 @@ export class FecMobileComponent implements OnInit {
         height: "900px",
         width: "600px",
         data:{
-          record:rec_num
+          record:rec_num,
+          prop:this.prop
         }
       }); 
     }

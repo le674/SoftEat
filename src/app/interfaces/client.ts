@@ -13,6 +13,7 @@ export class Client implements InteractionBddFirestore {
     public "promotion":boolean;
     public "is_contacted": boolean;
     public "uid":string;
+    [index:string]:any;
   
     constructor(){
       this.id = "";
@@ -70,28 +71,28 @@ export class Client implements InteractionBddFirestore {
      * permet de convertir un objet client en un JSON pour l'insérer dans la bdd
      * @returns {Object} objet client sous forme de JSON
      */
-    public getData(): any {
+    public getData(id: string | null,attrs:Array<string> | null, ...args: any[]): any {
+      let _attrs = Object.keys(this);
       let address = null;
+      let object: { [index: string]: any } = {};
+      if (attrs) {
+        _attrs = attrs
+      }
+      if (id) {
+        this.id = id;
+      }
       if(this.address !== null){
-        address = {
-          postal_code: this.address.postal_code,
-          street_number: this.address.street_number,
-          city: this.address.city,
-          street: this.address.street
+        address = this.address.getData(null, null);
+      }
+      for (let attr of _attrs) {
+        if(attr !== "address"){
+          object[attr] = this[attr];
+        }
+        else{
+          object[attr] = address;
         }
       }
-     return {
-      id: this.id,
-      name: this.name,
-      surname: this.surname,
-      email: this.email,
-      number: this.number,
-      address: address,
-      order_number: this.order_number,
-      wast_alert: this.waste_alert,
-      promotion: this.promotion,
-      is_contacted: this.is_contacted
-     }
+      return object;
     }
   }
   export class DisplayedClient {

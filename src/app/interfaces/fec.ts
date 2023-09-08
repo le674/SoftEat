@@ -79,31 +79,19 @@ export class Record implements InteractionBddFirestore {
      * @param id lors de l'ajout d'un nouvelle enregistrement identifiant du nouvelle enregistrement
      * @returns {Object} JSON représentant un enregistrmeent à ahouter à la base de donnée 
      */
-    public getData(id: string | null) {
-        if (id !== null) {
+    public getData(id: string | null, attrs:Array<string> | null, ...args: any[]) {
+        let _attrs = Object.keys(this);
+        let object:{[index:string]:any} = {};
+        if(attrs){
+            _attrs = attrs
+        }
+        if(id){
             this.id = id;
-        }   
-        return {
-            account_ids: this.account_ids,
-            account_ids_src:this.account_ids_src,
-            credit_ammount: this.credit_ammount,
-            debit_ammount: this.debit_ammount,
-            description: this.description,
-            devise:this.devise,
-            devise_ammount: this.devise_ammount,
-            lettrage: this.lettrage,
-            lettrage_label: this.lettrage_label,
-            id:this.id,
-            id_src:this.id_src,
-            journal_name: this.journal_name,
-            journal_label:this.journal_label,
-            name: this.name,
-            nature:this.nature,
-            number:this.number,
-            reception_date: this.reception_date,
-            validation_date: this.validation_date,
-            send_date: this.send_date
-        };
+        }
+        for(let attr of _attrs){
+            object[attr] = this[attr];
+        }
+        return object;
     }
     /**
      * Permet de retourner les informations sur le lettrage
@@ -137,7 +125,7 @@ export class Record implements InteractionBddFirestore {
             this.lettrage = this.lettrage + `&nature=${this.nature}`;
         }
         if(this.id_src){
-            this.lettrage = this.lettrage + `&identifiant=${this.nature}`;
+            this.lettrage = this.lettrage + `&identifiant=${this.id_src}`;
         }
         if(this.account_ids_src){
             for (let index = 0; index < this.account_ids_src.length; index++) {
@@ -154,7 +142,15 @@ export class Record implements InteractionBddFirestore {
     public getInstance(): InteractionBddFirestore {
         return new Record();
     }
-
+    /**
+     * Permet de récupérer le chemin dans la base de donnée vers Firestore
+     */
+    public static getPathsToFirestore(prop_id:string){
+        return ["proprietaires", prop_id, "recording"];
+    }
+    /**
+     * Cette partie contient l'ensemble des fonctions d'intéraction avec la base de doonnée
+    */
     /**
      * Permet d'incrémenté l'id du nouvelle enregistrement de 1 par rarpport au nombre actuel d'enregistrement existant
      * @param bdd_data données récupérés avant l'ajout dans la base
@@ -169,12 +165,6 @@ export class Record implements InteractionBddFirestore {
             _record.number = _bdd_data[0].record;
         }
         return _record;
-    }
-    /**
-     * Permet de récupérer le chemin dans la base de donnée vers Firestore
-     */
-    public static getPathsToFirestore(prop_id:string){
-        return ["proprietaires", prop_id, "recording"];
     }
 }
 

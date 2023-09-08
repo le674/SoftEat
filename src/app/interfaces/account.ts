@@ -20,6 +20,7 @@ export class Account implements InteractionBddFirestore {
     public name: string;
     public number: number;
     public solde: number;
+    [index:string]:any;
 
     constructor() {
         this.class = 0;
@@ -55,19 +56,23 @@ export class Account implements InteractionBddFirestore {
     }
     /**
      * Retourne un json pour l'écrire dans la base de donnée
+     * @param id identifiant de l'objet à modifier en base
+     * @param attrs attributs de l'objet que nous souhaitons modifier
      * @returns un JSON pour écriture dans la base de donnée
      */
-    public getData(): any {
-        return {
-            class: this.class,
-            credit: this.credit,
-            debit: this.debit,
-            desc: this.desc,
-            id: this.id,
-            name: this.name,
-            number: this.number,
-            solde: this.solde
+    public getData(id:string | null,attrs:Array<string> | null): any {
+        let _attrs = Object.keys(this);
+        let object: { [index: string]: any } = {};
+        if (attrs) {
+          _attrs = attrs
         }
+        if (id) {
+          this.id = id;
+        }
+        for (let attr of _attrs) {
+          object[attr] = this[attr];
+        }
+        return object;
     }
     /**
      * retourne une instance d'un compte

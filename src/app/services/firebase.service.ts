@@ -5,10 +5,10 @@ import { Statut } from '../interfaces/statut';
 import { Unsubscribe } from 'firebase/auth';
 import { CollectionReference, DocumentData, DocumentReference, DocumentSnapshot, Firestore, SnapshotOptions, collection, updateDoc, deleteDoc, doc, onSnapshot, setDoc, getDocs } from '@angular/fire/firestore';
 import { CalculService } from './menus/menu.calcul/menu.calcul.ingredients/calcul.service';
-import { Class, Condition, InteractionBddFirestore, TransactionalConf } from '../interfaces/interaction_bdd';
+import { Class, Condition, InteractionBddFirestore, TransactionalConf, TransactionalWriteOnlyConf } from '../interfaces/interaction_bdd';
 import { Subject, throwError } from 'rxjs';
 import { Conversation } from '../interfaces/conversation';
-import { Query, query, runTransaction, where } from 'firebase/firestore';
+import { Query, query, runTransaction, where, writeBatch } from 'firebase/firestore';
 import { Employee } from '../interfaces/employee';
 import { CommonService } from './common/common.service';
 
@@ -176,7 +176,7 @@ export class FirebaseService {
             }
         }
         let ref = doc(this.concatPathCollection(_paths, converter_firestore));
-        return await setDoc(ref, data_to_set.getData(ref.id)).then(async () => ref.id);
+        return await setDoc(ref, data_to_set.getData(ref.id, null)).then(async () => ref.id);
     }
     /**
      * Cette fonction permet d'ajouter dans firestore des données, nous récupérons plusieurs donnée
@@ -187,7 +187,6 @@ export class FirebaseService {
     public async setFirestoreMultipleData(prev_data:InteractionBddFirestore,confs: Array<TransactionalConf>) {
         let results: Array<any> = [];
         await runTransaction(this.firestore, async (transaction) => {
-
             for(let conf of confs) {
                 let converter_firestore = null;
                 const _class = conf.class;
@@ -217,10 +216,8 @@ export class FirebaseService {
                         results.push(new_doc.data() as InteractionBddFirestore);
                     }
                     else{
-                        const error = new Error("conf.doc_id not null for get methode")
-                        return throwError(() => {
-                            console.log(error);
-                        })
+                        const error = new Error("conf.doc_id not null for get methode");
+                        throw error;
                     }
                 }
                 if(conf.transaction === "update") {
@@ -231,7 +228,7 @@ export class FirebaseService {
                             to_update = conf.operation(results);
                         }
                         if(to_update){
-                            await transaction.update(doc_ref,to_update.getData(null));
+                            await transaction.update(doc_ref,to_update.getData(null,null));
                         }
                         else{
                             console.log(`donnée null à modifier sur le chemin ${conf.path}`);
@@ -239,9 +236,7 @@ export class FirebaseService {
                     }
                     else{
                         const error = new Error("conf.doc_id not null for update methode")
-                        return throwError(() => {
-                            console.log(error);
-                        })
+                        throw error;
                     }
                 }
                 if(conf.transaction === "set"){
@@ -252,7 +247,7 @@ export class FirebaseService {
                         to_set = conf.operation(results, prev_data);
                     }
                     if(to_set){
-                        await transaction.set(doc_ref, to_set.getData(doc_ref.id));
+                        await transaction.set(doc_ref, to_set.getData(doc_ref.id,null));
                     }
                     else{
                         console.log(`donnée null à ajouter sur le chemin ${conf.path}`);
@@ -262,6 +257,80 @@ export class FirebaseService {
             }
            return console.log("transaction completed");
         })
+    }
+    /**
+     * Cette fonction permet d'ajouter dans firestore des données, nous récupérons plusieurs donnée
+     * puis nous écrivons une nouvelle donnée dans la base firestore
+     * @param confs configuration de la transaction
+     * @param operation opération à réaliser avant l'écriture dan la bdd
+     */
+    public async setFirestoreMultipleDataOnly(confs: Array<TransactionalWriteOnlyConf>) {
+        const batch = writeBatch(this.firestore); 
+        for(let conf of confs) {   
+            let converter_firestore = null;
+            const _class = conf.class;
+            if(_class){
+                let to_add:InteractionBddFirestore | null =  conf.instance;
+                converter_firestore = {
+                    toFirestore: (object: InteractionBddFirestore) => {
+                        return object;
+                    },
+                    fromFirestore: (snapshot: DocumentSnapshot<InteractionBddFirestore>, options: SnapshotOptions) => {
+                        const data = snapshot.data(options);
+                        if (data !== undefined) {
+                            let instance: InteractionBddFirestore;
+                            instance = this.constructInstance(_class).getInstance();
+                            instance.setData(data);
+                            return instance;
+                        }
+                        else {
+                            return null;
+                        }
+                    }
+                };
+                if (conf.operation) {
+                    to_add = conf.operation(null, to_add);
+                };
+                if(conf.transaction === "set"){
+                    const collection_ref = this.concatPathCollection(conf.path, converter_firestore);
+                    let doc_ref = doc(collection_ref);
+                    if(to_add){
+                        batch.set(doc_ref, to_add.getData(doc_ref.id, null));
+                    }
+                    else{
+                        const error = new Error(`donnée null à ajouter sur le chemin ${conf.path}`);
+                        throw error;
+                    }
+                }
+                if(conf.transaction === "update"){
+                    if(conf.doc_id){
+                        let doc_ref = this.concatPathDoc(conf.doc_id, conf.path, converter_firestore);
+                        if(to_add){
+                           batch.update(doc_ref,to_add.getData(null, conf.attrs));
+                        }
+                        else{
+                            const error = new Error(`donnée null à modifier sur le chemin ${conf.path}`);
+                            throw error;
+                        }
+                    }
+                    else{
+                        const error = new Error("conf.doc_id not null for update methode")
+                        throw error;
+                    }
+                }
+                if(conf.transaction === "delete"){
+                    if(conf.doc_id){
+                        let doc_ref = this.concatPathDoc(conf.doc_id, conf.path, converter_firestore);
+                        batch.delete(doc_ref);
+                    }
+                    else{
+                        const error = new Error("conf.doc_id not null for delete methode")
+                        throw error;
+                    }
+                }
+            }
+        }
+        await batch.commit();
     }
     /**
      * Cette fonction permet de modifier dans firestore des données 
@@ -289,7 +358,7 @@ export class FirebaseService {
             }
         }
         let ref = this.concatPathDoc(id, _paths, converter_firestore);
-        await updateDoc(ref, data_to_set.getData(null));
+        await updateDoc(ref, data_to_set.getData(null, null));
     }
     /**
      * Cette fonction permet depuis le local storage de récupérer le mail d'un employée
@@ -373,6 +442,9 @@ export class FirebaseService {
         if (Class.name === "Employee") {
             const statut = new Statut(this.common_service);
             return new Class("", statut, "", this.common_service);
+        }
+        if(Class.name === "Facture"){
+            return new Class("", null);
         }
         return new Class();
     }

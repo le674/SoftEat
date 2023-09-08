@@ -309,7 +309,7 @@ export class UserInteractionService {
       ), "employees"
     ),employee.id).withConverter(this.employee_converter);
     employee[attribut] = valeur;
-    await updateDoc(user_ref, employee.getData(null))
+    await updateDoc(user_ref, employee.getData(null, null))
   }
 
   /**

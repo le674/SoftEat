@@ -76,7 +76,7 @@ public async getFromFirestoreLocalStorageObj(class_instance: Class<InteractionBd
   public async setToLocalStorageObj(bdd_obj:Array<InteractionBddFirestore>, key:string){
     let all_objects:Array<any> = [];
     bdd_obj.forEach((obj) => {
-      let _object = obj.getData(null);
+      let _object = obj.getData(null,null);
       all_objects.push(_object);
     });
     localStorage.setItem(key,JSON.stringify(all_objects)) 

@@ -8,6 +8,7 @@ export class Conversation implements InteractionBddFirestore{
     surname:string | null;
     timestamp:number;
     newDay?: boolean;
+    [index:string]:any;
     constructor(){
         this.author = null;
         this.container = null;
@@ -24,15 +25,16 @@ export class Conversation implements InteractionBddFirestore{
         this.surname = conversation.surname;
         this.timestamp = conversation.timestamp;
     }
-    getData(id: string | null, ...args: any[]) {
-        return {
-            author: this.author,
-            container: this.container,
-            content:this.content,
-            name:this.name,
-            surname:this.surname,
-            timestamp:this.timestamp
+    getData(id: string | null, attrs:Array<string> | null, ...args: any[]) {
+        let _attrs = Object.keys(this);
+        let object:{[index:string]:any} = {};
+        if(attrs){
+            _attrs = attrs
         }
+        for(let attr of _attrs){
+            object[attr] = this[attr];
+        }
+        return object;
     }
     getInstance(): InteractionBddFirestore {
         return new Conversation();

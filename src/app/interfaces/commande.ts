@@ -1,59 +1,59 @@
 import { InteractionBddFirestore } from "./interaction_bdd";
 
-export class Ccommande implements InteractionBddFirestore{
-    "id":string;
-    "clients": Array<String> | null;
-    "date":string | null;
-    "etat":number | null;
-    "commande": Array<Map<string, Map<string, string>[]>> | null;
-    /**
-     * permet de transformer les donnée JSON récupérer depuis la bdd firestore en objet MENU
-     * @param data donnée Json récupérer depuis la base ded onnée firestore
-     */
-    setData(data: Ccommande) {
-        this.id = data.id;
-        this.clients = data.clients;
-        this.date = data.date;
-        this.commande = data.commande;
-        this.etat = data.etat;
-    }
+export class Ccommande implements InteractionBddFirestore {
+  "id": string;
+  "clients": Array<String> | null;
+  "date": string | null;
+  "etat": number | null;
+  "commande": Array<Map<string, Map<string, string>[]>> | null;
+  [index: string]: any;
+  /**
+   * permet de transformer les donnée JSON récupérer depuis la bdd firestore en objet MENU
+   * @param data donnée Json récupérer depuis la base ded onnée firestore
+   */
+  setData(data: Ccommande) {
+    this.id = data.id;
+    this.clients = data.clients;
+    this.date = data.date;
+    this.commande = data.commande;
+    this.etat = data.etat;
+  }
 
-    /**
-     * permet de récupérer un menu depuis la base de donnée
-     * @param id identifiant du menu dans la base de donnée
-     * @returns {Object} JSON correspndant au menu 
-    */
-    getData(id: string | null, ...args: any[]) {
-        if(id !== null){
-            this.id = id;
-        }
-        if(this.clients !== null){
-           // this.nbr_clients_max = nbr_clients_max;
-        }
-        return {
-            id: this.id,
-            clients: this.clients,
-            date:this.date,
-            commande: this.commande,
-            etat: this.etat
-        }
+  /**
+   * permet de récupérer un menu depuis la base de donnée
+   * @param id identifiant du menu dans la base de donnée
+   * @returns {Object} JSON correspndant au menu 
+  */
+  getData(id: string | null, attrs: Array<string> | null, ...args: any[]) {
+    let _attrs = Object.keys(this);
+    let object: { [index: string]: any } = {};
+    if (attrs) {
+      _attrs = attrs
     }
-    /**
-     * Récupération d'une commande
-     * @returns {InteractionBddFirestore}
-     */
-    getInstance(): InteractionBddFirestore {
-        return new Ccommande();
+    if (id) {
+      this.id = id;
     }
-    /**
-     * Permet de récupérer les tables du restaurant
-     * @param proprietary_id identifiant du propriétaire contenant les tables
-     * @param restaurant_id identifiant du restaurant contenant les tables
-     * @returns {string[]} ensembe des tables de la base de donnée
-     */
-    public static getPathsToFirestore(proprietary_id: string, restaurant_id: string, tables_id: string):string[] {
-        return ["proprietaires", proprietary_id, "restaurants", restaurant_id, "tables",tables_id,"commandes"]
+    for (let attr of _attrs) {
+      object[attr] = this[attr];
     }
+    return object;
+  }
+  /**
+   * Récupération d'une commande
+   * @returns {InteractionBddFirestore}
+   */
+  getInstance(): InteractionBddFirestore {
+    return new Ccommande();
+  }
+  /**
+   * Permet de récupérer les tables du restaurant
+   * @param proprietary_id identifiant du propriétaire contenant les tables
+   * @param restaurant_id identifiant du restaurant contenant les tables
+   * @returns {string[]} ensembe des tables de la base de donnée
+   */
+  public static getPathsToFirestore(proprietary_id: string, restaurant_id: string, tables_id: string): string[] {
+    return ["proprietaires", proprietary_id, "restaurants", restaurant_id, "tables", tables_id, "commandes"]
+  }
 }
 /*structure de commande */
 /**

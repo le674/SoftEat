@@ -2,8 +2,12 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Account } from 'src/app/interfaces/account';
+import { Facture } from 'src/app/interfaces/facture';
 import { Journal, Record } from 'src/app/interfaces/fec';
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { Transaction } from 'src/app/transaction/transaction';
 
 @Component({
   selector: 'app-fec.modif-record',
@@ -23,9 +27,11 @@ export class FecModifRecordComponent implements OnInit {
   });
   public accounts:Array<Account>;
   public journals:Array<{name:string, label:string, description:string}>;
-  constructor(public dialogRef: MatDialogRef<FecModifRecordComponent>,@Inject(MAT_DIALOG_DATA) public data: {
+  constructor(private service:FirebaseService, public dialogRef: MatDialogRef<FecModifRecordComponent>,
+    private _snackBar: MatSnackBar,@Inject(MAT_DIALOG_DATA) public data: {
       record:Record,
-      accounts:Array<Account>
+      accounts:Array<Account>,
+      prop:string
     }
   ){
     this.journals =  Journal.defaultJournal();
@@ -41,7 +47,10 @@ export class FecModifRecordComponent implements OnInit {
     this.modif_form.controls.description.setValue(this.data.record.description); 
     this.modif_form.controls.name.setValue(this.data.record.name);
     this.modif_form.controls.accounts.setValue(this.data.record.account_ids);   
-    this.modif_form.controls.reception_date.setValue(reception_date); 
+    this.modif_form.controls.reception_date.setValue(reception_date);
+    if(this.data.record.nature === 'facture'){
+      this.modif_form.controls.name.disable();
+    } 
   }
   changeRecord() {
     const journal_name = this.modif_form.controls.journal_name.value;
@@ -52,6 +61,9 @@ export class FecModifRecordComponent implements OnInit {
     const reception_date =  this.modif_form.controls.reception_date.value;
     const accounts = this.modif_form.controls.accounts.value;
     let record = new Record();
+    let facture = new Facture("", null);
+    record.setData(this.data.record);
+    facture.id = record.name;
     if(journal_name){
       record.journal_name = journal_name;
       const default_journal = Journal.defaultJournal().find((journal) => journal.name === journal_name);
@@ -67,9 +79,11 @@ export class FecModifRecordComponent implements OnInit {
     }
     if(credit_ammount){
       record.credit_ammount = credit_ammount;
+      facture.ammount_total = credit_ammount;
     }
     if(description){
       record.description = description;
+      facture.name = description;
     }
     if(reception_date){
       record.reception_date = reception_date.toISOString();
@@ -77,6 +91,17 @@ export class FecModifRecordComponent implements OnInit {
     if(accounts){
       record.account_ids = accounts;
     }
+    const conf = Transaction.changeRecord(this.data.prop, record, facture);
+    this.service.setFirestoreMultipleDataOnly(conf).then(() => {
+      console.log("write lettrage completed");
+    }).catch((err) => {
+      this._snackBar.open("impossible de modifier l'enrregistrement contacter softeat", "fermer");
+      this.dialogRef.close();
+      throw err;
+    }).then(() => {
+      this._snackBar.open("l'eregistrement vient d'être modifié", "fermer");
+      this.dialogRef.close();
+    }) 
   }
   printValue($event: MatOptionSelectionChange<string>) {
     const _accounts = this.modif_form.controls.accounts.value;

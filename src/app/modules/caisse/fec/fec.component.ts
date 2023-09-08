@@ -29,7 +29,7 @@ export class FecComponent implements OnInit, OnDestroy {
   private sub_account!: Subscription;
   private sub_record!: Subscription;
   public displayedColumns: string[] = ['CodeJournal', 'LibelléJournal', 'Numéro', 'DateComptabilisation',
-  'NuméroCompte', 'LibelléCompte', 'NuméroCompteAuxiliaire', 'LibelléCompteAuxiliaire',
+  'NuméroCompte', 'LibelléCompte', 'LibelléCompteAuxiliaire', 'NuméroCompteAuxiliaire',
   'RéférencePièceJustificative', 'DatePièceJustificative', 'LibelléEcriture', 'MontantDébit', 'MontantCrédit',
   'Lettrage', 'DateLettrage', 'DateValidation', 'Montantdevise', 'Idevise'];
   constructor(private router: Router, private service:FirebaseService, public mobile_service:CommonService) { 
@@ -42,6 +42,8 @@ export class FecComponent implements OnInit, OnDestroy {
     this.accounts = [];
     this.row_fec = [];
     this.windows_screen_mobile = this.mobile_service.getMobileBreakpoint("ing");
+    let user_info = this.url.queryParams;
+    this.prop = user_info["prop"];
   }
   ngOnDestroy(): void {
     this.unsubscrib_account();
@@ -50,8 +52,6 @@ export class FecComponent implements OnInit, OnDestroy {
     this.sub_record.unsubscribe();
   }
   ngOnInit(): void {
-    let user_info = this.url.queryParams;
-    this.prop = user_info["prop"];
     let end_date = new Date();
     let start_date = new Date();
     start_date = new Date(start_date.setDate(-30));

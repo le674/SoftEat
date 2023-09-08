@@ -4,10 +4,8 @@
 }
 .sub-section{
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: baseline;
-    flex-wrap: wrap;
-    gap: 50px;
 }
 .col{
     color: rgb(125, 181, 46);

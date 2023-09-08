@@ -1,6 +1,7 @@
 import { TextItem } from "pdfjs-dist/types/src/display/api"
 import { TextShared } from "./text"
 import { Account } from "./account";
+import { InteractionBddFirestore } from "./interaction_bdd";
 
 export interface FactureColumns {
     name: Array<string>;
@@ -56,7 +57,7 @@ export interface FacturePrintedResult {
     total?: number | undefined;
 }
 
-export class Facture{
+export class Facture implements InteractionBddFirestore{
     date_reception:string;
     day:number;
     month:number;
@@ -72,6 +73,7 @@ export class Facture{
     nature:string;
     identifiant:string | null;
     account_id:Array<string> | null;
+    [index:string]:any;
 
     constructor(date_reception:string, is_read:boolean | null){
         this.nature = Facture.getNatures()[1];
@@ -122,29 +124,32 @@ export class Facture{
      * Cette fonction permet de récupérer l'objet facture sous forme d'un JSON 
      * @returns JSON constituant l'objet facture
      */
-    public getData(){
-
-        let accounts = null;
-        if(this.account_id){
-            accounts = this.account_id;
+    public getData(id: string | null, attrs:Array<string> | null, ...args: any[]){
+        let _attrs = Object.keys(this);
+        let object:{[index:string]:any} = {};
+        if(id){
+            this.id = id;
         }
-        return {
-            date_reception: this.date_reception,
-            day: this.day,
-            month: this.month,
-            year: this.year,
-            extension: this.extension,
-            is_read: this.is_read,
-            id: this.id,
-            restaurants_id: this.restaurant_id, 
-            path: this.path,
-            name:this.name,
-            supplier:this.supplier,
-            ammount_total:this.ammount_total,
-            identifiant: this.identifiant,
-            account_id:accounts,
-            nature:this.nature
+        if(attrs){
+            _attrs = attrs
         }
+        for(let attr of _attrs){
+            object[attr] = this[attr];
+        }
+        return object;
+    }
+    /**
+     * Permet de retrourner une instance de facture copie de cette instance
+     * @returns construit une instance de facture copie de cette instance
+     */
+    getInstance(): InteractionBddFirestore {
+       return new Facture(this.date_reception, this.is_read);
+    }
+    /**
+     * permet de retourner un chemin vers la facture à ajouter à la bdd
+     */
+    public static getPathsToFirestore(prop:string){
+        return ["proprietaires", prop, "factures"]
     }
     /**
      * permet de construire le chemin vers storage de la facture
@@ -180,5 +185,16 @@ export class Facture{
     public monthMapping(month_number:number):string{
         const _months=  ["janvier", "fevrier", "mars", "avril", "mai", "juin", "juillet", "aout", "septembre", "octobre", "decembre"];
         return _months[month_number];
+    }
+    /**
+     * Permet de modifier les données en base  
+     * @param data 
+     * @param result 
+     */
+    public static extractYearMonthDay(data: InteractionBddFirestore[] | null, new_facture:Facture){
+        new_facture.day = new Date(new_facture.date_reception).getDate();
+        new_facture.month = new Date(new_facture.date_reception).getMonth() + 1;
+        new_facture.year = new Date(new_facture.date_reception).getFullYear();
+        return new_facture;
     }
 }

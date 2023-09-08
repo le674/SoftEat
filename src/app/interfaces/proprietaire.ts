@@ -14,6 +14,7 @@ export class Proprietary implements InteractionBddFirestore {
     record:number;
     restaurant_number:number;
     uid:string;
+    [index:string]:any
 
     constructor(){
         this.email = "";
@@ -47,19 +48,19 @@ export class Proprietary implements InteractionBddFirestore {
                 this.uid = proprietary.uid;
             }
     }
-    getData(id: string | null, ...args: any[]) {
+    getData(id: string | null,  attrs: Array<string> | null, ...args: any[]) {
+        let _attrs = Object.keys(this);
+        let object:{[index:string]:any} = {};
         if(id){
             this.id = id;
         }
-        return {
-            email:this.email,
-            exigences:this.exigences,
-            id:this.id,
-            name:this.name,
-            record:this.record,
-            restaurant_number:this.restaurant_number,
-            uid:this.uid
+        if(attrs){
+            _attrs = attrs
         }
+        for(let attr of _attrs){
+            object[attr] = this[attr];
+        }
+        return object;
     }
     getInstance(): InteractionBddFirestore {
         return new Proprietary();

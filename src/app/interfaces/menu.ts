@@ -14,6 +14,7 @@ export class Cmenu implements InteractionBddFirestore{
     "ingredients": TIngredientBase[] | null;
     "etapes": Etape[] | null;
     "plats": CbasePlat[] | null;
+    [index:string]:any;
     
     /**
      * permet de transformer les donnée JSON récupérer depuis la bdd firestore en objet MENU
@@ -70,11 +71,13 @@ export class Cmenu implements InteractionBddFirestore{
      * @param id identifiant du menu dans la base de donnée
      * @returns {Object} JSON correspndant au menu 
      */
-    public  getData(id:string | null){
+    public  getData(id: string | null, attrs:Array<string> | null){
+        let _attrs = Object.keys(this);
         let ingredients:null | Array<Object> = null;
         let consommables:null | Array<Object> = null;
         let etapes:null | Array<Object> = null;
         let plats: null | Array<Object> = null;
+        let object:{[index:string]:any} = {};
         if(this.ingredients !== undefined){
             if(this.ingredients !== null){
                 ingredients = this.ingredients.map((ingredient) => ingredient.getData());
@@ -85,7 +88,7 @@ export class Cmenu implements InteractionBddFirestore{
         }
         if(this.consommables !== undefined){
             if(this.consommables !== null){
-                consommables = this.consommables.map((consommable) => consommable.getData());
+                consommables = this.consommables.map((consommable) => consommable.getData(null, null));
             }
         }
         else{
@@ -110,17 +113,33 @@ export class Cmenu implements InteractionBddFirestore{
         if(id !== null){
             this.id = id;
         }
-        return {
-            id: this.id,
-            name: this.name,
-            taux_tva: this.taux_tva,
-            cost: this.cost,
-            cost_ttc: this.cost_ttc,
-            consommables: consommables,
-            ingredients: ingredients,
-            plats: plats,
-            etapes: etapes
+        if(attrs){
+            _attrs = attrs
         }
+        for(let attr of _attrs){
+            if(attr === "etapes"){
+                object[attr] = etapes;
+            }
+            else{
+                if(attr === "plats"){
+                    object[attr] = plats;
+                }
+                else{
+                  if(attr === "ingredients"){
+                     object[attr] = ingredients;
+                  }
+                  else{
+                     if(attr === "consommables"){
+                        object[attr] = consommables;
+                     }
+                     else{
+                        object[attr] = this[attr]
+                     }
+                  }
+                }
+            }
+        }
+        return object;
     }
     /**
      * chemin vers l'ensemble des menus dans firestore

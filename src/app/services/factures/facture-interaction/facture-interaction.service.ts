@@ -54,7 +54,7 @@ export class FactureInteractionService {
       )).withConverter(this.facture_converter);
     facture.id = facture_ref.id;
     facture.creatPath(proprietaire_id);
-    return setDoc(facture_ref, facture.getData()).then(() => {
+    return setDoc(facture_ref, facture.getData(null,null)).then(() => {
       return facture;
     });
   }

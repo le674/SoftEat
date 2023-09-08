@@ -15,6 +15,7 @@ export class FecTableComponent implements OnInit {
 @Input() records:Array<Record>;
 @Input() columns:Array<string>;
 @Input() accounts:Array<Account>;
+@Input() prop:string;
 public  panelOpenState = false;
 public index_record:Array<string>;
 /* public dataSource: MatTableDataSource<RowFec>;
@@ -25,6 +26,7 @@ public index_record:Array<string>;
     this.columns = [];
     this.accounts = [];
     this.index_record = RowFec.getKeys();
+    this.prop = "";
   }
   ngOnInit(): void {
   }
@@ -36,7 +38,8 @@ public index_record:Array<string>;
         width: "600px",
         data:{
           record:rec_num,
-          accounts:this.accounts
+          accounts:this.accounts,
+          prop:this.prop
         }
       }); 
     }
@@ -48,7 +51,8 @@ public index_record:Array<string>;
         height: "900px",
         width: "600px",
         data:{
-          record:rec_num
+          record:rec_num,
+          prop:this.prop
         }
       }); 
     }

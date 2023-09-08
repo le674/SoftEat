@@ -138,40 +138,29 @@ export class Employee implements InteractionBddFirestore {
      * Permet d'envoyer dans la bdd une instance d'employé sous la forme d'un JSON
      * @returns un JSON qui représente l'employée
      */
-    public getData(id:string | null): any {
+    public getData(id: string | null, attrs:Array<string> | null, ...args: any[]): any {
       const convPrivee = this.email.split("@")[0] + "_" + this.surname + "_" + this.name;
-       if(id !== null){
+      let _attrs = Object.keys(this);
+      let address = null;
+      if(attrs){
+        _attrs = attrs
+      }
+      if(id !== null){
         this.id = id;
        }
-       let address = null;
-       if(this.address !== null){
-        address = {
-          postal_code: this.address.postal_code,
-          street_number: this.address.street_number,
-          city: this.address.city,
-          street: this.address.street
-        }
-       }
-       return {
-          id: this.id,
-          time_work:this.time_work,
-          address: this.address,
-          proprietary_id: this.proprietary_id,
-          service:this.service,
-          auth_rh:this.auth_rh,
-          current_restaurant: this.current_restaurant,
-          email: this.email,
-          name: this.name,
-          number: this.number,
-          roles: this.roles,
-          surname: this.surname,
-          uid: this.uid,
-          user_id: this.user_id,
-          convPrivee: convPrivee,
-          calendar:this.calendar,
-          notifConversations: this.notifConversations,
-          statut: this.statut.getData()
-         }
+      if(this.address !== null){
+       address = this.address.getData(null, null);
+      }
+      let object:{[index:string]:any} = {};
+      for(let attr of _attrs){
+          if(attr !== "address"){
+            object[attr] = this[attr];
+          }
+          else{
+            object[attr] = address;
+          }
+      }
+      return object;
     }
     /**
       * permet de copier un JSON employee dans une instance de la classe employée
