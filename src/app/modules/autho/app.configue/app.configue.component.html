@@ -39,7 +39,7 @@
           [attr.aria-labelledby]="'heading_' + statut.split(' ')[0]" data-bs-parent="#accordionExample">
           <div class="accordion-body">
             <div>
-              <table *ngIf="!windows_screen_mobile" #table mat-table [dataSource]="getDataSource(i)"
+              <table #table *ngIf="!windows_screen_mobile" mat-table [dataSource]="getDataSource(i)"
                 class="mat-elevation-z8">
                 ID Column
                 <ng-container matColumnDef="id">

@@ -3,30 +3,31 @@ import { InteractionBddFirestore } from "./interaction_bdd";
 import { Restaurant } from "./restaurant";
 
 export class User implements InteractionBddFirestore {
-  public "email":string;
-  public "id":string | null;
-  public "proprietary_id":string | null
+  public "email": string;
+  public "id": string | null;
+  public "proprietary_id": string | null
   public "related_restaurants": Array<{
-      proprietaire_id:string,
-      restaurant_id:string
+    proprietaire_id: string,
+    restaurant_id: string
 
   }> | null;
-  public "uid":string;
-  public "id_employee":string | null;
+  public "uid": string;
+  public "id_employee": string | null;
+  [index: string]: any
 
-  constructor(){
+  constructor() {
   }
   /**
      * chemin vers l'ensemble des utilisateurs de l'application
   */
   public static getPathsToFirestore(): string[] {
-      return ["clients"]
+    return ["clients"]
   }
   /**
    * Cette fonction permet de copier un json de la base de donnée à une instance actueld de user
    * @param user user récupéré depuis la bdd à ajouter à l'instance actuel
    */
-  public setData(user:User) {
+  public setData(user: User) {
     this.email = user.email;
     this.id = user.id;
     this.id_employee = user.id_employee;
@@ -34,18 +35,19 @@ export class User implements InteractionBddFirestore {
     this.related_restaurants = user.related_restaurants;
     this.uid = user.uid;
   }
-  public getData(id: string | null) {
-    if(id){
+  public getData(id: string | null, attrs: Array<string> | null) {
+    let _attrs = Object.keys(this);
+    let object: { [index: string]: any } = {};
+    if (attrs) {
+      _attrs = attrs
+    }
+    if (id) {
       this.id = id;
     }
-   return {
-    email: this.email,
-    id: this.id,
-    proprietary_id: this.proprietary_id,
-    related_restaurants: this.related_restaurants,
-    uid: this.uid,
-    id_employee: this.id_employee
-   };
+    for (let attr of _attrs) {
+      object[attr] = this[attr];
+    }
+    return object;
   }
   getInstance(): InteractionBddFirestore {
     return new User();
@@ -54,12 +56,12 @@ export class User implements InteractionBddFirestore {
 
 export class ShortUser {
   public "name": string;
-  public "email":string;
-  public "id":string;
+  public "email": string;
+  public "id": string;
   public "proprietaire": string;
   public "restaurants": string;
   public "roles": string;
-  public "row_roles":string;
+  public "row_roles": string;
   public "is_prop": boolean;
   public "alertes": string;
   public "analyse": string;
@@ -71,23 +73,23 @@ export class ShortUser {
   public "time_work": string;
   public "numero": string
 
-  restToString(restaurants: Array<Restaurant>){
+  restToString(restaurants: Array<Restaurant>) {
     let restau = restaurants.map((restaurant) => restaurant.name)
     this.restaurants = restau.toString()
   }
 
-  restToList(){
+  restToList() {
     return this.restaurants.split(',')
   }
 
-  rolesToString(roles:string[]){
-    this.row_roles= roles.toString()
+  rolesToString(roles: string[]) {
+    this.row_roles = roles.toString()
   }
-  rolesToList(){
+  rolesToList() {
     return this.roles.split(',');
   }
-  setRowUser(employee:Employee, roles:(string | string[])[], restaurants:Array<Restaurant>){
-    if(employee.id !== null) this.id = employee.id;
+  setRowUser(employee: Employee, roles: (string | string[])[], restaurants: Array<Restaurant>) {
+    if (employee.id !== null) this.id = employee.id;
     this.email = employee.email;
     this.row_roles = roles.toString();
     this.restToString(restaurants);

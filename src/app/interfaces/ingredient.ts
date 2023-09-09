@@ -141,6 +141,7 @@ export class CIngredient implements InteractionBddFirestore {
     "base_ingredient_id": Array<string> | null;
     "id": string;
     "proprietary_id": string;
+    [index:string]:any;
     constructor(public service: CalculService) {
         this.name = "";
         this.categorie_restaurant = "";
@@ -247,32 +248,37 @@ export class CIngredient implements InteractionBddFirestore {
      * permet de récupérer un objet constituant l'ingrédient à écrire en base de donnée
      * @returns {Object} ingrédient sous forme d'objet
     */
-    public getData(id:string | null): any {
+    public getData(id: string | null, attrs:Array<string> | null): any {
+        let _attrs = Object.keys(this);
+        let date_reception = "";
+        let dlc = "";
+        let object:{[index:string]:any} = {};
+        if(this.date_reception instanceof Date){
+            date_reception = this.date_reception.toISOString();
+        }
+        if(this.dlc instanceof Date){
+             dlc = this.dlc.toISOString();
+        }
         if(id !== null){
             this.id = id;
         }
-        if (this.base_ingredient_id === undefined) {
-            this.base_ingredient_id = null;
+        if(attrs){
+            _attrs = attrs
         }
-        return {
-            name: this.name,
-            cost: this.cost,
-            cost_ttc: this.cost_ttc,
-            id: this.id,
-            base_ingredient_id: this.base_ingredient_id,
-            categorie_restaurant: this.categorie_restaurant,
-            categorie_tva: this.categorie_tva,
-            taux_tva: this.taux_tva,
-            date_reception: this.date_reception.toLocaleString(),
-            dlc: this.dlc?.toLocaleString(),
-            marge: this.marge,
-            quantity: this.quantity,
-            unity: this.unity,
-            total_quantity: this.total_quantity,
-            quantity_unity: this.quantity_unity,
-            proprietary_id: this.proprietary_id,
-            vrac: this.vrac
+        for(let attr of _attrs){
+            if(attr === "date_reception"){
+                object[attr] = date_reception;
+            }
+            else{
+                if(attr === "dlc"){
+                    object[attr] = dlc;
+                }
+                else{
+                    object[attr] = this[attr];
+                }
+            }
         }
+        return object;
     }
     /**
      * Cette fonction permet de retourner un objet  qui permet l'intéraction entre la base de donnée et l'objet  ingrédient

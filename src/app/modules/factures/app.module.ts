@@ -21,7 +21,8 @@ import { ModifIngComponent } from './app.factures/app.factures.modif/modif.ing/m
 import { MatListModule } from '@angular/material/list';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { FoldersComponent } from './app.archi/app.archi.folders/folders.component';
-import { AppArchiFilesComponent } from './app.archi/app.archi.files/app.archi.files.component'; 
+import { AppArchiFilesComponent } from './app.archi/app.archi.files/app.archi.files.component';
+import { AppFacturesInfosComponent } from './app.factures/app.factures.infos/app.factures.infos.component'; 
 @NgModule({
   declarations: [
     ModifIngComponent,
@@ -29,7 +30,8 @@ import { AppArchiFilesComponent } from './app.archi/app.archi.files/app.archi.fi
     AppArchiComponent,
     FactureLoadComponent,
     FoldersComponent,
-    AppArchiFilesComponent
+    AppArchiFilesComponent,
+    AppFacturesInfosComponent
   ],
   imports: [
     MatFormFieldModule,

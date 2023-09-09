@@ -1,0 +1,84 @@
+<div class="inputs-containers">
+    <button (click)="closePopup($event)" mat-mini-fab type="button" id="close_popup" color="white" matTooltip="fermer la fenêtre"
+    aria-label="close popup">
+    <i class="fa-regular fa-xmark"></i>
+    </button>
+</div>
+<form [formGroup]="modif_form" (ngSubmit)="changeRecord()">
+    <div class="section">
+        <p class="title">Sélectionner un nom de journal</p>
+        <mat-form-field>
+            <mat-label>Sélectionner un nom de journal</mat-label>
+            <mat-select formControlName="journal_name">
+                <mat-option (onSelectionChange)="addJournal($event)" *ngFor="let journal of journals" [value]="journal.name">
+                    {{journal.label}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <p *ngIf="current_journal">
+            <span class="info">{{current_journal.name}} - </span>
+            {{current_journal.description}}
+        </p>
+    </div>
+    <div  class="section">
+        <p class="title">choisir un le montant débité</p>
+        <mat-form-field appearance="fill">
+            <mat-label>Modifier le montant débité</mat-label>
+            <input type="number" matInput formControlName="debit_ammount">
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p class="title">choisir un montant crédité</p>
+        <mat-form-field appearance="fill">
+            <mat-label>Modifier le montant crédité</mat-label>
+            <input type="number" matInput formControlName="credit_ammount">
+        </mat-form-field>
+    </div>
+    <div class="section-description">
+        <p class="title"> donner une description de la transaction</p>
+        <mat-form-field> 
+            <textarea matInput  placeholder="Comment"  formControlName="description">
+            </textarea>
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p class="title">quelle est le nom de la pièce justificatif</p>
+        <mat-form-field appearance="fill">
+            <mat-label>Modifier un nom</mat-label>
+            <input matInput formControlName="name">
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p class="title">quelle est la date de reception</p>
+        <mat-form-field>
+            <mat-label>Choisire une date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="reception_date">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <div class="section-accounts">
+        <p class="title">quelle sont les comptes pour comptabiliser la transaction</p>
+        <mat-form-field>
+            <mat-label>Modifier les comptes</mat-label>
+            <mat-select formControlName="accounts" multiple>
+                <mat-option (onSelectionChange)="printValue($event)"  *ngFor="let account of accounts" [value]="account.id">
+                    {{account.number}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <p class="infoBox" *ngFor="let account of _accounts"> 
+            <span class="info">{{account.number}} - </span>
+            <span class="sub-info">{{account.name}} - </span>
+            {{account.desc}}
+        </p>
+    </div>
+    <button mat-stroked-button type="submit" *ngIf="modification else ajout">
+        modification
+    </button>
+    <ng-template #ajout>
+        <button mat-stroked-button type="submit">
+            ajout
+        </button>
+    </ng-template>
+</form>

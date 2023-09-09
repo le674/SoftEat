@@ -7,6 +7,7 @@ export class TConsoBase {
     quantity: number | null;
     unity: string | null;
     id: Array<string>;
+    [index:string]:any;
     constructor(name: string, quantity: number | null, unity: string | null) {
         this.name = name;
         this.quantity = quantity;
@@ -37,13 +38,16 @@ export class TConsoBase {
      * retourne un consommable que l'on peut ajouter dans la base de donnée
      * @returns {TConsoBase} à ajouter dans la base de donnée
      */
-    public getData(): { name: string, quantity: number | null, unity: string | null, id: Array<string> | null } {
-        return {
-            name: this.name,
-            quantity: this.quantity,
-            unity: this.unity,
-            id: this.id
+    public getData(id: string | null,attrs:Array<string> | null):any {
+        let _attrs = Object.keys(this);
+        let object:{[index:string]:any} = {};
+        if(attrs){
+            _attrs = attrs
         }
+        for(let attr of _attrs){
+            object[attr] = this[attr];
+        }
+        return object;
     }
 
 }
@@ -95,24 +99,19 @@ export class Cconsommable implements InteractionBddFirestore {
      * @param prop identifiant d" l'enseigne qui possède le consommable
      * @returns {void}
      */
-    public getData(id:string | null): any {
-        if(id !== null){
+    public getData(id: string | null,attrs:Array<string> | null): any {
+        let _attrs = Object.keys(this);
+        let object:{[index:string]:any} = {};
+        if(attrs){
+            _attrs = attrs
+        }
+        if(id){
             this.id = id;
         }
-        return {
-            categorie_restaurant: this.categorie_restaurant,
-            name: this.name,
-            cost: this.cost,
-            cost_ttc: this.cost_ttc,
-            id: this.id,
-            proprietary_id: this.proprietary_id,
-            taux_tva: this.taux_tva,
-            date_reception: this.date_reception.toLocaleString(),
-            marge: this.marge,
-            quantity: this.quantity,
-            unity: this.unity,
-            total_quantity: this.total_quantity,
+        for(let attr of _attrs){
+            object[attr] = this[attr];
         }
+        return object;
     }
     /**
      * cette fonction permet de construire un consommable à partir du JSON de la

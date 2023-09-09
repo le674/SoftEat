@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <div id="top-section">
+      <button mat-stroked-button>
+          exporter le tableau au format text
+      </button>
+    </div>
+    <div #accordeon [ngStyle]="{'max-width.px': this.mobile_service.accordeonMaxWidth()}" class="accordion">
+        <div class="accordion-item" *ngFor="let record of row_fec; let i = index;">
+          <h2 class="accordion-header" [id]="'heading_' + record.id">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              [attr.data-bs-target]="'#collapse_' +  record.id" [attr.aria-controls]="'collapse_' +  record.id"
+              (click)="changeArrow(i)">
+              <div class="collapse-section">
+                <div id="title-content">
+                    <p>{{record.name}}</p>
+                    <p class="date"> {{record.date_reception}}</p>
+                </div>
+                <i [ngClass]="getVisible(i) ?  'fa-regular fa-angle-down':'fa-regular fa-angle-up'"></i>
+              </div>
+            </button>
+          </h2>
+          <div [id]="'collapse_' + record.id" class="accordion-collapse collapse"
+            [attr.aria-labelledby]="'heading_' + record.id" data-bs-parent="#accordionExample">
+            <div class="accordion-body collapse in">
+              <div>
+                <mat-list role="list" *ngFor="let column of columns;let ind=index">
+                    <mat-list-item role="listitem">
+                        <span class="categorie">{{column}}</span>
+                    </mat-list-item>
+                    <mat-list-item role="listitem" [ngClass]="column === 'Lettrage' ? 'lettrage' : ''">
+                        {{record[index_record[ind]]}}
+                    </mat-list-item>
+                    <div id="add-lettrage">
+                      <button *ngIf="column === 'Lettrage'" mat-mini-fab (click)="openSenderInfo(record)" id="lettrage-button" matTooltip="changer le lettrage">
+                        <i class="fa-regular fa-pen"></i>
+                      </button>
+                    </div>
+                </mat-list>
+                <i id="open-modif-form" class="fa-regular fa-pen action_table  fa-lg" (click)="modifRecord(record)"></i>                  
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div id="button-section">
+      <button mat-fab class="plus-fab" type="button" matTooltip="ajouter un enregistrement"
+      aria-label="ajouter un enregistrement" (click)="addRecord()">
+          <i class="fa-regular fa-plus"></i>
+      </button>
+    </div> 
+</html>

@@ -1,0 +1,62 @@
+<form [formGroup]="add_facture_infos" (ngSubmit)="submitInfo()">
+    <div class="section">
+        <p class="title">Entrer le nom du fournisseur de la facture</p>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer le nom du fournisseur</mat-label>
+            <input matInput formControlName="name" placeholder="Ex. asperge">
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p class="title">Entrer le montant total crédité</p>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer le montant total crédité</mat-label>
+            <input matInput formControlName="cost" type="number" placeholder="Ex. asperge">
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p class="title">Quelle est la nature du document reçu</p>
+        <mat-form-field appearance="fill">
+            <mat-label>Quelle est la nature du document reçu</mat-label>
+            <mat-select formControlName="nature">
+                <mat-option *ngFor="let doc of natures" [value]="doc">
+                    {{doc}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p class="title">Entrer le numéro d'identification</p>
+        <mat-form-field appearance="fill">
+            <mat-label>Entrer le numéro d'identification</mat-label>
+            <input matInput formControlName="id" placeholder="Ex. 012334">
+        </mat-form-field>
+    </div>
+    <div class="section">
+        <p class="title">Choisir des comptes fournisseur associés à la facture</p>
+        <ng-container formArrayName="accounts_number">
+            <div *ngFor="let item of add_facture_infos.controls.accounts_number.controls;let i=index">
+                <ng-container [formGroupName]="i">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Entrer un compte</mat-label>
+                        <input matInput formControlName="account_number" placeholder="Ex. 012334">
+                    </mat-form-field>
+                </ng-container>
+            </div>
+        </ng-container>
+        <div id="button-section">
+            <div class="inputs-containers">
+                <button mat-mini-fab class="plus-fab" type="button" matTooltip="ajout d'un compte"
+                aria-label="ajout d'un compte" (click)="updateAccount(true)">
+                    <i class="fa-regular fa-plus"></i>
+                </button>
+            </div>
+            <div class="inputs-containers">
+                <button mat-mini-fab class="close-fab" type="button" matTooltip="supprimer d'un compte"
+                aria-label="supprimer un compte" (click)="updateAccount(false)">
+                    <i class="fa-regular fa-minus"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <button id="bottom-button" mat-stroked-button type="submit"> Modifier </button>
+</form>

@@ -29,7 +29,6 @@
                         <i class="fa fa-paper-plane">
                             <span class="befor" [matBadge]="alert_num"  [matBadgeHidden]="hidden" matBadgeColor="accent"></span>
                         </i>
-                        <span class="name">Messages</span>
                     </a>
                     <!-- <i class='bx bxs-chevron-down'></i> -->
                 </div>
@@ -44,7 +43,6 @@
                 <div class="title">
                     <a (click)="clickProfil()" class="link">
                         <i class="fa-solid fa-user"></i>
-                        <span class="name">Profil</span>
                     </a>
                     <!-- <i class='bx bxs-chevron-down'></i> -->
                 </div>
@@ -52,22 +50,20 @@
                     <a class="link submenu-title">Profil</a>
                 </div>
             </li>
-
             <!-- -------- Dropdown List Item ------- -->
             <!--================Section Caisse enregistreuse==============-->
             <li class="dropdown">
                 <div class="title">
                     <a class="link">
-                        <i class="fas fa-cash-register"></i>
-                        <span class="name">Caisse</span>
+                        <i id="caisse-id" class="fas fa-cash-register"></i>
                     </a>
                 </div>
-                <div class="submenu media">
+                <div id="caisse-div" class="submenu">
                     <a class="link submenu-title">Caisse enregistreuse</a>
                     <a class="link" (click)="clickSalle()">Commandes salle</a>
                     <a class="link" (click)="clickTerrasse()">Commandes terrasse</a>
                     <a class="link" (click)="clickCenLigne()">Commandes en ligne</a>
-                    <a class="link" (click)="clickHistCommandes()">historique des commandes</a>
+                    <a class="link" (click)="clickFec()">Génération des fichiers décritures comptables</a>
                 </div>
             </li>
 
@@ -75,12 +71,11 @@
             <!--================Section Inventaires==============-->
             <li class="dropdown">
                 <div class="title">
-                    <a class="multi-section">
-                        <i class="fa-solid fa-boxes-stacked"></i>
-                        <span class="name">Inventaire</span>
+                    <a class="link">
+                        <i id="inventory-id" class="fa-solid fa-boxes-stacked"></i>
                     </a> 
                 </div>
-                <div class="submenu media">
+                <div id="inventory-div" class="submenu">
                     <a class="link submenu-title">Inventaire</a>
                     <a class="link" (click)="clickIngredients()">Ingrédients</a>
                     <a class="link" (click)="clickConso()">Consommables</a>
@@ -93,11 +88,10 @@
             <li class="dropdown">
                 <div class="title">
                     <a class="link">
-                        <i class="fa-solid fa-utensils"></i>
-                        <span class="name">Recettes</span>
+                        <i id="receip-id" class="fa-solid fa-utensils"></i>
                     </a>
                 </div>
-                <div class="submenu media">
+                <div id="receip-div" class="submenu">
                     <a class="link submenu-title">Recettes</a>
                     <a class="link" (click)="clickMenu()">Menus</a>
                     <a class="link" (click)="clickPlats()">Plats</a>
@@ -111,7 +105,6 @@
                 <div class="title">
                     <a class="link">
                         <i class="fa-regular fa-users"></i>
-                        <span class="name">CLients</span>
                     </a>
                 </div>
             </li>
@@ -120,11 +113,10 @@
             <li class="dropdown">
                 <div class="title">
                     <a class="link">
-                        <i class="fa-solid fa-chart-line"></i>
-                        <span class="name">Analyse</span>
+                        <i id="analyse-id" class="fa-solid fa-chart-line"></i>
                     </a>
                 </div>
-                <div class="submenu">
+                <div id="analyse-div" class="submenu">
                     <a class="link submenu-title">Analyse</a>
                     <a class="link" (click)="clickCAnalyseStock()">Stock</a>
                     <a class="link" (click)="clickAnalyseFreq()">Fréquentation</a>
@@ -141,7 +133,6 @@
                 <div class="title">
                     <a (click)="clickCompta()" class="link">
                         <i class="fa-solid fa-chart-pie"></i>
-                        <span class="name">Comptabilité</span>
                     </a>
                 </div>
                 <div class="submenu">
@@ -151,14 +142,13 @@
 
             <!-- -------- Dropdown List Item ------- -->
             <!--================Section Factures==============-->
-            <li class="dropdown">
+            <li class="dropdown" >
                 <div class="title">
                     <a class="link">
-                        <i class="fa-solid fa-book-open"></i>
-                        <span class="name">Factures</span>
+                        <i id="facture-id" class="fa-solid fa-book-open"></i>
                     </a>
                 </div>
-                <div class="submenu">
+                <div id="facture-div" class="submenu">
                     <a class="link submenu-title">Factures</a>
                     <a class="link" (click)="clickScFactures()">Scan des factures</a>
                     <a class="link" (click)="clickArchi()">Archivage</a>
@@ -170,7 +160,6 @@
                 <div class="title">
                     <a (click)="clickRH()" class="link">
                         <i class="fa-solid fa-calendar-days"></i>
-                        <span class="name">Ressources Humaines</span>
                     </a>
                 </div>
                 <div class="submenu">

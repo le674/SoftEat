@@ -5,6 +5,7 @@ export class Address implements InteractionBddFirestore{
     public street_number: number | null;
     public city: string;
     public street: string | null;
+    [index:string]:any
     constructor(postal_code:string | null, street_number:number | null, city:string, street:string | null){
         this.postal_code = postal_code;
         this.street_number = street_number;
@@ -26,13 +27,16 @@ export class Address implements InteractionBddFirestore{
      * @param id toujours null
      * @returns {Object} objet address
      */
-    getData(id: string | null, ...args: any[]) {
-        return {
-            postal_code: this.postal_code,
-            street: this.street,
-            street_number:this.street_number,
-            city: this.city
+    getData(id: string | null, attrs:Array<string> | null,...args: any[]) {
+        let _attrs = Object.keys(this);
+        let object: { [index: string]: any } = {};
+        if (attrs) {
+          _attrs = attrs
         }
+        for (let attr of _attrs) {
+          object[attr] = this[attr];
+        }
+        return object;
     }
     getInstance(): InteractionBddFirestore {
         throw new Error("Method not implemented.");

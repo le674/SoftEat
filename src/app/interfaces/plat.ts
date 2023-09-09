@@ -24,7 +24,7 @@ export class Cplat implements InteractionBddFirestore{
     "time":number | null;
     "proprietary_id":string;
     "id":string;
-
+    [index:string]:any;
     constructor(){
         this.unity = '';
         this.type = '';
@@ -151,7 +151,9 @@ export class Cplat implements InteractionBddFirestore{
      * @param prop id de l'enseigne
      * @returns {Object} objet qui représente le plat
     */
-    public getData(id:string | null): Object {
+    public getData(id: string | null, attrs:Array<string> | null): Object {
+        let _attrs = Object.keys(this);
+        let object:{[index:string]:any} = {};
         let preparations:null | Array<Object> = null;
         let ingredients:null | Array<Object> = null;
         let consommables:null | Array<Object> = null;
@@ -160,7 +162,7 @@ export class Cplat implements InteractionBddFirestore{
             ingredients = this.ingredients.map((ingredient) => ingredient.getData());
         }
         if((this.consommables !== null) && (this.ingredients !== undefined)){
-            consommables = this.consommables?.map((consommable) => consommable.getData());
+            consommables = this.consommables?.map((consommable) => consommable.getData(null,null));
         }
         if((this.etapes !== null) && (this.etapes !== undefined)){
             etapes = this.etapes.map((etape) => etape.getData());
@@ -171,27 +173,35 @@ export class Cplat implements InteractionBddFirestore{
         if (id !== null) {
             this.id = id;
         }   
-        return {
-            name: this.name,
-            categorie_restaurant: this.categorie_restaurant,
-            etapes: etapes,
-            ingredients: ingredients,
-            consommables: consommables,
-            preparations: preparations,
-            time: this.time,
-            cost: this.cost,
-            portions: this.portions,
-            unity: this.unity,
-            category: this.category,
-            taux_tva: this.taux_tva,
-            type: this.type,
-            portion_cost: this.portion_cost,
-            material_ratio: this.material_ratio,
-            prime_cost: this.prime_cost,
-            material_cost: this.material_cost,
-            proprietary_id: this.proprietary_id,
-            id: this.id
+        if(attrs){
+            _attrs = attrs
         }
+        for(let attr of _attrs){
+            if(attr === "etapes"){
+                object[attr] = etapes;
+            }
+            else{
+                if(attr === "preparations"){
+                    object[attr] = preparations;
+                }
+                else{
+                  if(attr === "ingredients"){
+                     object[attr] = ingredients;
+                  }
+                  else{
+                     if(attr === "consommables"){
+                        object[attr] = consommables;
+                     }
+                     else{
+                        object[attr] = this[attr]
+                     }
+                  }
+                }
+            }
+        }
+        return object;
+
+
     }
    /**
     * permet de générer une autre instance de l'objet plat

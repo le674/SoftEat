@@ -38,6 +38,7 @@ export class Cpreparation implements InteractionBddFirestore {
     "is_stock": boolean;
     "id": string;
     "proprietary_id": string;
+    [index: string]: any
 
     constructor(public service: CalculService) {
         this.name = "";
@@ -70,7 +71,7 @@ export class Cpreparation implements InteractionBddFirestore {
      * permet de retourner une isntance de Cpreparation
      * @returns une instance Cpreparation
     */
-    getInstance(){
+    getInstance() {
         return new Cpreparation(this.service) as Cpreparation;
     }
     // permet d'initialiser certain attributs pour l'objet préparation lorsque celui-ci a des attributs null
@@ -88,13 +89,13 @@ export class Cpreparation implements InteractionBddFirestore {
      * @param restaurant restaurant qui possède les préparations
      */
     public static getPathsToFirestore(proprietary_id: string, restaurant_id: string): string[] {
-        return ["proprietaires",proprietary_id, "restaurants", restaurant_id, "preparations"];
+        return ["proprietaires", proprietary_id, "restaurants", restaurant_id, "preparations"];
     }
     /**
      * Cette fonction permet dedupliquer une prépartion
      * @param data préparation à ajouter dans la base de donnée
      */
-    public setData(data: Cpreparation):void {
+    public setData(data: Cpreparation): void {
         let ingredients = new Array<TIngredientBase>();
         let consommables = new Array<TConsoBase>();
         if (data.ingredients !== null && data.ingredients !== undefined) {
@@ -109,7 +110,7 @@ export class Cpreparation implements InteractionBddFirestore {
                 return _ingredient;
             });
         }
-        if (data.consommables !== null && data.consommables !== undefined){
+        if (data.consommables !== null && data.consommables !== undefined) {
             consommables = data.consommables.map((consommable) => {
                 let _consommable: TConsoBase = new TConsoBase(
                     consommable.name,
@@ -119,17 +120,17 @@ export class Cpreparation implements InteractionBddFirestore {
                 return _consommable;
             })
         }
-        if(data.name !== undefined){
+        if (data.name !== undefined) {
             this.name = data.name;
         }
-        if(data.categorie_restaurant !== undefined){
+        if (data.categorie_restaurant !== undefined) {
             this.categorie_restaurant = data.categorie_restaurant;
         }
-        if(data.id !== undefined){
+        if (data.id !== undefined) {
             this.id = data.id;
         }
         if (typeof data.date_reception === "string") {
-            
+
             const date_reception = this.service.stringToDate(data.date_reception);
             if (date_reception !== null) {
                 this.date_reception = date_reception;
@@ -139,7 +140,7 @@ export class Cpreparation implements InteractionBddFirestore {
             }
         }
         else {
-            if(data.date_reception !== undefined){
+            if (data.date_reception !== undefined) {
                 this.date_reception = data.date_reception;
             }
         }
@@ -153,93 +154,93 @@ export class Cpreparation implements InteractionBddFirestore {
             }
         }
         else {
-            if(data.dlc !== undefined){
+            if (data.dlc !== undefined) {
                 this.dlc = data.dlc;
             }
         }
-        if(data.etapes !== undefined){
+        if (data.etapes !== undefined) {
             this.etapes = data.etapes;
         }
-        if(data.ingredients !== undefined){
-            for(let ingredient of ingredients){
-                if(ingredient.added_price === undefined){
+        if (data.ingredients !== undefined) {
+            for (let ingredient of ingredients) {
+                if (ingredient.added_price === undefined) {
                     ingredient.added_price = null;
                 }
-                if(ingredient.id === undefined){
+                if (ingredient.id === undefined) {
                     ingredient.id = [];
                 }
-                if(ingredient.name === undefined){
+                if (ingredient.name === undefined) {
                     ingredient.name = "";
                 }
-                if(ingredient.quantity === undefined){
+                if (ingredient.quantity === undefined) {
                     ingredient.quantity = null;
                 }
-                if(ingredient.unity === undefined){
+                if (ingredient.unity === undefined) {
                     ingredient.unity = null;
                 }
             }
             this.ingredients = ingredients;
         }
-        if(data.consommables !== undefined){
-            for(let consommable of consommables){
-                if(consommable.id === undefined){
+        if (data.consommables !== undefined) {
+            for (let consommable of consommables) {
+                if (consommable.id === undefined) {
                     consommable.id = [];
-                } 
-                if(consommable.name === undefined){
+                }
+                if (consommable.name === undefined) {
                     consommable.name = "";
                 }
-                if(consommable.quantity === undefined){
+                if (consommable.quantity === undefined) {
                     consommable.quantity = null;
                 }
-                if(consommable.unity === undefined){
+                if (consommable.unity === undefined) {
                     consommable.unity = null;
                 }
             }
             this.consommables = consommables;
         }
-        if(data.marge !== undefined){
+        if (data.marge !== undefined) {
             this.marge = data.marge;
         }
-        if(data.material_cost !== undefined){
+        if (data.material_cost !== undefined) {
             this.material_cost = data.material_cost;
         }
-        if(data.portions !== undefined){
+        if (data.portions !== undefined) {
             this.portions = data.portions;
         }
-        if(data.prime_cost !== undefined){
+        if (data.prime_cost !== undefined) {
             this.prime_cost = data.prime_cost;
         }
-        if(data.quantity !== undefined){
+        if (data.quantity !== undefined) {
             this.quantity = data.quantity;
         }
-        if(data.unity !== undefined){
+        if (data.unity !== undefined) {
             this.unity = data.unity;
         }
-        if(data.quantity_after_prep !== undefined){
+        if (data.quantity_after_prep !== undefined) {
             this.quantity_after_prep = data.quantity_after_prep;
         }
-        if(data.quantity_bef_prep !== undefined){
+        if (data.quantity_bef_prep !== undefined) {
             this.quantity_bef_prep = data.quantity_bef_prep;
         }
-        if(data.total_quantity !== undefined){
+        if (data.total_quantity !== undefined) {
             this.total_quantity = data.total_quantity;
         }
-        if(data.quantity_unity !== undefined){
+        if (data.quantity_unity !== undefined) {
             this.quantity_unity = data.quantity_unity;
         }
-        if(data.cost !== undefined){
+        if (data.cost !== undefined) {
             this.cost = data.cost;
         }
-        if(data.val_bouch !== undefined){
+        if (data.val_bouch !== undefined) {
             this.val_bouch = data.val_bouch;
         }
-        if(data.temps !== undefined){
+        if (data.temps !== undefined) {
             this.temps = data.temps;
         }
-        if(data.is_stock !== undefined){
+        if (data.is_stock !== undefined) {
             this.is_stock = data.is_stock;
         }
-        if(data.is_similar !== undefined){
+        if (data.is_similar !== undefined) {
             this.is_similar = data.is_similar;
         }
     }
@@ -249,50 +250,51 @@ export class Cpreparation implements InteractionBddFirestore {
      * @param id identifiant de l'objet à ajouter en base de donnée
      * @returns {any} json de l'objet Cpreparation
     */
-    public getData(id:string | null):any {
-
-        if(id !== null){
+    public getData(id: string | null, attrs: Array<string> | null): any {
+        let _attrs = Object.keys(this);
+        let object: { [index: string]: any } = {};
+        if (id !== null) {
             this.id = id;
         }
-        let ingredients:null | Array<Object> = null;
-        let consommables:null | Array<Object> = null;
-        let etapes:null | Array<Object> = null;
-        if((this.ingredients !== null) && (this.ingredients !== undefined)){
+        let ingredients: null | Array<Object> = null;
+        let consommables: null | Array<Object> = null;
+        let etapes: null | Array<Object> = null;
+        if ((this.ingredients !== null) && (this.ingredients !== undefined)) {
             ingredients = this.ingredients.map((ingredient) => ingredient.getData());
         }
-        if((this.consommables !== null) && (this.consommables !== undefined)){
-            consommables = this.consommables?.map((consommable) => consommable.getData());
+        if ((this.consommables !== null) && (this.consommables !== undefined)) {
+            consommables = this.consommables?.map((consommable) => consommable.getData(null, null));
         }
-        if((this.etapes !== null) && (this.etapes !== undefined)){
+        if ((this.etapes !== null) && (this.etapes !== undefined)) {
             etapes = this.etapes.map((etape) => etape.getData());
         }
-        return {
-            name: this.name,
-            categorie_restaurant: this.categorie_restaurant,
-            etapes: etapes,
-            temps: this.temps,
-            cost: this.cost,
-            quantity: this.quantity,
-            quantity_unity: this.quantity_unity,
-            total_quantity: this.total_quantity,
-            unity: this.unity,
-            marge: this.marge,
-            vrac: this.vrac,
-            portions: this.portions,
-            dlc: this.dlc.toLocaleString(),
-            date_reception: this.date_reception.toLocaleString(),
-            ingredients: ingredients,
-            consommables: consommables,
-            val_bouch: this.val_bouch,
-            prime_cost: this.prime_cost,
-            material_cost: this.material_cost,
-            quantity_bef_prep: this.quantity_bef_prep,
-            quantity_after_prep: this.quantity_after_prep,
-            is_similar: this.is_similar,
-            is_stock: this.is_stock,
-            proprietary_id: this.proprietary_id,
-            id: this.id
+        if (attrs) {
+            _attrs = attrs
         }
+        for (let attr of _attrs) {
+            if (attr === "etapes") {
+                object[attr] = etapes;
+            }
+            else {
+                if (attr === "ingredients") {
+                    object[attr] = ingredients;
+                }
+                else {
+                    if (attr === "consommables") {
+                        object[attr] = consommables;
+                    }
+                    else {
+                        if(attr === "dlc"){
+                            object[attr] = this.dlc.toISOString();
+                        }
+                        else{
+                            object[attr] = this[attr]
+                        }
+                    }
+                }
+            }
+        }
+        return object;
     }
     /**
      * Convertion de la préparation en préparation de base
@@ -310,23 +312,23 @@ export class Cpreparation implements InteractionBddFirestore {
      * Cette fonction permet de retourner un objet  qui permet l'intéraction entre la base de donnée et l'objet  
      * @returns {any} convertisseur de la preparation pour l'ajout en base 
      */
-    public static getConverter(service:CalculService):any{
+    public static getConverter(service: CalculService): any {
         return {
-            toFirestore: (preparation:Cpreparation) => {
-              return preparation;
-            },
-            fromFirestore: (snapshot:DocumentSnapshot<Cpreparation>, options:SnapshotOptions) => {
-              const data = snapshot.data(options);
-              if(data !== undefined){
-                let preparation = new Cpreparation(service);
-                preparation.setData(data)
+            toFirestore: (preparation: Cpreparation) => {
                 return preparation;
-              }
-              else{
-                return null;
-              }
-            } 
-          }
+            },
+            fromFirestore: (snapshot: DocumentSnapshot<Cpreparation>, options: SnapshotOptions) => {
+                const data = snapshot.data(options);
+                if (data !== undefined) {
+                    let preparation = new Cpreparation(service);
+                    preparation.setData(data)
+                    return preparation;
+                }
+                else {
+                    return null;
+                }
+            }
+        }
     }
 }
 
@@ -338,34 +340,34 @@ export class CpreparationBase {
      * permet de convertir l'instance de la classe en objet pour ajout dans la bdd
      * @returns {Object} objet CpreparationBase
      */
-    public getData():Object {
+    public getData(): Object {
         return {
             name: this.name,
             portions: this.portions,
-            id:this.id
+            id: this.id
         }
     }
     /**
      * permet de copier une instance de la classe CpreparationBase à cette instance
      * @param preparation préparationque l'on copie
      */
-    public setData(preparation:CpreparationBase){
-        if(preparation.id !== undefined){
+    public setData(preparation: CpreparationBase) {
+        if (preparation.id !== undefined) {
             this.id = preparation.id;
         }
-        else{
+        else {
             this.id = null;
         }
-        if(preparation.name !== undefined){
+        if (preparation.name !== undefined) {
             this.name = preparation.name;
         }
-        else{
+        else {
             this.name = null;
         }
-        if(preparation.portions !== undefined){
+        if (preparation.portions !== undefined) {
             this.portions = preparation.portions;
         }
-        else{
+        else {
             this.portions = null;
         }
     }

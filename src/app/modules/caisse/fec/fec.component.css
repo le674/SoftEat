@@ -1,0 +1,10 @@
+h1{
+    margin-top: 50px;
+    font-weight: normal;
+    color: rgb(125, 181, 46);
+}
+body{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}

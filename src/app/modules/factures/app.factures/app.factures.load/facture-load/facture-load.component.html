@@ -7,12 +7,13 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="first-container">
+    <div id="first-container" *ngIf="!form">
         <div id="spinner-container">
             <i class="fa-solid fa-check" *ngIf="!load"></i>
             <mat-spinner diameter="200" *ngIf="load"></mat-spinner>    
         </div>
     </div>
+    <app-factures-infos [prop]="this.data.prop" [file]="this.data.file" [facture]="this.data.facture" (myEvent)="endPopup($event)" *ngIf="form"></app-factures-infos>
 </body>
 </html>
 

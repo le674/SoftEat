@@ -240,8 +240,8 @@ export class AppFacturesComponent implements OnInit {
         facture.extension = extension; 
         facture.name = name;
         const dialog_ref = this.dialog.open(FactureLoadComponent,{
-          height: "400px",
-          width: "400px",
+          height: "780px",
+          width: "700px",
           data: {
             url:  null,
             type: "archive-facture",

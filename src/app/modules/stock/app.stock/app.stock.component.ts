@@ -5,14 +5,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/auth';
-import {Subscription, throwError } from 'rxjs';
+import {Subscription } from 'rxjs';
 import { CIngredient } from '../../../../app/interfaces/ingredient';
 import { CalculService } from '../../../../app/services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { AddIngComponent } from './app.stock.modals/add-ing/add.ing/add.ing.component';
 import { CommonService } from '../../../../app/services/common/common.service';
 import { RowIngredient } from 'src/app/interfaces/inventaire';
 import { FirebaseService } from 'src/app/services/firebase.service';
-import { InteractionBddFirestore } from 'src/app/interfaces/interaction_bdd';
 
 @Component({
   selector: 'app-stock',
@@ -32,7 +31,6 @@ export class AppStockComponent implements OnInit, OnDestroy{
   private page_number: number;
   private router: Router;
   private ingredient_table: Array<CIngredient>;
-/*   private ingredient_table_prep: Array<Cpreparation>; */
   private url: UrlTree;
   private prop: string;
   private restaurant: string;
@@ -88,7 +86,6 @@ export class AppStockComponent implements OnInit, OnDestroy{
               ingredient.getCostTtcFromCat();
             }
             else{
-              
               ingredient.getCostTtcFromTaux(); 
             }
             const name = ingredient.name.split(' ').join('<br>');
@@ -99,6 +96,7 @@ export class AppStockComponent implements OnInit, OnDestroy{
             const id = ingredient.id;
             let row_ingredient = new RowIngredient(name, cost, quantity, quantity_unity, unity, id);
             row_ingredient.setIngredient(ingredient);
+            row_ingredient.name = row_ingredient.name.split("<br>").join(" ");
             this.ingredients_displayed_br.push(row_ingredient);
             this.visibles.push(false);
             const first_event = new PageEvent();

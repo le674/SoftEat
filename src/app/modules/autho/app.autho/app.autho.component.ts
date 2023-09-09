@@ -35,7 +35,7 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
   private _user_subscription!:Subscription;
 
   constructor(private user_services : UserInteractionService, private auth: Auth,
-     private router: Router, public dialog: MatDialog, private tst_dialog:MatDialog, private serealizer: UrlSerializer,
+     private router: Router, public dialog: MatDialog,
      private restaurant_service:RestaurantService, public cache_service:CommonCacheServices){   
       this.uid = "";
       this.screen_width = window.innerWidth;

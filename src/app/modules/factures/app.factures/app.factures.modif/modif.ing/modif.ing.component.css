@@ -8,8 +8,6 @@ i{
     margin-bottom: 20px;
 }
 
-
-
 p{
     display: inline;
 }
@@ -17,7 +15,6 @@ p{
 #last{
     display: block;
 }
-
 .mat-stroked-button{
     color: rgb(125, 181, 46);
     background-color: white;
@@ -25,28 +22,23 @@ p{
     min-width: 96px;
     margin: 0;
 }
-
 .mat-stroked-button:hover{
     background-color: rgb(125, 181, 46);
     color: white;
 }
-
 .section {
     display: flex;
     justify-content: flex-start;
     align-items: center;
 }
-
 #old_ing{
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
 }
-
 mat-form-field{
     margin-left: 20px;
 }
-
 .selectSection{
     display: flex;
     justify-content: space-between;
@@ -56,17 +48,14 @@ mat-form-field{
 mat-radio-button{
   margin-right: 5px;
 }
-
 .mat-select {
     width: fit-content !important;
     min-width: 100%;
 }
-
 ::ng-deep .mat-form-field-infix {
     min-width: 120px !important;
     width: fit-content !important;
 }
-
 ::ng-deep .mat-select .mat-select-value {
     width: fit-content;
     min-width: 18ch;
