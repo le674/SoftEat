@@ -54,11 +54,9 @@ export class TableComponent {
     this.prop = this.url.queryParams["prop"];
     this.restaurant = this.url.queryParams["restaurant"];
     this.path_to_commandes = Ccommande.getPathsToFirestore(this.prop, this.restaurant, this.getTableId());
-
     this.req_commandes_brt = this.firestore.getFromFirestoreBDD(this.path_to_commandes, Ccommande, null);
-    this.commandes_brt_sub   = this.firestore.getFromFirestore().subscribe((commmande) => { 
-    this.commandes = this.commandes as Array<Ccommande>;
-    
+    this.commandes_brt_sub   = this.firestore.getFromFirestore().subscribe((commande) => { 
+      this.commandes = commande as Array<Ccommande>;
     })
     //console.log("commandes : "+this.commandes[0].id);
     //this.commandeNbr = this.commandes.length;
