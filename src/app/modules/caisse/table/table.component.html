@@ -10,4 +10,13 @@
     </div>
   </div>
   <button class="take-order-button" *ngIf="!tableOccupied && !isActive" (click)="takeOrder($event)">Prendre la commande</button>
+
+  <div class="popup" *ngIf="isPopupOpen">
+    <h2>Sélectionnez une commande :</h2>
+    <button *ngFor="let commande of commandeNbr" (click)="selectCommande(commande)">
+      Commande {{ commande }}
+    </button>
+    <button (click)="closePopup()">Fermer</button>
+  </div>
+
 </div>

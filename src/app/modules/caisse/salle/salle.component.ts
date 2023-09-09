@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Ctable } from 'src/app/interfaces/table';
+
 import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
-import { Ctable } from 'src/app/interfaces/table';
 import { FirebaseService } from 'src/app/services/firebase.service';
 
 interface Table {
