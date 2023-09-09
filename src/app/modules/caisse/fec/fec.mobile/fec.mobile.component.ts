@@ -49,6 +49,17 @@ export class FecMobileComponent implements OnInit {
       }); 
     }
   }
+  addRecord() {
+    const dialog_ref = this.dialog.open(FecModifRecordComponent,{
+      height: "900px",
+      width: "600px",
+      data:{
+        record:null,
+        accounts:this.accounts,
+        prop:this.prop
+      }
+    }); 
+  }
   openSenderInfo(_record:RowFec){
     const rec_num = this.records.find((record) => record.id === _record.id);
     if(rec_num){

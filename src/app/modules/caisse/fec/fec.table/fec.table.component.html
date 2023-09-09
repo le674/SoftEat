@@ -5,6 +5,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
     </head>
+    <div id="top-section">
+        <button mat-stroked-button>
+            exporter le tableau au format text
+        </button>
+    </div>
     <mat-accordion>
         <mat-expansion-panel *ngFor="let record of row_fec">
             <mat-expansion-panel-header>
@@ -33,4 +38,10 @@
             <i id="open-modif-form" class="fa-regular fa-pen action_table fa-xl" (click)="modifRecord(record)"></i>
         </mat-expansion-panel>
     </mat-accordion>
+    <div id="button-section">
+        <button mat-fab class="plus-fab" type="button" matTooltip="ajouter un enregistrement"
+        aria-label="ajouter un enregistrement" (click)="addRecord()">
+            <i class="fa-regular fa-plus"></i>
+        </button>
+    </div>
 </html>

@@ -27,9 +27,11 @@ export class FecModifRecordComponent implements OnInit {
   });
   public accounts:Array<Account>;
   public journals:Array<{name:string, label:string, description:string}>;
+  public current_journal:{name:string,label:string,description:string} | undefined;
+  public modification:boolean;
   constructor(private service:FirebaseService, public dialogRef: MatDialogRef<FecModifRecordComponent>,
     private _snackBar: MatSnackBar,@Inject(MAT_DIALOG_DATA) public data: {
-      record:Record,
+      record:Record | null,
       accounts:Array<Account>,
       prop:string
     }
@@ -37,20 +39,24 @@ export class FecModifRecordComponent implements OnInit {
     this.journals =  Journal.defaultJournal();
     this.accounts = this.data.accounts;
     this._accounts = [];
+    this.modification = false;
   }
   ngOnInit(): void {
-    const reception_date = new Date(this.data.record.reception_date);
-    const sended_date = new Date(this.data.record.send_date);
-    this.modif_form.controls.journal_name.setValue(this.data.record.journal_name);
-    this.modif_form.controls.debit_ammount.setValue(this.data.record.debit_ammount); 
-    this.modif_form.controls.credit_ammount.setValue(this.data.record.credit_ammount); 
-    this.modif_form.controls.description.setValue(this.data.record.description); 
-    this.modif_form.controls.name.setValue(this.data.record.name);
-    this.modif_form.controls.accounts.setValue(this.data.record.account_ids);   
-    this.modif_form.controls.reception_date.setValue(reception_date);
-    if(this.data.record.nature === 'facture'){
-      this.modif_form.controls.name.disable();
-    } 
+    if(this.data.record){
+      this.modification = true;
+      const reception_date = new Date(this.data.record.reception_date);
+      const sended_date = new Date(this.data.record.send_date);
+      this.modif_form.controls.journal_name.setValue(this.data.record.journal_name);
+      this.modif_form.controls.debit_ammount.setValue(this.data.record.debit_ammount); 
+      this.modif_form.controls.credit_ammount.setValue(this.data.record.credit_ammount); 
+      this.modif_form.controls.description.setValue(this.data.record.description); 
+      this.modif_form.controls.name.setValue(this.data.record.name);
+      this.modif_form.controls.accounts.setValue(this.data.record.account_ids);   
+      this.modif_form.controls.reception_date.setValue(reception_date);
+      if(this.data.record.nature === 'facture'){
+        this.modif_form.controls.name.disable();
+      } 
+    }
   }
   changeRecord() {
     const journal_name = this.modif_form.controls.journal_name.value;
@@ -62,7 +68,9 @@ export class FecModifRecordComponent implements OnInit {
     const accounts = this.modif_form.controls.accounts.value;
     let record = new Record();
     let facture = new Facture("", null);
-    record.setData(this.data.record);
+    if(this.data.record){
+      record.setData(this.data.record);
+    }
     facture.id = record.name;
     if(journal_name){
       record.journal_name = journal_name;
@@ -91,17 +99,30 @@ export class FecModifRecordComponent implements OnInit {
     if(accounts){
       record.account_ids = accounts;
     }
-    const conf = Transaction.changeRecord(this.data.prop, record, facture);
-    this.service.setFirestoreMultipleDataOnly(conf).then(() => {
-      console.log("write lettrage completed");
-    }).catch((err) => {
-      this._snackBar.open("impossible de modifier l'enrregistrement contacter softeat", "fermer");
-      this.dialogRef.close();
-      throw err;
-    }).then(() => {
-      this._snackBar.open("l'eregistrement vient d'être modifié", "fermer");
-      this.dialogRef.close();
-    }) 
+    if(this.data.record){
+      const conf = Transaction.changeRecord(this.data.prop, record, facture);
+      this.service.setFirestoreMultipleDataOnly(conf).then(() => {
+        console.log("update record completed");
+      }).catch((err) => {
+        this._snackBar.open("impossible de modifier l'enrregistrement contacter softeat", "fermer");
+        this.dialogRef.close();
+        throw err;
+      }).then(() => {
+        this._snackBar.open("l'enregistrement vient d'être modifié", "fermer");
+        this.dialogRef.close();
+      }) 
+    }
+    else{
+      const conf = Transaction.addRecord(this.data.prop);
+      this.service.setFirestoreMultipleData(record,conf).catch((err) => {
+        this._snackBar.open("impossible d'ajouter l'enrregistrement contacter softeat", "fermer");
+        this.dialogRef.close();
+        throw err;
+      }).then(() => {
+        this._snackBar.open("l'enregistrement vient d'être ajouté", "fermer");
+        this.dialogRef.close();
+      }) 
+    }
   }
   printValue($event: MatOptionSelectionChange<string>) {
     const _accounts = this.modif_form.controls.accounts.value;
@@ -117,6 +138,11 @@ export class FecModifRecordComponent implements OnInit {
           this._accounts = this._accounts.filter((account) => account.id !== _account.id);
         }
       }
+    }
+  }
+  addJournal($event: MatOptionSelectionChange<string>) {
+    if($event.source.selected){
+      this.current_journal = Journal.defaultJournal().find((journal) => journal.name === $event.source.value);
     }
   }
   closePopup($event: MouseEvent) {

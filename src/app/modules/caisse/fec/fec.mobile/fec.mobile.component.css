@@ -1,3 +1,32 @@
+.plus-fab:hover{
+    color: white;
+    background-color:rgb(125, 181, 46);
+}
+.plus-fab{
+    margin-top: 10px;
+    color:rgb(125, 181, 46);
+    background-color: white;
+}
+#button-section{
+    display: flex;
+    justify-content: flex-start;
+}
+#top-section{
+    display: flex;
+    justify-content: flex-start;
+}
+.mat-stroked-button{
+    color: rgb(125, 181, 46);
+    background-color: white;
+    height: 40px;
+    min-width: 96px;
+    margin: 0;
+    margin-bottom: 20px;
+}
+.mat-stroked-button:hover{
+    background-color: rgb(125, 181, 46);
+    color: white;
+}
 .accordion-item {
     margin-top: 1%;
  }

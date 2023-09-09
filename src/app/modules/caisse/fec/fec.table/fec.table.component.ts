@@ -57,4 +57,15 @@ public index_record:Array<string>;
       }); 
     }
   }
+  addRecord() {
+    const dialog_ref = this.dialog.open(FecModifRecordComponent,{
+      height: "900px",
+      width: "600px",
+      data:{
+        record:null,
+        accounts:this.accounts,
+        prop:this.prop
+      }
+    }); 
+  }
 }

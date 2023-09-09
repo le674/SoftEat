@@ -66,5 +66,5 @@ export type TransactionalWriteOnlyConf = {
     operation:((data:Array<InteractionBddFirestore> | null, ...result:any) => InteractionBddFirestore | null) | null,
     class:Class<InteractionBddFirestore> | null,
     instance:InteractionBddFirestore
-    attrs:Array<string>
+    attrs:Array<string> | null
 }

@@ -49,7 +49,7 @@ export class FecComponent implements OnInit, OnDestroy {
     this.unsubscrib_account();
     this.unsubscrib_record();
     this.sub_account.unsubscribe();
-    this.sub_record.unsubscribe();
+    this.sub_record.unsubscribe(); 
   }
   ngOnInit(): void {
     let end_date = new Date();
@@ -73,6 +73,7 @@ export class FecComponent implements OnInit, OnDestroy {
     this.record_path = Record.getPathsToFirestore(this.prop);
     this.unsubscrib_record = this.service.getFromFirestoreBDD(this.record_path, Record, conditions);
     this.sub_record = this.service.getFromFirestore().subscribe((records) => {
+
       this.records = records as Array<Record>;
       this.unsubscrib_account = this.service.getFromFirestoreBDD(this.account_path, Account, null);
       this.service.getFromFirestore().subscribe((accounts) => {

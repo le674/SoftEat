@@ -6,10 +6,8 @@ import { Unsubscribe } from 'firebase/auth';
 import { CollectionReference, DocumentData, DocumentReference, DocumentSnapshot, Firestore, SnapshotOptions, collection, updateDoc, deleteDoc, doc, onSnapshot, setDoc, getDocs } from '@angular/fire/firestore';
 import { CalculService } from './menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { Class, Condition, InteractionBddFirestore, TransactionalConf, TransactionalWriteOnlyConf } from '../interfaces/interaction_bdd';
-import { Subject, throwError } from 'rxjs';
-import { Conversation } from '../interfaces/conversation';
+import { Subject } from 'rxjs';
 import { Query, query, runTransaction, where, writeBatch } from 'firebase/firestore';
-import { Employee } from '../interfaces/employee';
 import { CommonService } from './common/common.service';
 
 
