@@ -13,8 +13,8 @@
 
   <div class="popup" *ngIf="isPopupOpen">
     <h2>Sélectionnez une commande :</h2>
-    <button *ngFor="let commande of commandeNbr" (click)="selectCommande(commande)">
-      Commande {{ commande }}
+    <button *ngFor="let commande of commandes; let i = index" (click)="selectCommande(i)">
+      {{ i + 1 }}. Commande {{ i }}
     </button>
     <button (click)="closePopup()">Fermer</button>
   </div>

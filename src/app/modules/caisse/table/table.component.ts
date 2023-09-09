@@ -23,7 +23,6 @@ export class TableComponent {
   private url: UrlTree;
 
   isPopupOpen = false;
-  commandeNbr: number[] = [1, 2, 3, 4, 5]; // Liste de commandes
   isActive: boolean = false;
 
   selectedCommande: number | null = null;
@@ -31,7 +30,7 @@ export class TableComponent {
   public tableOccupied:boolean | null;
 
   constructor(private firestore: FirebaseService, private router: Router) {
-    
+
     if(this.table !== undefined){
       this.tableOccupied = this.table.tableOccupied
     }
@@ -44,7 +43,6 @@ export class TableComponent {
     this.path_to_commandes = [];
     this.commandes = [];
     this.url = this.router.parseUrl(this.router.url);
-
   }
   getTableId():string{
     if(this.table?.id!=undefined){
@@ -56,24 +54,29 @@ export class TableComponent {
     this.prop = this.url.queryParams["prop"];
     this.restaurant = this.url.queryParams["restaurant"];
     this.path_to_commandes = Ccommande.getPathsToFirestore(this.prop, this.restaurant, this.getTableId());
-    this.req_commandes_brt = this.firestore.getFromFirestoreBDD(this.path_to_commandes, Ctable, null);
-    this.commandes_brt_sub   = this.firestore.getFromFirestore().subscribe((tables) => { 
+
+    this.req_commandes_brt = this.firestore.getFromFirestoreBDD(this.path_to_commandes, Ccommande, null);
+    this.commandes_brt_sub   = this.firestore.getFromFirestore().subscribe((commmande) => { 
     this.commandes = this.commandes as Array<Ccommande>;
     
-    console.log(this.commandes[0].id);
     })
+    //console.log("commandes : "+this.commandes[0].id);
+    //this.commandeNbr = this.commandes.length;
+    console.log(this.path_to_commandes);
+    console.log("commande : "+this.commandes[0]);
+    console.log("longueur: "+this.commandes.length);
+
   }
   toggleActive() {
     this.isActive = !this.isActive;
   }
   paiement_button() {
     let table = new Ctable();
-    console.log("paiement... nbr: " + table.seats);
+
   }
   takeOrder(event: Event) {
     // Empêcher la propagation de l'événement de clic
     event.stopPropagation();
-    console.log("Commande ");
     if (this.table) {
       // Ajoutez ici la logique pour prendre la commande
       if (!this.tableOccupied && !this.isActive) {
