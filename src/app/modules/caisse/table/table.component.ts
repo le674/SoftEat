@@ -46,11 +46,22 @@ export class TableComponent {
     this.url = this.router.parseUrl(this.router.url);
 
   }
+  getTableId():string{
+    if(this.table?.id!=undefined){
+      return this.table.id;
+    }
+    return "";
+  }
   ngOnInit(): void {
     this.prop = this.url.queryParams["prop"];
     this.restaurant = this.url.queryParams["restaurant"];
-    this.path_to_commandes = Ccommande.getPathsToFirestore(this.prop, this.restaurant);//, this.table?.id);
-
+    this.path_to_commandes = Ccommande.getPathsToFirestore(this.prop, this.restaurant, this.getTableId());
+    this.req_commandes_brt = this.firestore.getFromFirestoreBDD(this.path_to_commandes, Ctable, null);
+    this.commandes_brt_sub   = this.firestore.getFromFirestore().subscribe((tables) => { 
+    this.commandes = this.commandes as Array<Ccommande>;
+    
+    console.log(this.commandes[0].id);
+    })
   }
   toggleActive() {
     this.isActive = !this.isActive;
