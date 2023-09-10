@@ -14,7 +14,7 @@ import { Ctable } from 'src/app/interfaces/table';
 })
 export class TableComponent {
 
-  public commandes:Array<Ccommande>;
+  public commandes:Array<Array<Ccommande>>;
   private path_to_commandes: Array<string>;
   private prop: string;
   private restaurant: string;
@@ -24,7 +24,7 @@ export class TableComponent {
 
   isPopupOpen = false;
   isActive: boolean = false;
-
+  isTableExpanded = false;
   selectedCommande: number | null = null;
   @Input() table: Ctable | undefined;
   public tableOccupied:boolean | null;
@@ -44,11 +44,10 @@ export class TableComponent {
     this.commandes = [];
     this.url = this.router.parseUrl(this.router.url);
   }
-  getTableId():string{
-    if(this.table?.id!=undefined){
-      return this.table.id;
-    }
-    return "";
+
+  ngOnDestroy(): void {
+    this.req_commandes_brt();
+    this.commandes_brt_sub.unsubscribe();
   }
   ngOnInit(): void {
     this.prop = this.url.queryParams["prop"];
@@ -56,14 +55,21 @@ export class TableComponent {
     this.path_to_commandes = Ccommande.getPathsToFirestore(this.prop, this.restaurant, this.getTableId());
     this.req_commandes_brt = this.firestore.getFromFirestoreBDD(this.path_to_commandes, Ccommande, null);
     this.commandes_brt_sub   = this.firestore.getFromFirestore().subscribe((commande) => { 
-      this.commandes = commande as Array<Ccommande>;
+    this.commandes.push(commande as Array<Ccommande>);
+    
+    console.log("commande 0 : "+this.commandes[0]);
+    console.log("longueur: "+this.commandes.length);
     })
     //console.log("commandes : "+this.commandes[0].id);
     //this.commandeNbr = this.commandes.length;
     console.log(this.path_to_commandes);
-    console.log("commande : "+this.commandes[0]);
-    console.log("longueur: "+this.commandes.length);
 
+  }
+  getTableId():string{
+    if(this.table?.id!=undefined){
+      return this.table.id;
+    }
+    return "";
   }
   toggleActive() {
     this.isActive = !this.isActive;
@@ -71,6 +77,8 @@ export class TableComponent {
   paiement_button() {
     let table = new Ctable();
 
+    console.log("commande 0.2 : "+this.commandes[0]);
+    console.log("longueur: "+this.commandes.length);
   }
   takeOrder(event: Event) {
     // Empêcher la propagation de l'événement de clic
@@ -79,6 +87,8 @@ export class TableComponent {
       // Ajoutez ici la logique pour prendre la commande
       if (!this.tableOccupied && !this.isActive) {
         this.isPopupOpen = true;
+        this.isTableExpanded = true; // Activer l'agrandissement de la table
+
         console.log("Commande prise pour la table :", this.table?.tableNumber);
 
         
@@ -93,6 +103,7 @@ export class TableComponent {
   }
 
   closePopup() {
+    this.isTableExpanded = false; // desact l'agrandissement de la table
     this.isPopupOpen = false;
     this.selectedCommande = null;
   }

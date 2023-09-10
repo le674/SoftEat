@@ -1,4 +1,6 @@
-<div class="table" [ngClass]="{'occupied': tableOccupied}" (click)="toggleActive()">
+<div class="table" 
+[ngClass]="{'occupied': tableOccupied, 'table-expanded': isTableExpanded}"
+(click)="toggleActive()">
   <div class="table-number">{{table?.tableNumber}}</div>
   <p>Statut : {{tableOccupied ? "occupé" : "non occupé"}}</p>
 
@@ -14,7 +16,7 @@
   <div class="popup" *ngIf="isPopupOpen">
     <h2>Sélectionnez une commande :</h2>
     <button *ngFor="let commande of commandes; let i = index" (click)="selectCommande(i)">
-      {{ i + 1 }}. Commande {{ i }}
+      Commande {{i+1}}
     </button>
     <button (click)="closePopup()">Fermer</button>
   </div>

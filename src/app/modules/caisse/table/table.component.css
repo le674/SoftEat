@@ -20,6 +20,15 @@
   justify-content: space-between;
   height: 100%;
 }
+.table-expanded {
+  display: flex;
+  position: fixed;
+  /* Styles pour la table agrandie */
+  width:100%; /* 100% de la largeur de la fenêtre */
+  height: 100%; /* 100% de la hauteur de la fenêtre */
+  /* Ajoutez d'autres styles personnalisés au besoin */
+  z-index: 10;
+}
 
 .take-order-button {
   padding: 10px 20px;
@@ -43,11 +52,13 @@
   margin-right: 10px;
 }
 .payment-button{
+  display: inline;
   background-color: rgb(125, 181, 46);
   color: white;
   border: none;
   border-radius: 10%;
 }
+
 .button-container {
   
   display: flex;
@@ -121,7 +132,7 @@
   top: 50%;
   left: 50%;
   width: 200px;
-  width: 400px;
+  width: 200px;
   transform: translate(-50%, -50%);
   background-color: white;
   padding: 20px;
@@ -146,6 +157,7 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+
 }
 
 .popup button:hover {
@@ -175,3 +187,5 @@
     height: auto;
   }
 }
+
+
