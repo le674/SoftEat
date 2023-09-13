@@ -26,7 +26,7 @@ export class FecMobileComponent implements OnInit {
     this.columns = [];
     this.visibles = [];
     this.accounts = [];
-    this.index_record = RowFec.getKeys();
+    this.index_record = RowFec.getKeys(false);
     this.stock = null;
     this.prop = "";
   }

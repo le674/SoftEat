@@ -71,6 +71,11 @@ export class FecModifRecordComponent implements OnInit {
     if(this.data.record){
       record.setData(this.data.record);
     }
+    else{
+      if(reception_date){
+        record.reception_date = reception_date.toISOString();
+      }
+    }
     facture.id = record.name;
     if(journal_name){
       record.journal_name = journal_name;
@@ -94,7 +99,7 @@ export class FecModifRecordComponent implements OnInit {
       facture.name = description;
     }
     if(reception_date){
-      record.reception_date = reception_date.toISOString();
+      record.send_date = reception_date.toISOString();
     }
     if(accounts){
       record.account_ids = accounts;
@@ -104,7 +109,7 @@ export class FecModifRecordComponent implements OnInit {
       this.service.setFirestoreMultipleDataOnly(conf).then(() => {
         console.log("update record completed");
       }).catch((err) => {
-        this._snackBar.open("impossible de modifier l'enrregistrement contacter softeat", "fermer");
+        this._snackBar.open("impossible de modifier l'enregistrement contacter softeat", "fermer");
         this.dialogRef.close();
         throw err;
       }).then(() => {

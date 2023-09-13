@@ -90,7 +90,6 @@ export class FecComponent implements OnInit, OnDestroy {
           let _record = new RowFec();
           return _record.setRecord(record, this.accounts);
         });
-
       })
     });
   }

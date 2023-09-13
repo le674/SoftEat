@@ -26,7 +26,7 @@ constructor(public dialog: MatDialog,
     this.row_fec = [];
     this.columns = [];
     this.accounts = [];
-    this.index_record = RowFec.getKeys();
+    this.index_record = RowFec.getKeys(false);
     this.prop = "";
   }
   ngOnInit(): void {
@@ -70,18 +70,18 @@ constructor(public dialog: MatDialog,
     }); 
   }
   exportTab(){
-    
+    let _keys = RowFec.getKeys(true);
     let date_validation = Record.formatDate(new Date());
     let table = [this.columns];
-    this.row_fec.forEach((record) => {
+    this.row_fec.forEach((record, index) => {
       let line = [];
-      for(let index of this.index_record){
+      for(let index of _keys){
         let value_line = record[index];
         if(index === 'valid_date'){
           value_line = date_validation;
         }
         else{
-          if(['date_reception', 'send_date', 'lettrage_date'].includes((index))){
+          if(['timestamp_reception_date', 'timestamp_send_date', 'timestamp_lettrage_date'].includes((index))){
             value_line = Record.formatDate(new Date(record[index]));
           }
           else{

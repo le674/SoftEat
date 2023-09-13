@@ -231,17 +231,20 @@ export class RowFec{
     journal_label:string;
     number:number;
     date_reception:string;
+    timestamp_reception_date:string;
     account_number:number;
     account_label:string;
     other_account_number:number | null;
     other_account_label:string | null;
     name:string;
     send_date:string;
+    timestamp_send_date:string;
     label_fec:string;
     debit_ammount:number;
     credit_ammount:number;
     lettrage:string | null;
     lettrage_date:string | null;
+    timestamp_lettrage_date:string;
     valid_date:string;
     devise:number | null;
     identifiant_devise:string | null;
@@ -251,12 +254,14 @@ export class RowFec{
         this.journal_label = "";
         this.number = 0;
         this.date_reception = "";
+        this.timestamp_reception_date = "";
         this.account_number = 0;
         this.account_label = "";
         this.other_account_label = null;
         this.other_account_number = null;
         this.name = "";
         this.send_date = "";
+        this.timestamp_send_date = "";
         this.label_fec = "";
         this.id=""; 
         this.debit_ammount = 0;
@@ -264,6 +269,7 @@ export class RowFec{
         this.valid_date = "";
         this.lettrage = null;
         this.lettrage_date = null;
+        this.timestamp_lettrage_date = "";
         this.devise = null;
         this.identifiant_devise = null;
     }
@@ -276,6 +282,7 @@ export class RowFec{
         this.journal_label = record.journal_label;
         this.number = record.number;
         this.date_reception = new Date(record.reception_date).toLocaleString();
+        this.timestamp_reception_date = record.reception_date;
         if(account){
             this.account_number = account.number;
             this.account_label = account.name;
@@ -286,11 +293,13 @@ export class RowFec{
         }
         this.name = record.name;
         this.send_date = new Date(record.send_date).toLocaleString();
+        this.timestamp_send_date = record.send_date;
         this.label_fec = record.journal_label;
         this.debit_ammount = record.debit_ammount;
         this.credit_ammount = record.credit_ammount;
         this.lettrage = record.lettrage;
         this.lettrage_date = record.reception_date;
+        this.timestamp_lettrage_date = record.reception_date;
         this.valid_date = "";
         this.devise = record.devise_ammount;
         this.identifiant_devise = record.devise;
@@ -308,10 +317,20 @@ export class RowFec{
      * Retourne une liste des attributs dans l'ordre de display columns pour l'affichage d'un enregistrement
      * @returns liste de l'ensemble des clefs disponibles 
      */
-       public static getKeys(){
-        return ['code_journal', 'journal_label', 'number', 'date_reception', 'account_number',
-         'account_label', 'other_account_label','other_account_number', 'name', 'send_date',
-         'label_fec', 'debit_ammount', 'credit_ammount', 'lettrage', 'lettrage_date',
-         'valid_date','devise','identifiant_devise'];
+       public static getKeys(table:boolean){
+        let reception_date =  "timestamp_reception_date";
+        let send_date = "timestamp_send_date";
+        let lettrage_date = "timestamp_lettrage_date";
+        if(!table){
+            reception_date = "reception_date";
+            send_date = "send_date";
+            lettrage_date = "lettrage_date";
+        }
+        return [
+            'code_journal', 'journal_label', 'number', `${reception_date}`, 'account_number',
+            'account_label', 'other_account_label','other_account_number', 'name', `${send_date}`,
+            'label_fec', 'debit_ammount', 'credit_ammount', 'lettrage', `${lettrage_date}`,
+            'valid_date','devise','identifiant_devise'
+        ];
     }
 }

@@ -16,7 +16,7 @@ export class CommonTableService {
   public arrayToTab(array:Array<Array<string>>){
     let max_vector = this.getMaxLength(array);
     const array_format = this.paddArray(max_vector, array);
-    const sub_array_format = array_format.map((sub_array) => "|" + sub_array.join(""));
+    const sub_array_format = array_format.map((sub_array) => sub_array.join(""));
     const tab_string = sub_array_format.join("\n");
     return tab_string;
   }
@@ -52,8 +52,11 @@ export class CommonTableService {
     let reversed_tab:Array<Array<string>> = [];
     let index = 0;
     while (index < array[0].length) {
-      const rev_lst = array.map((sub_array) => {
-        let rev_ele = this.paddWord(lengths[index], sub_array[index]); 
+      const rev_lst = array.map((sub_array, _index) => {
+        let rev_ele = this.paddWord(lengths[index], sub_array[index], false); 
+        if(index === array[0].length - 1){
+          rev_ele = this.paddWord(lengths[index], sub_array[index], true); 
+        }
         return rev_ele;
       });
       reversed_tab.push(rev_lst);
@@ -71,8 +74,12 @@ export class CommonTableService {
    * Cette fonction permet d'ajouter à un mot du padding pour celui-ci
    * @param word cette fonction permet d'ajouter du padding à un mot
   */
-  public paddWord(length:number,word:string){
+  public paddWord(length:number,word:string, latest:boolean){
     const tot_length =  length - word.length;
-    return word + " ".repeat(tot_length) + "|";
+    let _word = word + " ".repeat(tot_length) + "|";
+    if(latest){
+      _word = word + " ".repeat(tot_length);
+    }
+    return _word;
   }
 }
