@@ -177,10 +177,18 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
     this.user = new User();
   }
   ngOnDestroy(): void {
-    this.user_unsubscribe();
-    this.user_subscription.unsubscribe();
-    this.all_user_unsubscribe();
-    this.all_user_subscription.unsubscribe();
+    if(this.user_unsubscribe){
+      this.user_unsubscribe();
+    }
+    if(this.user_subscription){
+      this.user_subscription.unsubscribe();
+    }
+    if(this.all_user_unsubscribe){
+      this.all_user_unsubscribe();
+    }
+    if(this.all_user_subscription){
+      this.all_user_subscription.unsubscribe();
+    }
     if(this.all_restaurants_unsubscribe !== undefined){
       this.all_restaurants_unsubscribe();
     }
@@ -226,7 +234,7 @@ export class AppConfigueComponent implements OnInit, OnDestroy {
                 this.prop_user = [];
                 for(let employee of _employees){
                   let row_user = new ShortUser();
-                  let _employee = new EmployeeFull(employee.email, employee.statut, employee.uid, this.common_service);
+                  let _employee = new EmployeeFull(employee.email, employee.statut, employee.uid);
                   _employee.setEmployee(employee);
                   _employee.proprietaire = this.proprietaire;
                   _employee.getAllRestaurant(this.user, restaurants as Array<Restaurant>);

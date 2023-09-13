@@ -116,7 +116,7 @@ export class ModifIngComponent implements OnInit {
 
   }
   changeIngredient() {
-    let ingredient = new CIngredient(this.calcul_service);
+    let ingredient = new CIngredient();
     if(this.add_ing_section.controls.name.value !== null){
       const name =  this.add_ing_section.controls.name.value.trim()
       ingredient.name = name;

@@ -64,8 +64,12 @@ export class ClientsComponent implements OnInit, OnDestroy {
     this.write = false;
   }
   ngOnDestroy(): void {
-    this.req_clients();
-    this.clients_sub.unsubscribe();
+    if(this.req_clients){
+      this.req_clients();
+    }
+    if(this.clients_sub){
+      this.clients_sub.unsubscribe();
+    }
   }
   ngOnInit(): void {
     if(this.clients !== null){

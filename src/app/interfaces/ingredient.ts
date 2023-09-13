@@ -1,6 +1,7 @@
 import { DocumentSnapshot, SnapshotOptions } from "@angular/fire/firestore";
 import { CalculService } from "../services/menus/menu.calcul/menu.calcul.ingredients/calcul.service";
 import { InteractionBddFirestore } from "./interaction_bdd";
+import { Injectable } from "@angular/core";
 
 /**
  * @class ingrédient utilisé pour la recette d'un plat 
@@ -142,7 +143,7 @@ export class CIngredient implements InteractionBddFirestore {
     "id": string;
     "proprietary_id": string;
     [index:string]:any;
-    constructor(public service: CalculService) {
+    constructor() {
         this.name = "";
         this.categorie_restaurant = "";
         this.categorie_tva = "";
@@ -180,13 +181,14 @@ export class CIngredient implements InteractionBddFirestore {
      * @returns une instance CIngredient
      */
     public getInstance(){
-        return new CIngredient(this.service) as CIngredient;
+        return new CIngredient() as CIngredient;
     }
     /**
      * permet de récupérer le cout ttc d'un ingrédient à partir de la catégorie de tva et du cout
      */
     public getCostTtcFromCat(): void {
-        const cost_ttc = this.service.getCostTtcFromCat(this.categorie_tva, this.cost);
+        const  service = new CalculService();
+        const cost_ttc = service.getCostTtcFromCat(this.categorie_tva, this.cost);
         if (cost_ttc) {
             this.cost_ttc = cost_ttc
         }
@@ -196,7 +198,8 @@ export class CIngredient implements InteractionBddFirestore {
      * permet de récupérer le cout ttc d'un ingrédient à partir du taux de tva et du cout
     */
     public getCostTtcFromTaux(): void {
-        const cost_ttc = this.service.getCostTtcFromTaux(this.taux_tva, this.cost);
+        const  service = new CalculService();
+        const cost_ttc = service.getCostTtcFromTaux(this.taux_tva, this.cost);
         if (cost_ttc !== null) {
             this.cost_ttc = cost_ttc;
         }
@@ -207,6 +210,9 @@ export class CIngredient implements InteractionBddFirestore {
      * @param data données à intégrer comme ingrédient
      */
     setData(data: CIngredient | undefined) {
+        const service = new CalculService();
+        console.log("service");
+        console.log(service); 
         if (data !== undefined) {
             this.name = data.name;
             this.cost = data.cost;
@@ -217,7 +223,7 @@ export class CIngredient implements InteractionBddFirestore {
             this.categorie_tva = data.categorie_tva;
             this.taux_tva = data.taux_tva;
             if (typeof data.date_reception === "string") {
-                const date_reception = this.service.stringToDate(data.date_reception);
+                const date_reception = service.stringToDate(data.date_reception);
                 if (date_reception !== null) {
                     this.date_reception = date_reception;
                 }
@@ -229,7 +235,7 @@ export class CIngredient implements InteractionBddFirestore {
                 this.date_reception = data.date_reception;
             }
             if (typeof data.dlc === "string") {
-                this.dlc = this.service.stringToDate(data.dlc);
+                this.dlc = service.stringToDate(data.dlc);
             }
             else {
                 this.dlc = data.dlc;
@@ -284,7 +290,7 @@ export class CIngredient implements InteractionBddFirestore {
      * Cette fonction permet de retourner un objet  qui permet l'intéraction entre la base de donnée et l'objet  ingrédient
      * @returns {any} convertisseur de ingrédient pour l'ajout en base 
     */
-    public static getConverter(service: CalculService): any {
+    public static getConverter(): any {
         return {
             toFirestore: (ingredient: CIngredient) => {
                 return ingredient;
@@ -292,7 +298,7 @@ export class CIngredient implements InteractionBddFirestore {
             fromFirestore: (snapshot: DocumentSnapshot<CIngredient>, options: SnapshotOptions) => {
                 const data = snapshot.data(options);
                 if (data !== undefined) {
-                    let ingredient = new CIngredient(service);
+                    let ingredient = new CIngredient();
                     ingredient.setData(data)
                     return ingredient;
                 }

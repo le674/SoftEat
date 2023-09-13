@@ -18,6 +18,6 @@ export class AppMessageTemplateComponent implements OnInit {
   constructor(private service:CommonService) {}
 
   ngOnInit(): void {
-    this.statut = new Statut(this.service);
+    this.statut = new Statut();
   }
 }

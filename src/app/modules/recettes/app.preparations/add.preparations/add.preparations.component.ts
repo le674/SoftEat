@@ -305,7 +305,7 @@ export class AddPreparationsComponent implements OnInit{
           this.prepa_service.getPrimCost(this.etapes, this.ingredients, this.base_ings ,this.base_conso).then((prime_cost) => {
               let preparation = this.data.preparation;
               if(preparation === null){
-                preparation = new Cpreparation(this.calcul_service);
+                preparation = new Cpreparation();
               }
               preparation.name = to_add_preparation_name;
               preparation.ingredients = this.base_ings;

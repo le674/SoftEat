@@ -74,7 +74,7 @@ export class AddConsoComponent implements OnInit, AfterContentInit{
   }
   changeConsommable() {
     let path_to_conso = Cconsommable.getPathsToFirestore(this.data.prop, this.data.restaurant);
-    let new_conso = new Cconsommable(this.calcul_service);
+    let new_conso = new Cconsommable();
     if(this.data.prop !== undefined){
       new_conso.proprietary_id = this.data.prop;
     }

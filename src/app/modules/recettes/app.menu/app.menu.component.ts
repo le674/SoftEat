@@ -58,14 +58,30 @@ export class AppMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     this.write = false;
   }
   ngOnDestroy(): void {
-    this.req_menus();
-    this.req_plats();
-    this.req_ingredients();
-    this.req_consommables();
-    this.menus_sub.unsubscribe();
-    this.plats_sub.unsubscribe();
-    this.ingredients_sub.unsubscribe();
-    this.consommables_sub.unsubscribe();
+    if(this.req_menus){
+      this.req_menus();
+    }
+    if(this.req_plats){
+      this.req_plats();
+    }
+    if(this.req_ingredients){
+      this.req_ingredients();
+    }
+    if(this.req_consommables){
+      this.req_consommables();
+    }
+    if(this.menus_sub){
+      this.menus_sub.unsubscribe();
+    }
+    if(this.plats_sub){
+      this.plats_sub.unsubscribe();
+    }
+    if(this.ingredients_sub){
+      this.ingredients_sub.unsubscribe();
+    }
+    if(this.consommables_sub){
+      this.consommables_sub.unsubscribe(); 
+    }
   }
 
   ngOnInit(): void {

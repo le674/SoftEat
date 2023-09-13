@@ -58,7 +58,7 @@ export class UserInteractionService {
       fromFirestore: (snapshot: DocumentSnapshot<Employee>, options: SnapshotOptions) => {
         const data = snapshot.data(options);
         if (data !== undefined) {
-          let employee = new Employee(data.email, data.statut, data.uid, this.common_service);
+          let employee = new Employee(data.email, data.statut, data.uid);
           employee.setData(data);
           return employee;
         }

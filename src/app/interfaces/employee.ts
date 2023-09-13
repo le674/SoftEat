@@ -29,7 +29,7 @@ export class Employee implements InteractionBddFirestore {
     notifConversations!: { [conv: string]: number};
     convPrivee:string | null;
     [index:string]:any;
-    constructor(email:string, statut:Statut, uid:string, private common_service: CommonService){
+    constructor(email:string, statut:Statut, uid:string){
         this.user_id = "";
         this.proprietary_id = "";
         this.email = email;
@@ -72,7 +72,8 @@ export class Employee implements InteractionBddFirestore {
      * @param right droit à attribuer pour cette ensemble de statut
      */
     public setStatus(status:string[], right:string){
-        let roles = this.common_service.getStatut();
+      const common_service = new CommonService();
+        let roles = common_service.getStatut();
         roles.forEach((role) => {
           if(role === 'propriétaire'){
             if(status.includes('propriétaire')){
@@ -130,7 +131,8 @@ export class Employee implements InteractionBddFirestore {
      * Supprime les status null et les remplaces par une chaine de caractère vide
      */
     public remove_null(){
-        for(let status of this.common_service.getStatut()){
+        const common_service = new CommonService();
+        for(let status of common_service.getStatut()){
           this.statut[status] = "";
         }
     }
@@ -167,8 +169,7 @@ export class Employee implements InteractionBddFirestore {
       * @param employee employée à copier dans une instance de la classe
     */
     public setData(employee: Employee) {
-        
-        let statut = new Statut(this.common_service);
+        let statut = new Statut();
         statut.setData(employee.statut);
         let address = null;
         if(employee.address !== null){
@@ -202,7 +203,7 @@ export class Employee implements InteractionBddFirestore {
       * @returns {Employee} un employee depuis la base de donnée
    */
     public getInstance(): InteractionBddFirestore {
-      return new Employee(this.email, this.statut, this.uid, this.common_service);
+      return new Employee(this.email, this.statut, this.uid);
     }
    /**
      * chemin vers l'ensemble des employees dans firestore
@@ -212,7 +213,7 @@ export class Employee implements InteractionBddFirestore {
       return ["proprietaires", proprietary_id, "employees"]
     }
     public to_roles() {
-      let statut = new Statut(this.common_service);
+      let statut = new Statut();
       statut.setData(this.statut);
       if(this.roles !== null && this.roles !== undefined){
         this.roles = statut.getRoles(this.roles.includes("propriétaire"));

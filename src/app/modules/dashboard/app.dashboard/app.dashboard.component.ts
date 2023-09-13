@@ -34,12 +34,16 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
     this.prop = "";
     this.restaurant = "";
     this.user_subscription = new Subscription();
-    this.status = new Statut(this.common_service);
+    this.status = new Statut();
     this.url = this.router.parseUrl(this.router.url);
   }
   ngOnDestroy(): void {
-   this.user_unsubscribe();
-   this.sub_user.unsubscribe();
+   if(this.user_unsubscribe){
+    this.user_unsubscribe();
+   }
+   if(this.sub_user){
+    this.sub_user.unsubscribe();
+   }
   }
   ngOnInit(): void {
     let user_info = this.url.queryParams;

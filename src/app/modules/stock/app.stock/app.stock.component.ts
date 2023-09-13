@@ -61,15 +61,18 @@ export class AppStockComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-    this.req_ingredients_brt(); 
-    this.req_merge_obs.unsubscribe();
+    if(this.req_ingredients_brt){
+      this.req_ingredients_brt(); 
+    }
+    if(this.req_merge_obs){
+      this.req_merge_obs.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
     if(this.stock !== null){
       if(this.stock.includes("w")) this.write = true;
       if(this.stock.includes("r")){ 
-        
         let user_info:any = this.url.queryParams;
         this.prop = user_info.prop;
         this.restaurant = user_info.restaurant;
@@ -141,6 +144,7 @@ export class AppStockComponent implements OnInit, OnDestroy{
   }
 
   modifIng(ele: RowIngredient) {
+    let ingredient = new CIngredient();
     let dlc = ""
     let categorie_tva = "";
     let _ingredient = this.ingredient_table.find((ingredient) => ingredient.id === ele.id);
@@ -152,7 +156,6 @@ export class AppStockComponent implements OnInit, OnDestroy{
     }
     let res_dlc = 0;
     let var_base_ing: Array<{ name: string; quantity_unity: number; quantity: number; unity: string; cost: number }> = [];
-    
     const dlc_date = this.calc_service.stringToDate(dlc);
     if (ele.date_reception !== undefined && ele.date_reception !== null) {
       const date_reception = this.calc_service.stringToDate(ele.date_reception);
@@ -163,11 +166,8 @@ export class AppStockComponent implements OnInit, OnDestroy{
         res_dlc = 0;
       }
     }
-
-    ele.name = ele.name.split('<br>').join(' ')
-    ele.categorie_tva = categorie_tva.split('<br>').join(' ')
-    let ingredient = new CIngredient(this.calc_service)
-
+    ele.name = ele.name.split('<br>').join(' ');
+    ele.categorie_tva = categorie_tva.split('<br>').join(' ');
     ingredient.name = ele.name;
     ingredient.categorie_tva = ele.categorie_tva;
     ingredient.cost = ele.cost;
@@ -202,7 +202,6 @@ export class AppStockComponent implements OnInit, OnDestroy{
             base_ingredient_id: null,
             base_ing: var_base_ing,
             not_prep: this.ingredient_table,
-           /*  quantity_after_prep: ele.after_prep, */
           }
         }
       });
@@ -220,7 +219,7 @@ export class AppStockComponent implements OnInit, OnDestroy{
     });
   }
   pageChanged(event: PageEvent) {
-    let datasource = [... this.ingredients_displayed_br];
+    let datasource = [...this.ingredients_displayed_br];
     this.page_number = event.pageIndex;
     this.dataSource.data = datasource.splice(event.pageIndex * event.pageSize, event.pageSize);
   }

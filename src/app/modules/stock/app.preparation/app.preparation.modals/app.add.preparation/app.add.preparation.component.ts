@@ -88,7 +88,7 @@ export class AppAddPreparationComponent implements OnInit, AfterContentInit, OnI
     
     let path_preparation = Cpreparation.getPathsToFirestore(this.data.prop, this.data.restaurant);
     let new_prepa:Cpreparation;
-    new_prepa = new Cpreparation(this.calcul_service);
+    new_prepa = new Cpreparation();
     new_prepa.proprietary_id = this.data.prop;
     new_prepa.setData(this.data.preparation);
     /* On crée un ingrédient à partir des données récupéré depuis le formulaire puis on l'ajoute à la bdd */

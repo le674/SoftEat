@@ -23,6 +23,8 @@ import { AppMessagerieModule } from './modules/messagerie/app.module';
 import {registerLocaleData} from '@angular/common';
 import * as fr from '@angular/common/locales/fr';
 import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_FIRESTORE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
+import { CalculService } from './services/menus/menu.calcul/menu.calcul.ingredients/calcul.service';
+import { FirebaseService } from './services/firebase.service';
 @NgModule({
   declarations: [
     AppComponent
@@ -77,6 +79,8 @@ import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_FIRESTORE_EMULATOR_HOST, FIREBASE
     })
   ],
   providers: [
+    FirebaseService,
+    CalculService,
     AuthentificationService,
     { provide: LOCALE_ID, useValue: 'fr-FR' }
   ],

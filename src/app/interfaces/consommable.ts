@@ -67,7 +67,7 @@ export class Cconsommable implements InteractionBddFirestore {
     "proprietary_id": string;
     [x: string]: any;
 
-    constructor(private service: CalculService) {
+    constructor() {
     }
     /**
      * transformation du consommable pour le stock en consommable pour le recette
@@ -91,7 +91,7 @@ export class Cconsommable implements InteractionBddFirestore {
     * @returns une instance CIngredient
    */
     public getInstance(): InteractionBddFirestore {
-        return new Cconsommable(this.service) as Cconsommable;
+        return new Cconsommable() as Cconsommable;
     }
     /**
      * 
@@ -119,6 +119,7 @@ export class Cconsommable implements InteractionBddFirestore {
      * @param data données à intégrer comme consommable
      */
     public setData(data: Cconsommable | undefined) {
+        let calcul = new CalculService()
         if (data !== undefined) {
             this.categorie_restaurant = data.categorie_restaurant;
             this.id = data.id;
@@ -133,7 +134,7 @@ export class Cconsommable implements InteractionBddFirestore {
             this.taux_tva = data.taux_tva;
             this.cost_ttc = data.cost_ttc;
             if (typeof data.date_reception === "string") {
-                const date_reception = this.service.stringToDate(data.date_reception);
+                const date_reception = calcul.stringToDate(data.date_reception);
                 if (date_reception !== null) {
                     this.date_reception = date_reception;
                 }

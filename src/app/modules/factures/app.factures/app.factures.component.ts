@@ -321,7 +321,7 @@ export class AppFacturesComponent implements OnInit {
     if(ele.vrac === undefined){
       ele.vrac = "non";
     }
-    let ingredient = new CIngredient(this.calc_service)
+    let ingredient = new CIngredient();
     ingredient.name = ele.nom;
     ingredient.categorie_tva = ele.categorie_tva;
     ingredient.cost = ele.cost;

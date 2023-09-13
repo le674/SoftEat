@@ -46,10 +46,18 @@ export class FecComponent implements OnInit, OnDestroy {
     this.prop = user_info["prop"];
   }
   ngOnDestroy(): void {
-    this.unsubscrib_account();
-    this.unsubscrib_record();
-    this.sub_account.unsubscribe();
-    this.sub_record.unsubscribe(); 
+    if(this.unsubscrib_account){
+      this.unsubscrib_account();
+    }
+    if(this.unsubscrib_record){
+      this.unsubscrib_record();
+    }
+    if(this.sub_account.unsubscribe){
+      this.sub_account.unsubscribe();
+    }
+    if(this.sub_record.unsubscribe){
+      this.sub_record.unsubscribe(); 
+    }
   }
   ngOnInit(): void {
     let end_date = new Date();

@@ -32,8 +32,12 @@ export class SalleComponent  implements OnInit,OnDestroy{
     this.url = this.router.parseUrl(this.router.url);
   }
   ngOnDestroy(): void {
-    this.req_tables_brt();
-    this.ables_brt_sub.unsubscribe();
+    if(this.req_tables_brt){
+      this.req_tables_brt();
+    }
+    if(this.ables_brt_sub){
+      this.ables_brt_sub.unsubscribe();
+    }
   }
   ngOnInit(): void {
     this.prop = this.url.queryParams["prop"];

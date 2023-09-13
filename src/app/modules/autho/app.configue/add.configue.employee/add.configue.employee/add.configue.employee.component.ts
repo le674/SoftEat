@@ -62,8 +62,8 @@ export class AddConfigueEmployeeComponent implements OnInit {
               if(this.add_employee.controls.surname.value !== null){
                 surname = this.add_employee.controls.surname.value as string;
               }
-              const status = new Statut(this.common_service);
-              let employee = new Employee(email, status, uid, this.common_service);
+              const status = new Statut();
+              let employee = new Employee(email, status, uid);
               employee.name = name;
               employee.surname = surname;
               employee.auth_rh = [uid];

@@ -46,8 +46,12 @@ export class TableComponent {
   }
 
   ngOnDestroy(): void {
-    this.req_commandes_brt();
-    this.commandes_brt_sub.unsubscribe();
+    if(this.req_commandes_brt){
+      this.req_commandes_brt();
+    }
+    if(this.commandes_brt_sub){
+      this.commandes_brt_sub.unsubscribe();
+    }
   }
   ngOnInit(): void {
     this.prop = this.url.queryParams["prop"];

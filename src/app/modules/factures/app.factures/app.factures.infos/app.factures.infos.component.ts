@@ -40,8 +40,12 @@ export class AppFacturesInfosComponent implements OnInit, OnDestroy {
     this.accounts = [];
   }
   ngOnDestroy(): void {
-    this.unsubscrib();
-    this.sub_account.unsubscribe();
+    if(this.unsubscrib){
+      this.unsubscrib();
+    }
+    if( this.sub_account){
+      this.sub_account.unsubscribe();
+    }
   }
   ngOnInit(): void {
     const path_to_accounts = Account.getPathsToFirestore(this.prop);

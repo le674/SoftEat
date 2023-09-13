@@ -118,7 +118,7 @@ export class AddIngComponent implements OnInit, AfterContentInit, AfterViewCheck
   changeIngredient() {
     let new_ing_aft_prepa = null;
     let new_ing: CIngredient;
-    new_ing = new CIngredient(this.calcul_service);
+    new_ing = new CIngredient();
     let act_quant = 0;
     new_ing.proprietary_id = this.data.prop;
     if(this.data.ingredient.base_ingredient_id !== undefined){

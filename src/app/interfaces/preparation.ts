@@ -40,7 +40,7 @@ export class Cpreparation implements InteractionBddFirestore {
     "proprietary_id": string;
     [index: string]: any
 
-    constructor(public service: CalculService) {
+    constructor() {
         this.name = "";
         this.categorie_restaurant = "";
         this.etapes = null;
@@ -72,7 +72,7 @@ export class Cpreparation implements InteractionBddFirestore {
      * @returns une instance Cpreparation
     */
     getInstance() {
-        return new Cpreparation(this.service) as Cpreparation;
+        return new Cpreparation() as Cpreparation;
     }
     // permet d'initialiser certain attributs pour l'objet préparation lorsque celui-ci a des attributs null
     public setDefautPrep() {
@@ -96,6 +96,7 @@ export class Cpreparation implements InteractionBddFirestore {
      * @param data préparation à ajouter dans la base de donnée
      */
     public setData(data: Cpreparation): void {
+        const service = new CalculService();
         let ingredients = new Array<TIngredientBase>();
         let consommables = new Array<TConsoBase>();
         if (data.ingredients !== null && data.ingredients !== undefined) {
@@ -131,7 +132,7 @@ export class Cpreparation implements InteractionBddFirestore {
         }
         if (typeof data.date_reception === "string") {
 
-            const date_reception = this.service.stringToDate(data.date_reception);
+            const date_reception = service.stringToDate(data.date_reception);
             if (date_reception !== null) {
                 this.date_reception = date_reception;
             }
@@ -145,7 +146,7 @@ export class Cpreparation implements InteractionBddFirestore {
             }
         }
         if (typeof data.dlc === "string") {
-            const dlc = this.service.stringToDate(data.dlc);
+            const dlc = service.stringToDate(data.dlc);
             if (dlc !== null) {
                 this.dlc = dlc;
             }
@@ -312,7 +313,7 @@ export class Cpreparation implements InteractionBddFirestore {
      * Cette fonction permet de retourner un objet  qui permet l'intéraction entre la base de donnée et l'objet  
      * @returns {any} convertisseur de la preparation pour l'ajout en base 
      */
-    public static getConverter(service: CalculService): any {
+    public static getConverter(): any {
         return {
             toFirestore: (preparation: Cpreparation) => {
                 return preparation;
@@ -320,7 +321,7 @@ export class Cpreparation implements InteractionBddFirestore {
             fromFirestore: (snapshot: DocumentSnapshot<Cpreparation>, options: SnapshotOptions) => {
                 const data = snapshot.data(options);
                 if (data !== undefined) {
-                    let preparation = new Cpreparation(service);
+                    let preparation = new Cpreparation();
                     preparation.setData(data)
                     return preparation;
                 }

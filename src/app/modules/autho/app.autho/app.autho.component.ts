@@ -43,13 +43,25 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
       this.is_confique = false;
       this.user = null;
   }
-  ngOnDestroy(): void {    
-    this.restaurant_unsubscribe();
-    this._restaurant_subscription.unsubscribe();
-    this.user_unsubscribe();
-    this._user_subscription.unsubscribe();
-    this.employee_unsubscribe();
-    this._employee_subscription.unsubscribe();
+  ngOnDestroy(): void {  
+    if(this.restaurant_unsubscribe){
+      this.restaurant_unsubscribe();
+    }  
+    if(this._restaurant_subscription){
+      this._restaurant_subscription.unsubscribe();
+    }
+    if(this.user_unsubscribe){
+      this.user_unsubscribe();
+    }
+    if(this._user_subscription.unsubscribe){
+      this._user_subscription.unsubscribe();
+    }
+    if(this.employee_unsubscribe){
+      this.employee_unsubscribe();
+    }
+    if(this._employee_subscription){
+      this._employee_subscription.unsubscribe();
+    }
   }
   ngOnInit(): void {
       onAuthStateChanged(this.auth, (user) => {

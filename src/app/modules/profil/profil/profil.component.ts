@@ -40,7 +40,7 @@ export class ProfilComponent implements OnInit {
      private mail_service:MailServicesService,public dialog: MatDialog,
      private _snackBar: MatSnackBar, public mobile_service:CommonService,
      private auth:Auth) { 
-    this.user_db = new Employee("", new Statut(this.mobile_service), "", this.mobile_service);
+    this.user_db = new Employee("", new Statut(), "");
     this.router = router;
   /*   this.user_db = new User() */
     this.enseigne = "";

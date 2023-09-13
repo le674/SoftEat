@@ -55,9 +55,15 @@ export class AppMainDashboardComponent implements OnInit, OnDestroy {
     this.alerte_subscription = new Subscription();
 }
   ngOnDestroy(): void {
-    this.alerte_subscription.unsubscribe();
-    this.stock_unsubscribe();
-    this.conso_unsubscribe();
+    if(this.alerte_subscription){
+      this.alerte_subscription.unsubscribe();
+    }
+    if(this.stock_unsubscribe){
+      this.stock_unsubscribe();
+    }
+    if( this.conso_unsubscribe){
+      this.conso_unsubscribe();
+    }
   }
   ngOnInit(): void {
     if ('ontouchstart' in window){

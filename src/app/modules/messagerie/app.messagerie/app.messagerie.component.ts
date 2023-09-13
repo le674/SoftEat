@@ -98,10 +98,18 @@ export class AppMessagerieComponent implements OnInit, OnDestroy ,AfterViewCheck
     this.rhConv = this.restaurant.substring(0,2) + "42" + "_rh";
   }
   ngOnDestroy(): void {
-    this.req_employee_unsub();
-    this.req_employee.unsubscribe();
-    this.req_conversations_unsub();
-    this.req_conversations.unsubscribe();
+    if( this.req_employee_unsub){
+      this.req_employee_unsub();
+    }
+    if(this.req_employee){
+      this.req_employee.unsubscribe();
+    }
+    if(this.req_conversations_unsub){
+      this.req_conversations_unsub();
+    }
+    if(this.req_conversations){
+      this.req_conversations.unsubscribe();
+    }
   }
   /**
    *

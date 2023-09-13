@@ -316,7 +316,7 @@ export class FactureSharedService {
           _ingredients.push(ingredient);
         }
         else {
-          const new_ingredient = new CIngredient(this.calcul_service);
+          const new_ingredient = new CIngredient();
           const name = _ingredient.name.trim().toLowerCase();
           new_ingredient.name = name.split(" ").join("_");
           new_ingredient.quantity = _ingredient.quantity;

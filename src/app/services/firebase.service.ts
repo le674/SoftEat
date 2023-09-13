@@ -428,18 +428,9 @@ export class FirebaseService {
      * @param Class class dont nous voulons retourner une instance
      */
     public constructInstance(Class: Class<InteractionBddFirestore>, ...args: any[]) {
-        if (Class.name === "CIngredient") {
-            return new Class(this.service);
-        }
-        if (Class.name === "Cpreparation") {
-            return new Class(this.service);
-        }
-        if (Class.name === "Cconsommable") {
-            return new Class(this.service);
-        }
         if (Class.name === "Employee") {
-            const statut = new Statut(this.common_service);
-            return new Class("", statut, "", this.common_service);
+            const statut = new Statut();
+            return new Class("", statut, "");
         }
         if(Class.name === "Facture"){
             return new Class("", null);

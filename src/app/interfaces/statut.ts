@@ -9,7 +9,7 @@ export class Statut {
     recette:string;
     clients:string;
     [index:string]:any;
-    constructor(private common_service: CommonService) {
+    constructor() {
         this.analyse = "";
         this.budget = "";
         this.facture = "";
