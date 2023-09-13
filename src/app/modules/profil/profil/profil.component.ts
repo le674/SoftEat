@@ -42,14 +42,11 @@ export class ProfilComponent implements OnInit {
      private auth:Auth) { 
     this.user_db = new Employee("", new Statut(), "");
     this.router = router;
-  /*   this.user_db = new User() */
     this.enseigne = "";
     this.restaurants = "";
     this.not_mobile = false;
-    // Attention l'url doit contenir l'information concernant le restaurant et le proprietaire
     this.url = this.router.parseUrl(this.router.url)
   }
-
   ngOnInit(): void{
     let user_info = this.url.queryParams;
     this.enseigne = user_info["prop"]

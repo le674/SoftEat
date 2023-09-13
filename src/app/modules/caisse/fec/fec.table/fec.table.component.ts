@@ -4,7 +4,8 @@ import { Record, RowFec } from 'src/app/interfaces/fec';
 import { FecModifRecordComponent } from '../fec.modif-record/fec.modif-record.component';
 import { Account } from 'src/app/interfaces/account';
 import { FecModifLettrageComponent } from '../fec.modif.lettrage/fec.modif.lettrage.component';
-
+import { CommonTableService } from 'src/app/services/common/common.table.service';
+import { DownloadService } from 'src/app/services/download/download.service';
 @Component({
   selector: 'app-fectable',
   templateUrl: './fec.table.component.html',
@@ -17,10 +18,10 @@ export class FecTableComponent implements OnInit {
 @Input() accounts:Array<Account>;
 @Input() prop:string;
 public  panelOpenState = false;
-public index_record:Array<string>;
-/* public dataSource: MatTableDataSource<RowFec>;
- */  
-  constructor(public dialog: MatDialog) {
+public index_record:Array<string>;  
+constructor(public dialog: MatDialog,
+    private table_service:CommonTableService,
+    private download_service:DownloadService) {
     this.records = [];
     this.row_fec = [];
     this.columns = [];
@@ -68,4 +69,36 @@ public index_record:Array<string>;
       }
     }); 
   }
+  exportTab(){
+    
+    let date_validation = Record.formatDate(new Date());
+    let table = [this.columns];
+    this.row_fec.forEach((record) => {
+      let line = [];
+      for(let index of this.index_record){
+        let value_line = record[index];
+        if(index === 'valid_date'){
+          value_line = date_validation;
+        }
+        else{
+          if(['date_reception', 'send_date', 'lettrage_date'].includes((index))){
+            value_line = Record.formatDate(new Date(record[index]));
+          }
+          else{
+            if(value_line){
+              value_line = record[index].toString(); 
+            }
+            else{
+              value_line = "";
+            }
+          }
+        }
+        line.push(value_line);
+      }
+      table.push(line);
+    });
+    const str_table = this.table_service.arrayToTab(table);
+    this.download_service.download(str_table, "fec");
+  }
+
 }

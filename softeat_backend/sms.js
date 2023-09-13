@@ -1,4 +1,5 @@
 const FIREBASE_PROD = false; 
+let corsOptions;
 //Import du paquet pour la création de fonctions https
 const functions = require("firebase-functions");
 //Import des librairies cors/express pour les requêtes Cross Origine
@@ -26,7 +27,6 @@ const snsClient = new SNSClient({
     credentials: credentials,
 }); 
 // Configuration des middleware CORS avec les URL autorisées
-let corsOptions;
 if(FIREBASE_PROD){
   corsOptions = {
         origin: ["https://www.softeat.fr", "https://psofteat-65478545498421319564.web.app"]

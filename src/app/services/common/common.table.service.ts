@@ -18,7 +18,6 @@ export class CommonTableService {
     const array_format = this.paddArray(max_vector, array);
     const sub_array_format = array_format.map((sub_array) => "|" + sub_array.join(""));
     const tab_string = sub_array_format.join("\n");
-    console.log(tab_string);
     return tab_string;
   }
 

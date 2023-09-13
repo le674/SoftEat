@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Record, RowFec } from 'src/app/interfaces/fec';
-import { CommonService } from 'src/app/services/common/common.service';
 import { FecModifRecordComponent } from '../fec.modif-record/fec.modif-record.component';
 import { Account } from 'src/app/interfaces/account';
 import { FecModifLettrageComponent } from '../fec.modif.lettrage/fec.modif.lettrage.component';
+import { CommonTableService } from 'src/app/services/common/common.table.service';
 
 @Component({
   selector: 'app-fecmobile',
@@ -20,7 +20,7 @@ export class FecMobileComponent implements OnInit {
   @Input() prop:string;
   public index_record:Array<string>;
   public visibles: Array<boolean>;
-  constructor(public mobile_service:CommonService, public dialog: MatDialog) { 
+  constructor(private dialog: MatDialog, private table_service:CommonTableService) { 
     this.row_fec = [];
     this.records = [];
     this.columns = [];
@@ -72,6 +72,23 @@ export class FecMobileComponent implements OnInit {
         }
       }); 
     }
+  }
+  exportTab(){
+    let table = [this.columns];
+    this.row_fec.forEach((record) => {
+      let line = [];
+      for(let index of this.index_record){
+        if(record[index]){
+          line.push(record[index].toString());
+        }
+        else{
+          line.push("");
+        }
+      }
+      table.push(line);
+    })
+    const str_table = this.table_service.arrayToTab(table);
+    console.log(str_table);
   }
   // Gestion de l'accordéon
   getVisible(i: number):boolean{

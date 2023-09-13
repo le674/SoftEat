@@ -166,6 +166,22 @@ export class Record implements InteractionBddFirestore {
         }
         return _record;
     }
+    /**
+     * Permet de formatter une date sous la forme d'une chaine de carctère
+     * @param date date que nous transformons en chaine de carctère
+     */
+    public static formatDate(date:Date){
+            let _date = date.getFullYear().toString();
+            let _month = (date.getMonth() + 1).toString();
+            let _days = date.getDate().toString();
+            if(_month.length === 1){
+                _month = `0${_month}`
+            }
+            if(_days.length === 1){
+                _days = `0${_days}`
+            }
+            return `${_date}${_month}${_days}`        
+    }
 }
 
 export class Journal {
@@ -251,17 +267,6 @@ export class RowFec{
         this.devise = null;
         this.identifiant_devise = null;
     }
-    /**
-     * Retourne une liste des attributs dans l'ordre de display columns pour l'affichage d'un enregistrement
-     * @returns liste de l'ensemble des clefs disponibles 
-     */
-    public static getKeys(){
-        return ['code_journal', 'journal_label', 'number', 'date_reception', 'account_number',
-         'account_label', 'other_account_label','other_account_number', 'name', 'send_date',
-         'label_fec', 'debit_ammount', 'credit_ammount', 'lettrage', 'lettrage_date',
-         'valid_date','devise','identifiant_devise'];
-    }
-
     public setRecord(record:Record, accounts:Array<Account>){
         let sec_account:Account | undefined | null = null;
         let account:Account | undefined | null = null;
@@ -298,5 +303,15 @@ export class RowFec{
         this.lettrage_date = this.lettrage_date ?? "pas de données";
         this.identifiant_devise = this.identifiant_devise ?? "pas de données";
         return this;
+    }
+    /**
+     * Retourne une liste des attributs dans l'ordre de display columns pour l'affichage d'un enregistrement
+     * @returns liste de l'ensemble des clefs disponibles 
+     */
+       public static getKeys(){
+        return ['code_journal', 'journal_label', 'number', 'date_reception', 'account_number',
+         'account_label', 'other_account_label','other_account_number', 'name', 'send_date',
+         'label_fec', 'debit_ammount', 'credit_ammount', 'lettrage', 'lettrage_date',
+         'valid_date','devise','identifiant_devise'];
     }
 }
