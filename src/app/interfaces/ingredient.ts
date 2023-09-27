@@ -35,7 +35,7 @@ export class TIngredientBase {
     /**
      * Permet de récupérer de l'ingrédient de base un ingrédient affichable
      * @returns {Object<{name:string, quntity:number}>}
-     */
+    */
     public toMinimalIng(): { name: string, quantity: number, unity: string } {
         let unity = "";
         let quantity = 0;
@@ -79,9 +79,9 @@ export class TIngredientBase {
         this.unity = ingredient.unity;
     }
     /**
-          * Cette fonction permet de retourner un objet  qui permet l'intéraction entre la base de donnée et l'objet  ingrédient
-          * @returns {any} convertisseur de ingrédient pour l'ajout en base 
-         */
+    * Cette fonction permet de retourner un objet  qui permet l'intéraction entre la base de donnée et l'objet  ingrédient
+    * @returns {any} convertisseur de ingrédient pour l'ajout en base 
+    */
     public static getConverter(): any {
         return {
             toFirestore: (ingredient: TIngredientBase) => {

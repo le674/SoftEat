@@ -14,6 +14,7 @@ export class Proprietary implements InteractionBddFirestore {
     record:number;
     restaurant_number:number;
     uid:string;
+    siret:string;
     [index:string]:any
 
     constructor(){
@@ -21,9 +22,10 @@ export class Proprietary implements InteractionBddFirestore {
         this.exigences = [];
         this.id = "";
         this.name = "";
+        this.uid = ""
+        this.siret = "";
         this.record = 0;
         this.restaurant_number = 0;
-        this.uid = ""
     }
     setData(proprietary:Proprietary) {
             if(proprietary.email){
@@ -46,6 +48,9 @@ export class Proprietary implements InteractionBddFirestore {
             }
             if(proprietary.uid){
                 this.uid = proprietary.uid;
+            }
+            if(proprietary.siret){
+                this.siret = proprietary.siret;
             }
     }
     getData(id: string | null,  attrs: Array<string> | null, ...args: any[]) {

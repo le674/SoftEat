@@ -58,6 +58,7 @@ export class AppPlatsComponent implements OnInit, OnDestroy {
     this._consommables = [];
     this._ingredients = [];
     this.preparations = [];
+    
     this.consommables = [];
     this.ingredients = [];
     this.carte = [];

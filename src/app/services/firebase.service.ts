@@ -7,7 +7,7 @@ import { CollectionReference, DocumentData, DocumentReference, DocumentSnapshot,
 import { CalculService } from './menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { Class, Condition, InteractionBddFirestore, TransactionalConf, TransactionalWriteOnlyConf } from '../interfaces/interaction_bdd';
 import { Subject } from 'rxjs';
-import { Query, query, runTransaction, where, writeBatch } from 'firebase/firestore';
+import { Query, getDoc, query, runTransaction, where, writeBatch } from 'firebase/firestore';
 import { CommonService } from './common/common.service';
 
 
@@ -65,6 +65,40 @@ export class FirebaseService {
             this.interaction_data.next(this.data_array)
         })
         return this.sub_function;
+    }
+    /**
+     * Cette fonction permet de récupérer un document 
+    */
+    public async getFromFirestoreDocProm(paths: Array<string> | string, id:string, class_instance: Class<InteractionBddFirestore>){
+        let result = null;
+        this.interaction_data = new Subject<Array<InteractionBddFirestore>>();
+        let _paths: Array<string> = this.getPath(paths);
+        let converter_firestore: any = {
+            toFirestore: (ingredient: InteractionBddFirestore) => {
+                return ingredient;
+            },
+            fromFirestore: (snapshot: DocumentSnapshot<InteractionBddFirestore>, options: SnapshotOptions) => {
+                const data = snapshot.data(options);
+                if (data !== undefined) {
+                    let instance: InteractionBddFirestore;
+                    instance = this.constructInstance(class_instance).getInstance();
+                    instance.setData(data);
+                    return instance;
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+        let ref = this.concatPathDoc(id, _paths, converter_firestore)
+        const docSnap = await getDoc(ref);
+        if(docSnap.exists()){
+             result = docSnap.data() as InteractionBddFirestore;
+        }
+        else{
+            throw Error("no such document with id " + id);
+        }
+        return result;
     }
     /**
      * Permet d'écouter uniquement les données chager dans firestore pour un chemin 

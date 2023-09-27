@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class CommonTableService {
-
   constructor() { 
 
   }
@@ -46,7 +45,7 @@ export class CommonTableService {
   /**
    * Cette fonction permet de récupérer toute les colonnes et d'ajouter à celle-ci un padding
    * @param array liste de liste pour laquel nous récupérons le maximum de la taille des sous chaines de caractères
-   */
+  */
   public paddArray( lengths:Array<number>, array:Array<Array<string>>){
     let tab:Array<Array<string>>  = [];
     let reversed_tab:Array<Array<string>> = [];
@@ -65,7 +64,7 @@ export class CommonTableService {
     index = 0;
     while(index < reversed_tab[0].length){
       const lst = reversed_tab.map((sub_array) => sub_array[index]);
-      tab.push(lst)
+      tab.push(lst);
       index = index + 1;
     }
     return tab;
@@ -76,10 +75,14 @@ export class CommonTableService {
   */
   public paddWord(length:number,word:string, latest:boolean){
     const tot_length =  length - word.length;
-    let _word = word + " ".repeat(tot_length) + "|";
+    let _word = word + "|";
     if(latest){
-      _word = word + " ".repeat(tot_length);
+      _word = word;
     }
     return _word;
+  }
+  public getSiren(siret: string){
+    const siret_part = siret.split(" "); 
+    return siret_part[0] + siret_part[1] + siret_part[2];
   }
 }
