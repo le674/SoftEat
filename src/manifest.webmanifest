@@ -5,53 +5,53 @@
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
-  "start_url": "./",
+  "start_url": "./accueil",
   "icons": [
     {
       "src": "assets/icons/icon-72x92.png",
-      "sizes": "72x92",
+      "sizes": "72x72",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
       "src": "assets/icons/icon-96x122.png",
-      "sizes": "96x122",
+      "sizes": "96x96",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
       "src": "assets/icons/icon-128x163.png",
-      "sizes": "128x163",
+      "sizes": "128x128",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
       "src": "assets/icons/icon-144x183.png",
-      "sizes": "144x183",
+      "sizes": "144x144",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
       "src": "assets/icons/icon-152x193.png",
-      "sizes": "152x193",
+      "sizes": "152x152",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
       "src": "assets/icons/icon-192x244.png",
-      "sizes": "192x244",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
       "src": "assets/icons/icon-384x488.png",
-      "sizes": "384x488",
+      "sizes": "384x384",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
       "src": "assets/icons/icon-530x684.png",
-      "sizes": "530x684",
+      "sizes": "530x530",
       "type": "image/png",
       "purpose": "maskable any"
     }

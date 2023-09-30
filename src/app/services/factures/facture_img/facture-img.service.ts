@@ -30,7 +30,8 @@ export class FactureImgService {
       imageColor: false,
       imageGrey: false,
       imageBinary: false,
-      debug: false
+      debug: false,
+      layoutBlocks:false
     }
 
     const init_item: TextShared = {

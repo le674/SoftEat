@@ -130,8 +130,11 @@ export class AppFacturesComponent implements OnInit {
             }
           });
          dialog_ref.componentInstance.getDataSubject().subscribe((parsed_pdf) => {
+          console.log(parsed_pdf);
             let p_ingredients = this.service_factue_shared.convertParsedLstToIngs(parsed_pdf, this.prop, this.restaurant)
             p_ingredients.then((ingredients) => {
+              console.log(ingredients);
+              
               this.ingredients_br = ingredients;
               for (let ingredient of ingredients) {
                 let row_dlc = "";
