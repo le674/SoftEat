@@ -10,6 +10,7 @@ const AppWebhook = express();
 AppWebhook.use(cors());
 AppWebhook.use(express.json());
 AppWebhook.post('/', (req, res) => {
+    const curr_date = new Date().toISOString();
     const secret = "qoqsd_PCWggf6V0fJHkCbkwy-PBts1ZcIDDdJlFLwqFYMbP9GAC8Rj-Tlv2e_o4LB0bmE7cLPcZP_Wf8Pr8yEA";
     const commande = req.body.body.order.id;
     const guid = req.headers["x-deliveroo-sequence-guid"];
@@ -21,17 +22,34 @@ AppWebhook.post('/', (req, res) => {
         const status = req.body.body.order.status;
         sdk_token.auth('5htgeb51pagm6k5es6dna9448b', '1vqot94lel5ks61ld4s537rvg247s13igtr9hjpgmjdfolbi6mut');
         sdk_token.server('https://auth-sandbox.developers.deliveroo.com');
+        console.log("before token");
             return sdk_token.getAccessToken({ grant_type: 'client_credentials' })
             .then(({ data }) => {
+                console.log("after token");
                 sdk_sync.auth(data.access_token);
                 sdk_sync.server('https://api-sandbox.developers.deliveroo.com');
-                sdk_sync.createSyncStatus({order_id:id}).then(({data}) => {
-                    return res.status(200).send(data);
-                }).catch((err) => {
-                    console.error(err)
-                    return res.status(err.status).send(err.data);
-                })
-            });
+                console.log('before sync');
+                if(status === "accepted"){
+                    console.log("actual date");
+                    console.log(curr_date);
+                    sdk_sync.createSyncStatus({
+                        status: 'succeeded',
+                        occurred_at: curr_date
+                      },{order_id:id}).then(({data}) => {
+                        console.log('after sync');
+                        return res.status(200).send(data);
+                    }).catch((err) => {
+                        console.error(err)
+                        return res.status(err.status).send(err.data);
+                    })
+                }
+                else{
+                    return res.status(200).send("ok");
+                }
+            }).catch((err) => {
+                console.error(err);
+                return res.status(406).send(err);
+            })
     }
     else{
         throw new Error("sended data not from this webhook");

@@ -4,7 +4,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Client, DisplayedClient } from '../../../../../app/interfaces/client';
 import { Router, UrlTree } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
-import { ClientsService } from 'src/app/services/clients/clients.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalModifComponent } from './app.clients.modals/app.client.modal.modif/modal.modif/modal.modif.component';
