@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { FirebaseApp } from '@angular/fire/app';
 import { ref, onValue, get } from 'firebase/database';
 import { Statut } from '../interfaces/statut';
 import { Unsubscribe } from 'firebase/auth';
@@ -22,7 +21,7 @@ export class FirebaseService {
     statut!: Statut;
     private sub_function!: Unsubscribe;
     private data_array: Array<InteractionBddFirestore>;
-    constructor(private ofApp: FirebaseApp, private firestore: Firestore, private service: CalculService, private common_service: CommonService) {
+    constructor( private firestore: Firestore, private service: CalculService, private common_service: CommonService) {
         this.data_array = [];
     }
     /**

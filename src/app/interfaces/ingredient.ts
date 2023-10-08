@@ -320,14 +320,13 @@ export class CIngredient implements InteractionBddFirestore {
         return ingredients.map((ingredient) => ingredient.id);
     }
     /**
-     * modification des quantités des ingrédients avant 
+     * modification des quantités des ingrédients avant leur reécriture dans la base de donnée
      */
-    public static changeQuantity(datas:Array<Array<InteractionBddFirestore>>, quantity:Array<number>){
-        let service:CommonService = new CommonService();
+    public static changeQuantity(datas:Array<Array<InteractionBddFirestore>>){
         const calcul:CalculService = new CalculService();
         let ingredients:Array<CIngredient> = datas[1] as Array<CIngredient>;
         let plats:Array<Cplat> = datas[0] as Array<Cplat>;
-        ingredients.forEach((ingredient) => {
+        ingredients = ingredients.map((ingredient) => {
             let _ingredients = plats.map((plat) => plat.ingredients.find((ing) => ing.id[0] === ingredient.id));
             const quantities = _ingredients.map((_ing) =>{
                 if(_ing && _ing.quantity && _ing.unity){
@@ -340,7 +339,9 @@ export class CIngredient implements InteractionBddFirestore {
             const sum = quantities.reduce((prev_quant, next_quant) => prev_quant + next_quant);
             ingredient.quantity = calcul.convertQuantity(ingredient.quantity, ingredient.unity) - sum;
             ingredient.quantity = calcul.revertQuantity(ingredient.quantity, ingredient.unity);
-        })
+            return ingredient;
+        });
+        return ingredients;
     }
 
 }
