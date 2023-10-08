@@ -213,13 +213,18 @@ export class FirebaseService {
     /**
      * Cette fonction permet d'ajouter dans firestore des données, nous récupérons plusieurs donnée
      * puis nous écrivons une nouvelle donnée dans la base firestore
+     * @param prev_data donné que l'lon souhaite ajouter à la bdd
      * @param confs configuration de la transaction
-     * @param operation opération à réaliser avant l'écriture dan la bdd
      */
     public async setFirestoreMultipleData(prev_data:InteractionBddFirestore,confs: Array<TransactionalConf>) {
-        let results: Array<any> = [];
+        let results: Array<Array<InteractionBddFirestore>> = [];
         await runTransaction(this.firestore, async (transaction) => {
             for(let conf of confs) {
+                let tmp_result:Array<InteractionBddFirestore> = [];
+                let ids = conf.doc_id;
+                if(conf.operation_ids){
+                    ids = conf.operation_ids(results);
+                }
                 let converter_firestore = null;
                 const _class = conf.class;
                 if(_class){
@@ -242,10 +247,13 @@ export class FirebaseService {
                     }
                 }
                 if(conf.transaction === "get") {
-                    if(conf.doc_id){
-                        let doc_ref = this.concatPathDoc(conf.doc_id, conf.path, converter_firestore);
-                        const new_doc = await transaction.get(doc_ref);
-                        results.push(new_doc.data() as InteractionBddFirestore);
+                    if(ids){
+                        for(let id of ids){
+                            let doc_ref = this.concatPathDoc(id, conf.path, converter_firestore);
+                            const new_doc = await transaction.get(doc_ref);
+                            tmp_result.push(new_doc.data() as InteractionBddFirestore);
+                        }
+                        results.push(tmp_result);
                     }
                     else{
                         const error = new Error("conf.doc_id not null for get methode");
@@ -253,17 +261,19 @@ export class FirebaseService {
                     }
                 }
                 if(conf.transaction === "update") {
-                    if(conf.doc_id){
+                    if(ids){
                         let to_update:InteractionBddFirestore | null = prev_data;
-                        let doc_ref = this.concatPathDoc(conf.doc_id, conf.path, converter_firestore);
-                        if (conf.operation) {
-                            to_update = conf.operation(results);
-                        }
-                        if(to_update){
-                            await transaction.update(doc_ref,to_update.getData(null,null));
-                        }
-                        else{
-                            console.log(`donnée null à modifier sur le chemin ${conf.path}`);
+                        for(let index = 0; index < ids.length; index++){
+                            let doc_ref = this.concatPathDoc(ids[index], conf.path, converter_firestore);
+                            if (conf.operation) {
+                                to_update = conf.operation(results, prev_data, ids[index]);
+                            }
+                            if(to_update){
+                                await transaction.update(doc_ref,to_update.getData(null,null));
+                            }
+                            else{
+                                console.log(`donnée null à modifier sur le chemin ${conf.path}`);
+                            }
                         }
                     }
                     else{
@@ -285,7 +295,6 @@ export class FirebaseService {
                         console.log(`donnée null à ajouter sur le chemin ${conf.path}`);
                     }
                 }
-
             }
            return console.log("transaction completed");
         })

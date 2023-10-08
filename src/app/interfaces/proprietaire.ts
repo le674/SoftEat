@@ -70,10 +70,10 @@ export class Proprietary implements InteractionBddFirestore {
     getInstance(): InteractionBddFirestore {
         return new Proprietary();
     }
-    public static incRecord(data:Array<InteractionBddFirestore> | null):InteractionBddFirestore | null{
+    public static incRecord(data:Array<Array<InteractionBddFirestore>> | null, added_data:InteractionBddFirestore, id:string):InteractionBddFirestore | null{
         let _data = null;
         if(data){
-            _data = data[0] as Proprietary;
+            _data = data[0][0] as Proprietary;
             _data.record = _data.record + 1;
         }
         return _data;

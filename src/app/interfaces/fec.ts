@@ -157,12 +157,12 @@ export class Record implements InteractionBddFirestore {
      * @param added_data nombre actuel d'enregistrement
      * @returns un enregistrement avec l'argument record incrémenté de 1
      */
-    public static incRecord(bdd_data:Array<InteractionBddFirestore> | null,added_data:InteractionBddFirestore):InteractionBddFirestore | null{
+    public static incRecord(bdd_data:Array<Array<InteractionBddFirestore>> | null,added_data:InteractionBddFirestore):InteractionBddFirestore | null{
         let _record = null;
-        let _bdd_data = bdd_data as Array<Proprietary>
+        let _bdd_data = bdd_data as Array<Array<Proprietary>>
         if(bdd_data){
             _record =  added_data as Record;
-            _record.number = _bdd_data[0].record;
+            _record.number = _bdd_data[0][0].record;
         }
         return _record;
     }

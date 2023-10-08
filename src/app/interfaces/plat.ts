@@ -213,6 +213,15 @@ export class Cplat implements InteractionBddFirestore{
    public static getPathsToFirestore(proprietary_id:string){
       return ["proprietaires", proprietary_id, "plats"]
    }
+   /**
+    * permet de retourner les identifiants des ingrédeints à partir des plats
+    * @param datas données récupérés depuis la base de donnée représentent l'ensemble des données récupérer par la 
+    * fonction get de la transaction une par une
+    */
+   public static getIngredientsIds(datas:Array<Array<InteractionBddFirestore>>):Array<string>{
+      const plats = datas[0] as Array<Cplat>;
+      return plats.map((plat) => plat.ingredients.map((ingredient) => ingredient.id).flat()).flat()
+   }
 }
 export class CbasePlat{
    "name":string;

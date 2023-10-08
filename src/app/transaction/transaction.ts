@@ -1,6 +1,10 @@
+import { Ccommande } from "../interfaces/commande";
+import { Cconsommable } from "../interfaces/consommable";
 import { Facture } from "../interfaces/facture";
 import { Record } from "../interfaces/fec";
+import { CIngredient } from "../interfaces/ingredient";
 import { TransactionalConf, TransactionalWriteOnlyConf } from "../interfaces/interaction_bdd";
+import { Cplat } from "../interfaces/plat";
 import { Proprietary } from "../interfaces/proprietaire";
 
 export class Transaction {
@@ -17,15 +21,17 @@ export class Transaction {
         return [
             {
               path:Proprietary.getPathsToFirestore(),
-              doc_id:prop,
+              doc_id:[prop],
               transaction:"get",
+              operation_ids:null,
               operation:null,
               class:Proprietary 
             },
             {
               path:Proprietary.getPathsToFirestore(),
-              doc_id:prop,
+              doc_id:[prop],
               transaction:"update",
+              operation_ids:null,
               operation:Proprietary.incRecord,
               class:Proprietary
             },
@@ -33,6 +39,7 @@ export class Transaction {
               path:Record.getPathsToFirestore(prop),
               doc_id:null,
               transaction:"set",
+              operation_ids:null,
               operation:Record.incRecord,
               class:Record
             }
@@ -99,5 +106,55 @@ export class Transaction {
               attrs:["ammount_total", "name"]
             }
           ] as Array<TransactionalWriteOnlyConf>;
+    }
+    /**
+     * Configuration d'ajout d'une commande dans la base de donnée 
+     * @param prop identifiant du propriétaire pour lequel nous souhaitons modifier 
+     * @param commande commande que l'on souhaite ajouter à l'inventaire
+     * @param restaurant_id identifiant du restaurant pour lequel nous voulons supprimer le plat
+     * @param table_id identifiant de la table qui contient le plat à supprimer
+     * @returns configuration de la transaction
+     */
+    public static addCommande(prop:string, restaurant_id:string, table_id:string ,commandes:Ccommande){
+      let configuration:Array<TransactionalWriteOnlyConf> = [];
+      if(commandes.commande){
+         let ids:Array<string> = commandes.commande.map((commande) => Object.values(commande).map((plat) => plat.id)).flat();
+         let quantity:Array<string> = commandes.commande.map((commande) => Object.values(commande).map((plat) => plat.quantity)).flat();
+         let ok = [
+          {
+            path:Cplat.getPathsToFirestore(prop),
+            doc_id:ids,
+            transaction:'get',
+            operations_ids:null,
+            operation:null,
+            class:Cplat
+          },
+          {
+            path: CIngredient.getPathsToFirestore(prop, restaurant_id),
+            doc_id:null,
+            transaction:'get',
+            operations_ids:Cplat.getIngredientsIds,
+            operation:null,
+            class:CIngredient
+          },
+          {
+            path: CIngredient.getPathsToFirestore(prop, restaurant_id),
+            doc_id:null,
+            transaction:'update',
+            operations_ids:CIngredient.getIds,
+            operation:CIngredient.changeQuantity,
+            class:CIngredient
+          },
+          {
+            path:Ccommande.getPathsToFirestore(prop, restaurant_id,table_id),
+            doc_id:null,
+            transaction:'set',
+            operation_ids:null,
+            operation:null,
+            class:Ccommande,
+          }
+        ]
+      }
+      return configuration;
     }
 }
