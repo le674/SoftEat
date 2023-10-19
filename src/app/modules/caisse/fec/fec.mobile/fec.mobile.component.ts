@@ -18,6 +18,7 @@ export class FecMobileComponent implements OnInit {
   @Input() stock:string | null;
   @Input() accounts:Array<Account>; 
   @Input() prop:string;
+  @Input() siret:string;
   public index_record:Array<string>;
   public visibles: Array<boolean>;
   constructor(private dialog: MatDialog, private table_service:CommonTableService) { 
@@ -29,6 +30,7 @@ export class FecMobileComponent implements OnInit {
     this.index_record = RowFec.getKeys(false);
     this.stock = null;
     this.prop = "";
+    this.siret = "";
   }
 
   ngOnInit(): void {
@@ -88,7 +90,6 @@ export class FecMobileComponent implements OnInit {
       table.push(line);
     })
     const str_table = this.table_service.arrayToTab(table);
-    console.log(str_table);
   }
   // Gestion de l'accordéon
   getVisible(i: number):boolean{

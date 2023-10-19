@@ -129,7 +129,12 @@ export class CalculService {
     return null;
   } */
 
-
+  /**
+   * Cette fonction permet de normaliser les unitée
+   * @param quantity quantitée que nous souhaitons normaliser
+   * @param unity unitée de la quantitée à normaliser
+   * @returns nouvelle quantitée
+   */
   convertQuantity(quantity: number, unity: string): number {
     if(unity === 'g') quantity = quantity * 0.001;
     if(unity === 'mg') quantity = quantity * 0.0001;
@@ -143,6 +148,27 @@ export class CalculService {
     if(unity === 'pince') quantity = quantity * 0.004;
     if(unity === 'pointe') quantity = quantity * 0.005;
     if(unity === 'verre') quantity = quantity * 0.2;
+    return quantity;
+  }
+  /**
+   * Cette fonction permet de dénormaliser une quantitée
+   * @param quantity quantitée que nous souhaitons dénormaliser
+   * @param unity nouvelle unitée associé à la quantitée
+   * @returns nouvelle quantitée
+   */
+  revertQuantity(quantity:number, unity:string){
+    if(unity === 'g') quantity = quantity * 1000;
+    if(unity === 'mg') quantity = quantity * 10000;
+    if(unity === 'ml') quantity = quantity * 10000;
+    if(unity === 'cl') quantity = quantity * 100;
+    if(unity === 'cm') quantity = quantity * 100;
+    if(unity === 'c.c') quantity = quantity * 200;
+    if(unity === 'c.s') quantity = quantity * 67;
+    if(unity === 'noisette')  quantity = quantity * 200;
+    if(unity === 'noix')  quantity = quantity * 67;
+    if(unity === 'pince') quantity = quantity * 250;
+    if(unity === 'pointe') quantity = quantity * 200;
+    if(unity === 'verre') quantity = quantity * 5;
     return quantity;
   }
 

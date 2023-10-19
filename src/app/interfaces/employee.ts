@@ -28,6 +28,7 @@ export class Employee implements InteractionBddFirestore {
     time_work:string | null;
     notifConversations!: { [conv: string]: number};
     convPrivee:string | null;
+    registre_notif:string | null;
     [index:string]:any;
     constructor(email:string, statut:Statut, uid:string){
         this.user_id = "";
@@ -48,8 +49,9 @@ export class Employee implements InteractionBddFirestore {
         this.convPrivee = null;
         this.address = null;
         this.current_restaurant = null;
-        this.calendar = Object.assign({"id": ""},{"api_key": ""})
-        this.notifConversations = { 'ana': 0, 'com': 0, 'fac': 0, 'inv': 0, 'rec': 0}
+        this.calendar = Object.assign({"id": ""},{"api_key": ""});
+        this.notifConversations = { 'ana': 0, 'com': 0, 'fac': 0, 'inv': 0, 'rec': 0};
+        this.registre_notif = null;
     }
     /**
      * permet de récupérer les statut qui sont autoriser pour le droit
@@ -197,6 +199,7 @@ export class Employee implements InteractionBddFirestore {
         this.proprietary_id = employee.proprietary_id;
         this.auth_rh = employee.auth_rh;
         this.service = employee.service;
+        this.registre_notif = employee.registre_notif;
     }
    /**
       * Permet de retourner une nouvelle instance de employee depuis la base de donnée
@@ -255,6 +258,7 @@ export class EmployeeFull extends Employee{
     super.service = employee.service;
     super.surname = employee.surname;
     super.user_id = employee.user_id;
+    super.registre_notif = employee.registre_notif;
   }
   /**
    * permet de récupérer l'ensemble des identifiants des restaurants auxquel appartient l'employé 

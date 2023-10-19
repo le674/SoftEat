@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { FirebaseApp } from '@angular/fire/app';
 import { ref, onValue, get } from 'firebase/database';
 import { Statut } from '../interfaces/statut';
 import { Unsubscribe } from 'firebase/auth';
@@ -7,7 +6,7 @@ import { CollectionReference, DocumentData, DocumentReference, DocumentSnapshot,
 import { CalculService } from './menus/menu.calcul/menu.calcul.ingredients/calcul.service';
 import { Class, Condition, InteractionBddFirestore, TransactionalConf, TransactionalWriteOnlyConf } from '../interfaces/interaction_bdd';
 import { Subject } from 'rxjs';
-import { Query, query, runTransaction, where, writeBatch } from 'firebase/firestore';
+import { Query, getDoc, query, runTransaction, where, writeBatch } from 'firebase/firestore';
 import { CommonService } from './common/common.service';
 
 
@@ -22,7 +21,7 @@ export class FirebaseService {
     statut!: Statut;
     private sub_function!: Unsubscribe;
     private data_array: Array<InteractionBddFirestore>;
-    constructor(private ofApp: FirebaseApp, private firestore: Firestore, private service: CalculService, private common_service: CommonService) {
+    constructor( private firestore: Firestore, private service: CalculService, private common_service: CommonService) {
         this.data_array = [];
     }
     /**
@@ -65,6 +64,40 @@ export class FirebaseService {
             this.interaction_data.next(this.data_array)
         })
         return this.sub_function;
+    }
+    /**
+     * Cette fonction permet de récupérer un document 
+    */
+    public async getFromFirestoreDocProm(paths: Array<string> | string, id:string, class_instance: Class<InteractionBddFirestore>){
+        let result = null;
+        this.interaction_data = new Subject<Array<InteractionBddFirestore>>();
+        let _paths: Array<string> = this.getPath(paths);
+        let converter_firestore: any = {
+            toFirestore: (ingredient: InteractionBddFirestore) => {
+                return ingredient;
+            },
+            fromFirestore: (snapshot: DocumentSnapshot<InteractionBddFirestore>, options: SnapshotOptions) => {
+                const data = snapshot.data(options);
+                if (data !== undefined) {
+                    let instance: InteractionBddFirestore;
+                    instance = this.constructInstance(class_instance).getInstance();
+                    instance.setData(data);
+                    return instance;
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+        let ref = this.concatPathDoc(id, _paths, converter_firestore)
+        const docSnap = await getDoc(ref);
+        if(docSnap.exists()){
+             result = docSnap.data() as InteractionBddFirestore;
+        }
+        else{
+            throw Error("no such document with id " + id);
+        }
+        return result;
     }
     /**
      * Permet d'écouter uniquement les données chager dans firestore pour un chemin 
@@ -179,13 +212,18 @@ export class FirebaseService {
     /**
      * Cette fonction permet d'ajouter dans firestore des données, nous récupérons plusieurs donnée
      * puis nous écrivons une nouvelle donnée dans la base firestore
+     * @param prev_data donné que l'lon souhaite ajouter à la bdd
      * @param confs configuration de la transaction
-     * @param operation opération à réaliser avant l'écriture dan la bdd
      */
     public async setFirestoreMultipleData(prev_data:InteractionBddFirestore,confs: Array<TransactionalConf>) {
-        let results: Array<any> = [];
+        let results: Array<Array<InteractionBddFirestore>> = [];
         await runTransaction(this.firestore, async (transaction) => {
             for(let conf of confs) {
+                let tmp_result:Array<InteractionBddFirestore> = [];
+                let ids = conf.doc_id;
+                if(conf.operation_ids){
+                    ids = conf.operation_ids(results);
+                }
                 let converter_firestore = null;
                 const _class = conf.class;
                 if(_class){
@@ -208,10 +246,13 @@ export class FirebaseService {
                     }
                 }
                 if(conf.transaction === "get") {
-                    if(conf.doc_id){
-                        let doc_ref = this.concatPathDoc(conf.doc_id, conf.path, converter_firestore);
-                        const new_doc = await transaction.get(doc_ref);
-                        results.push(new_doc.data() as InteractionBddFirestore);
+                    if(ids){
+                        for(let id of ids){
+                            let doc_ref = this.concatPathDoc(id, conf.path, converter_firestore);
+                            const new_doc = await transaction.get(doc_ref);
+                            tmp_result.push(new_doc.data() as InteractionBddFirestore);
+                        }
+                        results.push(tmp_result);
                     }
                     else{
                         const error = new Error("conf.doc_id not null for get methode");
@@ -219,17 +260,19 @@ export class FirebaseService {
                     }
                 }
                 if(conf.transaction === "update") {
-                    if(conf.doc_id){
+                    if(ids){
                         let to_update:InteractionBddFirestore | null = prev_data;
-                        let doc_ref = this.concatPathDoc(conf.doc_id, conf.path, converter_firestore);
-                        if (conf.operation) {
-                            to_update = conf.operation(results);
-                        }
-                        if(to_update){
-                            await transaction.update(doc_ref,to_update.getData(null,null));
-                        }
-                        else{
-                            console.log(`donnée null à modifier sur le chemin ${conf.path}`);
+                        for(let index = 0; index < ids.length; index++){
+                            let doc_ref = this.concatPathDoc(ids[index], conf.path, converter_firestore);
+                            if (conf.operation) {
+                                to_update = conf.operation(results, prev_data, ids[index]);
+                            }
+                            if(to_update){
+                                await transaction.update(doc_ref,to_update.getData(null,null));
+                            }
+                            else{
+                                console.log(`donnée null à modifier sur le chemin ${conf.path}`);
+                            }
                         }
                     }
                     else{
@@ -251,7 +294,6 @@ export class FirebaseService {
                         console.log(`donnée null à ajouter sur le chemin ${conf.path}`);
                     }
                 }
-
             }
            return console.log("transaction completed");
         })

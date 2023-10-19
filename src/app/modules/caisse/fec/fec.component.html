@@ -10,8 +10,8 @@
         <h1> Fichier d'expertise comptable </h1>
     </header>
     <main>
-        <app-fectable *ngIf="!windows_screen_mobile" [prop]="prop" [accounts]="accounts"  [row_fec]="this.row_fec" [records]="this.records" [columns]="this.displayedColumns"></app-fectable>
-        <app-fecmobile *ngIf="windows_screen_mobile" [prop]="prop" [accounts]="accounts" [row_fec]="this.row_fec" [records]="this.records" [columns]="this.displayedColumns"></app-fecmobile>
+        <app-fectable *ngIf="!windows_screen_mobile" [siret]="siret" [prop]="prop" [accounts]="accounts"  [row_fec]="this.row_fec" [records]="this.records" [columns]="this.displayedColumns"></app-fectable>
+        <app-fecmobile *ngIf="windows_screen_mobile" [siret]="siret" [prop]="prop" [accounts]="accounts" [row_fec]="this.row_fec" [records]="this.records" [columns]="this.displayedColumns"></app-fecmobile>
     </main>
 </body>
 </html>

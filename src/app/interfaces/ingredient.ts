@@ -2,6 +2,8 @@ import { DocumentSnapshot, SnapshotOptions } from "@angular/fire/firestore";
 import { CalculService } from "../services/menus/menu.calcul/menu.calcul.ingredients/calcul.service";
 import { InteractionBddFirestore } from "./interaction_bdd";
 import { Injectable } from "@angular/core";
+import { Cplat } from "./plat";
+import { CommonService } from "../services/common/common.service";
 
 /**
  * @class ingrédient utilisé pour la recette d'un plat 
@@ -35,7 +37,7 @@ export class TIngredientBase {
     /**
      * Permet de récupérer de l'ingrédient de base un ingrédient affichable
      * @returns {Object<{name:string, quntity:number}>}
-     */
+    */
     public toMinimalIng(): { name: string, quantity: number, unity: string } {
         let unity = "";
         let quantity = 0;
@@ -79,9 +81,9 @@ export class TIngredientBase {
         this.unity = ingredient.unity;
     }
     /**
-          * Cette fonction permet de retourner un objet  qui permet l'intéraction entre la base de donnée et l'objet  ingrédient
-          * @returns {any} convertisseur de ingrédient pour l'ajout en base 
-         */
+    * Cette fonction permet de retourner un objet  qui permet l'intéraction entre la base de donnée et l'objet  ingrédient
+    * @returns {any} convertisseur de ingrédient pour l'ajout en base 
+    */
     public static getConverter(): any {
         return {
             toFirestore: (ingredient: TIngredientBase) => {
@@ -308,4 +310,38 @@ export class CIngredient implements InteractionBddFirestore {
             }
         }
     }
+    /**
+     * permet de retourner les identifiants des ingrédients récupérer en deuxième appel de la transaction 
+     * @param datas données récupérés avec la fonction get
+     * @returns identifiant des igrédients
+     */
+    public static getIds(datas:Array<Array<InteractionBddFirestore>>):Array<string>{
+        const ingredients = datas[1] as Array<CIngredient>;
+        return ingredients.map((ingredient) => ingredient.id);
+    }
+    /**
+     * modification des quantités des ingrédients avant leur reécriture dans la base de donnée
+     */
+    public static changeQuantity(datas:Array<Array<InteractionBddFirestore>>){
+        const calcul:CalculService = new CalculService();
+        let ingredients:Array<CIngredient> = datas[1] as Array<CIngredient>;
+        let plats:Array<Cplat> = datas[0] as Array<Cplat>;
+        ingredients = ingredients.map((ingredient) => {
+            let _ingredients = plats.map((plat) => plat.ingredients.find((ing) => ing.id[0] === ingredient.id));
+            const quantities = _ingredients.map((_ing) =>{
+                if(_ing && _ing.quantity && _ing.unity){
+                    return calcul.convertQuantity(_ing.quantity, _ing.unity)
+                }
+                else{
+                    return 0;
+                }
+            });
+            const sum = quantities.reduce((prev_quant, next_quant) => prev_quant + next_quant);
+            ingredient.quantity = calcul.convertQuantity(ingredient.quantity, ingredient.unity) - sum;
+            ingredient.quantity = calcul.revertQuantity(ingredient.quantity, ingredient.unity);
+            return ingredient;
+        });
+        return ingredients;
+    }
+
 }

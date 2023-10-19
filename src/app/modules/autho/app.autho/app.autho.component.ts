@@ -13,6 +13,9 @@ import { Employee } from 'src/app/interfaces/employee';
 import { CommonCacheServices } from 'src/app/services/common/common.cache.services.service';
 import { Subscription } from 'rxjs';
 import { Auth } from '@angular/fire/auth';
+import { FirebaseApp } from '@angular/fire/app';
+import { FcmService } from 'src/app/services/fcm.service';
+import { FirebaseService } from 'src/app/services/firebase.service';
 
 @Component({
   selector: 'app-app.autho',
@@ -21,27 +24,34 @@ import { Auth } from '@angular/fire/auth';
 })
 export class AppAuthoComponent implements OnInit, OnDestroy {
   @ViewChild('widgetsContent') public widgetsContent!: ElementRef;
-
   private readonly screen_width: any;
   private uid: string;
   public user:User | null;
   public is_confique: boolean;
   public url:string;
+  public notif:boolean;
   private employee_unsubscribe!:Unsubscribe;
   private _employee_subscription!:Subscription;
   private restaurant_unsubscribe!: Unsubscribe;
   private _restaurant_subscription!:Subscription;
   private user_unsubscribe!: Unsubscribe;
   private _user_subscription!:Subscription;
+  private employee:Employee | null;
+  private fcm:FcmService;
 
-  constructor(private user_services : UserInteractionService, private auth: Auth,
+  constructor(private ofApp: FirebaseApp, private user_services : UserInteractionService, private auth: Auth,
      private router: Router, public dialog: MatDialog,
-     private restaurant_service:RestaurantService, public cache_service:CommonCacheServices){   
+     private restaurant_service:RestaurantService,
+     private firebase_service:FirebaseService, 
+     public cache_service:CommonCacheServices){   
       this.uid = "";
       this.screen_width = window.innerWidth;
       this.url = "";
       this.is_confique = false;
       this.user = null;
+      this.notif = false;
+      this.fcm = new FcmService(this.ofApp, this.firebase_service);
+      this.employee = null;
   }
   ngOnDestroy(): void {  
     if(this.restaurant_unsubscribe){
@@ -65,7 +75,6 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
   }
   ngOnInit(): void {
       onAuthStateChanged(this.auth, (user) => {
-        console.log(user);
         if(user){
           this.uid = user.uid;
           this.user_unsubscribe = this.user_services.getUserFromUidBDD(this.uid);
@@ -75,6 +84,7 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
               this.cache_service.setUser(user);
               this.employee_unsubscribe = this.user_services.getEmployeeBDD(this.user)
               this._employee_subscription = this.user_services.getEmployee().subscribe((employee:Employee) => {
+                this.employee = employee;
                 if(employee.roles?.includes("propriétaire")){
                   this.is_confique = true;
                 }
@@ -136,6 +146,23 @@ export class AppAuthoComponent implements OnInit, OnDestroy {
   }
   redirectConfigue() {
     this.router.navigate(["/autho/configuration"]);
+  }
+  enableNotif(){
+    if(this.employee && this.user?.proprietary_id){
+      if(!this.employee.registre_notif){
+        this.fcm.registerToken(this.employee, this.user.proprietary_id).then((result) => {
+          if(typeof result === "string"){
+            let token = result as string
+            /**
+             * On transmet le token pour s'enregistrer auprès des topics prop_restaurant_stock, ect...
+             */
+          }
+          else{
+            throw result;
+          }
+        });
+      }
+    }
   }
 }
 

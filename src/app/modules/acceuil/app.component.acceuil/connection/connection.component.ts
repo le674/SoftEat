@@ -8,19 +8,13 @@ import { AuthentificationService } from "../../../../services/authentification.s
 })
 
 export class ConnectionComponent implements OnInit {
-
-  
   constructor(public authService: AuthentificationService){
 
   }
-
   ngOnInit(): void {
     
   }
-
   connexionTest(){
     
   }
-
-
 }

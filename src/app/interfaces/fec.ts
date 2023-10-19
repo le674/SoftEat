@@ -157,12 +157,12 @@ export class Record implements InteractionBddFirestore {
      * @param added_data nombre actuel d'enregistrement
      * @returns un enregistrement avec l'argument record incrémenté de 1
      */
-    public static incRecord(bdd_data:Array<InteractionBddFirestore> | null,added_data:InteractionBddFirestore):InteractionBddFirestore | null{
+    public static incRecord(bdd_data:Array<Array<InteractionBddFirestore>> | null,added_data:InteractionBddFirestore):InteractionBddFirestore | null{
         let _record = null;
-        let _bdd_data = bdd_data as Array<Proprietary>
+        let _bdd_data = bdd_data as Array<Array<Proprietary>>
         if(bdd_data){
             _record =  added_data as Record;
-            _record.number = _bdd_data[0].record;
+            _record.number = _bdd_data[0][0].record;
         }
         return _record;
     }
@@ -244,7 +244,7 @@ export class RowFec{
     credit_ammount:number;
     lettrage:string | null;
     lettrage_date:string | null;
-    timestamp_lettrage_date:string;
+    timestamp_lettrage_date:string | null;
     valid_date:string;
     devise:number | null;
     identifiant_devise:string | null;
@@ -257,8 +257,8 @@ export class RowFec{
         this.timestamp_reception_date = "";
         this.account_number = 0;
         this.account_label = "";
-        this.other_account_label = null;
         this.other_account_number = null;
+        this.other_account_label = null;
         this.name = "";
         this.send_date = "";
         this.timestamp_send_date = "";
@@ -269,7 +269,7 @@ export class RowFec{
         this.valid_date = "";
         this.lettrage = null;
         this.lettrage_date = null;
-        this.timestamp_lettrage_date = "";
+        this.timestamp_lettrage_date = null;
         this.devise = null;
         this.identifiant_devise = null;
     }
@@ -298,8 +298,10 @@ export class RowFec{
         this.debit_ammount = record.debit_ammount;
         this.credit_ammount = record.credit_ammount;
         this.lettrage = record.lettrage;
-        this.lettrage_date = record.reception_date;
-        this.timestamp_lettrage_date = record.reception_date;
+        if(this.lettrage !== "" && this.lettrage){
+            this.lettrage_date = record.reception_date;
+            this.timestamp_lettrage_date = record.reception_date;
+        }
         this.valid_date = "";
         this.devise = record.devise_ammount;
         this.identifiant_devise = record.devise;
@@ -328,7 +330,7 @@ export class RowFec{
         }
         return [
             'code_journal', 'journal_label', 'number', `${reception_date}`, 'account_number',
-            'account_label', 'other_account_label','other_account_number', 'name', `${send_date}`,
+            'account_label', 'other_account_number','other_account_label', 'name', `${send_date}`,
             'label_fec', 'debit_ammount', 'credit_ammount', 'lettrage', `${lettrage_date}`,
             'valid_date','devise','identifiant_devise'
         ];

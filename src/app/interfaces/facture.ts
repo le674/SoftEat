@@ -86,7 +86,7 @@ export class Facture implements InteractionBddFirestore{
         }
         const curr_date = new Date(date_reception);
         this.day = curr_date.getDate();
-        this.month = curr_date.getMonth();
+        this.month = curr_date.getMonth() + 1;
         this.year = curr_date.getFullYear();
         this.is_read = is_read;
         this.restaurant_id = null;

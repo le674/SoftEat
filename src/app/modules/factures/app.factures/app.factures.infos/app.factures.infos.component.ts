@@ -7,6 +7,7 @@ import { Subscription, throwError } from 'rxjs';
 import { Account } from 'src/app/interfaces/account';
 import { Facture } from 'src/app/interfaces/facture';
 import { Journal, Record } from 'src/app/interfaces/fec';
+import { CommonService } from 'src/app/services/common/common.service';
 import { FactureInteractionService } from 'src/app/services/factures/facture-interaction/facture-interaction.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { Transaction } from 'src/app/transaction/transaction';
@@ -56,11 +57,12 @@ export class AppFacturesInfosComponent implements OnInit, OnDestroy {
     });
   }
   submitInfo() {
+    let service:CommonService = new CommonService();
     let record = new Record();
     this.facture.account_id = []
     const _accounts = this.add_facture_infos.controls.accounts_number.controls.flat()
       .map((form_grp) => form_grp.controls.account_number.value)
-      .map((account) => this.checkNull(account))
+      .map((account) => service.checkNullString(account))
       .filter((account) => account !== "");
     if (this.add_facture_infos.valid) {
       const cost = this.add_facture_infos.controls.cost.value;
@@ -152,24 +154,5 @@ export class AppFacturesInfosComponent implements OnInit, OnDestroy {
   }
   sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
-  }
-  /*   printValue($event: MatOptionSelectionChange<string>) {
-    const _accounts = this.add_facture_infos.controls.account_number.value;
-    const _account = this.accounts.find((account) =>  account.id === $event.source.value);
-    if(_accounts){
-      if($event.source.selected){
-        if(_account) {
-          this.desc.push(_account);
-        }
-      }
-      else{
-        if(_account){ 
-          this.desc = this.desc.filter((account) => account.id !== _account.id);
-        }
-      }
-    }
-  } */
-  private checkNull(stringOrNull: string | null): string {
-    return stringOrNull ?? "";
   }
 }

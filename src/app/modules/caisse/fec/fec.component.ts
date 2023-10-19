@@ -1,11 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, UrlTree } from '@angular/router';
-import { Unsubscribe } from 'firebase/firestore';
+import { DocumentData, Unsubscribe } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { Account } from 'src/app/interfaces/account';
 import { Record, RowFec } from 'src/app/interfaces/fec';
-import { Condition } from 'src/app/interfaces/interaction_bdd';
+import { Condition, InteractionBddFirestore } from 'src/app/interfaces/interaction_bdd';
+import { Proprietary } from 'src/app/interfaces/proprietaire';
 import { CommonService } from 'src/app/services/common/common.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 
@@ -19,8 +20,10 @@ export class FecComponent implements OnInit, OnDestroy {
   private url: UrlTree;
   public windows_screen_mobile:boolean;
   public prop:string;
+  public siret:string;
   private record_path:Array<string>;
   private account_path:Array<string>;
+  private proprietary_path:Array<string>;
   public accounts:Array<Account>;
   public records:Array<Record>;
   public row_fec:Array<RowFec>;
@@ -28,16 +31,18 @@ export class FecComponent implements OnInit, OnDestroy {
   private unsubscrib_record!: Unsubscribe;
   private sub_account!: Subscription;
   private sub_record!: Subscription;
-  public displayedColumns: string[] = ['CodeJournal', 'LibelléJournal', 'Numéro', 'DateComptabilisation',
-  'NuméroCompte', 'LibelléCompte', 'LibelléCompteAuxiliaire', 'NuméroCompteAuxiliaire',
-  'RéférencePièceJustificative', 'DatePièceJustificative', 'LibelléEcriture', 'MontantDébit', 'MontantCrédit',
-  'Lettrage', 'DateLettrage', 'DateValidation', 'Montantdevise', 'Idevise'];
+  public displayedColumns: string[] = ['JournalCode', 'JournalLib', 'EcritureNum', 'EcritureDate',
+  'CompteNum', 'CompteLib','CompAuxNum', 'CompAuxLib',
+  'PieceRef', 'PieceDate', 'EcritureLib', 'Debit', 'Credit',
+  'EcritureLet', 'DateLet', 'ValidDate', 'Montantdevise', 'Idevise'];
   constructor(private router: Router, private service:FirebaseService, public mobile_service:CommonService) { 
     this.url = this.router.parseUrl(this.router.url);
     this.prop = "";
+    this.siret = "";
     this.stock = null;
     this.account_path = [];
     this.record_path = [];
+    this.proprietary_path = [];
     this.records = [];
     this.accounts = [];
     this.row_fec = [];
@@ -79,9 +84,9 @@ export class FecComponent implements OnInit, OnDestroy {
     
     this.account_path = Account.getPathsToFirestore(this.prop);
     this.record_path = Record.getPathsToFirestore(this.prop);
+    this.proprietary_path = Proprietary.getPathsToFirestore();
     this.unsubscrib_record = this.service.getFromFirestoreBDD(this.record_path, Record, conditions);
     this.sub_record = this.service.getFromFirestore().subscribe((records) => {
-
       this.records = records as Array<Record>;
       this.unsubscrib_account = this.service.getFromFirestoreBDD(this.account_path, Account, null);
       this.service.getFromFirestore().subscribe((accounts) => {
@@ -89,7 +94,11 @@ export class FecComponent implements OnInit, OnDestroy {
         this.row_fec = this.records.map((record) => {
           let _record = new RowFec();
           return _record.setRecord(record, this.accounts);
-        });
+        });         
+        this.service.getFromFirestoreDocProm(this.proprietary_path, this.prop, Proprietary).then((doc:InteractionBddFirestore) => {
+          const proprietary = doc as Proprietary;
+          this.siret = proprietary.siret;
+        })
       })
     });
   }

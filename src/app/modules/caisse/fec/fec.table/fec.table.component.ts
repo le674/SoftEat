@@ -17,6 +17,7 @@ export class FecTableComponent implements OnInit {
 @Input() columns:Array<string>;
 @Input() accounts:Array<Account>;
 @Input() prop:string;
+@Input() siret:string;
 public  panelOpenState = false;
 public index_record:Array<string>;  
 constructor(public dialog: MatDialog,
@@ -28,6 +29,7 @@ constructor(public dialog: MatDialog,
     this.accounts = [];
     this.index_record = RowFec.getKeys(false);
     this.prop = "";
+    this.siret = "";
   }
   ngOnInit(): void {
   }
@@ -81,24 +83,29 @@ constructor(public dialog: MatDialog,
           value_line = date_validation;
         }
         else{
-          if(['timestamp_reception_date', 'timestamp_send_date', 'timestamp_lettrage_date'].includes((index))){
-            value_line = Record.formatDate(new Date(record[index]));
-          }
-          else{
-            if(value_line){
-              value_line = record[index].toString(); 
+          if(value_line !== null && value_line !== undefined){
+            if(['timestamp_reception_date', 'timestamp_send_date', 'timestamp_lettrage_date'].includes((index))){
+              value_line = Record.formatDate(new Date(record[index]));
             }
             else{
-              value_line = "";
+              const value = record[index];
+              const str_value_line = value.toString() as String; 
+              value_line = str_value_line;
+              if(typeof value === "number"){
+                value_line =  str_value_line.replace(".", ",");
+              }
             }
+          }
+          else{
+            value_line = "";
           }
         }
         line.push(value_line);
       }
       table.push(line);
     });
+    const siren = this.table_service.getSiren(this.siret);
     const str_table = this.table_service.arrayToTab(table);
-    this.download_service.download(str_table, "fec");
+    this.download_service.download(str_table, siren + "FEC" + date_validation);
   }
-
 }

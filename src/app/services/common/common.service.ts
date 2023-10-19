@@ -81,4 +81,10 @@ export class CommonService {
   getCounter():number{
     return this.read_count;
   }
+  checkNullString(stringOrNull: string | null): string {
+    return stringOrNull ?? "";
+  }
+  checkNullNum(stringOrNull: number | null): number {
+    return stringOrNull ?? 0;
+  }
 }
