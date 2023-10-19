@@ -27,7 +27,7 @@ import { CalculService } from './services/menus/menu.calcul/menu.calcul.ingredie
 import { FirebaseService } from './services/firebase.service';
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     AppDashboardModule,

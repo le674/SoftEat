@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, NgModule, OnDestroy, OnInit} from '@angular/core';
 import { Ccommande } from '../../../../app/interfaces/commande';
 
 import { Router, UrlTree } from '@angular/router';
@@ -6,6 +6,10 @@ import { Unsubscribe } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { Ctable } from 'src/app/interfaces/table';
+import { MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
+import { DialogCommandesComponent } from '../dialog-commandes/dialog-commandes.component';
 
 @Component({
   selector: 'app-table',
@@ -29,7 +33,7 @@ export class TableComponent {
   @Input() table: Ctable | undefined;
   public tableOccupied:boolean | null;
 
-  constructor(private firestore: FirebaseService, private router: Router) {
+  constructor(private firestore: FirebaseService, private router: Router, public dialog: MatDialog) {
 
     if(this.table !== undefined){
       this.tableOccupied = this.table.tableOccupied
@@ -44,7 +48,15 @@ export class TableComponent {
     this.commandes = [];
     this.url = this.router.parseUrl(this.router.url);
   }
+  openDialog() {
+    const dialogRef = this.dialog.open(DialogCommandesComponent, {
+      data: { tableID: this.table?.id },
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
   ngOnDestroy(): void {
     if(this.req_commandes_brt){
       this.req_commandes_brt();
@@ -112,3 +124,112 @@ export class TableComponent {
     this.selectedCommande = null;
   }
 }
+/*
+@Component({
+  selector: 'dialog-content-example-dialog',
+  templateUrl: 'dialog-content-example-dialog.html',
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule, CommonModule],
+})
+export class DialogContentExampleDialog{
+
+  @NgModule({
+    imports: [
+      CommonModule, 
+    ],
+    declarations: [
+      // ...
+    ],
+  })
+
+  public commandes:Array<Array<Ccommande>>;
+  private path_to_commandes: Array<string>;
+  private prop: string;
+  private restaurant: string;
+  private req_commandes_brt!:Unsubscribe;
+  private commandes_brt_sub!:Subscription;
+  private url: UrlTree;
+
+  isPopupOpen = false;
+  isActive: boolean = false;
+  isTableExpanded = false;
+  selectedCommande: number | null = null;
+  @Input() table: Ctable | undefined;
+  public tableOccupied:boolean | null;
+
+  constructor(private firestore: FirebaseService, private router: Router, public dialog: MatDialog) {
+
+    if(this.table !== undefined){
+      this.tableOccupied = this.table.tableOccupied
+    }
+    else{
+      this.tableOccupied = null;
+    }
+
+    this.prop = "";
+    this.restaurant = "";
+    this.path_to_commandes = [];
+    this.commandes = [];
+    this.url = this.router.parseUrl(this.router.url);
+ 
+  }
+
+
+  openDialog() {
+    
+    const dialogRef = this.dialog.open(DialogContentExampleDialog);
+
+    dialogRef.afterClosed().subscribe(result => {
+      
+      console.log(`Dialog result: ${result}`);
+
+  
+  
+    });
+
+  }
+  ngOnDestroy(): void {
+    if(this.req_commandes_brt){
+      this.req_commandes_brt();
+    }
+    if(this.commandes_brt_sub){
+      this.commandes_brt_sub.unsubscribe();
+    }
+  }
+  ngOnInit(): void {
+    
+    this.prop = this.url.queryParams["prop"];
+    this.restaurant = this.url.queryParams["restaurant"];
+    this.path_to_commandes = Ccommande.getPathsToFirestore(this.prop, this.restaurant, this.getTableId());
+    this.req_commandes_brt = this.firestore.getFromFirestoreBDD(this.path_to_commandes, Ccommande, null);
+    this.commandes_brt_sub   = this.firestore.getFromFirestore().subscribe((commande) => { 
+    this.commandes.push(commande as Array<Ccommande>);
+    
+    console.log("Popup :  commande 0 : "+this.commandes[0]);
+    console.log("Popup :  longueur: "+this.commandes.length);
+    })
+    
+    console.log("Popup :  "+this.path_to_commandes);
+  }
+  
+  getTableId():string{
+    if(this.table?.id!=undefined){
+      return this.table.id;
+    }
+    return "";
+  }
+  toggleActive() {
+    console.log("Ouverture");
+    this.isActive = !this.isActive;
+  }
+  closePopup() {
+    this.isTableExpanded = false; // desact l'agrandissement de la table
+    this.isPopupOpen = false;
+    this.selectedCommande = null;
+  }
+  
+  selectCommande(commande: number) {
+    this.selectedCommande = commande;
+    // Vous pouvez ajouter ici la logique pour traiter la commande sélectionnée
+  }
+}*/

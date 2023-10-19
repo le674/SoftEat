@@ -18,6 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { FecModifLettrageComponent } from './fec/fec.modif.lettrage/fec.modif.lettrage.component';
+import { DialogCommandesComponent } from './dialog-commandes/dialog-commandes.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { FecModifLettrageComponent } from './fec/fec.modif.lettrage/fec.modif.le
     FecTableComponent,
     FecMobileComponent,
     FecModifRecordComponent,
-    FecModifLettrageComponent
+    FecModifLettrageComponent,
+    DialogCommandesComponent
   ],
   imports: [
     CommonModule,

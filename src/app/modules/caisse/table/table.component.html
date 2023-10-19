@@ -11,7 +11,7 @@
       <button class="payment-button" (click)="paiement_button()">Paiement</button>
     </div>
   </div>
-  <button class="take-order-button" *ngIf="!tableOccupied && !isActive" (click)="takeOrder($event)">Prendre la commande</button>
+  <!--<button class="take-order-button" *ngIf="!tableOccupied && !isActive" (click)="takeOrder($event)">Prendre la commande</button>-->
 
   <div class="popup" *ngIf="isPopupOpen">
     <h2>Sélectionnez une commande :</h2>
@@ -22,6 +22,7 @@
 
     <button (click)="closePopup()">Fermer</button>
   </div>
+  <button mat-button (click)="openDialog()" class="take-order-button" *ngIf="!tableOccupied && !isActive">Commandes de la table</button>
 
 </div>
 <!--
