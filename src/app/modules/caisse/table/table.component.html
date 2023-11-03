@@ -3,30 +3,11 @@
 (click)="toggleActive()">
   <div class="table-number">{{table?.tableNumber}}</div>
   <p>Statut : {{tableOccupied ? "occupé" : "non occupé"}}</p>
-
   <div class="table-info" [ngStyle]="{'display': isActive ? 'block' : 'none'}">
-    <!--<p>Numéro de table : {{ tableNumber }}</p>-->
     <p>Nombre de places : {{table?.seats}}</p>
     <div class="button-container">
       <button class="payment-button" (click)="paiement_button()">Paiement</button>
     </div>
   </div>
-  <!--<button class="take-order-button" *ngIf="!tableOccupied && !isActive" (click)="takeOrder($event)">Prendre la commande</button>-->
-
-  <div class="popup" *ngIf="isPopupOpen">
-    <h2>Sélectionnez une commande :</h2>
-    <button *ngFor="let commande of commandes; let i = index" (click)="selectCommande(i)">
-      Commande {{i+1}}
-    </button>
-    <button (click)="closePopup()">nouvelle commande</button>
-
-    <button (click)="closePopup()">Fermer</button>
-  </div>
   <button mat-button (click)="openDialog()" class="take-order-button" *ngIf="!tableOccupied && !isActive">Commandes de la table</button>
-
 </div>
-<!--
-
-  [ngClass]="{'occupied': tableOccupied, 'table-expanded': isTableExpanded}"
-
--->

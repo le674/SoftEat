@@ -3,6 +3,6 @@
 <button *ngFor="let commande of commandes; let i = index" (click)="selectCommande(i)">
   Commande {{i+1}}
 </button>
-<button (click)="closePopup()">nouvelle commande</button>
+<button (click)="closePopup(true)">nouvelle commande</button>
 
-<button (click)="closePopup()">Fermer</button>
+<button (click)="closePopup(true)">Fermer</button>

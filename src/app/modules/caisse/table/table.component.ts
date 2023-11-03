@@ -1,16 +1,12 @@
-import { Component, Input, NgModule, OnDestroy, OnInit} from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { Ccommande } from '../../../../app/interfaces/commande';
-
 import { Router, UrlTree } from '@angular/router';
 import { Unsubscribe } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { Ctable } from 'src/app/interfaces/table';
-import { MatDialog, MatDialogModule} from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
+import { MatDialog} from '@angular/material/dialog';
 import { DialogCommandesComponent } from '../dialog-commandes/dialog-commandes.component';
-
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -34,14 +30,12 @@ export class TableComponent {
   public tableOccupied:boolean | null;
 
   constructor(private firestore: FirebaseService, private router: Router, public dialog: MatDialog) {
-
     if(this.table !== undefined){
       this.tableOccupied = this.table.tableOccupied
     }
     else{
       this.tableOccupied = null;
     }
-
     this.prop = "";
     this.restaurant = "";
     this.path_to_commandes = [];
@@ -70,9 +64,9 @@ export class TableComponent {
     this.restaurant = this.url.queryParams["restaurant"];
     this.path_to_commandes = Ccommande.getPathsToFirestore(this.prop, this.restaurant, this.getTableId());
     this.req_commandes_brt = this.firestore.getFromFirestoreBDD(this.path_to_commandes, Ccommande, null);
-    this.commandes_brt_sub   = this.firestore.getFromFirestore().subscribe((commande) => { 
+    this.commandes_brt_sub   = this.firestore.getFromFirestore().subscribe((commande) => {
     this.commandes.push(commande as Array<Ccommande>);
-    
+
     console.log("commande 0 : "+this.commandes[0]);
     console.log("longueur: "+this.commandes.length);
     })
@@ -88,13 +82,11 @@ export class TableComponent {
     return "";
   }
   toggleActive() {
+    if()
     this.isActive = !this.isActive;
   }
   paiement_button() {
     let table = new Ctable();
-
-    console.log("commande 0.2 : "+this.commandes[0]);
-    console.log("longueur: "+this.commandes.length);
   }
   takeOrder(event: Event) {
     // Empêcher la propagation de l'événement de clic
@@ -107,10 +99,10 @@ export class TableComponent {
 
         console.log("Commande prise pour la table :", this.table?.tableNumber);
 
-        
+
       }
     }
-   
+
   }
 
   selectCommande(commande: number) {
@@ -135,7 +127,7 @@ export class DialogContentExampleDialog{
 
   @NgModule({
     imports: [
-      CommonModule, 
+      CommonModule,
     ],
     declarations: [
       // ...
@@ -171,20 +163,20 @@ export class DialogContentExampleDialog{
     this.path_to_commandes = [];
     this.commandes = [];
     this.url = this.router.parseUrl(this.router.url);
- 
+
   }
 
 
   openDialog() {
-    
+
     const dialogRef = this.dialog.open(DialogContentExampleDialog);
 
     dialogRef.afterClosed().subscribe(result => {
-      
+
       console.log(`Dialog result: ${result}`);
 
-  
-  
+
+
     });
 
   }
@@ -197,21 +189,21 @@ export class DialogContentExampleDialog{
     }
   }
   ngOnInit(): void {
-    
+
     this.prop = this.url.queryParams["prop"];
     this.restaurant = this.url.queryParams["restaurant"];
     this.path_to_commandes = Ccommande.getPathsToFirestore(this.prop, this.restaurant, this.getTableId());
     this.req_commandes_brt = this.firestore.getFromFirestoreBDD(this.path_to_commandes, Ccommande, null);
-    this.commandes_brt_sub   = this.firestore.getFromFirestore().subscribe((commande) => { 
+    this.commandes_brt_sub   = this.firestore.getFromFirestore().subscribe((commande) => {
     this.commandes.push(commande as Array<Ccommande>);
-    
+
     console.log("Popup :  commande 0 : "+this.commandes[0]);
     console.log("Popup :  longueur: "+this.commandes.length);
     })
-    
+
     console.log("Popup :  "+this.path_to_commandes);
   }
-  
+
   getTableId():string{
     if(this.table?.id!=undefined){
       return this.table.id;
@@ -227,7 +219,7 @@ export class DialogContentExampleDialog{
     this.isPopupOpen = false;
     this.selectedCommande = null;
   }
-  
+
   selectCommande(commande: number) {
     this.selectedCommande = commande;
     // Vous pouvez ajouter ici la logique pour traiter la commande sélectionnée
