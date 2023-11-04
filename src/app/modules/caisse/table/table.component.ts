@@ -82,7 +82,6 @@ export class TableComponent {
     return "";
   }
   toggleActive() {
-    if()
     this.isActive = !this.isActive;
   }
   paiement_button() {
