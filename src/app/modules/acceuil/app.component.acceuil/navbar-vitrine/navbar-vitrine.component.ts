@@ -55,6 +55,15 @@ export class NavbarVitrineComponent implements OnInit {
       return "Se connecter"
     }
   }
+
+  getNomClient():string{
+    if(this.email!=null){
+    return this.email;
+    }else{
+      return "Connexion client"
+    }
+  }
+
   ngOnInit(): void {
   }
   clicContact(toogler: HTMLButtonElement) {
@@ -73,6 +82,15 @@ export class NavbarVitrineComponent implements OnInit {
       toogler.click();
     }
   }
+
+  clicConnexionClient(toogler: HTMLButtonElement){
+    this.numPanel.emit(3);  
+    
+    if(window.matchMedia("(max-width: 990px)").matches){
+      toogler.click();
+    }
+  }
+
   clicAutho(){
     
     this.router.navigate(['autho']);

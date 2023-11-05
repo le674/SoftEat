@@ -13,6 +13,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FooterComponent } from './app.component.acceuil/footer/footer.component';
+import { ConnexionClientComponent } from './app.component.acceuil/connexion-client/connexion-client.component';
 @NgModule({
   declarations: [
     ComponentAcceuil,
@@ -23,7 +24,8 @@ import { FooterComponent } from './app.component.acceuil/footer/footer.component
     PrixComponent,
     ProposComponent,
     ContactComponent,
-    FooterComponent
+    FooterComponent,
+    ConnexionClientComponent
   ],
   imports: [
      CommonModule,
