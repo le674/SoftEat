@@ -67,6 +67,22 @@ Inscription(email:string,password:string){
     });
   }
 
+  ConnexionClient(email:string,password:string){
+    this.auth.updateCurrentUser;
+
+    signInWithEmailAndPassword(this.auth, email, password)
+    .then((userCredential) => {
+      // Signed in
+      const user = userCredential.user;
+      this.router.navigate(['client']);
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+    });
+  }
+
   /*evoieUser():User{
 
     return user;

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ConnectionComponent } from './modules/acceuil/app.component.acceuil/connection/connection.component';
 import { AppAuthoComponent } from './modules/autho/app.autho/app.autho.component';
 import { AuthGuard } from './services/auth.guard';
+import { ClientComponent } from './modules/client/client.component';
 const routes: Routes = [
   {
     path:'',
@@ -20,6 +21,12 @@ const routes: Routes = [
     component: AppAuthoComponent,
     canActivate: [AuthGuard],
     pathMatch:'full'
+    },
+
+    { 
+      path: 'client',
+      component: ClientComponent,
+      pathMatch:'full'
     }
 ];
 @NgModule({
