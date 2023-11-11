@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ComponentAcceuil } from './app.component.acceuil/app.component.acceuil';
 import { AppModuleRoutingModule } from './app.module-routing';
@@ -31,6 +32,7 @@ import { LoginClientComponent } from './app.component.acceuil/login-client/login
   ],
   imports: [
      CommonModule,
+     FormsModule,
      MatDividerModule,
      ReactiveFormsModule,
      AppModuleRoutingModule,

@@ -1,1 +1,53 @@
-<p>login-client works!</p>
+<div class="cont">
+    <div class="signup-form-container">
+        <div class="form-container">
+          <form #signupForm="ngForm" (ngSubmit)="onFormSubmit(signupForm.value)" autocomplete="false" class="form">
+            <h3 class="form-header">Inscription
+            </h3>
+            <div class="control">
+              <label for="name">Name</label>
+              <input ngModel #name="ngModel" minlength="3" name="name" required id="name" type="text">
+              <div class="form-error" *ngIf="name.touched && !name.valid">
+                <div *ngIf="name.errors?.['required']">
+                  Name is required
+                </div>
+                <div *ngIf="name.errors?.['minlength']">
+                  Name must be at least 3 characters long.
+                </div>
+              </div>
+            </div>
+            <div class="control">
+              <label for="email">Email</label>
+              <input ngModel #email="ngModel" email="true" name="email" required id="email" type="text">
+              <div class="form-error" *ngIf="email.touched && !email.valid">
+                <div *ngIf="email.errors?.['required']">
+                  Email is required
+                </div>
+                <div *ngIf="email.errors?.['email'] && !email.errors?.['required']">
+                  Invalid Email address.
+                </div>
+              </div>
+            </div>
+            <div class="control">
+              <label for="password">Password</label>
+              <input ngModel #password="ngModel" minlength="4" name="password" required autocomplete="new-password" id="password" type="password">
+              <div class="form-error" *ngIf="password.touched && !password.valid">
+                <div *ngIf="password.errors?.['required']">
+                  Password is required
+                </div>
+                <div *ngIf="password.errors?.['minlength']">
+                  Password must be at least 4 characters long.
+                </div>
+              </div>
+            </div>
+            <div class="control">
+              <button [disabled]="signupForm.invalid" class="btn" id="signup" type="submit">S'inscrire</button>
+              <p>
+              <span id="alter-way">
+                <a (click) ="login()" type="submit">Vous avez déjà un compte ?</a>
+              </span>
+            </p>
+            </div>
+          </form>
+        </div>
+      </div>

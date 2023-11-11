@@ -1,7 +1,7 @@
 <app-navbar-vitrine (numPanel)="numeroPanel = $event" ></app-navbar-vitrine>
 <app-connection *ngIf="numeroPanel == 1"></app-connection>
 <app-connexion-client (numPanel)="numeroPanel = $event" *ngIf="numeroPanel == 3"></app-connexion-client>
-<app-login-client *ngIf="numeroPanel == 4"></app-login-client>
+<app-login-client (numPanel)="numeroPanel = $event" *ngIf="numeroPanel == 4"></app-login-client>
 <div *ngIf="numeroPanel == 2">   
 <app-home (numPanel)="numeroPanel = $event"></app-home>
 <!--_____________________________________________________________________________________________________________________-->
