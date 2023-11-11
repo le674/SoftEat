@@ -1,6 +1,5 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostBinding, OnInit, Output } from '@angular/core';
 import { AuthentificationService } from "../../../../services/authentification.service";
-
 @Component({
   selector: 'app-connexion-client',
   templateUrl: './connexion-client.component.html',
@@ -8,8 +7,9 @@ import { AuthentificationService } from "../../../../services/authentification.s
 })
 
 export class ConnexionClientComponent implements OnInit {
-
   
+  @Output() public numPanel = new EventEmitter();
+
   constructor(public authService: AuthentificationService){
 
   }
@@ -20,6 +20,10 @@ export class ConnexionClientComponent implements OnInit {
 
   connexionTest(){
     
+  }
+
+  signup(){
+    this.numPanel.emit(4);
   }
 
 

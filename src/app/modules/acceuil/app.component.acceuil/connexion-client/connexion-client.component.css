@@ -17,14 +17,16 @@ form{
    }
    input[type="button"]{
     margin-top: 10px;
+    margin-bottom: 3em;
    }
    input[type ="mail"]{
     color:rgb(125, 181, 46);
     font-weight: 200;
+    margin-bottom: 3em;
    }
    input[type ="password"]{
     color:rgb(125, 181, 46);
-
+    margin-bottom: 2em;
    }  
    h3{
     font-weight: 500;
@@ -40,7 +42,6 @@ form{
     padding: 1rem;
     width: 300px;
     border-radius: 90px;
-    margin-bottom: 3em;
     background-color: rgba(0, 255,0, 0.02);
    }
    .panel-default {
@@ -65,4 +66,13 @@ form{
     #connection:hover{
       color: white;
       background-color: rgb(125, 181, 46);
+    }
+
+    .signup{
+      color:rgb(125, 181, 46);
+    }
+
+    #signupMethod{
+      text-decoration: underline;
+      font-weight: 600;
     }

@@ -14,6 +14,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FooterComponent } from './app.component.acceuil/footer/footer.component';
 import { ConnexionClientComponent } from './app.component.acceuil/connexion-client/connexion-client.component';
+import { LoginClientComponent } from './app.component.acceuil/login-client/login-client.component';
 @NgModule({
   declarations: [
     ComponentAcceuil,
@@ -25,7 +26,8 @@ import { ConnexionClientComponent } from './app.component.acceuil/connexion-clie
     ProposComponent,
     ContactComponent,
     FooterComponent,
-    ConnexionClientComponent
+    ConnexionClientComponent,
+    LoginClientComponent
   ],
   imports: [
      CommonModule,

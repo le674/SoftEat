@@ -9,6 +9,9 @@
           <div class="formGroup">
             <input type="password" class="formControl" placeholder="Mot de passe" #userPassword required>
           </div>
+          <div class="signup">
+            Vous n'avez pas de compte ? <span id="signupMethod"><a (click) ="signup()" type="submit">Inscription</a></span>
+          </div>
           <!-- Calling SignIn Api from AuthService -->
           <div class="formGroup">
             <input type="button" class="btn" id="connection" value="Se connecter"
