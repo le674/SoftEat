@@ -15,14 +15,11 @@ export class Ctable implements InteractionBddFirestore{
         this.tableOccupied = data.tableOccupied;
         this.tableNumber = data.tableNumber;
     }
-
     /**
      * permet de récupérer un menu depuis la base de donnée
      * @param id identifiant du menu dans la base de donnée
      * @returns {Object} JSON correspndant au menu 
      */
-
-
     getData(id:string | null, attrs:Array<string> | null, ...args: any[]) {
         let _attrs = Object.keys(this);
         let object: { [index: string]: any } = {};
@@ -40,9 +37,6 @@ export class Ctable implements InteractionBddFirestore{
     getInstance(): InteractionBddFirestore {
         return new Ctable();
     }
-
-
-
     public static getPathsToFirestore(proprietary_id: string, restaurant_id: string):string[] {
         return ["proprietaires", proprietary_id, "restaurants", restaurant_id, "tables"]
     }

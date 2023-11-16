@@ -1,8 +1,8 @@
 
 <h2>Sélectionnez une commande :</h2>
-<button *ngFor="let commande of commandes; let i = index" (click)="selectCommande(i)">
+<button *ngFor="let commande of commandes; let i = index" mat-button [mat-dialog-close]="i" (click)="selectCommande(i)">
   Commande {{i+1}}
 </button>
-<button (click)="closePopup(true)">nouvelle commande</button>
+<button mat-button [mat-dialog-close]="true">nouvelle commande</button>
 
-<button (click)="closePopup(true)">Fermer</button>
+<button mat-button [mat-dialog-close]="false">Fermer</button>

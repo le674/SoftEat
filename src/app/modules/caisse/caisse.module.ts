@@ -17,8 +17,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import { FecModifLettrageComponent } from './fec/fec.modif.lettrage/fec.modif.lettrage.component';
 import { DialogCommandesComponent } from './dialog-commandes/dialog-commandes.component';
+import { PriseCommandeComponent } from './prise-commande/prise-commande.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,8 @@ import { DialogCommandesComponent } from './dialog-commandes/dialog-commandes.co
     FecMobileComponent,
     FecModifRecordComponent,
     FecModifLettrageComponent,
-    DialogCommandesComponent
+    DialogCommandesComponent,
+    PriseCommandeComponent
   ],
   imports: [
     CommonModule,
@@ -44,6 +47,7 @@ import { DialogCommandesComponent } from './dialog-commandes/dialog-commandes.co
     MatDialogModule,
     MatTooltipModule,
     MatButtonModule,
+    MatCheckboxModule,
     MatExpansionModule
   ],
   exports: [

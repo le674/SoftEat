@@ -469,14 +469,12 @@ export class AddPreparationsComponent implements OnInit{
         this.getBaseIng().at(index).controls.unity.setValue(ingredient.unity);
       }
     }
-
     if(category === 'conso'){
       const consommable = this.consommables.find((consommable) => consommable.name === (new_selection.value) as string);
       if((this.getBaseConso().at(index) !== undefined) && (consommable !== undefined)){
         this.getBaseConso().at(index).controls.unity.setValue(consommable.unity);
       }
     }
-
   }
 
   

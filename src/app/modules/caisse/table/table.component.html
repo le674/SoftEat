@@ -1,6 +1,5 @@
 <div class="table" 
-[ngClass]="{'occupied': tableOccupied}"
-(click)="toggleActive()">
+[ngClass]="{'occupied': tableOccupied}">
   <div class="table-number">{{table?.tableNumber}}</div>
   <p>Statut : {{tableOccupied ? "occupé" : "non occupé"}}</p>
   <div class="table-info" [ngStyle]="{'display': isActive ? 'block' : 'none'}">

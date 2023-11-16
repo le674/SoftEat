@@ -1,0 +1,178 @@
+<div class="inputs-containers-close" id="close-section">
+    <button (click)="closePopup($event)" class="close-fab" mat-mini-fab type="button" id="close_popup" color="white"
+        matTooltip="fermer la fenêtre" aria-label="close popup">
+        <i class="fa-regular fa-xmark"></i>
+    </button>
+</div>
+<form [formGroup]="add_commande_section" (ngSubmit)="addCommande()">
+    <p class="title">Saisir les commandes</p>
+    <ng-container formArrayName="commande">
+        <div class="old" *ngFor="let item of add_commande_section.controls.commande.controls;let i=index">
+            <ng-container [formGroupName]="i">
+                <div class="section_fields">
+                    <mat-checkbox (change)="addClient(i, $event)" class="check-box">
+                        Ajouter un client
+                    </mat-checkbox>
+                    <button class="btn supp_button" (click)="suppInputCmd(i)"mat-stroked-button>
+                        Suppression de la commande
+                    </button>
+                </div>
+                <div class="client-section" *ngIf="add_client[i]" formGroupName="new_client">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Nom du client</mat-label>
+                        <input matInput formControlName="name">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Prénom du client</mat-label>
+                        <input matInput formControlName="surname">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Email du client</mat-label>
+                        <input matInput formControlName="email">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Numéro du client</mat-label>
+                        <input matInput formControlName="number">
+                    </mat-form-field>
+                    <p>Address</p>
+                    <div class="client-section" formGroupName="address">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Code postal</mat-label>
+                            <input matInput formControlName="postal_code">
+                        </mat-form-field>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Numéro de rue</mat-label>
+                            <input matInput formControlName="street_number">
+                        </mat-form-field>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Rue</mat-label>
+                            <input matInput formControlName="street">
+                        </mat-form-field>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Ville</mat-label>
+                            <input matInput formControlName="city">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div id="select_carte">
+                    <div formArrayName="entries" id="entry">
+                        <ng-container
+                            *ngFor="let item_entry of add_commande_section.controls.commande.at(i).controls.entries.controls;let _index=index">
+                            <div class="top-container-content">
+                                <div class="container-content">
+                                    <div class="full-container">
+                                        <p>nom de l'entrée</p>
+                                        <p>quantitée de l'entrée</p>
+                                    </div>
+                                    <div class="full-container">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Choisir l'entrée</mat-label>
+                                            <mat-select formControlName="name">
+                                                <mat-option *ngFor="let plat of $_carte.$_entree| async"
+                                                    [value]="plat.id">{{plat.name}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="fill">
+                                            <mat-label> quantitée de l'entrée </mat-label>
+                                            <input matInput type="number" formControlName="quantity">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <button class="btn supp_button" (click)="suppInputPlt(i,_index,'entry')"
+                                    mat-stroked-button>
+                                    Suppression de l'entrée
+                                </button>
+                            </div>
+                        </ng-container>
+                        <div class="inputs-containers">
+                            <button mat-mini-fab type="button" id="add_input_ing" color="white"
+                                matTooltip="ajouter une entrée" aria-label="ajouter une entrée"
+                                (click)="addInputPlt(i,'entry')">
+                                <i class="fa-regular fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div formArrayName="plats" id="plat">
+                        <ng-container
+                            *ngFor="let item_entry of add_commande_section.controls.commande.at(i).controls.plats.controls;let _index=index">
+                            <div class="top-container-content">
+                                <div class="container-content">
+                                    <div class="full-container">
+                                        <p>nom du plat</p>
+                                        <p>quantitée du plat</p>
+                                    </div>
+                                    <div class="full-container">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Choisir le plat</mat-label>
+                                            <mat-select formControlName="name">
+                                                <mat-option *ngFor="let plat of $_carte.$_plats| async"
+                                                    [value]="plat.id">{{plat.name}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="fill">
+                                            <mat-label> quantitée du plat </mat-label>
+                                            <input matInput type="number" formControlName="quantity">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <button class="btn supp_button" (click)="suppInputPlt(i,_index, 'plat')"
+                                    mat-stroked-button>Suppression du plat</button>
+                            </div>
+                        </ng-container>
+                        <div class="inputs-containers">
+                            <button mat-mini-fab class="plus-fab" type="button" id="add_input_ing" color="white"
+                                matTooltip="ajouter un plat" aria-label="ajouter un plat"
+                                (click)="addInputPlt(i, 'plat')">
+                                <i class="fa-regular fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div formArrayName="desserts" id="dessert">
+                        <ng-container
+                            *ngFor="let item_entry of add_commande_section.controls.commande.at(i).controls.desserts.controls;let _index=index">
+                            <div class="top-container-content">
+                                <div class="container-content">
+                                    <div class="full-container">
+                                        <p>nom du dessert</p>
+                                        <p>quantitée du dessert</p>
+                                    </div>
+                                    <div class="full-container">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Choisir le dessert</mat-label>
+                                            <mat-select formControlName="name">
+                                                <mat-option *ngFor="let plat of $_carte.$_dessert| async"
+                                                    [value]="plat.id">{{plat.name}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="fill">
+                                            <mat-label> quantitée du dessert </mat-label>
+                                            <input matInput type="number" formControlName="quantity">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <button class="btn supp_button" (click)="suppInputPlt(i,_index, 'dessert')"
+                                    mat-stroked-button>Suppression du dessert
+                                </button>
+                            </div>
+                        </ng-container>
+                        <div class="inputs-containers">
+                            <button mat-mini-fab class="plus-fab" type="button" id="add_input_ing" color="white"
+                                matTooltip="ajouter un dessert" aria-label="ajouter un plat"
+                                (click)="addInputPlt(i, 'dessert')">
+                                <i class="fa-regular fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
+    <div id="inputs-containers-cmd">
+        <button mat-fab id="add-cmd-btn" matTooltip="Ajouter une nouvelle commande" (click)="addInputCmd()">
+            <i class="fa-regular fa-plus"></i>
+        </button>
+        <button type="submit" mat-stroked-button matTooltip="enregistrer les commandes" id="record-cmd-btn">
+            Enregistrer les commandes
+       </button>
+    </div>
+</form>
