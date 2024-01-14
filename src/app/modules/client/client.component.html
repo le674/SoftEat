@@ -1,1 +1,70 @@
-<p>client works!</p>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page d'entrée sur les restaurants accessibles aux clients</title>
+    <link rel="stylesheet" href="/assets/fontawesome/css/fontawesome.css">
+    <link rel="stylesheet" href="/assets/fontawesome/css/solid.css">
+    <link rel="stylesheet" href="/assets/fontawesome/css/regular.css">
+</head>
+
+<body>
+    <header>
+        <div id="navigationx">
+            <div (click)="clicAcceuil()"><img src="/assets/images/SoftEat_Quadrichromie.png" alt=""></div>
+            <div class="profil">
+                <div>
+                  <i class="fa-solid fa-user"></i>
+                  <span>{{ displayName }}</span>
+                </div>
+                <div>
+                    <i class="fa-solid fa-star"></i>
+                  <span>Mes points : {{ fidelite }}</span>
+                </div>
+              </div>              
+            <nav id="navbar_top">
+                <ul>
+                    <li class="nav-item">
+                        <a class="nav-link" (click)="clicdeConnexion()" id ="souligneVert">Secteur</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" (click)="clicdeConnexion()" id ="souligneVert">Cas clients</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" (click)="clicdeConnexion()" id ="souligneVert">Ressources</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" (click)="clicdeConnexion()" id ="souligneVert">Offres</a>
+                      </li>
+                    <li>
+                        <button class="btn" (click)="clicdeConnexion()" id="deco" type="submit">Déconnexion</button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="body-text">
+            <div class="left-text">
+                <h2>Retrouvez</h2>
+                <h2>{{ dinerText }}</h2>
+                <h2>Maintenant</h2>
+            </div>
+            <div class="space"></div>
+            <div class="right-text">
+                <h4>Passez la meilleure nuit de votre vie</h4>
+                <div>
+                    <p>25 mai 2030 (samedi) | de 19h à 22h à Di Voglia</p>
+                    <p>Allez sur notre carte GPS pour réserver votre restaurant préféré ci-dessous</p>
+                </div>
+                <button class="walkButton" (click)="toRestaurants()"><i class="fa-solid fa-person-walking"></i></button>
+            </div>
+        </div>    
+    </main>
+</body>
+
+</html>

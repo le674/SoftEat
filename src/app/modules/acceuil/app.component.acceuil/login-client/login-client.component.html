@@ -1,18 +1,18 @@
 <div class="cont">
     <div class="signup-form-container">
         <div class="form-container">
-          <form #signupForm="ngForm" (ngSubmit)="onFormSubmit(signupForm.value)" autocomplete="false" class="form">
+          <form #signupForm="ngForm" (ngSubmit)="onFormSubmit(signupForm.value.email, signupForm.value.password, signupForm.value.name)" autocomplete="false" class="form">
             <h3 class="form-header">Inscription
             </h3>
             <div class="control">
-              <label for="name">Name</label>
+              <label for="name">Nom</label>
               <input ngModel #name="ngModel" minlength="3" name="name" required id="name" type="text">
               <div class="form-error" *ngIf="name.touched && !name.valid">
                 <div *ngIf="name.errors?.['required']">
-                  Name is required
+                  Nom requis.
                 </div>
                 <div *ngIf="name.errors?.['minlength']">
-                  Name must be at least 3 characters long.
+                  Le nom doit faire au moins 3 caractères.
                 </div>
               </div>
             </div>
@@ -21,22 +21,22 @@
               <input ngModel #email="ngModel" email="true" name="email" required id="email" type="text">
               <div class="form-error" *ngIf="email.touched && !email.valid">
                 <div *ngIf="email.errors?.['required']">
-                  Email is required
+                  Email requis.
                 </div>
                 <div *ngIf="email.errors?.['email'] && !email.errors?.['required']">
-                  Invalid Email address.
+                  Adresse email invalide.
                 </div>
               </div>
             </div>
             <div class="control">
-              <label for="password">Password</label>
+              <label for="password">Mot de passe</label>
               <input ngModel #password="ngModel" minlength="4" name="password" required autocomplete="new-password" id="password" type="password">
               <div class="form-error" *ngIf="password.touched && !password.valid">
                 <div *ngIf="password.errors?.['required']">
-                  Password is required
+                  Mot de passe requis.
                 </div>
                 <div *ngIf="password.errors?.['minlength']">
-                  Password must be at least 4 characters long.
+                  Le mot de passe doit faire au moins 4 caractères.
                 </div>
               </div>
             </div>

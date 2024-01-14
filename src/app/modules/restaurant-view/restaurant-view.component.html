@@ -1,0 +1,20 @@
+<div *ngIf="restaurants$ | async as restaurants; else loading">
+    <ul>
+      <li *ngFor="let restaurant of restaurants">
+        <h3>{{ restaurant.name }}</h3>
+        <p>ID: {{ restaurant.id }}</p>
+        <p>Is Client: {{ restaurant.is_client ? 'Oui' : 'Non' }}</p>
+        <p>Address:</p>
+        <ul>
+          <li>Postal Code: {{ restaurant.address.postal_code }}</li>
+          <li>Street Number: {{ restaurant.address.street_number }}</li>
+          <li>City: {{ restaurant.address.city }}</li>
+          <li>Street: {{ restaurant.address.street }}</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  
+  <ng-template #loading>
+    Loading...
+  </ng-template>  

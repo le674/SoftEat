@@ -24,16 +24,23 @@ import {registerLocaleData} from '@angular/common';
 import * as fr from '@angular/common/locales/fr';
 import { FIREBASE_AUTH_EMULATOR_HOST, FIREBASE_FIRESTORE_EMULATOR_HOST, FIREBASE_PROD } from 'src/environments/variables';
 import { ClientComponent } from './modules/client/client.component';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireModule } from '@angular/fire/compat';
+import { RestaurantViewComponent } from './modules/restaurant-view/restaurant-view.component';
+
 @NgModule({
   declarations: [
     AppComponent,
-    ClientComponent
+    ClientComponent,
+    RestaurantViewComponent
   ],
   imports: [
     AppDashboardModule,
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    AngularFirestoreModule,
+    AngularFireModule.initializeApp(environment.firebase),
     //import des différent module propre à chacune des pages de l'application
     AppAlertesModule,
     AppAuthenModule,

@@ -15,19 +15,12 @@
           <!-- Calling SignIn Api from AuthService -->
           <div class="formGroup">
             <input type="button" class="btn" id="connection" value="Se connecter"
-              (click)="authService.ConnexionClient(userName.value, userPassword.value)">
+              (click)="connexionClient(userName.value, userPassword.value)">
           </div>
-          <!--  <div class="formGroup">
-            <span class="or"><span class="orInner">Ou</span></span>
-          </div>
-         
-          <div class="forgotPassword">
+          <!--<div class="forgotPassword">
             <span routerLink="/forgot-password">Mot de passe oublié ?</span>
           </div> -->
         </div>
-        <!-- <div class="redirectToLogin">
-          <span>Tu n'as pas de compte ?<span class="redirect" routerLink="/register-user"> Inscrit toi</span></span>
-        </div> -->
       </div>
     </form>
   </div>

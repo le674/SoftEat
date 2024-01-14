@@ -1,5 +1,7 @@
 import { Component, EventEmitter, HostBinding, OnInit, Output } from '@angular/core';
-import { AuthentificationService } from "../../../../services/authentification.service";
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { Client } from 'src/app/interfaces/client';
+import { AuthentificationService } from 'src/app/services/authentification.service';
 @Component({
   selector: 'app-connexion-client',
   templateUrl: './connexion-client.component.html',
@@ -9,8 +11,11 @@ import { AuthentificationService } from "../../../../services/authentification.s
 export class ConnexionClientComponent implements OnInit {
   
   @Output() public numPanel = new EventEmitter();
-
+  private restaurant : string;
+  private proprietaire : string;
   constructor(public authService: AuthentificationService){
+    this.restaurant="";
+    this.proprietaire="";
 
   }
 
@@ -18,8 +23,8 @@ export class ConnexionClientComponent implements OnInit {
     
   }
 
-  connexionTest(){
-    
+  connexionClient(username : string, password : string){
+    this.authService.ConnexionUtilisateur(username, password)
   }
 
   signup(){

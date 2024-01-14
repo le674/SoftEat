@@ -4,6 +4,8 @@ import { ConnectionComponent } from './modules/acceuil/app.component.acceuil/con
 import { AppAuthoComponent } from './modules/autho/app.autho/app.autho.component';
 import { AuthGuard } from './services/auth.guard';
 import { ClientComponent } from './modules/client/client.component';
+import { RestaurantViewComponent } from './modules/restaurant-view/restaurant-view.component';
+
 const routes: Routes = [
   {
     path:'',
@@ -26,6 +28,12 @@ const routes: Routes = [
     { 
       path: 'client',
       component: ClientComponent,
+      pathMatch:'full'
+    },
+
+    { 
+      path: 'restaurants',
+      component: RestaurantViewComponent,
       pathMatch:'full'
     }
 ];

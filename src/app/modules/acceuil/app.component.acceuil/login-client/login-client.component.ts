@@ -19,9 +19,8 @@ export class LoginClientComponent implements OnInit {
     
   }
 
-  onFormSubmit(data: any) {
-    console.log(data);
-    this.router.navigateByUrl('/');
+  onFormSubmit(email : string, password : string, name : string) {
+    this.authService.InscriptionClient(email, password, name);
   }
 
   login(){
