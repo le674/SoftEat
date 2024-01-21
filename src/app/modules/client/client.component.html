@@ -14,6 +14,7 @@
 <body>
     <header>
         <div id="navigationx">
+          <!--On revient à l'accueil si on clique sur le logo Softeat-->
             <div (click)="clicAcceuil()"><img src="/assets/images/SoftEat_Quadrichromie.png" alt=""></div>
             <div class="profil">
                 <div>
@@ -26,21 +27,23 @@
                 </div>
               </div>              
             <nav id="navbar_top">
+              <!--Les différents liens ramènent pour l'instant à l'accueil, changer les méthodes
+              correspondantes-->
                 <ul>
                     <li class="nav-item">
-                        <a class="nav-link" (click)="clicdeConnexion()" id ="souligneVert">Secteur</a>
+                        <a class="nav-link" (click)="clicAcceuil()" id ="souligneVert">Secteur</a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" (click)="clicdeConnexion()" id ="souligneVert">Cas clients</a>
+                        <a class="nav-link" (click)="clicAcceuil()" id ="souligneVert">Cas clients</a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" (click)="clicdeConnexion()" id ="souligneVert">Ressources</a>
+                        <a class="nav-link" (click)="clicAcceuil()" id ="souligneVert">Ressources</a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" (click)="clicdeConnexion()" id ="souligneVert">Offres</a>
+                        <a class="nav-link" (click)="clicAcceuil()" id ="souligneVert">Offres</a>
                       </li>
                     <li>
-                        <button class="btn" (click)="clicdeConnexion()" id="deco" type="submit">Déconnexion</button>
+                        <button class="btn" (click)="clicAcceuil()" id="deco" type="submit">Déconnexion</button>
                     </li>
                 </ul>
             </nav>

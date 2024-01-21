@@ -85,6 +85,7 @@ li a {
 main {
   height: 90%;
   width: auto;
+  /*Modifier l'image de fond pour une libre de droits*/
   background-image: url("https://ideat.fr/wp-content/uploads/sites/3/2023/01/restaurant-sphere-paris-slider-salle-2.jpg");
 }
 

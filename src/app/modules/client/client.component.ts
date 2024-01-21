@@ -35,17 +35,21 @@ export class ClientComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
   }
+
+  // Affiche les informations du User connecté
   ngOnInit(): void {
       onAuthStateChanged(this.auth, (user) => {
         console.log(user);
         if(user){
+          // Récupère les informations du users depuis firestore
           const usersCollection = this.firestore.collection('users');
           this.uid = user.uid;
           const docRef = usersCollection.doc(this.uid);
-          
+          // Met à jour le nom et les points de l'utilisateur s'il existe dans la BDD
+          // dans la collection 'users'
           docRef.get().subscribe((doc) => {
             if (doc.exists) {
-              this.dataUser = doc.data() as UserData;
+              this.dataUser = doc.data() as UserData; // Interface contenant les informations des utilisateurs
               console.log(this.dataUser)
               this.displayName = this.dataUser.displayName;
               this.fidelite = this.dataUser.fidelite;
@@ -56,32 +60,26 @@ export class ClientComponent implements OnInit, OnDestroy {
         }
         else{
           console.log("pas d'autentification");
-           //renvoyer la personne vers la page d'authentification
+           //renvoie la personne vers la page d'authentification
           this.router.navigate(["./accueil"])
         } 
       })
   }
+  // Déconnexion
   clicdeConnexion(){
     this.auth.signOut(); 
     this.router.navigate([''])
   }
+
+  // Retour à l'accueil
   clicAcceuil(){
     this.router.navigate(["../accueil"])
   }
 
+  // Accès à la liste des restaurants, où sera implémentée la carte en 
+  // OpenStreetMap
   toRestaurants(){
     this.router.navigate(["../restaurants"]);
-    const restaurantsCollection = this.firestore.collection('restaurants');
-    restaurantsCollection.get().subscribe((snapshot) => {
-      snapshot.forEach((doc) => {
-        const restaurantData = doc.data() as RestaurantData;
-        
-        // Vous pouvez maintenant accéder aux champs du document
-        console.log('Nom du restaurant:', restaurantData.name);
-        console.log('Adresse du restaurant:', restaurantData.address);
-        // Ajoutez d'autres champs selon votre structure de document
-      });
-    });
   }
 }
 

@@ -50,19 +50,15 @@ Inscription(email:string,password:string){
 
   }
 
+  // Fonction appelée à la création de l'utilisateur Client.
   InscriptionClient(email: string, password: string, displayName: string) {
     createUserWithEmailAndPassword(this.auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        /*console.log('Utilisateur créé avec succès, UID : ', user.uid);
-        updateProfile(user, {
-          displayName: displayName,
-          photoURL: "client",
-        })*/
         const usersCollection = this.firestore.collection('users');
         const userDocRef = usersCollection.doc(user.uid);
   
-        // Création du document dans la collection 'users'
+        // Création du document associé dans la collection 'users'
         userDocRef.set({
           email: user.email,
           role: 'client',
@@ -70,8 +66,10 @@ Inscription(email:string,password:string){
           uid: user.uid,
           displayName: displayName
         })
+        // Les console.log peuvent être retiré, je les ai laissés au cas où
           .then(() => {
             console.log('Rôle "client" ajouté avec succès pour l\'utilisateur : ', user.uid);
+            // Une fois que l'utilisateur est enregistré on le connecte
             this.ConnexionUtilisateur(email, password);
           })
           .catch((error) => {
@@ -88,9 +86,9 @@ Inscription(email:string,password:string){
   
 
   miseAJourProfil(){
-
-
   }
+
+  // Fonction appelée pour la connexion restaurateur et client
   ConnexionUtilisateur(email:string,password:string){
     this.auth.updateCurrentUser;
     signInWithEmailAndPassword(this.auth, email, password)
@@ -98,34 +96,32 @@ Inscription(email:string,password:string){
       // Signed in
       const user = userCredential.user;
       user.getIdTokenResult().then((idTokenResult) => {
-        console.log(idTokenResult)
+        // On vient chercher l'id du user connecté, et on le compare à ceux
+        // présents dans la collection 'users'
         const usersCollection = this.firestore.collection('users');
         const user_uid = idTokenResult?.claims?.['user_id'];
         const userDocRef = usersCollection.doc(user_uid);
-        console.log('user_uid : ', user_uid);
         userDocRef.get().subscribe(snapshot => {
+          // On stocke les données de l'utilisateur récupérées depuis Firestore
+          // dans un UserData
           const userData = snapshot.data() as UserData;
         
-          // Vérifiez d'abord si le document existe
+          // On vérifie d'abord si le document existe
           if (snapshot.exists) {
             const role = userData.role;
         
             if (role === "client") {
-              // Faites quelque chose ici
               this.router.navigate(['client']);
             } else {
-              // Le rôle n'est pas "client"
+              // Le rôle n'est pas "client", on fait comme si c'était un restaurateur
               this.router.navigate(['autho']);
             }
           } else {
-            // Le document n'existe pas
+            // Le document n'existe pas dans la collection 'users' (ce sont tous les utilisateurs
+            // créés différemment), on va à la page des restaurateurs
             this.router.navigate(['autho']);
           }
         });
-      /*
-      localStorage.setItem("user_name", user.displayName as string);
-      localStorage.setItem("user_role", user.photoURL as string);*/
-      //});
     })
     .catch((error) => {
       const errorCode = error.code;

@@ -1,6 +1,8 @@
 <div class="cont">
     <div class="signup-form-container">
         <div class="form-container">
+          <!-- Des vérifications permettent d'avoir un nom et un mot de passe
+             suffisamment long, et un mail valide. Cela peut être retiré si besoin-->
           <form #signupForm="ngForm" (ngSubmit)="onFormSubmit(signupForm.value.email, signupForm.value.password, signupForm.value.name)" autocomplete="false" class="form">
             <h3 class="form-header">Inscription
             </h3>
